@@ -1,6 +1,6 @@
 # Frontend Client Wallet Saas
 
-Esse front tem como objetivo ser o app para os desenvolvedores manipularem e monitorar a aplicação que os clientes vão utilizar
+Esse front tem como objetivo ser o app para os clientes do software como todo, ou sejá, adm's, gestores e clientes.
 
 ## Pré-requisitos
 Para iniciar a aplicação, você precisa ter a versão 20.11 do Node.js instalada em sua máquina. Se você não tiver essa versão, recomendação do uso do NVM.
