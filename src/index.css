@@ -73,4 +73,10 @@
     body {
       @apply bg-background text-foreground;
     }
-  }
+}
+
+body{
+    background-color: #1C1C1C;
+    margin: 0;
+    padding: 0;
+}
