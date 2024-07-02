@@ -109,7 +109,7 @@ export default function Wallet() {
   }
 
   return (
-    <div className="p-10 ">
+    <div className="p-10">
       <div className="mb-10 flex items-center justify-between">
         <h1 className="text-2xl text-white font-medium">Wallet</h1>
         <SwitchTheme />
@@ -117,7 +117,7 @@ export default function Wallet() {
 
       <div className="flex items-center justify-between mb-10">
         <Input
-          className="bg-[#171717] w-5/6 border-0 text-white focus:ring-0"
+          className="bg-[#171717] w-3/4 border-0 text-white focus:ring-0"
           type="text"
           placeholder="Search for ..."
         />
