@@ -6,6 +6,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import ErrorPage from './pages/404.tsx'
 import Root from './pages/outlet.tsx'
 import Wallet from './pages/wallet.tsx'
+import Login from './pages/login.tsx'
 
 const router = createBrowserRouter([
   {
@@ -15,7 +16,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <App />,
+        element: <Login />,
       },
       {
         path: '/wallet',
