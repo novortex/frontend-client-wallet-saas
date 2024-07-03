@@ -11,57 +11,31 @@ export default function Clients(){
             responsible: "Abner Silva",
             alerts: 4,
             nreb: "02/07/2024",
-            lreb: "01/07/2024"
+            lreb: "01/07/2024",
+            email: "arthur.fraige@example.com",
+            cpf: "123.456.789-00",
+            phone: "(11) 98765-4321"
         },
         {
             name: "Beatriz Oliveira",
             responsible: "Carla Mendes",
             alerts: 3,
             nreb: "30/06/2024",
-            lreb: "29/06/2024"
+            lreb: "29/06/2024",
+            email: "beatriz.oliveira@example.com",
+            cpf: "",
+            phone: ""
         },
         {
             name: "Carlos Souza",
             responsible: "Débora Lima",
             alerts: 5,
             nreb: "28/06/2024",
-            lreb: "27/06/2024"
+            lreb: "27/06/2024",
+            email: "carlos.souza@example.com",
+            cpf: "345.678.901-22",
+            phone: ""
         },
-        {
-            name: "Daniela Santos",
-            responsible: "Eliane Rocha",
-            alerts: 2,
-            nreb: "25/06/2024",
-            lreb: "24/06/2024"
-        },
-        {
-            name: "Eduardo Pereira",
-            responsible: "Fátima Costa",
-            alerts: 6,
-            nreb: "22/06/2024",
-            lreb: "21/06/2024"
-        },
-        {
-            name: "Eduardo Pereira",
-            responsible: "Fátima Costa",
-            alerts: 6,
-            nreb: "22/06/2024",
-            lreb: "21/06/2024"
-        },
-        {
-            name: "Eduardo Pereira",
-            responsible: "Fátima Costa",
-            alerts: 8,
-            nreb: "22/06/2024",
-            lreb: "21/06/2024"
-        },
-        {
-            name: "Eduardo Pereira",
-            responsible: "Fátima Costa",
-            alerts: 10,
-            nreb: "22/06/2024",
-            lreb: "21/06/2024"
-        }
     ];
 
     return(
@@ -84,15 +58,18 @@ export default function Clients(){
                     + Add New
                 </Button>
             </div>
-            <div className="w-full flex flex-row flex-wrap gap-8 justify-start">
+            <div className="w-full flex flex-row flex-wrap gap-4 justify-start">
                 {users.map((user, index) => (
                     <CardClient
                         key={index}
                         name={user.name}
                         responsible={user.responsible}
                         alerts={user.alerts}
-                        next_reb={user.nreb}
-                        last_reb={user.lreb}
+                        next_rebalancing={user.nreb}
+                        last_rebalancing={user.lreb}
+                        email={user.email}
+                        phone={user.phone}
+                        cpf={user.cpf}
                     />
                 ))} 
             </div>

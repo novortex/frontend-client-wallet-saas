@@ -8,8 +8,11 @@ interface CardClientProps {
     name: string;
     responsible: string;
     alerts: number;
-    next_reb: string;
-    last_reb: string;
+    next_rebalancing: string;
+    last_rebalancing: string;
+    email: string;
+    cpf?: string;
+    phone?:string;
 }
 
 const getTagAlertColor = (alerts: number) => {
@@ -42,7 +45,7 @@ const getTextAlertColor = (alerts: number) => {
     }
 }
 
-export default function CardClient({name, responsible, alerts, next_reb, last_reb}: CardClientProps) {
+export default function CardClient({name, responsible, alerts, next_rebalancing, last_rebalancing, email, cpf, phone}: CardClientProps) {
     const alertColor = getTagAlertColor(alerts);
     const alertTextColor = getTextAlertColor(alerts)
 
@@ -58,8 +61,19 @@ export default function CardClient({name, responsible, alerts, next_reb, last_re
                     <div className='h-full w-1/2 flex items-center justify-start text-[#fff] text-2xl'>
                         <p>{name}</p>
                     </div>
-                    <div className='h-full w-1/2 flex items-center justify-end'>
-                        <img src={infoIcon} />
+                    <div className="relative h-full w-1/2 flex items-center justify-end">
+                        <div className="relative group">
+                            <img src={infoIcon} alt="Info Icon" className="cursor-pointer" />
+                            <div className="absolute bottom-full right-full mb-2 w-[650%] px-4 py-2 bg-black text-sm text-white text-start rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                {name}
+                                <br/>
+                                email: {email}
+                                <br/>
+                                phone: {phone}
+                                <br/>
+                                cpf: {cpf}
+                            </div>
+                        </div>
                     </div>
                 </CardTitle>
                 <CardDescription className='flex flex-row'>
@@ -81,7 +95,7 @@ export default function CardClient({name, responsible, alerts, next_reb, last_re
                         <p>Next rebalancing:</p>
                     </div>
                     <div className='flex h-full w-1/2 justify-end items-center text-base text-[#fff]'>
-                        {next_reb}
+                        {next_rebalancing}
                     </div>
                 </div>
                 <div className='flex flex-row h-1/2 w-full'>
@@ -90,7 +104,7 @@ export default function CardClient({name, responsible, alerts, next_reb, last_re
                         <p>Last rebalancing:</p>
                     </div>
                     <div className='flex h-full w-1/2 justify-end items-center text-base text-[#fff]'>
-                        {last_reb}
+                        {last_rebalancing}
                     </div>
                 </div>
             </CardContent>
