@@ -7,6 +7,7 @@ import Root from './pages/outlet.tsx'
 import Wallet from './pages/wallet.tsx'
 import Login from './pages/login.tsx'
 import Clients from './pages/clients.tsx'
+import Infos from './pages/infos.tsx'
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
       {
         path: '/clients',
         element: <Clients />,
+      },
+      {
+        path: '/clients/:clientUuid/infos',
+        element: <Infos />,
       },
     ],
   },
