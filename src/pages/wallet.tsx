@@ -8,7 +8,6 @@ import { DataTable } from '@/components/custom/tables/wallet-client/data-table'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
-// import searchIcon from '../assets/icons/MagnifyingGlass.svg'
 import SwitchTheme from '@/components/custom/switch-theme'
 
 async function getData(): Promise<ClientActive[]> {

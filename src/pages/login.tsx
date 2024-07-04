@@ -4,13 +4,21 @@ import { Label } from '@/components/ui/label'
 import vaultLogo from '../assets/image/vault-logo.png'
 
 import { useNavigate } from 'react-router-dom'
+import { useUserStore } from '@/store/user'
 
 export default function Login() {
   const navigate = useNavigate()
+  const [setUser] = useUserStore((state) => [state.setUser])
 
   // TODO: put this function in a service
   const handleButtonClick = () => {
     // Navigate to the '/home' route
+    setUser({
+      name: 'abner',
+      email: 'blalala',
+      imageUrl: 'asdada',
+      uuidOrganization: 'asdas',
+    })
     navigate('/wallet')
   }
 
