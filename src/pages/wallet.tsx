@@ -8,7 +8,6 @@ import { DataTable } from '@/components/custom/tables/wallet-client/data-table'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
-// import searchIcon from '../assets/icons/MagnifyingGlass.svg'
 import SwitchTheme from '@/components/custom/switch-theme'
 
 async function getData(): Promise<ClientActive[]> {
@@ -121,12 +120,14 @@ export default function Wallet() {
           type="text"
           placeholder="Search for ..."
         />
-        <Button type="button" variant="outline">
-          Change history
-        </Button>
-        <Button className="bg-[#EF4E3D] p-5" type="button">
-          Closing
-        </Button>
+        <div className="flex gap-5">
+          <Button type="button" variant="outline">
+            Change history
+          </Button>
+          <Button className="bg-[#EF4E3D] p-5" type="button">
+            Closing
+          </Button>
+        </div>
       </div>
 
       <div className="flex gap-5 mb-10">

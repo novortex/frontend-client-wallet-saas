@@ -2,6 +2,7 @@ import { ChevronLeft, ChevronRight, MoreVertical, Bell } from 'lucide-react'
 import LogoOrg from '../../assets/image/vault-logo.png'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { ReactNode, useContext, useState, createContext } from 'react'
+import { useUserStore } from '@/store/user'
 
 // TODO: Refact this component -> separate files and context
 type SideBarContextProps = {
@@ -20,6 +21,7 @@ export function SideBar({
   alerts: number
 }) {
   const [expanded, setExpanded] = useState(true)
+  const userInfo = useUserStore((state) => state.user)
   return (
     <aside className={`h-screen ${expanded ? 'w-1/6' : 'w-20'}`}>
       <nav
@@ -55,7 +57,7 @@ export function SideBar({
 
               {alerts !== 0 && (
                 <div
-                  className={`bg-[#F2BE38] text-black w-5 h-5 text-center overflow-hidden transition-all  ${expanded ? 'w-52 ' : 'w-0'}`}
+                  className={`bg-[#F2BE38] text-black h-5 text-center overflow-hidden transition-all  ${expanded ? 'w-5' : 'w-0'}`}
                 >
                   {alerts}
                 </div>
@@ -74,7 +76,7 @@ export function SideBar({
           {expanded && (
             <div className="flex justify-between items-center ml-3 w-full">
               <div className="leading-4">
-                <p className="font-normal text-white">Abner Silva Barbosa</p>
+                <p className="font-normal text-white">{userInfo.name}</p>
                 <span className="text-sx text-[#959CB6]">Admin</span>
               </div>
               <MoreVertical color="white" />
