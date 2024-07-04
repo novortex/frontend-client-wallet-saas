@@ -55,7 +55,7 @@ export function SideBar({
 
               {alerts !== 0 && (
                 <div
-                  className={`bg-[#F2BE38] text-black w-5 h-5 text-center overflow-hidden transition-all  ${expanded ? 'w-52 ' : 'w-0'}`}
+                  className={`bg-[#F2BE38] text-black h-5 text-center overflow-hidden transition-all  ${expanded ? 'w-5' : 'w-0'}`}
                 >
                   {alerts}
                 </div>
