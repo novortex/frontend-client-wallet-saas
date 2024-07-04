@@ -21,6 +21,7 @@ import exportIcon from '../../../../assets/icons/export.svg'
 
 import AddNewWalletModal from '../../add-new-wallet-modal'
 
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
