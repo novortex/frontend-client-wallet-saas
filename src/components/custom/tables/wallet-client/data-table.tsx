@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import {
   ColumnDef,
   flexRender,
@@ -18,6 +19,9 @@ import { Button } from '@/components/ui/button'
 import filterIcon from '../../../../assets/icons/filter.svg'
 import exportIcon from '../../../../assets/icons/export.svg'
 
+import AddNewWalletModal from '../../add-new-wallet-modal'
+
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
@@ -27,6 +31,16 @@ export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const openModal = () => {
+    setIsModalOpen(true)
+  }
+
+  const closeModal = () => {
+    setIsModalOpen(false)
+  }
+
   const table = useReactTable({
     data,
     columns,
@@ -39,14 +53,15 @@ export function DataTable<TData, TValue>({
         <h1 className="text-xl text-white">Table</h1>
         <div className="flex gap-5">
           <Button className="bg-white text-black flex gap-2 hover:bg-gray-400 w-1/3 p-5">
-            {' '}
             <img src={filterIcon} alt="" /> Filters
           </Button>
           <Button className="bg-white text-black flex gap-2 hover:bg-gray-400 w-1/3 p-5">
-            {' '}
             <img src={exportIcon} alt="" /> Export
           </Button>
-          <Button className="bg-[#1877F2] w-1/2 hover:bg-blue-600 p-5">
+          <Button
+            className="bg-[#1877F2] w-1/2 hover:bg-blue-600 p-5"
+            onClick={openModal}
+          >
             + Add new
           </Button>
         </div>
@@ -97,6 +112,7 @@ export function DataTable<TData, TValue>({
           )}
         </TableBody>
       </Table>
+      <AddNewWalletModal isOpen={isModalOpen} onClose={closeModal} />
     </div>
   )
 }
