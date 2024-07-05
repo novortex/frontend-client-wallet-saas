@@ -6,6 +6,8 @@ import filterIcon from '../assets/image/filter-lines.png'
 import AddNewClientModal from '@/components/custom/add-new-client-modal'
 import { useState } from 'react'
 
+import RelateClientModal from '@/components/custom/relate-client-modal'
+
 export default function Clients() {
     const [isModalOpen, setIsModalOpen] = useState(false)
 

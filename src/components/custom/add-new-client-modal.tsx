@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "../ui/input"
 import * as React from "react"
+import RelateClientModal from "./relate-client-modal"
 
 interface AddNewClientModalProps {
   isOpen: boolean
@@ -33,6 +34,16 @@ export default function AddNewClientModal({ isOpen, onClose }: AddNewClientModal
     setPhone("")
 
     onClose()
+  }
+
+  const [isModalOpen, setIsModalOpen] = React.useState(false)
+
+  const openModal = () => {
+    setIsModalOpen(true)
+  }
+
+  const closeModal = () => {
+    setIsModalOpen(false)
   }
 
   return (
@@ -74,11 +85,12 @@ export default function AddNewClientModal({ isOpen, onClose }: AddNewClientModal
           </div>
         </div>
         <DialogFooter className="flex justify-end items-end">
-          <Button className="bg-[#1877F2] w-1/4 hover:bg-blue-600 p-5" onClick={handleAddClient}>
+          <Button className="bg-[#1877F2] w-1/4 hover:bg-blue-600 p-5" onClick={() => { handleAddClient(); openModal(); }}>
             Next
           </Button>
         </DialogFooter>
       </DialogContent>
+      <RelateClientModal isOpen={isModalOpen} onClose={closeModal} />
     </Dialog>
   )
 }
