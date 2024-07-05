@@ -3,8 +3,20 @@ import SwitchTheme from '@/components/custom/switch-theme'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import filterIcon from '../assets/image/filter-lines.png'
+import AddNewClientModal from '@/components/custom/add-new-client-modal'
+import { useState } from 'react'
 
 export default function Clients() {
+    const [isModalOpen, setIsModalOpen] = useState(false)
+
+    const openModal = () => {
+      setIsModalOpen(true)
+    }
+  
+    const closeModal = () => {
+      setIsModalOpen(false)
+    }
+
   const users = [
     {
       name: 'Arthur Fraige',
@@ -59,7 +71,7 @@ export default function Clients() {
             <img src={filterIcon} alt="" />
             <p>Filters</p>
           </Button>
-          <Button className="bg-[#1877F2] p-5" type="button">
+          <Button className="bg-[#1877F2] p-5" type="button" onClick={openModal}>
             + Add New
           </Button>
         </div>
@@ -79,6 +91,7 @@ export default function Clients() {
           />
         ))}
       </div>
+      <AddNewClientModal isOpen={isModalOpen} onClose={closeModal} />
     </div>
   )
 }

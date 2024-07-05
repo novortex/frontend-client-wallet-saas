@@ -12,8 +12,20 @@ import {
   BarChartBigIcon,
 } from 'lucide-react'
 import responsibleIcon from '../assets/image/responsible-icon.png'
+import ClientsInfoModal from '@/components/custom/clients-info-modal'
+import { useState } from 'react'
 
 export default function Infos() {
+    const [isModalOpen, setIsModalOpen] = useState(false)
+
+    const openModal = () => {
+      setIsModalOpen(true)
+    }
+  
+    const closeModal = () => {
+      setIsModalOpen(false)
+    }
+
   return (
     <div className="p-10">
       <div className="mb-10 flex items-center justify-between">
@@ -46,7 +58,7 @@ export default function Infos() {
               </Badge>
             </div>
             <div>
-              <Button className="bg-[#131313] text-[#F2BE38] flex gap-3 hover:bg-yellow-500 hover:text-black">
+              <Button className="bg-[#131313] text-[#F2BE38] flex gap-3 hover:bg-yellow-500 hover:text-black" onClick={openModal}>
                 {' '}
                 <CircleAlert className="w-5" /> Information
               </Button>
@@ -188,6 +200,7 @@ export default function Infos() {
           </div>
         </div>
       </div>
+      <ClientsInfoModal isOpen={isModalOpen} onClose={closeModal} />
     </div>
   )
 }
