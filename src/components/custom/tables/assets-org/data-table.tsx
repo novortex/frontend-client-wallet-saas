@@ -17,6 +17,8 @@ import { Button } from '@/components/ui/button'
 
 import filterIcon from '../../../../assets/icons/filter.svg'
 import exportIcon from '../../../../assets/icons/export.svg'
+import { useState } from 'react'
+import AddNewAssetModal from '../../add-new-asset-modal'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -33,6 +35,16 @@ export function DataTableAssetOrg<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
   })
 
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const openModal = () => {
+    setIsModalOpen(true)
+  }
+
+  const closeModal = () => {
+    setIsModalOpen(false)
+  }
+
   return (
     <div className="rounded-md">
       <div className="bg-[#171717] rounded-t-lg p-5 flex items-center justify-between">
@@ -46,7 +58,7 @@ export function DataTableAssetOrg<TData, TValue>({
             {' '}
             <img src={exportIcon} alt="" /> Export
           </Button>
-          <Button className="bg-[#1877F2] w-1/2 hover:bg-blue-600 p-5">
+          <Button className="bg-[#1877F2] w-1/2 hover:bg-blue-600 p-5" onClick={openModal}>
             + Add new
           </Button>
         </div>
@@ -97,6 +109,7 @@ export function DataTableAssetOrg<TData, TValue>({
           )}
         </TableBody>
       </Table>
+      <AddNewAssetModal isOpen={isModalOpen} onClose={closeModal} />
     </div>
   )
 }
