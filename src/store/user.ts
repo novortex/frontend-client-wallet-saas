@@ -4,6 +4,7 @@ import { persist, createJSONStorage } from 'zustand/middleware'
 export type TUser = {
   name: string
   email: string
+  role: string
   imageUrl: string
   uuidOrganization: string
 }
@@ -20,6 +21,7 @@ export const useUserStore = create<UserStore>()(
       user: {
         name: '',
         email: '',
+        role: '',
         imageUrl: '',
         uuidOrganization: '',
       },
@@ -31,6 +33,7 @@ export const useUserStore = create<UserStore>()(
           user: {
             name: '',
             email: '',
+            role: '',
             imageUrl: '',
             uuidOrganization: '',
           },

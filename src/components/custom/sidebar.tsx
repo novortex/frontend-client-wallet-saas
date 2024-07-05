@@ -55,13 +55,11 @@ export function SideBar({
                 Notifications
               </p>
 
-              {alerts !== 0 && (
-                <div
-                  className={`bg-[#F2BE38] text-black h-5 text-center overflow-hidden transition-all  ${expanded ? 'w-5' : 'w-0'}`}
-                >
-                  {alerts}
-                </div>
-              )}
+              <div
+                className={`bg-[#F2BE38] text-black h-5 text-center overflow-hidden transition-all  ${expanded ? 'w-5' : 'w-0'}`}
+              >
+                {alerts}
+              </div>
             </li>
 
             {children}
@@ -76,8 +74,8 @@ export function SideBar({
           {expanded && (
             <div className="flex justify-between items-center ml-3 w-full">
               <div className="leading-4">
-                <p className="font-normal text-white">{userInfo.name}</p>
-                <span className="text-sx text-[#959CB6]">Admin</span>
+                <p className="font-normal text-white mb-2">{userInfo.name}</p>
+                <span className="text-sx text-[#959CB6]">{userInfo.role}</span>
               </div>
               <MoreVertical color="white" />
             </div>
