@@ -42,18 +42,15 @@ export default function Login() {
           description: 'Demo Vault !!',
         })
       } else {
-        // Toast com erro
-        throw new Error()
+        toast({
+          className: 'bg-red-500 border-0 text-white',
+          title: 'Failed login :(',
+          description: 'Demo Vault !!',
+        })
       }
     } else {
       // TODO: Toast com erro e validações nos inputs
       console.error('Os campos de email e senha não podem estar vazios.')
-
-      toast({
-        className: 'bg-red-500 border-0 text-white',
-        title: 'Failed login :(',
-        description: 'Demo Vault !!',
-      })
     }
   }
 
