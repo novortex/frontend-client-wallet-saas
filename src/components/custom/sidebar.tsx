@@ -30,7 +30,7 @@ export function SideBar({
         <div className="flex gap-5 items-center relative mt-5 mb-5">
           <img src={LogoOrg} className="w-16" alt="" />
           <div
-            className={`overflow-hidden transition-all  ${expanded ? 'w-16' : 'w-0'}`}
+            className={`overflow-hidden transition-all  ${expanded ? 'w-20' : 'w-0'}`}
           >
             <h2 className="text-white font-semibold">Vault</h2>
             <p className="text-[#959CB6] text-sm">Dashboard</p>
