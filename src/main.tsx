@@ -33,7 +33,7 @@ const router = createBrowserRouter([
         element: <AssetsOrg />,
       },
       {
-        path: '/clients/:clientUuid/infos',
+        path: '/clients/:walletUuid/infos',
         element: <Infos />,
       },
     ],

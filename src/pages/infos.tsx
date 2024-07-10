@@ -13,18 +13,83 @@ import {
 } from 'lucide-react'
 import responsibleIcon from '../assets/image/responsible-icon.png'
 import ClientsInfoModal from '@/components/custom/clients-info-modal'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import {
+  getInfosCustomer,
+  TWallet,
+  TWalletCommission,
+  TWalletInfos,
+} from '@/service/request'
+import { useUserStore } from '@/store/user'
+import { formatDate } from '@/utils'
 
 export default function Infos() {
-    const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
-    const openModal = () => {
-      setIsModalOpen(true)
+  const [walletCommission, setWalletCommission] = useState<TWalletCommission[]>(
+    [],
+  )
+  const [walletInfos, setWalletInfos] = useState<TWalletInfos>({
+    manager: '',
+    lastContactAt: '',
+  })
+
+  const [walletI, setWalletI] = useState<TWallet>({
+    uuid: '',
+    userUuid: '',
+    enterDate: '',
+    investedAmount: 0,
+    currentAmount: 0,
+    closeDate: '',
+    initialFee: null,
+    initialFeePaid: false,
+    riskProfile: '',
+    monthCloseDate: '',
+    contract: false,
+    performanceFee: 0,
+    rebalanceCuid: null,
+    exchangeUuid: '',
+    organizationUuid: '',
+    createAt: '',
+    updateAt: '',
+    benchmarkCuid: '',
+  })
+
+  const navigate = useNavigate()
+  const { walletUuid } = useParams()
+
+  const uuidOrganization = useUserStore((state) => state.user.uuidOrganization)
+
+  const openModal = () => {
+    setIsModalOpen(true)
+  }
+
+  const closeModal = () => {
+    setIsModalOpen(false)
+  }
+
+  useEffect(() => {
+    const getInfo = async () => {
+      if (!walletUuid) {
+        return navigate('client')
+      }
+
+      const result = await getInfosCustomer(walletUuid, uuidOrganization)
+
+      if (!result) {
+        return false
+      }
+
+      console.log(result.walletCommission)
+
+      setWalletI(result.wallet)
+      setWalletInfos(result.walletInfos)
+      setWalletCommission(result.walletCommission)
     }
-  
-    const closeModal = () => {
-      setIsModalOpen(false)
-    }
+
+    getInfo()
+  }, [navigate, uuidOrganization, walletUuid])
 
   return (
     <div className="p-10">
@@ -52,13 +117,23 @@ export default function Infos() {
           <div className="flex justify-between mb-5">
             <div className="flex gap-5">
               <h1 className="text-3xl text-white">Fernanda Souza</h1>
-              <Badge className="bg-[#10A45C] text-white flex gap-2 hover:bg-[#10A45C] hover:text-white">
-                {' '}
-                <Check className="w-5" /> Confirm contact
-              </Badge>
+              {walletInfos.lastContactAt == null ? (
+                <Badge className="bg-red-500 text-white flex gap-2 hover:bg-red-800 hover:text-white">
+                  {' '}
+                  <Check className="w-5" /> Not registered
+                </Badge>
+              ) : (
+                <Badge className="bg-[#10A45C] text-white flex gap-2 hover:bg-[#10A45C] hover:text-white">
+                  {' '}
+                  <Check className="w-5" /> Confirm contact
+                </Badge>
+              )}
             </div>
             <div>
-              <Button className="bg-[#131313] text-[#F2BE38] flex gap-3 hover:bg-yellow-500 hover:text-black" onClick={openModal}>
+              <Button
+                className="bg-[#131313] text-[#F2BE38] flex gap-3 hover:bg-yellow-500 hover:text-black"
+                onClick={openModal}
+              >
                 {' '}
                 <CircleAlert className="w-5" /> Information
               </Button>
@@ -68,14 +143,20 @@ export default function Infos() {
           <div className="mb-14">
             <div className="h-full w-1/2 flex items-center justify-start gap-2 text-[#959CB6] text-xl">
               <img className="w-6" src={responsibleIcon} alt="" />
-              <p>Carlos Henrique</p>
+              <p>{walletInfos.manager}</p>
             </div>
 
             <div className="flex text-xl">
               <DollarSign className="text-[#F2BE38]" />
-              <p className="text-[#959CB6]">
-                10% commission for: Arthur Fraige, Pedro Gattai
-              </p>
+              {walletCommission &&
+                walletCommission.map((item) => (
+                  <div key={item.name}>
+                    <p className="text-[#959CB6] mr-5">
+                      {item.name}{' '}
+                      <span className="text-gray-300">({item.comission}%)</span>
+                    </p>
+                  </div>
+                ))}
             </div>
           </div>
 
@@ -91,44 +172,58 @@ export default function Infos() {
 
               <Badge className="bg-[#F2BE38] text-black flex gap-2 hover:bg-[#F2BE38] hover:text-black p-2 pl-5 pr-5">
                 {' '}
-                <CircleAlert className="" /> Risk profile
+                <CircleAlert className="" /> {walletI.riskProfile}
               </Badge>
             </div>
 
             <div className="w-full p-2 grid grid-cols-2 gap-5 mb-5">
               <div className="flex gap-3">
                 <Calendar className="text-[#F2BE38]" />
-                <p className="text-white">Initial amount invested: 0.00</p>
-              </div>
-              <div className="flex gap-3">
-                <Calendar className="text-[#F2BE38]" />
                 <p className="text-white">
-                  Current value referring to the benchmark: 0.00
+                  Initial amount invested: {walletI.investedAmount}
                 </p>
               </div>
               <div className="flex gap-3">
                 <Calendar className="text-[#F2BE38]" />
-                <p className="text-white">Current value: 0.00</p>
+                <p className="text-white">
+                  Current value referring to the benchmark:{' '}
+                  {walletI.benchmarkCuid}
+                </p>
               </div>
               <div className="flex gap-3">
                 <Calendar className="text-[#F2BE38]" />
-                <p className="text-white">Next rebalancing date: 0.00</p>
+                <p className="text-white">
+                  Current value: {walletI.currentAmount}
+                </p>
               </div>
               <div className="flex gap-3">
                 <Calendar className="text-[#F2BE38]" />
-                <p className="text-white">Performance fee: 0.00</p>
+                <p className="text-white">
+                  Next rebalancing date: {walletI.rebalanceCuid}
+                </p>
               </div>
               <div className="flex gap-3">
                 <Calendar className="text-[#F2BE38]" />
-                <p className="text-white">Last rebalance date: 0.00</p>
+                <p className="text-white">
+                  Performance fee: {walletI.performanceFee}
+                </p>
               </div>
               <div className="flex gap-3">
                 <Calendar className="text-[#F2BE38]" />
-                <p className="text-white">Benchmark: 0.00</p>
+                <p className="text-white">
+                  Last rebalance date: {walletI.rebalanceCuid}
+                </p>
               </div>
               <div className="flex gap-3">
                 <Calendar className="text-[#F2BE38]" />
-                <p className="text-white">Next monthly closing date: 0.00</p>
+                <p className="text-white">Benchmark: {walletI.benchmarkCuid}</p>
+              </div>
+              <div className="flex gap-3">
+                <Calendar className="text-[#F2BE38]" />
+                <p className="text-white">
+                  Next monthly closing date:{' '}
+                  {formatDate(walletI.monthCloseDate)}
+                </p>
               </div>
             </div>
 
@@ -141,7 +236,7 @@ export default function Infos() {
               </div>
               <div className="flex gap-3">
                 <Calendar className="text-[#F2BE38]" />
-                <p className="text-white">Initial fee: 0.00</p>
+                <p className="text-white">Initial fee: {walletI.initialFee}</p>
               </div>
               <div className="flex gap-3">
                 <Calendar className="text-[#F2BE38]" />
@@ -150,7 +245,8 @@ export default function Infos() {
               <div className="flex gap-3">
                 <Calendar className="text-[#F2BE38]" />
                 <p className="text-white">
-                  Initial fee was paid or not (checker): 0.00
+                  Initial fee was paid or not (checker):{' '}
+                  {walletI.initialFeePaid ? '✅' : '❌'}
                 </p>
               </div>
             </div>
@@ -161,13 +257,13 @@ export default function Infos() {
           <div className="flex justify-end gap-7 mb-5">
             <div className="bg-[#171717] flex flex-col items-center p-10 rounded-lg">
               <Calendar className="text-[#F2BE38]" />
-              <p className="text-white">Prohibited</p>
-              <p className="text-[#959CB6]">02/07/2024</p>
+              <p className="text-white">Enter Date</p>
+              <p className="text-[#959CB6]">{formatDate(walletI.enterDate)}</p>
             </div>
             <div className="bg-[#171717] flex flex-col items-center p-10 rounded-lg">
               <Calendar className="text-[#F2BE38]" />
-              <p className="text-white">Closure</p>
-              <p className="text-[#959CB6]">02/07/2024</p>
+              <p className="text-white">Close Date</p>
+              <p className="text-[#959CB6]">{formatDate(walletI.closeDate)}</p>
             </div>
           </div>
 
