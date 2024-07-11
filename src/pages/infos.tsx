@@ -23,9 +23,11 @@ import {
 } from '@/service/request'
 import { useUserStore } from '@/store/user'
 import { formatDate } from '@/utils'
+import ExchangeInfoModal from '@/components/custom/modal/clients-info-modal'
 
 export default function Infos() {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isModalExchangeOpen, setIsModalExchangeOpen] = useState(false)
 
   const [walletCommission, setWalletCommission] = useState<TWalletCommission[]>(
     [],
@@ -46,12 +48,17 @@ export default function Infos() {
     monthCloseDate: '',
     contract: false,
     performanceFee: 0,
-    exchangeUuid: '',
     benchmark: { name: '' },
     currentValueBenchmark: 0,
     lastRebalance: '',
     nextBalance: '',
     user: {
+      name: '',
+    },
+    exchange: {
+      accountEmail: '',
+      emailPassword: '',
+      exchangePassword: '',
       name: '',
     },
   })
@@ -67,6 +74,14 @@ export default function Infos() {
 
   const closeModal = () => {
     setIsModalOpen(false)
+  }
+
+  const openModalExchange = () => {
+    setIsModalExchangeOpen(true)
+  }
+
+  const closeModalopenModalExchange = () => {
+    setIsModalExchangeOpen(false)
   }
 
   useEffect(() => {
@@ -236,15 +251,19 @@ export default function Infos() {
             <div className="w-full p-2 grid grid-cols-2 gap-5">
               <div className="flex gap-3">
                 <Calendar className="text-[#F2BE38]" />
-                <p className="text-white">{`Person's broker:`} 0.00</p>
+                <p className="text-white">Exchange: {walletI.exchange.name}</p>
               </div>
               <div className="flex gap-3">
                 <Calendar className="text-[#F2BE38]" />
                 <p className="text-white">Initial fee: {walletI.initialFee}</p>
               </div>
               <div className="flex gap-3">
-                <Calendar className="text-[#F2BE38]" />
-                <p className="text-white">Account information: 0.00</p>
+                <Button
+                  className="bg-[#F2BE38] text-black hover:bg-yellow-400/35"
+                  onClick={openModalExchange}
+                >
+                  Account exchange information
+                </Button>
               </div>
               <div className="flex gap-3">
                 <Calendar className="text-[#F2BE38]" />
@@ -301,6 +320,13 @@ export default function Infos() {
         </div>
       </div>
       <ClientsInfoModal isOpen={isModalOpen} onClose={closeModal} />
+      <ExchangeInfoModal
+        isOpen={isModalExchangeOpen}
+        onClose={closeModalopenModalExchange}
+        accountEmail={walletI.exchange.accountEmail}
+        emailPassword={walletI.exchange.emailPassword}
+        exchangePassword={walletI.exchange.exchangePassword}
+      />
     </div>
   )
 }

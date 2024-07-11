@@ -21,7 +21,6 @@ export type TWallet = {
   monthCloseDate: string // or Date
   contract: boolean
   performanceFee: number
-  exchangeUuid: string
   user: {
     name: string
   }
@@ -31,6 +30,12 @@ export type TWallet = {
   currentValueBenchmark: number
   lastRebalance: string
   nextBalance: string // or Date
+  exchange: {
+    name: string
+    accountEmail: string
+    exchangePassword: string
+    emailPassword: string
+  }
 }
 
 type TUserLoginInfos = {
