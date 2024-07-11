@@ -1,14 +1,14 @@
-# Um novo PR que legal :nerd_face: !!
+# A new PR, how exciting! :nerd_face: !!
 
-### O que esse PR esta fazendo ?
+### What is this PR doing?
 
-quanto mais detalahado for melhor para o revisador aprovar o seu PR, então da aquele esforço por favor :pleading_face:
+The more detailed, the better for the reviewer to approve your PR, so put in that extra effort, please! :pleading_face:
 
-"Escrever aqui !!!"
+"Write here!!!"
 
-- [ ] Foi realizado teste na sua maquina ?
-- [ ] Esta confiante em relação a esse PR ?
+- [ ] Was testing performed on your machine?
+- [ ] Are you confident about this PR?
 
-Caso alguma das opções assim não forem marcadas por favor deixar escrito o porque logo a abaixo:
+If any of the options are not checked, please write the reason below:
 
-"Escrever aqui !!!"
+"Write here!!!"
