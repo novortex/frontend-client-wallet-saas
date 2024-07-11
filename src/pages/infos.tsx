@@ -32,12 +32,10 @@ export default function Infos() {
   )
   const [walletInfos, setWalletInfos] = useState<TWalletInfos>({
     manager: '',
-    lastContactAt: '',
+    lastContacAt: '',
   })
 
   const [walletI, setWalletI] = useState<TWallet>({
-    uuid: '',
-    userUuid: '',
     enterDate: '',
     investedAmount: 0,
     currentAmount: 0,
@@ -48,12 +46,14 @@ export default function Infos() {
     monthCloseDate: '',
     contract: false,
     performanceFee: 0,
-    rebalanceCuid: null,
     exchangeUuid: '',
-    organizationUuid: '',
-    createAt: '',
-    updateAt: '',
-    benchmarkCuid: '',
+    benchmark: { name: '' },
+    currentValueBenchmark: 0,
+    lastRebalance: '',
+    nextBalance: '',
+    user: {
+      name: '',
+    },
   })
 
   const navigate = useNavigate()
@@ -81,10 +81,10 @@ export default function Infos() {
         return false
       }
 
-      console.log(result.walletCommission)
+      console.log(result)
 
-      setWalletI(result.wallet)
-      setWalletInfos(result.walletInfos)
+      setWalletI(result.walletInfo)
+      setWalletInfos(result.walletPreInfos)
       setWalletCommission(result.walletCommission)
     }
 
@@ -116,8 +116,8 @@ export default function Infos() {
         <div className="flex flex-col w-3/5">
           <div className="flex justify-between mb-5">
             <div className="flex gap-5">
-              <h1 className="text-3xl text-white">Fernanda Souza</h1>
-              {walletInfos.lastContactAt == null ? (
+              <h1 className="text-3xl text-white">{walletI.user.name}</h1>
+              {walletInfos.lastContacAt == null ? (
                 <Badge className="bg-red-500 text-white flex gap-2 hover:bg-red-800 hover:text-white">
                   {' '}
                   <Check className="w-5" /> Not registered
@@ -145,10 +145,9 @@ export default function Infos() {
               <img className="w-6" src={responsibleIcon} alt="" />
               <p>{walletInfos.manager}</p>
             </div>
-
             <div className="flex text-xl">
               <DollarSign className="text-[#F2BE38]" />
-              {walletCommission &&
+              {walletCommission && walletCommission.length > 0 ? (
                 walletCommission.map((item) => (
                   <div key={item.name}>
                     <p className="text-[#959CB6] mr-5">
@@ -156,7 +155,10 @@ export default function Infos() {
                       <span className="text-gray-300">({item.comission}%)</span>
                     </p>
                   </div>
-                ))}
+                ))
+              ) : (
+                <p className="text-[#959CB6]">No commission</p>
+              )}
             </div>
           </div>
 
@@ -187,7 +189,7 @@ export default function Infos() {
                 <Calendar className="text-[#F2BE38]" />
                 <p className="text-white">
                   Current value referring to the benchmark:{' '}
-                  {walletI.benchmarkCuid}
+                  {walletI.currentValueBenchmark}
                 </p>
               </div>
               <div className="flex gap-3">
@@ -199,7 +201,7 @@ export default function Infos() {
               <div className="flex gap-3">
                 <Calendar className="text-[#F2BE38]" />
                 <p className="text-white">
-                  Next rebalancing date: {walletI.rebalanceCuid}
+                  Next rebalancing date: {formatDate(walletI.nextBalance)}
                 </p>
               </div>
               <div className="flex gap-3">
@@ -211,12 +213,14 @@ export default function Infos() {
               <div className="flex gap-3">
                 <Calendar className="text-[#F2BE38]" />
                 <p className="text-white">
-                  Last rebalance date: {walletI.rebalanceCuid}
+                  Last rebalance date: {formatDate(walletI.lastRebalance)}
                 </p>
               </div>
               <div className="flex gap-3">
                 <Calendar className="text-[#F2BE38]" />
-                <p className="text-white">Benchmark: {walletI.benchmarkCuid}</p>
+                <p className="text-white">
+                  Benchmark: {walletI.benchmark.name}
+                </p>
               </div>
               <div className="flex gap-3">
                 <Calendar className="text-[#F2BE38]" />

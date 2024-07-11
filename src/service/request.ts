@@ -7,12 +7,10 @@ export type TWalletCommission = {
 
 export type TWalletInfos = {
   manager: string
-  lastContactAt: string | null
+  lastContacAt: string | null
 }
 
 export type TWallet = {
-  uuid: string
-  userUuid: string
   enterDate: string // or Date
   investedAmount: number
   currentAmount: number
@@ -23,23 +21,27 @@ export type TWallet = {
   monthCloseDate: string // or Date
   contract: boolean
   performanceFee: number
-  rebalanceCuid: string | null
   exchangeUuid: string
-  organizationUuid: string
-  createAt: string // or Date
-  updateAt: string // or Date
-  benchmarkCuid: string
+  user: {
+    name: string
+  }
+  benchmark: {
+    name: string
+  }
+  currentValueBenchmark: number
+  lastRebalance: string
+  nextBalance: string // or Date
 }
 
 type TUserLoginInfos = {
   user: {
     cpf: string | null
-    createAt: string // ou Date se você preferir trabalhar com objetos Date em vez de strings ISO
+    createAt: string // or Date if you prefer working with Date objects instead of ISO strings
     email: string
     name: string
     phone: string | null
-    role: 'ADMIN' | 'USER' | 'OTHER_ROLE' // Ajuste conforme os diferentes papéis que você tem
-    updateAt: string // ou Date se preferir
+    role: 'ADMIN' | 'USER' | 'OTHER_ROLE' // Adjust based on different roles you have
+    updateAt: string // or Date if preferred
     uuid: string
     uuidOrganizations: string
   }
@@ -47,8 +49,8 @@ type TUserLoginInfos = {
 
 type TInfosCustomerResponse = {
   walletCommission: TWalletCommission[]
-  walletInfos: TWalletInfos
-  wallet: TWallet
+  walletPreInfos: TWalletInfos
+  walletInfo: TWallet
 }
 
 // Requests from api (backend)
