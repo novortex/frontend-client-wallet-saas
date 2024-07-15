@@ -1,42 +1,81 @@
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { Input } from "../ui/input"
-import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu"
-import * as React from "react"
+} from '@/components/ui/dialog'
+import { Input } from '../ui/input'
+import { DropdownMenuCheckboxItemProps } from '@radix-ui/react-dropdown-menu'
+import * as React from 'react'
+import { addCryptoOrg } from '@/service/request'
+import { useUserStore } from '@/store/user'
+import { useToast } from '../ui/use-toast'
+import { useSignalStore } from '@/store/signalEffect'
 
-type Checked = DropdownMenuCheckboxItemProps["checked"]
+type Checked = DropdownMenuCheckboxItemProps['checked']
 
 interface AddNewAssetModalProps {
   isOpen: boolean
   onClose: () => void
 }
 
-export default function AddNewAssetModal({ isOpen, onClose }: AddNewAssetModalProps) {
-  const [assetId, setAssetId] = React.useState("")
+export default function AddNewAssetModal({
+  isOpen,
+  onClose,
+}: AddNewAssetModalProps) {
+  const [assetId, setAssetId] = React.useState('')
+  const [uuidOrganization] = useUserStore((state) => [
+    state.user.uuidOrganization,
+  ])
+  const [setSignal, signal] = useSignalStore((state) => [
+    state.setSignal,
+    state.signal,
+  ])
+  const { toast } = useToast()
 
-  const handleAddAsset = () => {
-    console.log("Asset ID:", assetId)
-
-    // Reset the input
-    setAssetId("")
-
-    // Close the modal
+  const handleAddAsset = async () => {
     onClose()
+
+    toast({
+      className: 'bg-yellow-500 border-0',
+      title: 'Processing add Asset in organization',
+      description: 'Demo Vault !!',
+    })
+
+    // toast yellow for process
+    const result = await addCryptoOrg(uuidOrganization, [Number(assetId)])
+
+    if (result === false) {
+      setAssetId('')
+      return toast({
+        className: 'bg-red-500 border-0',
+        title: 'Failed add Asset in organization',
+        description: 'Demo Vault !!',
+      })
+    }
+
+    setAssetId('')
+
+    if (!signal) {
+      setSignal(true)
+    } else {
+      setSignal(false)
+    }
+
+    return toast({
+      className: 'bg-green-500 border-0',
+      title: 'Success !! new Asset in organization',
+      description: 'Demo Vault !!',
+    })
   }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="h-1/3 w-[200%] bg-[#131313] text-[#fff]">
         <DialogHeader>
-          <DialogTitle className="text-3xl text-[#fff]">
-            New Asset
-          </DialogTitle>
+          <DialogTitle className="text-3xl text-[#fff]">New Asset</DialogTitle>
         </DialogHeader>
         <div className="w-full flex flex-col gap-4">
           <Input
@@ -46,16 +85,22 @@ export default function AddNewAssetModal({ isOpen, onClose }: AddNewAssetModalPr
             onChange={(e) => setAssetId(e.target.value)}
           />
           <div className="w-full flex flex-row gap-1">
-            <p className="text-[#fff]">
-                Check the desired asset ID at 
-            </p>
-            <a className="text-[#1877F2] hover:opacity-70" href="https://coinmarketcap.com/" target="_blank">
-                coinmarketcap
+            <p className="text-[#fff]">Check the desired asset ID at</p>
+            <a
+              className="text-[#1877F2] hover:opacity-70"
+              href="https://coinmarketcap.com/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              coinmarketcap
             </a>
           </div>
         </div>
         <DialogFooter className="flex justify-end items-end">
-          <Button className="bg-[#1877F2] w-1/4 hover:bg-blue-600 p-5" onClick={handleAddAsset}>
+          <Button
+            className="bg-[#1877F2] w-1/4 hover:bg-blue-600 p-5"
+            onClick={handleAddAsset}
+          >
             Add asset
           </Button>
         </DialogFooter>

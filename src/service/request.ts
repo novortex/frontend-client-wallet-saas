@@ -52,10 +52,26 @@ type TUserLoginInfos = {
   }
 }
 
+type TRiskProfileCounts = {
+  superLowRisk: number
+  lowRisk: number
+  standard: number
+}
+
 type TInfosCustomerResponse = {
   walletCommission: TWalletCommission[]
   walletPreInfos: TWalletInfos
   walletInfo: TWallet
+}
+
+type TAssetsOrganizationResponse = {
+  uuid: string
+  icon: string
+  name: string
+  price: number
+  qntInWallet: number
+  presencePercentage: string
+  riskProfileCounts: TRiskProfileCounts
 }
 
 // Requests from api (backend)
@@ -92,5 +108,43 @@ export async function getInfosCustomer(
     return result.data
   } catch (error) {
     console.log(error)
+  }
+}
+
+export async function getAllAssetsOrg(organizationUuid: string) {
+  try {
+    const result = await instance.get<TAssetsOrganizationResponse[]>(
+      `manager/${organizationUuid}/assets`,
+      {
+        headers: {
+          'x-organization': organizationUuid,
+        },
+      },
+    )
+
+    return result.data
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export async function addCryptoOrg(organizationUuid: string, idCmc: number[]) {
+  try {
+    const result = await instance.post(
+      `admin/${organizationUuid}/cryptos`,
+      {
+        idCmc,
+      },
+      {
+        headers: {
+          'x-organization': organizationUuid,
+        },
+      },
+    )
+
+    return result.data
+  } catch (error) {
+    console.log(error)
+    return false
   }
 }

@@ -5,94 +5,64 @@ import {
   AssetOrgs,
   columnsAssetOrg,
 } from '@/components/custom/tables/assets-org/columns'
-
-async function getData(): Promise<AssetOrgs[]> {
-  return [
-    {
-      id: '728ed52f',
-      active: {
-        urlImage:
-          'https://static-00.iconduck.com/assets.00/bitcoin-icon-2048x2048-t8gwld81.png',
-        name: 'BTC',
-      },
-      price: 'U$ 66.000',
-      appearances: '50 wallets',
-      porcentOfApp: '95%',
-      quantSLowRisk: '10 Wallets',
-      quantLowRisk: '10 Wallets',
-      quantStandard: '10 Wallets',
-    },
-    {
-      id: '728ed52f',
-      active: {
-        urlImage:
-          'https://static-00.iconduck.com/assets.00/bitcoin-icon-2048x2048-t8gwld81.png',
-        name: 'BTC',
-      },
-      price: 'U$ 66.000',
-      appearances: '50 wallets',
-      porcentOfApp: '95%',
-      quantSLowRisk: '10 Wallets',
-      quantLowRisk: '10 Wallets',
-      quantStandard: '10 Wallets',
-    },
-    {
-      id: '728ed52f',
-      active: {
-        urlImage:
-          'https://static-00.iconduck.com/assets.00/bitcoin-icon-2048x2048-t8gwld81.png',
-        name: 'BTC',
-      },
-      price: 'U$ 66.000',
-      appearances: '50 wallets',
-      porcentOfApp: '95%',
-      quantSLowRisk: '10 Wallets',
-      quantLowRisk: '10 Wallets',
-      quantStandard: '10 Wallets',
-    },
-    {
-      id: '728ed52f',
-      active: {
-        urlImage:
-          'https://static-00.iconduck.com/assets.00/bitcoin-icon-2048x2048-t8gwld81.png',
-        name: 'BTC',
-      },
-      price: 'U$ 66.000',
-      appearances: '50 wallets',
-      porcentOfApp: '95%',
-      quantSLowRisk: '10 Wallets',
-      quantLowRisk: '10 Wallets',
-      quantStandard: '10 Wallets',
-    },
-    {
-      id: '728ed52f',
-      active: {
-        urlImage:
-          'https://static-00.iconduck.com/assets.00/bitcoin-icon-2048x2048-t8gwld81.png',
-        name: 'BTC',
-      },
-      price: 'U$ 66.000',
-      appearances: '50 wallets',
-      porcentOfApp: '95%',
-      quantSLowRisk: '10 Wallets',
-      quantLowRisk: '10 Wallets',
-      quantStandard: '10 Wallets',
-    },
-  ]
-}
+import { getAllAssetsOrg } from '@/service/request'
+import { useUserStore } from '@/store/user'
+import { useSignalStore } from '@/store/signalEffect'
+import { useToast } from '@/components/ui/use-toast'
 
 export default function AssetsOrg() {
   const [data, setData] = useState<AssetOrgs[]>([])
   const [loading, setLoading] = useState(true)
+  const [uuidOrganization] = useUserStore((state) => [
+    state.user.uuidOrganization,
+  ])
+  const [signal] = useSignalStore((state) => [state.signal])
+
+  const { toast } = useToast()
 
   useEffect(() => {
-    async function fetchData() {
-      const data = await getData()
-      setData(data)
-      setLoading(false)
+    // TODO: separe this script this file :)
+    async function getData(
+      uuidOrganization: string,
+      setDate: React.Dispatch<React.SetStateAction<AssetOrgs[]>>,
+    ) {
+      try {
+        const result = await getAllAssetsOrg(uuidOrganization)
+
+        if (!result) {
+          return toast({
+            className: 'bg-red-500 border-0 text-white',
+            title: 'Failed get assets organization :(',
+            description: 'Demo Vault !!',
+          })
+        }
+
+        const dataTable = result.map((item) => ({
+          id: item.uuid,
+          asset: {
+            urlImage: item.icon,
+            name: item.name,
+          },
+          price: `U$ ${item.price}`,
+          appearances: `${item.qntInWallet} wallets`,
+          porcentOfApp: `${item.presencePercentage}%`,
+          quantSLowRisk: `${item.riskProfileCounts.superLowRisk} Wallets`,
+          quantLowRisk: `${item.riskProfileCounts.lowRisk} Wallets`,
+          quantStandard: `${item.riskProfileCounts.standard} Wallets`,
+        }))
+
+        setDate(dataTable)
+        setLoading(false)
+      } catch (error) {
+        toast({
+          className: 'bg-red-500 border-0 text-white',
+          title: 'Failed get assets organization :(',
+          description: 'Demo Vault !!',
+        })
+      }
     }
-    fetchData()
-  }, [])
+    getData(uuidOrganization, setData)
+  }, [uuidOrganization, signal, toast])
 
   if (loading) {
     return <div>Loading...</div>
