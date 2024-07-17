@@ -7,14 +7,11 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Input } from '../ui/input'
-import { DropdownMenuCheckboxItemProps } from '@radix-ui/react-dropdown-menu'
 import * as React from 'react'
 import { addCryptoOrg } from '@/service/request'
 import { useUserStore } from '@/store/user'
 import { useToast } from '../ui/use-toast'
 import { useSignalStore } from '@/store/signalEffect'
-
-type Checked = DropdownMenuCheckboxItemProps['checked']
 
 interface AddNewAssetModalProps {
   isOpen: boolean
