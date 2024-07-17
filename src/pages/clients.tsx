@@ -6,18 +6,16 @@ import filterIcon from '../assets/image/filter-lines.png'
 import AddNewClientModal from '@/components/custom/add-new-client-modal'
 import { useState } from 'react'
 
-import RelateClientModal from '@/components/custom/relate-client-modal'
-
 export default function Clients() {
-    const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
-    const openModal = () => {
-      setIsModalOpen(true)
-    }
-  
-    const closeModal = () => {
-      setIsModalOpen(false)
-    }
+  const openModal = () => {
+    setIsModalOpen(true)
+  }
+
+  const closeModal = () => {
+    setIsModalOpen(false)
+  }
 
   const users = [
     {
@@ -73,7 +71,11 @@ export default function Clients() {
             <img src={filterIcon} alt="" />
             <p>Filters</p>
           </Button>
-          <Button className="bg-[#1877F2] p-5" type="button" onClick={openModal}>
+          <Button
+            className="bg-[#1877F2] p-5"
+            type="button"
+            onClick={openModal}
+          >
             + Add New
           </Button>
         </div>
