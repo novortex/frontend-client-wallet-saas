@@ -38,6 +38,28 @@ export type TWallet = {
   }
 }
 
+export type TWalletAssetsInfo = {
+  enterDate: string
+  investedAmount: number
+  currentAmount: number
+  monthCloseDate: string
+  performanceFee: number
+  lastRebalance: string
+}
+
+type TAsset = {
+  uuid: string
+  name: string
+  icon: string
+  investedAmount: number
+  quantityAsset: number
+  price: number
+  currentAllocation: number
+  idealAllocation: number
+  idealAmountInMoney: number
+  buyOrSell: number
+}
+
 type TUserLoginInfos = {
   user: {
     cpf: string | null
@@ -72,6 +94,17 @@ type TAssetsOrganizationResponse = {
   qntInWallet: number
   presencePercentage: string
   riskProfileCounts: TRiskProfileCounts
+}
+
+type WalletDataResponse = {
+  wallet: TWalletAssetsInfo
+  assets: TAsset[]
+}
+
+export type AssetsOrganizationForSelectedResponse = {
+  uuid: string
+  name: string
+  icon: string
 }
 
 // Requests from api (backend)
@@ -146,5 +179,73 @@ export async function addCryptoOrg(organizationUuid: string, idCmc: number[]) {
   } catch (error) {
     console.log(error)
     return false
+  }
+}
+
+export async function getAllAssetsWalletClient(
+  organizationUuid: string,
+  walletUuid: string,
+) {
+  try {
+    const result = await instance.get<WalletDataResponse>(
+      `manager/wallet/${walletUuid}/walletAssets`,
+      {
+        headers: {
+          'x-organization': organizationUuid,
+        },
+      },
+    )
+
+    return result.data
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export async function addCryptoWalletClient(
+  organizationUuid: string,
+  walletUuid: string,
+  assetUuid: string,
+  quantity: number,
+  targetAllocation: number,
+) {
+  try {
+    const result = await instance.post(
+      `manager/wallet/${walletUuid}/asset`,
+      {
+        assetId: assetUuid,
+        quantity,
+        targetAllocation,
+      },
+      {
+        headers: {
+          'x-organization': organizationUuid,
+        },
+      },
+    )
+
+    return result.data
+  } catch (error) {
+    console.log(error)
+    return false
+  }
+}
+
+export async function getAllAssetsInOrgForAddWalletClient(
+  organizationUuid: string,
+) {
+  try {
+    const result = await instance.get<AssetsOrganizationForSelectedResponse[]>(
+      `manager/wallet/${organizationUuid}/assets`,
+      {
+        headers: {
+          'x-organization': organizationUuid,
+        },
+      },
+    )
+
+    return result.data
+  } catch (error) {
+    console.log(error)
   }
 }
