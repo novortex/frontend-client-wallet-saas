@@ -249,3 +249,32 @@ export async function getAllAssetsInOrgForAddWalletClient(
     console.log(error)
   }
 }
+
+export async function updateAssetWalletInformations(
+  organizationUuid: string,
+  walletUuid: string,
+  assetUuid: string,
+  quantity: number,
+  targetAllocation: number,
+) {
+  try {
+    const result = await instance.put(
+      `manager/wallet/${walletUuid}/asset`,
+      {
+        assetUuid,
+        quantity,
+        targetAllocation,
+      },
+      {
+        headers: {
+          'x-organization': organizationUuid,
+        },
+      },
+    )
+
+    return result.data
+  } catch (error) {
+    console.log(error)
+    return false
+  }
+}
