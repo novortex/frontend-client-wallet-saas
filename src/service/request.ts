@@ -74,6 +74,66 @@ type TAssetsOrganizationResponse = {
   riskProfileCounts: TRiskProfileCounts
 }
 
+export type TNewCustomerResponse = {
+  uuid: string
+  name: string
+  email: string
+  password: string
+  phone: string | null
+  cpf: string | null
+  role: string
+  createAt: string
+  updateAt: string
+  UserOrganizations: {
+    userUuid: string
+    organizationUuid: string
+    active: boolean
+  }[]
+  uncryptedPassword: string
+}
+
+type TWallets_Client = {
+  uuid: string
+  enterDate: string
+  investedAmount: number
+  currentAmount: number
+  closeDate: string
+  initialFee: number | null
+  initialFeePaid: boolean
+  riskProfile: string
+  monthCloseDate: string
+  contract: boolean
+  performanceFee: number
+  lastRebalance: string | null
+  userUuid: string
+  rebalanceCuid: string | null
+  exchangeUuid: string
+  organizationUuid: string
+  benchmarkCuid: string
+  createAt: string
+  updateAt: string
+}
+
+type TClientInfosResponse = {
+  userUuid: string
+  walletUuid: string
+  lastContactAt: string | null
+  revokeAt: string | null
+  createAt: string
+  updateAt: string
+  wallet: TWallets_Client
+}
+
+type TClientDataResponse = {
+  cpf: string
+  email: string
+  name: string
+  phone: string
+  createAt: string
+  updateAt: string
+  uuid: string
+}
+
 // Requests from api (backend)
 export async function login(
   email: string,
@@ -146,5 +206,78 @@ export async function addCryptoOrg(organizationUuid: string, idCmc: number[]) {
   } catch (error) {
     console.log(error)
     return false
+  }
+}
+
+export async function registerNewCustomer(
+  name: string,
+  email: string,
+  organizationId: string,
+  cpf?: string,
+  phone?: string,
+): Promise<TNewCustomerResponse> {
+  try {
+    const data = {
+      name,
+      email,
+      cpf,
+      phone,
+      organizationId,
+    }
+
+    const result = await instance.post<TNewCustomerResponse>(
+      'manager/costumer',
+      data,
+      {
+        headers: {
+          'x-organization': organizationId,
+        },
+      },
+    )
+
+    return result.data
+  } catch (error) {
+    console.error('Error registering new customer:', error)
+    throw error
+  }
+}
+
+export async function getManagerWallets(
+  managerId: string,
+  organizationUuid: string,
+): Promise<TClientInfosResponse[] | undefined> {
+  try {
+    const response = await instance.get<TClientInfosResponse[]>(
+      `/manager/${managerId}/client`,
+      {
+        headers: {
+          'x-organization': organizationUuid,
+        },
+      },
+    )
+
+    return response.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+export async function getManagerClients(
+  clientId: string,
+  organizationUuid: string,
+): Promise<TClientDataResponse[] | undefined> {
+  try {
+    const response = await instance.get<TClientDataResponse[]>(
+      `/manager/client/${clientId}/details`,
+      {
+        headers: {
+          'x-organization': organizationUuid,
+        },
+      },
+    )
+
+    return response.data
+  } catch (error) {
+    console.error(error)
   }
 }

@@ -4,53 +4,126 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import filterIcon from '../assets/image/filter-lines.png'
 import AddNewClientModal from '@/components/custom/add-new-client-modal'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { getManagerWallets, getManagerClients } from '@/service/request'
+import { useUserStore } from '@/store/user'
 
-import RelateClientModal from '@/components/custom/relate-client-modal'
+type TWallet = {
+  uuid: string
+  enterDate: string
+  investedAmount: number
+  currentAmount: number
+  closeDate: string
+  initialFee: number | null
+  initialFeePaid: boolean
+  riskProfile: string
+  monthCloseDate: string
+  contract: boolean
+  performanceFee: number
+  lastRebalance: string | null
+  userUuid: string
+  rebalanceCuid: string | null
+  exchangeUuid: string
+  organizationUuid: string
+  benchmarkCuid: string
+  createAt: string
+  updateAt: string
+}
+
+type TClientData = {
+  uuid: string
+  name: string
+  email: string
+  phone: string
+  cpf: string
+  createAt: string
+  updateAt: string
+}
+
+type TClientInfosResponse = {
+  userUuid: string
+  walletUuid: string
+  lastContactAt: string | null
+  revokeAt: string | null
+  createAt: string
+  updateAt: string
+  wallet: TWallet
+  clientData: TClientData
+}
 
 export default function Clients() {
-    const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [uuidUser] = useUserStore((state) => [state.user.uuid])
+  const [uuidOrganization] = useUserStore((state) => [
+    state.user.uuidOrganization,
+  ])
+  const [clients, setClients] = useState<TClientInfosResponse[]>([])
 
-    const openModal = () => {
-      setIsModalOpen(true)
-    }
-  
-    const closeModal = () => {
-      setIsModalOpen(false)
+  useEffect(() => {
+    const fetchWalletsAndClients = async () => {
+      try {
+        const walletsResponse = await getManagerWallets(
+          uuidUser,
+          uuidOrganization,
+        )
+        console.log('Wallets Response:', walletsResponse)
+
+        if (walletsResponse) {
+          const userUuids = extractUserUuids(walletsResponse)
+          const clientPromises = userUuids.map((userUuid) =>
+            getManagerClients(userUuid, uuidOrganization),
+          )
+
+          const clientsResponses: TClientData[] =
+            await Promise.all(clientPromises)
+
+          const compiledClients: TClientInfosResponse[] = clientsResponses.map(
+            (clientResponse, index) => {
+              const wallet = walletsResponse[index]
+
+              return {
+                userUuid: clientResponse.uuid,
+                walletUuid: wallet.uuid,
+                lastContactAt: null,
+                revokeAt: null,
+                createAt: clientResponse.createAt,
+                updateAt: clientResponse.updateAt,
+                wallet,
+                clientData: {
+                  uuid: clientResponse.uuid,
+                  name: clientResponse.name,
+                  email: clientResponse.email,
+                  phone: clientResponse.phone,
+                  cpf: clientResponse.cpf,
+                  createAt: clientResponse.createAt,
+                  updateAt: clientResponse.updateAt,
+                },
+              }
+            },
+          )
+
+          console.log('Compiled Clients:', compiledClients)
+          setClients(compiledClients)
+        }
+      } catch (error) {
+        console.error('Error fetching wallets and clients:', error)
+      }
     }
 
-  const users = [
-    {
-      name: 'Arthur Fraige',
-      responsible: 'Abner Silva',
-      alerts: 4,
-      nreb: '02/07/2024',
-      lreb: '01/07/2024',
-      email: 'arthur.fraige@example.com',
-      cpf: '123.456.789-00',
-      phone: '(11) 98765-4321',
-    },
-    {
-      name: 'Beatriz Oliveira',
-      responsible: 'Carla Mendes',
-      alerts: 3,
-      nreb: '30/06/2024',
-      lreb: '29/06/2024',
-      email: 'beatriz.oliveira@example.com',
-      cpf: '',
-      phone: '',
-    },
-    {
-      name: 'Carlos Souza',
-      responsible: 'Débora Lima',
-      alerts: 5,
-      nreb: '28/06/2024',
-      lreb: '27/06/2024',
-      email: 'carlos.souza@example.com',
-      cpf: '345.678.901-22',
-      phone: '',
-    },
-  ]
+    fetchWalletsAndClients()
+  }, [uuidOrganization, uuidUser])
+
+  function extractUserUuids(data: TClientInfosResponse[]): string[] {
+    return data.map((item: TClientInfosResponse) => item.wallet.userUuid)
+  }
+
+  const openModal = () => {
+    setIsModalOpen(true)
+  }
+
+  const closeModal = () => {
+    setIsModalOpen(false)
+  }
 
   return (
     <div className="p-10">
@@ -73,23 +146,28 @@ export default function Clients() {
             <img src={filterIcon} alt="" />
             <p>Filters</p>
           </Button>
-          <Button className="bg-[#1877F2] p-5" type="button" onClick={openModal}>
+          <Button
+            className="bg-[#1877F2] p-5"
+            type="button"
+            onClick={openModal}
+          >
             + Add New
           </Button>
         </div>
       </div>
       <div className="w-full flex gap-7">
-        {users.map((user, index) => (
+        {clients.map((client, index) => (
           <CardClient
             key={index}
-            name={user.name}
-            responsible={user.responsible}
-            alerts={user.alerts}
-            next_rebalancing={user.nreb}
-            last_rebalancing={user.lreb}
-            email={user.email}
-            phone={user.phone}
-            cpf={user.cpf}
+            walletUuid={client.wallet.walletUuid}
+            name={client.clientData.name}
+            email={client.clientData.email}
+            phone={client.clientData.phone}
+            cpf={client.clientData.cpf}
+            // alerts={}
+            // responsible={}
+            // lastRebalancing={client.wallet.lastRebalance}
+            // nextRebalancing={}
           />
         ))}
       </div>

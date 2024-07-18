@@ -12,13 +12,14 @@ import { useNavigate } from 'react-router-dom'
 
 interface CardClientProps {
   name: string
-  responsible: string
-  alerts: number
-  next_rebalancing: string
-  last_rebalancing: string
+  responsible?: string
+  alerts?: number
+  nextRebalancing?: string
+  lastRebalancing?: string
   email: string
   cpf?: string
   phone?: string
+  walletUuid: string
 }
 
 const getTagAlertColor = (alerts: number) => {
@@ -55,18 +56,19 @@ export default function CardClient({
   name,
   responsible,
   alerts,
-  next_rebalancing,
-  last_rebalancing,
+  nextRebalancing,
+  lastRebalancing,
   email,
   cpf,
   phone,
+  walletUuid,
 }: CardClientProps) {
   const alertColor = getTagAlertColor(alerts)
   const alertTextColor = getTextAlertColor(alerts)
 
   const navigate = useNavigate()
   const handleCardClick = () => {
-    navigate('/clients')
+    navigate(`/clients/${walletUuid}/infos`)
   }
 
   return (
@@ -115,7 +117,7 @@ export default function CardClient({
             <p>Next rebalancing:</p>
           </div>
           <div className="flex h-full w-1/2 justify-end items-center text-base text-[#fff]">
-            {next_rebalancing}
+            {nextRebalancing}
           </div>
         </div>
         <div className="flex flex-row h-1/2 w-full">
@@ -124,7 +126,7 @@ export default function CardClient({
             <p>Last rebalancing:</p>
           </div>
           <div className="flex h-full w-1/2 justify-end items-center text-base text-[#fff]">
-            {last_rebalancing}
+            {lastRebalancing}
           </div>
         </div>
       </CardContent>
