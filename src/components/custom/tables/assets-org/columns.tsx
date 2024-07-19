@@ -5,7 +5,6 @@ import { ColumnDef } from '@tanstack/react-table'
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 

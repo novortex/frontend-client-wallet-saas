@@ -7,48 +7,118 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Input } from '../ui/input'
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import * as React from 'react'
 
-import dropdownArrow from '../../assets/icons/dropdown-arrow.svg'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+
+import { useState, useEffect } from 'react'
+
+import { useToast } from '../ui/use-toast'
+import {
+  addCryptoWalletClient,
+  AssetsOrganizationForSelectedResponse,
+  getAllAssetsInOrgForAddWalletClient,
+} from '@/service/request'
+import { useUserStore } from '@/store/user'
+import { useSignalStore } from '@/store/signalEffect'
 
 interface AddNewWalletModalProps {
   isOpen: boolean
   onClose: () => void
+  walletUuid: string
 }
-
-const Asset = [{ name: 'asset-1' }, { name: 'asset-2' }, { name: 'asset-3' }]
 
 export default function AddNewWalletModal({
   isOpen,
   onClose,
+  walletUuid,
 }: AddNewWalletModalProps) {
-  const [selectedAsset, setSelectedAsset] = React.useState('Asset')
-  const [selectedBenchmark, setSelectedBenchmark] = React.useState('Benchmark')
-  const [entryValue, setEntryValue] = React.useState('')
-  const [allocation, setAllocation] = React.useState('')
+  const [selectedAsset, setSelectedAsset] = useState('')
+  const [entryValue, setEntryValue] = useState('')
+  const [allocation, setAllocation] = useState('')
+  const [assetForSelected, setAssetForSelected] = useState<
+    AssetsOrganizationForSelectedResponse[]
+  >([])
+  const [uuidOrganization] = useUserStore((state) => [
+    state.user.uuidOrganization,
+  ])
+  const [setSignal, signal] = useSignalStore((state) => [
+    state.setSignal,
+    state.signal,
+  ])
 
-  const handleAddAsset = () => {
-    console.log('Selected Asset:', selectedAsset)
-    console.log('Selected Benchmark:', selectedBenchmark)
-    console.log('Entry Value:', entryValue)
-    console.log('Allocation:', allocation)
+  const { toast } = useToast()
+
+  const handleAddAsset = async () => {
+    onClose()
+
+    toast({
+      className: 'bg-yellow-500 border-0',
+      title: 'Processing add Asset in organization',
+      description: 'Demo Vault !!',
+    })
+
+    // toast yellow for process
+    const result = await addCryptoWalletClient(
+      uuidOrganization,
+      walletUuid,
+      selectedAsset,
+      Number(entryValue),
+      Number(allocation),
+    )
+
+    if (result === false) {
+      setSelectedAsset('')
+      setEntryValue('')
+      setAllocation('')
+      return toast({
+        className: 'bg-red-500 border-0',
+        title: 'Failed add Asset in organization',
+        description: 'Demo Vault !!',
+      })
+    }
 
     // Reset the dropdowns and inputs
     setSelectedAsset('Asset')
-    setSelectedBenchmark('Benchmark')
     setEntryValue('')
     setAllocation('')
 
-    onClose()
+    if (!signal) {
+      setSignal(true)
+    } else {
+      setSignal(false)
+    }
+
+    return toast({
+      className: 'bg-green-500 border-0',
+      title: 'Success !! new Asset in organization',
+      description: 'Demo Vault !!',
+    })
   }
+
+  useEffect(() => {
+    async function getData(
+      uuidOrganization: string,
+      setAssetForSelected: React.Dispatch<
+        React.SetStateAction<AssetsOrganizationForSelectedResponse[]>
+      >,
+    ) {
+      const result = await getAllAssetsInOrgForAddWalletClient(uuidOrganization)
+
+      if (!result) {
+        return null
+      }
+
+      setAssetForSelected(result)
+    }
+
+    getData(uuidOrganization, setAssetForSelected)
+  }, [uuidOrganization])
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -58,32 +128,32 @@ export default function AddNewWalletModal({
         </DialogHeader>
         <div className="w-full flex flex-col gap-4">
           <div className="w-full h-1/2 flex flex-row justify-between gap-4 items-center">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="w-1/2 h-full bg-[#272727] border-[#323232] text-[#959CB6] flex justify-between"
-                >
-                  {selectedAsset}
-                  <img src={dropdownArrow} />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56">
-                <DropdownMenuLabel>Assets on Organization</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                {Asset.map((asset) => (
-                  <DropdownMenuCheckboxItem
-                    key={asset.name}
-                    checked={selectedAsset === asset.name}
-                    onCheckedChange={() => setSelectedAsset(asset.name)}
-                  >
-                    {asset.name}
-                  </DropdownMenuCheckboxItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <Select onValueChange={(item) => setSelectedAsset(item)}>
+              <SelectTrigger className="w-2/4 h-full bg-[#131313] border-[#323232]">
+                <SelectValue placeholder="Asset" />
+              </SelectTrigger>
+              <SelectContent className="bg-[#131313] border-2 border-[#323232]">
+                {assetForSelected &&
+                  assetForSelected.map((item) => (
+                    <SelectItem
+                      className=" bg-[#131313] border-0  focus:bg-[#252525] focus:text-white text-white"
+                      key={item.uuid}
+                      value={item.uuid}
+                    >
+                      <div className="flex gap-5">
+                        <img
+                          src={item.icon}
+                          alt={item.name}
+                          className="w-6 h-6 mr-2"
+                        />
+                        {item.name}
+                      </div>
+                    </SelectItem>
+                  ))}
+              </SelectContent>
+            </Select>
             <Input
-              className="w-1/2 h-full bg-[#272727] border-[#323232] text-[#959CB6]"
+              className="w-1/2 h-full bg-[#131313] border-[#323232] text-[#959CB6]"
               placeholder="Entry value"
               value={entryValue}
               onChange={(e) => setEntryValue(e.target.value)}
@@ -91,7 +161,7 @@ export default function AddNewWalletModal({
           </div>
           <div className="w-full h-1/2 flex flex-row justify-between gap-4 items-center">
             <Input
-              className="w-1/2 h-full bg-[#272727] border-[#323232] text-[#959CB6]"
+              className="w-1/2 h-full bg-[#131313] border-[#323232] text-[#959CB6]"
               placeholder="Allocation"
               value={allocation}
               onChange={(e) => setAllocation(e.target.value)}

@@ -9,99 +9,89 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
 import SwitchTheme from '@/components/custom/switch-theme'
-
-async function getData(): Promise<ClientActive[]> {
-  return [
-    {
-      id: '728ed52f',
-      active: {
-        urlImage:
-          'https://static-00.iconduck.com/assets.00/bitcoin-icon-2048x2048-t8gwld81.png',
-        name: 'BTC',
-      },
-      qtyInCript: 0.5912,
-      inputData: '02/07/2024',
-      entryValue: 'U$ 20.000,00',
-      currentValue: 'U$ 20.000,00',
-      optimalValue: 'U$ 20.000,00',
-      optimalAllocation: '25%',
-      currentAllocation: '30%',
-    },
-    {
-      id: '728e',
-      active: {
-        urlImage:
-          'https://static-00.iconduck.com/assets.00/bitcoin-icon-2048x2048-t8gwld81.png',
-        name: 'BTC',
-      },
-      qtyInCript: 0.5912,
-      inputData: '02/07/2024',
-      entryValue: 'U$ 20.000,00',
-      currentValue: 'U$ 20.000,00',
-      optimalValue: 'U$ 20.000,00',
-      optimalAllocation: '25%',
-      currentAllocation: '30%',
-    },
-    {
-      id: '728ed',
-      active: {
-        urlImage:
-          'https://static-00.iconduck.com/assets.00/bitcoin-icon-2048x2048-t8gwld81.png',
-        name: 'BTC',
-      },
-      qtyInCript: 0.5912,
-      inputData: '02/07/2024',
-      entryValue: 'U$ 20.000,00',
-      currentValue: 'U$ 20.000,00',
-      optimalValue: 'U$ 20.000,00',
-      optimalAllocation: '25%',
-      currentAllocation: '30%',
-    },
-    {
-      id: '728ed5',
-      active: {
-        urlImage:
-          'https://static-00.iconduck.com/assets.00/bitcoin-icon-2048x2048-t8gwld81.png',
-        name: 'BTC',
-      },
-      qtyInCript: 0.5912,
-      inputData: '02/07/2024',
-      entryValue: 'U$ 20.000,00',
-      currentValue: 'U$ 20.000,00',
-      optimalValue: 'U$ 20.000,00',
-      optimalAllocation: '25%',
-      currentAllocation: '30%',
-    },
-    {
-      id: '728ed52',
-      active: {
-        urlImage:
-          'https://static-00.iconduck.com/assets.00/bitcoin-icon-2048x2048-t8gwld81.png',
-        name: 'BTC',
-      },
-      qtyInCript: 0.5912,
-      inputData: '02/07/2024',
-      entryValue: 'U$ 20.000,00',
-      currentValue: 'U$ 20.000,00',
-      optimalValue: 'U$ 20.000,00',
-      optimalAllocation: '25%',
-      currentAllocation: '30%',
-    },
-  ]
-}
+import { useToast } from '@/components/ui/use-toast'
+import { getAllAssetsWalletClient, TWalletAssetsInfo } from '@/service/request'
+import { useParams } from 'react-router-dom'
+import { useUserStore } from '@/store/user'
+import { formatDate } from '@/utils'
+import { useSignalStore } from '@/store/signalEffect'
 
 export default function Wallet() {
   const [data, setData] = useState<ClientActive[]>([])
+  const [infosWallet, setInfosWallet] = useState<TWalletAssetsInfo>()
   const [loading, setLoading] = useState(true)
+  const [uuidOrganization] = useUserStore((state) => [
+    state.user.uuidOrganization,
+  ])
+  const [signal] = useSignalStore((state) => [state.signal])
+
+  const { walletUuid } = useParams()
+
+  const { toast } = useToast()
 
   useEffect(() => {
-    async function fetchData() {
-      const data = await getData()
-      setData(data)
-      setLoading(false)
+    async function getData(
+      uuidOrganization: string,
+      walletUuid: string,
+      setData: React.Dispatch<React.SetStateAction<ClientActive[]>>,
+      setInfosWallet: React.Dispatch<
+        React.SetStateAction<TWalletAssetsInfo | undefined>
+      >,
+    ) {
+      try {
+        const result = await getAllAssetsWalletClient(
+          uuidOrganization,
+          walletUuid,
+        )
+
+        if (!result) {
+          return toast({
+            className: 'bg-red-500 border-0 text-white',
+            title: 'Failed get assets organization :(',
+            description: 'Demo Vault !!',
+          })
+        }
+
+        setInfosWallet(result.wallet)
+
+        const dataTable: ClientActive[] = result.assets.map((item) => ({
+          id: item.uuid,
+          asset: {
+            urlImage: item.icon,
+            name: item.name,
+          },
+          investedAmount: item.investedAmount,
+          assetQuantity: item.quantityAsset,
+          price: item.price,
+          allocation: item.currentAllocation,
+          idealAllocation: item.idealAllocation,
+          idealAmount: item.idealAmountInMoney,
+          buyOrSell: item.buyOrSell,
+        }))
+
+        setData(dataTable)
+        setLoading(false)
+      } catch (error) {
+        toast({
+          className: 'bg-red-500 border-0 text-white',
+          title: 'Failed get assets organization :(',
+          description: 'Demo Vault !!',
+        })
+      }
     }
-    fetchData()
-  }, [])
+
+    if (!walletUuid) {
+      toast({
+        className: 'bg-red-500 border-0 text-white',
+        title: 'Failed get assets organization :(',
+        description: 'Demo Vault !!',
+      })
+
+      return
+    }
+
+    getData(uuidOrganization, walletUuid, setData, setInfosWallet)
+  }, [toast, uuidOrganization, walletUuid, signal])
 
   if (loading) {
     return <div>Loading...</div>
@@ -129,18 +119,41 @@ export default function Wallet() {
           </Button>
         </div>
       </div>
-
-      <div className="flex gap-5 mb-10">
-        <CardDashboard title="Date of entry" data="02/07/2024" />
-        <CardDashboard title="Initial value" data="0" />
-        <CardDashboard title="Current value" data="0" />
-        <CardDashboard title="Performance fee" data="0" />
-        <CardDashboard title="Last rebalancing" data="02/07/2024" />
-        <CardDashboard title="Closing date" data="02/07/2024" />
-      </div>
+      {infosWallet && (
+        <div className="flex gap-5 mb-10">
+          <CardDashboard
+            title="Date of entry"
+            data={formatDate(infosWallet.enterDate)}
+          />
+          <CardDashboard
+            title="Invested Amount"
+            data={String(infosWallet.investedAmount)}
+          />
+          <CardDashboard
+            title="Current Amount"
+            data={String(infosWallet.currentAmount)}
+          />
+          <CardDashboard
+            title="Performance fee"
+            data={String(infosWallet.performanceFee)}
+          />
+          <CardDashboard
+            title="Last rebalancing"
+            data={formatDate(infosWallet.lastRebalance)}
+          />
+          <CardDashboard
+            title="Month closing date"
+            data={formatDate(infosWallet.monthCloseDate)}
+          />
+        </div>
+      )}
 
       <div className="mb-10">
-        <DataTable columns={columns} data={data} />
+        <DataTable
+          columns={columns}
+          data={data}
+          walletUuid={walletUuid as string}
+        />
       </div>
 
       <div className="bg-[#171717] rounded-t-lg p-5 flex items-center justify-between ">

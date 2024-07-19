@@ -21,7 +21,7 @@ const router = createBrowserRouter([
         element: <Login />,
       },
       {
-        path: '/wallet',
+        path: '/wallet/:walletUuid/assets',
         element: <Wallet />,
       },
       {

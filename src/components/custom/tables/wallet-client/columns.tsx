@@ -2,107 +2,70 @@
 
 import { ColumnDef } from '@tanstack/react-table'
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  //   DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-
-import { MoreHorizontal } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import CellActions from './cell-action'
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 export type ClientActive = {
   id: string
-  active: {
+  asset: {
     urlImage: string
     name: string
   }
-  qtyInCript: number
-  inputData: string
-  entryValue: string
-  currentValue: string
-  optimalValue: string
-  optimalAllocation: string
-  currentAllocation: string
+  investedAmount: number
+  assetQuantity: number
+  price: number
+  allocation: number
+  idealAllocation: number
+  idealAmount: number
+  buyOrSell: number
 }
 
 export const columns: ColumnDef<ClientActive>[] = [
   {
-    accessorKey: 'active',
-    header: 'Active',
+    accessorKey: 'asset',
+    header: 'Asset',
     cell: ({ row }) => (
       <div className="flex items-center">
         <img
-          src={row.original.active.urlImage}
-          alt={row.original.active.name}
+          src={row.original.asset.urlImage}
+          alt={row.original.asset.name}
           className="w-6 h-6 mr-2"
         />
-        <span>{row.original.active.name}</span>
+        <span>{row.original.asset.name}</span>
       </div>
     ),
   },
   {
-    accessorKey: 'qtyInCript',
-    header: 'Qty. in Cript',
+    accessorKey: 'investedAmount',
+    header: 'Invested amount',
   },
   {
-    accessorKey: 'inputData',
-    header: 'input data',
+    accessorKey: 'assetQuantity',
+    header: 'Asset quantity',
   },
   {
-    accessorKey: 'entryValue',
-    header: 'Entry value',
+    accessorKey: 'price',
+    header: 'Price',
   },
   {
-    accessorKey: 'currentValue',
-    header: 'Current value',
+    accessorKey: 'allocation',
+    header: 'Allocation',
   },
   {
-    accessorKey: 'optimalValue',
-    header: 'Optimal value',
+    accessorKey: 'idealAllocation',
+    header: 'Ideal allocation',
   },
   {
-    accessorKey: 'optimalAllocation',
-    header: 'Optimal allocation',
+    accessorKey: 'idealAmount',
+    header: 'Ideal amount',
   },
   {
-    accessorKey: 'currentAllocation',
-    header: 'Current allocation',
+    accessorKey: 'buyOrSell',
+    header: 'Buy/Sell',
   },
   {
     id: 'actions',
-    cell: ({ row }) => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const payment = row.original
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            className="bg-white border-0 text-black"
-            align="center"
-          >
-            {/* <DropdownMenuLabel>Actions</DropdownMenuLabel> */}
-            {/* <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy active ID
-            </DropdownMenuItem> */}
-            <DropdownMenuItem>Edit</DropdownMenuItem>
-            <DropdownMenuItem>Disable</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )
-    },
+    cell: ({ row }) => <CellActions rowInfos={row.original} />,
   },
 ]

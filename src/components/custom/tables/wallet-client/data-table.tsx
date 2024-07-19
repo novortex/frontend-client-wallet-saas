@@ -21,15 +21,16 @@ import exportIcon from '../../../../assets/icons/export.svg'
 
 import AddNewWalletModal from '../../add-new-wallet-modal'
 
-
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  walletUuid: string
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  walletUuid,
 }: DataTableProps<TData, TValue>) {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -112,7 +113,11 @@ export function DataTable<TData, TValue>({
           )}
         </TableBody>
       </Table>
-      <AddNewWalletModal isOpen={isModalOpen} onClose={closeModal} />
+      <AddNewWalletModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        walletUuid={walletUuid}
+      />
     </div>
   )
 }
