@@ -6,7 +6,6 @@ export type TUser = {
   email: string
   role: string
   imageUrl: string
-  uuid: string
   uuidOrganization: string
 }
 
@@ -24,7 +23,6 @@ export const useUserStore = create<UserStore>()(
         email: '',
         role: '',
         imageUrl: '',
-        uuid: '',
         uuidOrganization: '',
       },
 
@@ -37,7 +35,6 @@ export const useUserStore = create<UserStore>()(
             email: '',
             role: '',
             imageUrl: '',
-            uuid: '',
             uuidOrganization: '',
           },
         })

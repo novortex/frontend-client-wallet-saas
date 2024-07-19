@@ -47,7 +47,6 @@ type TUserLoginInfos = {
     phone: string | null
     role: 'ADMIN' | 'USER' | 'OTHER_ROLE' // Adjust based on different roles you have
     updateAt: string // or Date if preferred
-    uuid: string
     uuidOrganizations: string
   }
 }
@@ -92,46 +91,17 @@ export type TNewCustomerResponse = {
   uncryptedPassword: string
 }
 
-type TWallets_Client = {
-  uuid: string
-  enterDate: string
-  investedAmount: number
-  currentAmount: number
-  closeDate: string
-  initialFee: number | null
-  initialFeePaid: boolean
-  riskProfile: string
-  monthCloseDate: string
-  contract: boolean
-  performanceFee: number
-  lastRebalance: string | null
-  userUuid: string
-  rebalanceCuid: string | null
-  exchangeUuid: string
-  organizationUuid: string
-  benchmarkCuid: string
-  createAt: string
-  updateAt: string
-}
-
-type TClientInfosResponse = {
-  userUuid: string
+export type TClientInfosResponse = {
   walletUuid: string
-  lastContactAt: string | null
-  revokeAt: string | null
-  createAt: string
-  updateAt: string
-  wallet: TWallets_Client
-}
-
-type TClientDataResponse = {
-  cpf: string
-  email: string
-  name: string
-  phone: string
-  createAt: string
-  updateAt: string
-  uuid: string
+  managerName: string
+  infosClient: {
+    name: string
+    email: string
+    phone?: string
+    cpf?: string
+  }
+  lastBalance?: Date
+  nextBalance?: Date
 }
 
 // Requests from api (backend)
@@ -242,13 +212,12 @@ export async function registerNewCustomer(
   }
 }
 
-export async function getManagerWallets(
-  managerId: string,
+export async function getWalletOrganization(
   organizationUuid: string,
-): Promise<TClientInfosResponse[] | undefined> {
+): Promise<TClientInfosResponse[]> {
   try {
     const response = await instance.get<TClientInfosResponse[]>(
-      `/manager/${managerId}/client`,
+      `/manager/client`,
       {
         headers: {
           'x-organization': organizationUuid,
@@ -259,25 +228,6 @@ export async function getManagerWallets(
     return response.data
   } catch (error) {
     console.error(error)
-  }
-}
-
-export async function getManagerClients(
-  clientId: string,
-  organizationUuid: string,
-): Promise<TClientDataResponse[] | undefined> {
-  try {
-    const response = await instance.get<TClientDataResponse[]>(
-      `/manager/client/${clientId}/details`,
-      {
-        headers: {
-          'x-organization': organizationUuid,
-        },
-      },
-    )
-
-    return response.data
-  } catch (error) {
-    console.error(error)
+    throw error
   }
 }

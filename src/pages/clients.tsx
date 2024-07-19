@@ -5,117 +5,40 @@ import { Input } from '@/components/ui/input'
 import filterIcon from '../assets/image/filter-lines.png'
 import AddNewClientModal from '@/components/custom/add-new-client-modal'
 import { useState, useEffect } from 'react'
-import { getManagerWallets, getManagerClients } from '@/service/request'
+import { getWalletOrganization, TClientInfosResponse } from '@/service/request'
 import { useUserStore } from '@/store/user'
-
-type TWallet = {
-  uuid: string
-  enterDate: string
-  investedAmount: number
-  currentAmount: number
-  closeDate: string
-  initialFee: number | null
-  initialFeePaid: boolean
-  riskProfile: string
-  monthCloseDate: string
-  contract: boolean
-  performanceFee: number
-  lastRebalance: string | null
-  userUuid: string
-  rebalanceCuid: string | null
-  exchangeUuid: string
-  organizationUuid: string
-  benchmarkCuid: string
-  createAt: string
-  updateAt: string
-}
-
-type TClientData = {
-  uuid: string
-  name: string
-  email: string
-  phone: string
-  cpf: string
-  createAt: string
-  updateAt: string
-}
-
-type TClientInfosResponse = {
-  userUuid: string
-  walletUuid: string
-  lastContactAt: string | null
-  revokeAt: string | null
-  createAt: string
-  updateAt: string
-  wallet: TWallet
-  clientData: TClientData
-}
+import { useToast } from '@/components/ui/use-toast'
+import { formatDate } from '@/utils'
 
 export default function Clients() {
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [uuidUser] = useUserStore((state) => [state.user.uuid])
   const [uuidOrganization] = useUserStore((state) => [
     state.user.uuidOrganization,
   ])
   const [clients, setClients] = useState<TClientInfosResponse[]>([])
+  const { toast } = useToast()
 
   useEffect(() => {
     const fetchWalletsAndClients = async () => {
       try {
-        const walletsResponse = await getManagerWallets(
-          uuidUser,
-          uuidOrganization,
-        )
-        console.log('Wallets Response:', walletsResponse)
+        const result = await getWalletOrganization(uuidOrganization)
 
-        if (walletsResponse) {
-          const userUuids = extractUserUuids(walletsResponse)
-          const clientPromises = userUuids.map((userUuid) =>
-            getManagerClients(userUuid, uuidOrganization),
-          )
-
-          const clientsResponses: TClientData[] =
-            await Promise.all(clientPromises)
-
-          const compiledClients: TClientInfosResponse[] = clientsResponses.map(
-            (clientResponse, index) => {
-              const wallet = walletsResponse[index]
-
-              return {
-                userUuid: clientResponse.uuid,
-                walletUuid: wallet.uuid,
-                lastContactAt: null,
-                revokeAt: null,
-                createAt: clientResponse.createAt,
-                updateAt: clientResponse.updateAt,
-                wallet,
-                clientData: {
-                  uuid: clientResponse.uuid,
-                  name: clientResponse.name,
-                  email: clientResponse.email,
-                  phone: clientResponse.phone,
-                  cpf: clientResponse.cpf,
-                  createAt: clientResponse.createAt,
-                  updateAt: clientResponse.updateAt,
-                },
-              }
-            },
-          )
-
-          console.log('Compiled Clients:', compiledClients)
-          setClients(compiledClients)
+        if (!result) {
+          return toast({
+            className: 'bg-red-500 border-0 text-white',
+            title: 'Failed get clients :(',
+            description: 'Demo Vault !!',
+          })
         }
+
+        setClients(result)
       } catch (error) {
         console.error('Error fetching wallets and clients:', error)
       }
     }
 
     fetchWalletsAndClients()
-  }, [uuidOrganization, uuidUser])
-
-  function extractUserUuids(data: TClientInfosResponse[]): string[] {
-    return data.map((item: TClientInfosResponse) => item.wallet.userUuid)
-  }
+  }, [toast, uuidOrganization])
 
   const openModal = () => {
     setIsModalOpen(true)
@@ -156,20 +79,29 @@ export default function Clients() {
         </div>
       </div>
       <div className="w-full flex gap-7">
-        {clients.map((client, index) => (
-          <CardClient
-            key={index}
-            walletUuid={client.wallet.walletUuid}
-            name={client.clientData.name}
-            email={client.clientData.email}
-            phone={client.clientData.phone}
-            cpf={client.clientData.cpf}
-            // alerts={}
-            // responsible={}
-            // lastRebalancing={client.wallet.lastRebalance}
-            // nextRebalancing={}
-          />
-        ))}
+        {clients &&
+          clients.map((client, index) => (
+            <CardClient
+              key={index}
+              walletUuid={client.walletUuid}
+              name={client.infosClient.name}
+              email={client.infosClient.email}
+              phone={client.infosClient.phone}
+              cpf={client.infosClient.cpf}
+              // alerts={}
+              responsible={client.managerName}
+              lastRebalancing={
+                client.lastBalance !== undefined
+                  ? formatDate(client.lastBalance.toString())
+                  : undefined
+              }
+              nextRebalancing={
+                client.nextBalance !== undefined
+                  ? formatDate(client.nextBalance.toString())
+                  : undefined
+              }
+            />
+          ))}
       </div>
       <AddNewClientModal isOpen={isModalOpen} onClose={closeModal} />
     </div>

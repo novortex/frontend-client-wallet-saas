@@ -31,7 +31,6 @@ export default function Login() {
           email: result.user.email,
           role: result.user.role,
           imageUrl: '',
-          uuid: result.user.uuid,
           uuidOrganization: result?.user.uuidOrganizations,
         })
 
