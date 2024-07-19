@@ -4,10 +4,41 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import filterIcon from '../assets/image/filter-lines.png'
 import AddNewClientModal from '@/components/custom/add-new-client-modal'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { getWalletOrganization, TClientInfosResponse } from '@/service/request'
+import { useUserStore } from '@/store/user'
+import { useToast } from '@/components/ui/use-toast'
+import { formatDate } from '@/utils'
 
 export default function Clients() {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [uuidOrganization] = useUserStore((state) => [
+    state.user.uuidOrganization,
+  ])
+  const [clients, setClients] = useState<TClientInfosResponse[]>([])
+  const { toast } = useToast()
+
+  useEffect(() => {
+    const fetchWalletsAndClients = async () => {
+      try {
+        const result = await getWalletOrganization(uuidOrganization)
+
+        if (!result) {
+          return toast({
+            className: 'bg-red-500 border-0 text-white',
+            title: 'Failed get clients :(',
+            description: 'Demo Vault !!',
+          })
+        }
+
+        setClients(result)
+      } catch (error) {
+        console.error('Error fetching wallets and clients:', error)
+      }
+    }
+
+    fetchWalletsAndClients()
+  }, [toast, uuidOrganization])
 
   const openModal = () => {
     setIsModalOpen(true)
@@ -16,39 +47,6 @@ export default function Clients() {
   const closeModal = () => {
     setIsModalOpen(false)
   }
-
-  const users = [
-    {
-      name: 'Arthur Fraige',
-      responsible: 'Abner Silva',
-      alerts: 4,
-      nreb: '02/07/2024',
-      lreb: '01/07/2024',
-      email: 'arthur.fraige@example.com',
-      cpf: '123.456.789-00',
-      phone: '(11) 98765-4321',
-    },
-    {
-      name: 'Beatriz Oliveira',
-      responsible: 'Carla Mendes',
-      alerts: 3,
-      nreb: '30/06/2024',
-      lreb: '29/06/2024',
-      email: 'beatriz.oliveira@example.com',
-      cpf: '',
-      phone: '',
-    },
-    {
-      name: 'Carlos Souza',
-      responsible: 'Débora Lima',
-      alerts: 5,
-      nreb: '28/06/2024',
-      lreb: '27/06/2024',
-      email: 'carlos.souza@example.com',
-      cpf: '345.678.901-22',
-      phone: '',
-    },
-  ]
 
   return (
     <div className="p-10">
@@ -81,19 +79,29 @@ export default function Clients() {
         </div>
       </div>
       <div className="w-full flex gap-7">
-        {users.map((user, index) => (
-          <CardClient
-            key={index}
-            name={user.name}
-            responsible={user.responsible}
-            alerts={user.alerts}
-            next_rebalancing={user.nreb}
-            last_rebalancing={user.lreb}
-            email={user.email}
-            phone={user.phone}
-            cpf={user.cpf}
-          />
-        ))}
+        {clients &&
+          clients.map((client, index) => (
+            <CardClient
+              key={index}
+              walletUuid={client.walletUuid}
+              name={client.infosClient.name}
+              email={client.infosClient.email}
+              phone={client.infosClient.phone}
+              cpf={client.infosClient.cpf}
+              // alerts={}
+              responsible={client.managerName}
+              lastRebalancing={
+                client.lastBalance !== null
+                  ? formatDate(client.lastBalance.toString())
+                  : '-'
+              }
+              nextRebalancing={
+                client.nextBalance !== null
+                  ? formatDate(client.nextBalance.toString())
+                  : '-'
+              }
+            />
+          ))}
       </div>
       <AddNewClientModal isOpen={isModalOpen} onClose={closeModal} />
     </div>

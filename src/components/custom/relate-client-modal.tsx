@@ -1,11 +1,11 @@
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
+} from '@/components/ui/dialog'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,28 +13,28 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Checkbox } from "@/components/ui/checkbox"
-import * as React from "react"
+} from '@/components/ui/dropdown-menu'
+import { Checkbox } from '@/components/ui/checkbox'
+import * as React from 'react'
 
 interface RelateClientModalProps {
   isOpen: boolean
   onClose: () => void
 }
 
-const managers = [
-  { name: "Arthur" },
-  { name: "Pedro" },
-  { name: "Abner" },
-]
+const managers = [{ name: 'Arthur' }, { name: 'Pedro' }, { name: 'Abner' }]
 
-export default function RelateClientModal({ isOpen, onClose }: RelateClientModalProps) {
-  const [selectedManager, setSelectedManager] = React.useState("Select a manager")
+export default function RelateClientModal({
+  isOpen,
+  onClose,
+}: RelateClientModalProps) {
+  const [selectedManager, setSelectedManager] =
+    React.useState('Select a manager')
 
   const handleAddManager = () => {
-    console.log("Selected Manager:", selectedManager)
+    console.log('Selected Manager:', selectedManager)
 
-    setSelectedManager("Select a manager")
+    setSelectedManager('Select a manager')
 
     onClose()
   }
@@ -50,7 +50,10 @@ export default function RelateClientModal({ isOpen, onClose }: RelateClientModal
         <div className="w-full flex flex-col gap-4">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="w-full h-full bg-[#272727] border-[#323232] text-[#959CB6] flex justify-start">
+              <Button
+                variant="outline"
+                className="w-full h-full bg-[#272727] border-[#323232] text-[#959CB6] flex justify-start"
+              >
                 {selectedManager}
               </Button>
             </DropdownMenuTrigger>
@@ -58,21 +61,27 @@ export default function RelateClientModal({ isOpen, onClose }: RelateClientModal
               <DropdownMenuLabel>Managers</DropdownMenuLabel>
               <DropdownMenuSeparator />
               {managers.map((manager, index) => (
-                <DropdownMenuItem key={index} onClick={() => setSelectedManager(manager.name)}>
+                <DropdownMenuItem
+                  key={index}
+                  onClick={() => setSelectedManager(manager.name)}
+                >
                   {manager.name}
                 </DropdownMenuItem>
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
           <div className="w-full flex flex-row gap-3 items-center">
-            <Checkbox className="border-[#ffffff]"/>
+            <Checkbox className="border-[#ffffff]" />
             <label htmlFor="addMyself" className="text-[#fff]">
-                Add myself
+              Add myself
             </label>
           </div>
         </div>
         <DialogFooter className="flex justify-end items-end">
-          <Button className="bg-[#1877F2] w-1/4 hover:bg-blue-600 p-5" onClick={handleAddManager}>
+          <Button
+            className="bg-[#1877F2] w-1/4 hover:bg-blue-600 p-5"
+            onClick={handleAddManager}
+          >
             Add Customer
           </Button>
         </DialogFooter>

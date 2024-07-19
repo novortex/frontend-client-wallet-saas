@@ -1,39 +1,57 @@
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { Input } from "../ui/input"
-import * as React from "react"
-import RelateClientModal from "./relate-client-modal"
+} from '@/components/ui/dialog'
+import { Input } from '../ui/input'
+import * as React from 'react'
+import RelateClientModal from './relate-client-modal'
+import { registerNewCustomer } from '@/service/request'
+import { useUserStore } from '@/store/user'
 
 interface AddNewClientModalProps {
   isOpen: boolean
   onClose: () => void
 }
 
-export default function AddNewClientModal({ isOpen, onClose }: AddNewClientModalProps) {
-  const [name, setName] = React.useState("")
-  const [email, setEmail] = React.useState("")
-  const [cpf, setCpf] = React.useState("")
-  const [phone, setPhone] = React.useState("")
+export default function AddNewClientModal({
+  isOpen,
+  onClose,
+}: AddNewClientModalProps) {
+  const [name, setName] = React.useState('')
+  const [email, setEmail] = React.useState('')
+  const [cpf, setCpf] = React.useState('')
+  const [phone, setPhone] = React.useState('')
+  const [uuidOrganization] = useUserStore((state) => [
+    state.user.uuidOrganization,
+  ])
 
-  const handleAddClient = () => {
-    console.log("Name:", name)
-    console.log("Email:", email)
-    console.log("CPF", cpf)
-    console.log("Phone", phone)
+  const handleAddClient = async () => {
+    try {
+      const response = await registerNewCustomer(
+        name,
+        email,
+        uuidOrganization,
+        cpf,
+        phone,
+      )
 
-    // Reset the inputs
-    setName("")
-    setEmail("")
-    setCpf("")
-    setPhone("")
+      console.log('Novo cliente registrado:', response)
 
-    onClose()
+      // Reset the inputs
+      setName('')
+      setEmail('')
+      setCpf('')
+      setPhone('')
+
+      onClose()
+    } catch (error) {
+      console.error('Erro ao cadastrar novo cliente:', error)
+      // Tratar o erro conforme necessário
+    }
   }
 
   const [isModalOpen, setIsModalOpen] = React.useState(false)
@@ -85,7 +103,13 @@ export default function AddNewClientModal({ isOpen, onClose }: AddNewClientModal
           </div>
         </div>
         <DialogFooter className="flex justify-end items-end">
-          <Button className="bg-[#1877F2] w-1/4 hover:bg-blue-600 p-5" onClick={() => { handleAddClient(); openModal(); }}>
+          <Button
+            className="bg-[#1877F2] w-1/4 hover:bg-blue-600 p-5"
+            onClick={() => {
+              handleAddClient()
+              openModal()
+            }}
+          >
             Next
           </Button>
         </DialogFooter>
