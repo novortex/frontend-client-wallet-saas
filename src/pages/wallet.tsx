@@ -15,6 +15,14 @@ import { useParams } from 'react-router-dom'
 import { useUserStore } from '@/store/user'
 import { formatDate } from '@/utils'
 import { useSignalStore } from '@/store/signalEffect'
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb'
 
 export default function Wallet() {
   const [data, setData] = useState<ClientActive[]>([])
@@ -100,7 +108,33 @@ export default function Wallet() {
   return (
     <div className="p-10">
       <div className="mb-10 flex items-center justify-between">
-        <h1 className="text-2xl text-white font-medium">Wallet</h1>
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink
+                className="text-2xl text-white font-medium"
+                href="/clients"
+              >
+                Clients
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink
+                className="text-2xl text-white font-medium"
+                href={`/clients/${walletUuid}/infos`}
+              >
+                Information clients
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage className="text-2xl text-white font-medium">
+                Client wallet
+              </BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
         <SwitchTheme />
       </div>
 
@@ -123,7 +157,11 @@ export default function Wallet() {
         <div className="flex gap-5 mb-10">
           <CardDashboard
             title="Date of entry"
-            data={formatDate(infosWallet.enterDate)}
+            data={
+              infosWallet.enterDate !== null
+                ? formatDate(infosWallet.enterDate?.toString())
+                : '-'
+            }
           />
           <CardDashboard
             title="Invested Amount"
@@ -139,11 +177,19 @@ export default function Wallet() {
           />
           <CardDashboard
             title="Last rebalancing"
-            data={formatDate(infosWallet.lastRebalance)}
+            data={
+              infosWallet.lastRebalance !== null
+                ? formatDate(infosWallet.lastRebalance?.toString())
+                : '-'
+            }
           />
           <CardDashboard
             title="Month closing date"
-            data={formatDate(infosWallet.monthCloseDate)}
+            data={
+              infosWallet.monthCloseDate !== null
+                ? formatDate(infosWallet.monthCloseDate?.toString())
+                : '-'
+            }
           />
         </div>
       )}

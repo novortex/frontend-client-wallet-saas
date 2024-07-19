@@ -68,7 +68,9 @@ export default function CardClient({
 
   const navigate = useNavigate()
   const handleCardClick = () => {
-    navigate(`/clients/${walletUuid}/infos`)
+    navigate(`/clients/${walletUuid}/infos`, {
+      state: { name, email, cpf, phone },
+    })
   }
 
   return (

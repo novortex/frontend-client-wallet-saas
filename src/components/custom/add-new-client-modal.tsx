@@ -8,9 +8,12 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '../ui/input'
 import * as React from 'react'
-import RelateClientModal from './relate-client-modal'
+// import RelateClientModal from './relate-client-modal'
 import { registerNewCustomer } from '@/service/request'
 import { useUserStore } from '@/store/user'
+import { AlertCircle } from 'lucide-react'
+import { useSignalStore } from '@/store/signalEffect'
+import { useToast } from '../ui/use-toast'
 
 interface AddNewClientModalProps {
   isOpen: boolean
@@ -25,12 +28,30 @@ export default function AddNewClientModal({
   const [email, setEmail] = React.useState('')
   const [cpf, setCpf] = React.useState('')
   const [phone, setPhone] = React.useState('')
+  //   const [isModalOpen, setIsModalOpen] = React.useState(false)
   const [uuidOrganization] = useUserStore((state) => [
     state.user.uuidOrganization,
   ])
+  const [signal, setSignal] = useSignalStore((state) => [
+    state.signal,
+    state.setSignal,
+  ])
+  const { toast } = useToast()
+
+  //   const closeModal = () => {
+  //     setIsModalOpen(false)
+  //   }
 
   const handleAddClient = async () => {
     try {
+      onClose()
+
+      toast({
+        className: 'bg-yellow-500 border-0',
+        title: 'Processing add client in organization',
+        description: 'Demo Vault !!',
+      })
+
       const response = await registerNewCustomer(
         name,
         email,
@@ -39,29 +60,36 @@ export default function AddNewClientModal({
         phone,
       )
 
-      console.log('Novo cliente registrado:', response)
+      if (!response) {
+        return toast({
+          className: 'bg-red-500 border-0',
+          title: 'Failed add client in organization',
+          description: 'Demo Vault !!',
+        })
+      }
 
       // Reset the inputs
+      // TODO: change for REF
       setName('')
       setEmail('')
       setCpf('')
       setPhone('')
 
-      onClose()
+      if (!signal) {
+        setSignal(true)
+      } else {
+        setSignal(false)
+      }
+
+      return toast({
+        className: 'bg-green-500 border-0',
+        title: 'Success update !!',
+        description: 'Demo Vault !!',
+      })
     } catch (error) {
       console.error('Erro ao cadastrar novo cliente:', error)
       // Tratar o erro conforme necessário
     }
-  }
-
-  const [isModalOpen, setIsModalOpen] = React.useState(false)
-
-  const openModal = () => {
-    setIsModalOpen(true)
-  }
-
-  const closeModal = () => {
-    setIsModalOpen(false)
   }
 
   return (
@@ -102,19 +130,22 @@ export default function AddNewClientModal({
             />
           </div>
         </div>
-        <DialogFooter className="flex justify-end items-end">
+        <DialogFooter className="items-center">
+          <div className="font-bold text-yellow-200 flex gap-2 mr-5">
+            <AlertCircle />
+            <span>This customer will be assigned to you</span>
+          </div>
           <Button
             className="bg-[#1877F2] w-1/4 hover:bg-blue-600 p-5"
             onClick={() => {
               handleAddClient()
-              openModal()
             }}
           >
             Next
           </Button>
         </DialogFooter>
       </DialogContent>
-      <RelateClientModal isOpen={isModalOpen} onClose={closeModal} />
+      {/* //<RelateClientModal isOpen={isModalOpen} onClose={closeModal} /> */}
     </Dialog>
   )
 }

@@ -8,19 +8,20 @@ import {
 interface AddNewAssetModalProps {
   isOpen: boolean
   onClose: () => void
+  name: string
+  email: string
+  cpf: string
+  phone: string
 }
 
 export default function ClientsInfoModal({
   isOpen,
   onClose,
+  name,
+  email,
+  cpf,
+  phone,
 }: AddNewAssetModalProps) {
-  const user = {
-    name: 'Arthur Fraige',
-    email: 'arthur.fraige@example.com',
-    cpf: '123.456.789-00',
-    phone: '(11) 98765-4321',
-  }
-
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="h-1/3 w-[200%] bg-[#131313] text-[#fff] m-0">
@@ -32,7 +33,7 @@ export default function ClientsInfoModal({
             Name
           </div>
           <div className="h-full w-1/2 flex justify-start items-center text-[#959CB6]">
-            {user.name}
+            {name}
           </div>
         </div>
         <div className="flex flex-row">
@@ -40,7 +41,7 @@ export default function ClientsInfoModal({
             Email
           </div>
           <div className="h-full w-1/2 flex justify-start items-center text-[#959CB6]">
-            {user.email}
+            {email}
           </div>
         </div>
         <div className="flex flex-row">
@@ -48,7 +49,7 @@ export default function ClientsInfoModal({
             Phone
           </div>
           <div className="h-full w-1/2 flex justify-start items-center text-[#959CB6]">
-            {user.phone}
+            {phone}
           </div>
         </div>
         <div className="flex flex-row">
@@ -56,7 +57,7 @@ export default function ClientsInfoModal({
             CPF
           </div>
           <div className="h-full w-1/2 flex justify-start items-center text-[#959CB6]">
-            {user.cpf}
+            {cpf}
           </div>
         </div>
       </DialogContent>

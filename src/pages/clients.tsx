@@ -9,6 +9,7 @@ import { getWalletOrganization, TClientInfosResponse } from '@/service/request'
 import { useUserStore } from '@/store/user'
 import { useToast } from '@/components/ui/use-toast'
 import { formatDate } from '@/utils'
+import { useSignalStore } from '@/store/signalEffect'
 
 export default function Clients() {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -17,6 +18,7 @@ export default function Clients() {
   ])
   const [clients, setClients] = useState<TClientInfosResponse[]>([])
   const { toast } = useToast()
+  const [signal] = useSignalStore((state) => [state.signal])
 
   useEffect(() => {
     const fetchWalletsAndClients = async () => {
@@ -38,7 +40,7 @@ export default function Clients() {
     }
 
     fetchWalletsAndClients()
-  }, [toast, uuidOrganization])
+  }, [toast, uuidOrganization, signal])
 
   const openModal = () => {
     setIsModalOpen(true)

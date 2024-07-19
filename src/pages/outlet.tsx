@@ -1,12 +1,5 @@
 import { SideBar, SideBarItem } from '@/components/custom/sidebar'
-import {
-  PieChartIcon,
-  Activity,
-  UsersIcon,
-  Info,
-  BarChartBig,
-  WalletIcon,
-} from 'lucide-react'
+import { UsersIcon, Coins } from 'lucide-react'
 import { Outlet, useLocation } from 'react-router-dom'
 import { Toaster } from '@/components/ui/toaster'
 
@@ -23,20 +16,22 @@ export default function Root() {
           <div className="mb-5">
             <h3 className="text-white font-medium">Admin</h3>
             <SideBarItem
-              icon={<PieChartIcon size={20} />}
-              text="Dashboard"
+              icon={<UsersIcon size={20} />}
+              text="Clients"
+              href="/clients"
             ></SideBarItem>
             <SideBarItem
-              icon={<Activity size={20} />}
-              text="Active"
+              icon={<Coins size={20} />}
+              text="Assets organization"
+              href="/admin/orgs"
             ></SideBarItem>
           </div>
           <div className="mb-5">
-            <h3 className="text-white font-semibold">Client</h3>
-            <SideBarItem icon={<UsersIcon />} text="Clients" />
+            {/* <h3 className="text-white font-semibold">Client</h3> */}
+            {/* <SideBarItem icon={<UsersIcon />} text="Clients" />
             <SideBarItem icon={<Info />} text="Infos" />
             <SideBarItem icon={<BarChartBig />} text="Graphics" />
-            <SideBarItem icon={<WalletIcon />} text="Wallet" />
+            <SideBarItem icon={<WalletIcon />} text="Wallet" /> */}
           </div>
         </SideBar>
       )}

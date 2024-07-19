@@ -24,6 +24,14 @@ import {
 import { useUserStore } from '@/store/user'
 import { formatDate } from '@/utils'
 import ExchangeInfoModal from '@/components/custom/modal/clients-info-modal'
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb'
 
 export default function Infos() {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -34,7 +42,7 @@ export default function Infos() {
   )
   const [walletInfos, setWalletInfos] = useState<TWalletInfos>({
     manager: '',
-    lastContacAt: '',
+    lastContactAt: '',
   })
 
   const [walletI, setWalletI] = useState<TWallet>({
@@ -50,10 +58,13 @@ export default function Infos() {
     performanceFee: 0,
     benchmark: { name: '' },
     currentValueBenchmark: 0,
-    lastRebalance: '',
-    nextBalance: '',
+    lastRebalance: null,
+    nextBalance: null,
     user: {
       name: '',
+      email: '',
+      phone: '',
+      cpf: '',
     },
     exchange: {
       accountEmail: '',
@@ -96,7 +107,7 @@ export default function Infos() {
         return false
       }
 
-      console.log(result)
+      console.log(result.walletInfo.lastRebalance)
 
       setWalletI(result.walletInfo)
       setWalletInfos(result.walletPreInfos)
@@ -109,7 +120,24 @@ export default function Infos() {
   return (
     <div className="p-10">
       <div className="mb-10 flex items-center justify-between">
-        <h1 className="text-2xl text-white font-medium">Infos</h1>
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink
+                className="text-2xl text-white font-medium"
+                href="/clients"
+              >
+                Clients
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage className="text-2xl text-white font-medium">
+                Information clients
+              </BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
         <SwitchTheme />
       </div>
 
@@ -132,7 +160,7 @@ export default function Infos() {
           <div className="flex justify-between mb-5">
             <div className="flex gap-5">
               <h1 className="text-3xl text-white">{walletI.user.name}</h1>
-              {walletInfos.lastContacAt == null ? (
+              {walletInfos.lastContactAt == null ? (
                 <Badge className="bg-red-500 text-white flex gap-2 hover:bg-red-800 hover:text-white">
                   {' '}
                   <Check className="w-5" /> Not registered
@@ -167,7 +195,9 @@ export default function Infos() {
                   <div key={item.name}>
                     <p className="text-[#959CB6] mr-5">
                       {item.name}{' '}
-                      <span className="text-gray-300">({item.comission}%)</span>
+                      <span className="text-gray-300">
+                        ({item.commission}%)
+                      </span>
                     </p>
                   </div>
                 ))
@@ -216,7 +246,10 @@ export default function Infos() {
               <div className="flex gap-3">
                 <Calendar className="text-[#F2BE38]" />
                 <p className="text-white">
-                  Next rebalancing date: {formatDate(walletI.nextBalance)}
+                  Next rebalancing date:{' '}
+                  {walletI.nextBalance !== null
+                    ? formatDate(walletI.nextBalance?.toString())
+                    : '-'}
                 </p>
               </div>
               <div className="flex gap-3">
@@ -228,7 +261,10 @@ export default function Infos() {
               <div className="flex gap-3">
                 <Calendar className="text-[#F2BE38]" />
                 <p className="text-white">
-                  Last rebalance date: {formatDate(walletI.lastRebalance)}
+                  Last rebalance date:{' '}
+                  {walletI.lastRebalance !== null
+                    ? formatDate(walletI.lastRebalance?.toString())
+                    : '-'}
                 </p>
               </div>
               <div className="flex gap-3">
@@ -241,7 +277,9 @@ export default function Infos() {
                 <Calendar className="text-[#F2BE38]" />
                 <p className="text-white">
                   Next monthly closing date:{' '}
-                  {formatDate(walletI.monthCloseDate)}
+                  {walletI.monthCloseDate !== null
+                    ? formatDate(walletI.monthCloseDate?.toString())
+                    : '-'}
                 </p>
               </div>
             </div>
@@ -286,7 +324,11 @@ export default function Infos() {
             <div className="bg-[#171717] flex flex-col items-center p-10 rounded-lg">
               <Calendar className="text-[#F2BE38]" />
               <p className="text-white">Close Date</p>
-              <p className="text-[#959CB6]">{formatDate(walletI.closeDate)}</p>
+              <p className="text-[#959CB6]">
+                {walletI.closeDate !== null
+                  ? formatDate(walletI.closeDate?.toString())
+                  : '-'}
+              </p>
             </div>
           </div>
 
@@ -294,14 +336,17 @@ export default function Infos() {
             <div className="flex items-center justify-between mb-16">
               <h1 className="text-white text-xl">Alerts</h1>
               <div className="flex gap-5">
-                <Button className="bg-[#1877F2] hover:bg-blue-600 flex gap-3 pt-5 pb-5">
+                <Button
+                  onClick={() => navigate(`/wallet/${walletUuid}/assets`)}
+                  className="bg-[#1877F2] hover:bg-blue-600 flex gap-3 pt-5 pb-5"
+                >
                   <Wallet />
-                  <p>Filters</p>
+                  <p>Wallet</p>
                 </Button>
 
                 <Button className="bg-[#1877F2] hover:bg-blue-600 flex gap-3 pt-5 pb-5">
                   <BarChartBigIcon />
-                  <p>Filters</p>
+                  <p>Graphics</p>
                 </Button>
               </div>
             </div>
@@ -319,7 +364,14 @@ export default function Infos() {
           </div>
         </div>
       </div>
-      <ClientsInfoModal isOpen={isModalOpen} onClose={closeModal} />
+      <ClientsInfoModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        name={walletI.user.name}
+        email={walletI.user.email}
+        cpf={walletI.user.cpf}
+        phone={walletI.user.phone}
+      />
       <ExchangeInfoModal
         isOpen={isModalExchangeOpen}
         onClose={closeModalopenModalExchange}

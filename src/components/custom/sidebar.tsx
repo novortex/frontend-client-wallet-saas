@@ -3,6 +3,7 @@ import LogoOrg from '../../assets/image/vault-logo.png'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { ReactNode, useContext, useState, createContext } from 'react'
 import { useUserStore } from '@/store/user'
+import { useNavigate } from 'react-router-dom'
 
 // TODO: Refact this component -> separate files and context
 type SideBarContextProps = {
@@ -22,6 +23,7 @@ export function SideBar({
 }) {
   const [expanded, setExpanded] = useState(true)
   const userInfo = useUserStore((state) => state.user)
+
   return (
     <aside className={`h-screen ${expanded ? 'w-1/6' : 'w-20'}`}>
       <nav
@@ -92,12 +94,15 @@ export function SideBarItem({
   text,
   active,
   alert,
+  href,
 }: {
   icon: ReactNode
   text: string
   active?: boolean
   alert?: boolean
+  href: string
 }) {
+  const navigate = useNavigate()
   const context = useContext(SideBarContext)
 
   if (!context) {
@@ -108,6 +113,7 @@ export function SideBarItem({
 
   return (
     <li
+      onClick={() => navigate(href)}
       className={`relative flex items-center py-2 px-3 my-1 font-medium text-[#959CB6] rounded-md cursor-pointer transition-colors group hover:bg-[#F2BE38] hover:text-black ${!expanded ? 'justify-center' : ''} ${active ? 'bg-gradient-to-tr from-indigo-200 to-indigo-100 text-indigo-800' : ''}`}
     >
       {icon}
