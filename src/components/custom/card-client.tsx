@@ -14,8 +14,8 @@ interface CardClientProps {
   name: string
   responsible?: string
   alerts?: number
-  nextRebalancing?: string
-  lastRebalancing?: string
+  nextRebalancing: string | null
+  lastRebalancing: string | null
   email: string
   cpf?: string
   phone?: string

@@ -91,14 +91,14 @@ export default function Clients() {
               // alerts={}
               responsible={client.managerName}
               lastRebalancing={
-                client.lastBalance !== undefined
+                client.lastBalance !== null
                   ? formatDate(client.lastBalance.toString())
-                  : undefined
+                  : '-'
               }
               nextRebalancing={
-                client.nextBalance !== undefined
+                client.nextBalance !== null
                   ? formatDate(client.nextBalance.toString())
-                  : undefined
+                  : '-'
               }
             />
           ))}

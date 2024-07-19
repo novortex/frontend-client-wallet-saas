@@ -100,8 +100,8 @@ export type TClientInfosResponse = {
     phone?: string
     cpf?: string
   }
-  lastBalance?: Date
-  nextBalance?: Date
+  lastBalance: Date | null
+  nextBalance: Date | null
 }
 
 // Requests from api (backend)
