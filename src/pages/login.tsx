@@ -18,7 +18,9 @@ export default function Login() {
   const { toast } = useToast()
 
   // TODO: put this function in a service
-  const handleButtonClick = async () => {
+  const handleButtonClick = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+
     if (emailRef.current && passwordRef.current) {
       const email = emailRef.current.value
       const password = passwordRef.current.value
@@ -66,7 +68,12 @@ export default function Login() {
               A Vault makes the difficult thing easier when investing in crypto
             </div>
           </div>
-          <div className="w-full h-2/5">
+          <form
+            className="w-full h-2/5"
+            action="/clients"
+            method="POST"
+            onSubmit={handleButtonClick}
+          >
             <div className="w-full h-1/2 flex flex-col justify-center items-start gap-2.5">
               <Label htmlFor="email" className="text-white text-lg">
                 Email
@@ -74,9 +81,11 @@ export default function Login() {
               <Input
                 type="email"
                 id="email"
+                name="email"
                 placeholder="Email"
                 className="bg-gray-800 text-gray-400 border-transparent h-12"
                 ref={emailRef}
+                autoComplete="email"
               />
             </div>
             <div className="w-full h-1/2 flex flex-col justify-center items-start gap-2.5">
@@ -86,27 +95,29 @@ export default function Login() {
               <Input
                 type="password"
                 id="password"
+                name="password"
                 placeholder="Password"
                 className="bg-gray-800 text-gray-400 border-transparent h-12"
                 ref={passwordRef}
+                autoComplete="current-password"
               />
             </div>
-          </div>
-          <div className="w-full h-1/4">
-            <div className="w-full h-1/2 flex justify-end items-center text-lg text-blue-600">
-              <a href="" className="hover:opacity-70 cursor-pointer">
-                Forgot password?
-              </a>
+            <div className="w-full h-1/4">
+              <div className="w-full h-1/2 flex justify-end items-center text-lg text-blue-600 mb-5">
+                <a href="" className="hover:opacity-70 cursor-pointer">
+                  Forgot password?
+                </a>
+              </div>
+              <div className="w-full flex justify-center items-center">
+                <Button
+                  type="submit"
+                  className="bg-yellow-500 text-black w-full h-5/6 text-xl hover:bg-yellow-500/70"
+                >
+                  Sign in
+                </Button>
+              </div>
             </div>
-            <div className="w-full h-1/2 flex justify-center items-center">
-              <Button
-                onClick={handleButtonClick}
-                className="bg-yellow-500 text-black w-full h-5/6 text-xl hover:bg-yellow-500/70"
-              >
-                Sign in
-              </Button>
-            </div>
-          </div>
+          </form>
         </div>
       </div>
       <div className="h-screen w-1/2 flex justify-center items-center">
