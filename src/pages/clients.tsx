@@ -90,7 +90,7 @@ export default function Clients() {
               email={client.infosClient.email}
               phone={client.infosClient.phone}
               cpf={client.infosClient.cpf}
-              // alerts={}
+              alerts={0}
               responsible={client.managerName}
               lastRebalancing={
                 client.lastBalance !== null

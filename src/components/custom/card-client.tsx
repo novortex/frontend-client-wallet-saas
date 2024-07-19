@@ -13,7 +13,7 @@ import { useNavigate } from 'react-router-dom'
 interface CardClientProps {
   name: string
   responsible?: string
-  alerts?: number
+  alerts: number
   nextRebalancing: string | null
   lastRebalancing: string | null
   email: string
