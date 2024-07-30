@@ -163,7 +163,7 @@ export async function getInfosCustomer(
 ): Promise<TInfosCustomerResponse | undefined> {
   try {
     const result = await instance.get<TInfosCustomerResponse>(
-      `manager/client/${walletUuid}/infos`,
+      `wallet/${walletUuid}/infos`,
       {
         headers: {
           'x-organization': organizationUuid,
@@ -180,7 +180,7 @@ export async function getInfosCustomer(
 export async function getAllAssetsOrg(organizationUuid: string) {
   try {
     const result = await instance.get<TAssetsOrganizationResponse[]>(
-      `manager/${organizationUuid}/assets`,
+      `management/${organizationUuid}/assets`,
       {
         headers: {
           'x-organization': organizationUuid,
@@ -197,7 +197,7 @@ export async function getAllAssetsOrg(organizationUuid: string) {
 export async function addCryptoOrg(organizationUuid: string, idCmc: number[]) {
   try {
     const result = await instance.post(
-      `admin/${organizationUuid}/cryptos`,
+      `management/${organizationUuid}/asset`,
       {
         idCmc,
       },
@@ -232,7 +232,7 @@ export async function registerNewCustomer(
     }
 
     const result = await instance.post<TNewCustomerResponse>(
-      'manager/costumer',
+      'management/costumer',
       data,
       {
         headers: {
@@ -252,14 +252,11 @@ export async function getWalletOrganization(
   organizationUuid: string,
 ): Promise<TClientInfosResponse[]> {
   try {
-    const response = await instance.get<TClientInfosResponse[]>(
-      `/manager/client`,
-      {
-        headers: {
-          'x-organization': organizationUuid,
-        },
+    const response = await instance.get<TClientInfosResponse[]>(`wallet`, {
+      headers: {
+        'x-organization': organizationUuid,
       },
-    )
+    })
 
     return response.data
   } catch (error) {
@@ -274,7 +271,7 @@ export async function getAllAssetsWalletClient(
 ) {
   try {
     const result = await instance.get<WalletDataResponse>(
-      `manager/wallet/${walletUuid}/walletAssets`,
+      `wallet/${walletUuid}/walletAssets`,
       {
         headers: {
           'x-organization': organizationUuid,
@@ -297,7 +294,7 @@ export async function addCryptoWalletClient(
 ) {
   try {
     const result = await instance.post(
-      `manager/wallet/${walletUuid}/asset`,
+      `wallet/${walletUuid}/asset`,
       {
         assetId: assetUuid,
         quantity,
@@ -322,7 +319,7 @@ export async function getAllAssetsInOrgForAddWalletClient(
 ) {
   try {
     const result = await instance.get<AssetsOrganizationForSelectedResponse[]>(
-      `manager/wallet/${organizationUuid}/assets`,
+      `wallet/${organizationUuid}/assets`,
       {
         headers: {
           'x-organization': organizationUuid,
@@ -345,7 +342,7 @@ export async function updateAssetWalletInformations(
 ) {
   try {
     const result = await instance.put(
-      `manager/wallet/${walletUuid}/asset`,
+      `wallet/${walletUuid}/asset`,
       {
         assetUuid,
         quantity,
