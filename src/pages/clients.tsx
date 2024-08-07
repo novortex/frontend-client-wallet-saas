@@ -17,6 +17,7 @@ export default function Clients() {
     state.user.uuidOrganization,
   ])
   const [clients, setClients] = useState<TClientInfosResponse[]>([])
+  const [searchTerm, setSearchTerm] = useState('') // Adicionando estado para o termo de busca
   const { toast } = useToast()
   const [signal] = useSignalStore((state) => [state.signal])
 
@@ -50,6 +51,14 @@ export default function Clients() {
     setIsModalOpen(false)
   }
 
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value)
+  }
+
+  const filteredClients = clients.filter((client) =>
+    client.infosClient.name.toLowerCase().includes(searchTerm.toLowerCase()),
+  )
+
   return (
     <div className="p-10">
       <div className="mb-10 flex items-center justify-between">
@@ -61,6 +70,8 @@ export default function Clients() {
           className="bg-[#171717] w-3/4 border-0 text-white focus:ring-0"
           type="text"
           placeholder="Search for ..."
+          value={searchTerm}
+          onChange={handleSearchChange}
         />
         <div className="flex gap-5">
           <Button
@@ -81,8 +92,8 @@ export default function Clients() {
         </div>
       </div>
       <div className="w-full flex gap-7">
-        {clients &&
-          clients.map((client, index) => (
+        {filteredClients &&
+          filteredClients.map((client, index) => (
             <CardClient
               key={index}
               walletUuid={client.walletUuid}
