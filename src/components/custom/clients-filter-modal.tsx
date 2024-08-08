@@ -182,7 +182,7 @@ export default function ClientsFilterModal({
                 {selectedManagers.map((managerName, index) => (
                   <div
                     key={index}
-                    className="h-8 flex items-center bg-gray-700 text-white rounded-md px-2"
+                    className="h-8 flex items-center bg-[#959CB6] text-white rounded-md px-2"
                   >
                     <div
                       className="cursor-pointer mr-2"
