@@ -55,6 +55,8 @@ export default function AddNewWalletModal({
   const { toast } = useToast()
 
   const handleAddAsset = async () => {
+    if (!validateInputs()) return
+
     onClose()
 
     toast({
@@ -63,7 +65,6 @@ export default function AddNewWalletModal({
       description: 'Demo Vault !!',
     })
 
-    // toast yellow for process
     const result = await addCryptoWalletClient(
       uuidOrganization,
       walletUuid,
@@ -83,7 +84,6 @@ export default function AddNewWalletModal({
       })
     }
 
-    // Reset the dropdowns and inputs
     setSelectedAsset('Asset')
     setEntryValue('')
     setAllocation('')
@@ -99,6 +99,31 @@ export default function AddNewWalletModal({
       title: 'Success !! new Asset in organization',
       description: 'Demo Vault !!',
     })
+  }
+
+  const validateInputs = () => {
+    let isValid = true
+
+    if (Number(entryValue) < 0) {
+      toast({
+        className: 'bg-red-500 border-0',
+        title: 'Validation Error',
+        description: 'Entry value cannot be negative',
+      })
+      isValid = false
+    }
+
+    const allocationValue = Number(allocation)
+    if (allocationValue < 0 || allocationValue > 100) {
+      toast({
+        className: 'bg-red-500 border-0',
+        title: 'Validation Error',
+        description: 'Allocation must be between 0 and 100',
+      })
+      isValid = false
+    }
+
+    return isValid
   }
 
   useEffect(() => {
