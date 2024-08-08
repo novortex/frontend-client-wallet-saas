@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import filterIcon from '../assets/image/filter-lines.png'
 import AddNewClientModal from '@/components/custom/add-new-client-modal'
+import ClientsFilterModal from '@/components/custom/clients-filter-modal'
 import { useState, useEffect } from 'react'
 import { getWalletOrganization, TClientInfosResponse } from '@/service/request'
 import { useUserStore } from '@/store/user'
@@ -13,6 +14,7 @@ import { useSignalStore } from '@/store/signalEffect'
 
 export default function Clients() {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false)
   const [uuidOrganization] = useUserStore((state) => [
     state.user.uuidOrganization,
   ])
@@ -59,6 +61,14 @@ export default function Clients() {
     client.infosClient.name.toLowerCase().includes(searchTerm.toLowerCase()),
   )
 
+  const openFilterModal = () => {
+    setIsFilterModalOpen(true)
+  }
+
+  const closeFilterModal = () => {
+    setIsFilterModalOpen(false)
+  }
+
   return (
     <div className="p-10">
       <div className="mb-10 flex items-center justify-between">
@@ -78,6 +88,7 @@ export default function Clients() {
             type="button"
             variant="outline"
             className="gap-2 hover:bg-gray-700"
+            onClick={openFilterModal}
           >
             <img src={filterIcon} alt="" />
             <p>Filters</p>
@@ -117,6 +128,10 @@ export default function Clients() {
           ))}
       </div>
       <AddNewClientModal isOpen={isModalOpen} onClose={closeModal} />
+      <ClientsFilterModal
+        isOpen={isFilterModalOpen}
+        onClose={closeFilterModal}
+      />
     </div>
   )
 }
