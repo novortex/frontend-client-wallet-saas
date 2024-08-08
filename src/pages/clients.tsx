@@ -17,7 +17,7 @@ export default function Clients() {
     state.user.uuidOrganization,
   ])
   const [clients, setClients] = useState<TClientInfosResponse[]>([])
-  const [searchTerm, setSearchTerm] = useState('') // Adicionando estado para o termo de busca
+  const [searchTerm, setSearchTerm] = useState('')
   const { toast } = useToast()
   const [signal] = useSignalStore((state) => [state.signal])
 
