@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Button } from '@/components/ui/button'
 import {
@@ -25,8 +26,32 @@ export default function ClientsFilterModal({
   isOpen,
   onClose,
 }: ClientsFilterModalProps) {
+  const [selectedManagers, setSelectedManagers] = useState<string[]>([])
+
   const handleClose = () => {
     onClose()
+  }
+
+  const managers = [
+    {
+      name: 'Arthur',
+    },
+    {
+      name: 'Pedro',
+    },
+    {
+      name: 'Abner',
+    },
+  ]
+
+  const handleSelectManager = (managerName: string) => {
+    if (!selectedManagers.includes(managerName)) {
+      setSelectedManagers([...selectedManagers, managerName])
+    }
+  }
+
+  const handleRemoveManager = (managerName: string) => {
+    setSelectedManagers(selectedManagers.filter((name) => name !== managerName))
   }
 
   return (
@@ -36,6 +61,7 @@ export default function ClientsFilterModal({
           <DialogTitle className="text-2xl">Filter Customer</DialogTitle>
         </DialogHeader>
         <div className="w-full">
+          {/* Wallet Type */}
           <div className="h-[20%] w-full font-bold text-[#959CB6]">
             Wallet type
           </div>
@@ -68,6 +94,7 @@ export default function ClientsFilterModal({
           </div>
         </div>
         <div className="w-full">
+          {/* Order By */}
           <div className="h-[20%] w-full font-bold text-[#959CB6]">
             Order By
           </div>
@@ -95,6 +122,7 @@ export default function ClientsFilterModal({
           </div>
         </div>
         <div className="w-full">
+          {/* Number of Alerts */}
           <div className="h-[20%] w-full font-bold text-[#959CB6]">
             Number of alerts
           </div>
@@ -122,27 +150,50 @@ export default function ClientsFilterModal({
           </div>
         </div>
         <div className="w-full">
+          {/* Filter by Manager */}
           <div className="h-[20%] w-full font-bold text-[#959CB6]">
             Filter by manager
           </div>
           <div className="h-[80%] w-full flex flex-row">
-            <div className="h-full w-[15%] flex justify-center items-center">
-              <img src={responsibleIcon} alt="icon" className="w-[45%] " />
+            <div className="h-full w-[10%] flex justify-start items-center">
+              <img src={responsibleIcon} alt="icon" className="w-[70%]" />
             </div>
-            <div className="h-full w-[85%] flex items-center">
-              <Select>
-                <SelectTrigger className="w-[85%] bg-[#131313] border-[#323232] text-[#fff]">
-                  <SelectValue placeholder="Select managers" />
-                </SelectTrigger>
-                <SelectContent className="bg-[#131313] border-2 border-[#323232]">
-                  <SelectItem
-                    value="test"
-                    className=" bg-[#131313] border-0  focus:bg-[#252525] focus:text-white text-white"
+            <div className="h-full w-[90%] flex flex-col justify-center">
+              <div className="w-full flex items-center justify-start mb-2">
+                <Select onValueChange={handleSelectManager}>
+                  <SelectTrigger className="w-full bg-[#131313] border-[#323232] text-[#fff]">
+                    <SelectValue placeholder="Select managers" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-[#131313] border-2 border-[#323232]">
+                    {managers.map((manager, index) => (
+                      <SelectItem
+                        key={index}
+                        value={manager.name}
+                        className="bg-[#131313] border-0 focus:bg-[#252525] focus:text-white text-white"
+                      >
+                        <div>{manager.name}</div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                {/* Render selected manager tags */}
+                {selectedManagers.map((managerName, index) => (
+                  <div
+                    key={index}
+                    className="h-8 flex items-center bg-gray-700 text-white rounded-md px-2"
                   >
-                    <div>asd</div>
-                  </SelectItem>
-                </SelectContent>
-              </Select>
+                    <div
+                      className="cursor-pointer mr-2"
+                      onClick={() => handleRemoveManager(managerName)}
+                    >
+                      X
+                    </div>
+                    <div>{managerName}</div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
