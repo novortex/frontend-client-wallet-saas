@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Button } from '@/components/ui/button'
 import {
@@ -16,6 +16,8 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import responsibleIcon from '../../assets/image/responsible-icon.png'
+import { useUserStore } from '@/store/user'
+import { getAllManagersOnOrganization } from '@/service/request'
 
 interface ClientsFilterModalProps {
   isOpen: boolean
@@ -27,31 +29,52 @@ export default function ClientsFilterModal({
   onClose,
 }: ClientsFilterModalProps) {
   const [selectedManagers, setSelectedManagers] = useState<string[]>([])
+  const [managers, setManagers] = useState<{ name: string }[]>([])
+
+  const uuidOrganization = useUserStore((state) => state.user.uuidOrganization)
+
+  // Carregar gerentes do localStorage ao abrir o modal
+  useEffect(() => {
+    const cachedManagers = localStorage.getItem('selectedManagers')
+    if (cachedManagers) {
+      setSelectedManagers(JSON.parse(cachedManagers))
+    }
+  }, [])
+
+  useEffect(() => {
+    const fetchManagers = async () => {
+      try {
+        const result = await getAllManagersOnOrganization(uuidOrganization)
+        // Processar os dados da API e definir o estado dos gerentes
+        const managersData = result.map((item: any) => ({
+          name: item.user.name,
+        }))
+        setManagers(managersData)
+      } catch (error) {
+        console.error('Erro ao buscar gerentes:', error)
+      }
+    }
+    fetchManagers()
+  }, [uuidOrganization])
 
   const handleClose = () => {
     onClose()
   }
 
-  const managers = [
-    {
-      name: 'Arthur',
-    },
-    {
-      name: 'Pedro',
-    },
-    {
-      name: 'Abner',
-    },
-  ]
-
   const handleSelectManager = (managerName: string) => {
     if (!selectedManagers.includes(managerName)) {
-      setSelectedManagers([...selectedManagers, managerName])
+      const updatedManagers = [...selectedManagers, managerName]
+      setSelectedManagers(updatedManagers)
+      localStorage.setItem('selectedManagers', JSON.stringify(updatedManagers)) // Armazenar no localStorage
     }
   }
 
   const handleRemoveManager = (managerName: string) => {
-    setSelectedManagers(selectedManagers.filter((name) => name !== managerName))
+    const updatedManagers = selectedManagers.filter(
+      (name) => name !== managerName,
+    )
+    setSelectedManagers(updatedManagers)
+    localStorage.setItem('selectedManagers', JSON.stringify(updatedManagers)) // Atualizar o localStorage
   }
 
   return (

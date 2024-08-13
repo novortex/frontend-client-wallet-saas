@@ -57,9 +57,23 @@ export default function Clients() {
     setSearchTerm(event.target.value)
   }
 
-  const filteredClients = clients.filter((client) =>
-    client.infosClient.name.toLowerCase().includes(searchTerm.toLowerCase()),
-  )
+  // Função para obter gerentes do cache
+  const getCachedManagers = () => {
+    const cachedManagers = localStorage.getItem('selectedManagers')
+    return cachedManagers ? JSON.parse(cachedManagers) : []
+  }
+
+  const cachedManagers = getCachedManagers()
+
+  // Filtrar clientes com base no termo de pesquisa e gerentes em cache
+  const filteredClients = clients.filter((client) => {
+    const nameMatches = client.infosClient.name
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase())
+    const managerMatches =
+      cachedManagers.length === 0 || cachedManagers.includes(client.managerName)
+    return nameMatches && managerMatches
+  })
 
   const openFilterModal = () => {
     setIsFilterModalOpen(true)
