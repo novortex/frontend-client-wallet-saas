@@ -179,7 +179,7 @@ export default function AddNewWalletModal({
             </Select>
             <Input
               className="w-1/2 h-full bg-[#131313] border-[#323232] text-[#959CB6]"
-              placeholder="Entry value"
+              placeholder="Asset value"
               value={entryValue}
               onChange={(e) => setEntryValue(e.target.value)}
             />
