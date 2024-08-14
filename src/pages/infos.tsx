@@ -10,6 +10,7 @@ import {
   Calendar,
   Wallet,
   BarChartBigIcon,
+  PhoneCall,
 } from 'lucide-react'
 import responsibleIcon from '../assets/image/responsible-icon.png'
 import ClientsInfoModal from '@/components/custom/clients-info-modal'
@@ -171,7 +172,7 @@ export default function Infos() {
             <div className="flex gap-5">
               <h1 className="text-3xl text-white">{walletI.user.name}</h1>
               {walletInfos.lastContactAt == null ? (
-                <Badge className="bg-red-500 text-white flex gap-2 hover:bg-red-800 hover:text-white">
+                <Badge className="bg-red-500 h-10 text-white flex gap-2 hover:bg-red-800 hover:text-white">
                   {' '}
                   <Check className="w-5" /> Not registered
                 </Badge>
@@ -182,7 +183,8 @@ export default function Infos() {
                 </Badge>
               )}
             </div>
-            <div>
+
+            <div className="flex gap-5">
               <Button
                 className="bg-[#131313] text-[#F2BE38] flex gap-3 hover:bg-yellow-500 hover:text-black"
                 onClick={openModal}
@@ -190,13 +192,15 @@ export default function Infos() {
                 {' '}
                 <CircleAlert className="w-5" /> Information
               </Button>
+              <Button
+                className="bg-[#131313] text-[#F2BE38] flex gap-3 hover:bg-yellow-500 hover:text-black"
+                onClick={openModalContact}
+              >
+                {' '}
+                <PhoneCall className="w-5" />
+                Contact confirm
+              </Button>
             </div>
-            {/* <Button
-              className="bg-[#131313] text-[#F2BE38] flex gap-3 hover:bg-yellow-500 hover:text-black"
-              onClick={openModalContact}
-            >
-              Cofirmar contato
-            </Button> */}
           </div>
 
           <div className="mb-14">
