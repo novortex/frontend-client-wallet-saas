@@ -32,10 +32,12 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
+import ConfirmContactModal from '@/components/custom/confirm-contact-modal'
 
 export default function Infos() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isModalExchangeOpen, setIsModalExchangeOpen] = useState(false)
+  const [isModalContactOpen, setisModalContactOpen] = useState(false)
 
   const [walletCommission, setWalletCommission] = useState<TWalletCommission[]>(
     [],
@@ -93,6 +95,14 @@ export default function Infos() {
 
   const closeModalopenModalExchange = () => {
     setIsModalExchangeOpen(false)
+  }
+
+  const openModalContact = () => {
+    setisModalContactOpen(true)
+  }
+
+  const closeModalContact = () => {
+    setisModalContactOpen(false)
   }
 
   useEffect(() => {
@@ -181,6 +191,12 @@ export default function Infos() {
                 <CircleAlert className="w-5" /> Information
               </Button>
             </div>
+            {/* <Button
+              className="bg-[#131313] text-[#F2BE38] flex gap-3 hover:bg-yellow-500 hover:text-black"
+              onClick={openModalContact}
+            >
+              Cofirmar contato
+            </Button> */}
           </div>
 
           <div className="mb-14">
@@ -378,6 +394,10 @@ export default function Infos() {
         accountEmail={walletI.exchange.accountEmail}
         emailPassword={walletI.exchange.emailPassword}
         exchangePassword={walletI.exchange.exchangePassword}
+      />
+      <ConfirmContactModal
+        isOpen={isModalContactOpen}
+        onClose={closeModalContact}
       />
     </div>
   )

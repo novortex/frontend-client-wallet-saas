@@ -361,3 +361,26 @@ export async function updateAssetWalletInformations(
     return false
   }
 }
+
+export async function confirmContactClient(
+  organizationUuid: string,
+  walletUuid: string,
+) {
+  try {
+    const result = await instance.patch(
+      'management/contact',
+      {
+        walletUuid,
+      },
+      {
+        headers: {
+          'x-organization': organizationUuid,
+        },
+      },
+    )
+    return result.data
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
