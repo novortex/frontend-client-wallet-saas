@@ -21,6 +21,7 @@ import {
   TWallet,
   TWalletCommission,
   TWalletInfos,
+  convertedTimeZone,
 } from '@/service/request'
 import { useUserStore } from '@/store/user'
 import { formatDate } from '@/utils'
@@ -39,6 +40,8 @@ export default function Infos() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isModalExchangeOpen, setIsModalExchangeOpen] = useState(false)
   const [isModalContactOpen, setisModalContactOpen] = useState(false)
+
+  const [timeZone, setTimeZone] = useState(null)
 
   const [walletCommission, setWalletCommission] = useState<TWalletCommission[]>(
     [],
@@ -118,7 +121,8 @@ export default function Infos() {
         return false
       }
 
-      console.log(result.walletInfo.lastRebalance)
+      // console.log(result.walletInfo.lastRebalance)
+      // console.log(result.walletPreInfos.lastContactAt)
 
       setWalletI(result.walletInfo)
       setWalletInfos(result.walletPreInfos)
@@ -127,6 +131,21 @@ export default function Infos() {
 
     getInfo()
   }, [navigate, uuidOrganization, walletUuid])
+
+  useEffect(() => {
+    const fetchTimeZone = async () => {
+      try {
+        const result = await convertedTimeZone(uuidOrganization)
+        setTimeZone(result)
+      } catch (error) {
+        console.error('Error on fetching timezone')
+      }
+    }
+
+    fetchTimeZone()
+  }, [uuidOrganization])
+
+  console.log(timeZone)
 
   return (
     <div className="p-10">
@@ -171,14 +190,15 @@ export default function Infos() {
           <div className="flex justify-between mb-5">
             <div className="flex gap-5">
               <h1 className="text-3xl text-white">{walletI.user.name}</h1>
-              {walletInfos.lastContactAt == null ? (
+              {walletInfos.lastContactAt == null ||
+              (timeZone &&
+                walletI.monthCloseDate &&
+                new Date(timeZone) > new Date(walletI.monthCloseDate)) ? (
                 <Badge className="bg-red-500 h-10 text-white flex gap-2 hover:bg-red-800 hover:text-white">
-                  {' '}
                   <Check className="w-5" /> Not registered
                 </Badge>
               ) : (
                 <Badge className="bg-[#10A45C] text-white flex gap-2 hover:bg-[#10A45C] hover:text-white">
-                  {' '}
                   <Check className="w-5" /> Confirm contact
                 </Badge>
               )}

@@ -384,3 +384,17 @@ export async function confirmContactClient(
     throw error
   }
 }
+
+export async function convertedTimeZone(organizationUuid: string) {
+  try {
+    const result = await instance.get('management/timezone', {
+      headers: {
+        'x-organization': organizationUuid,
+      },
+    })
+    return result.data
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
