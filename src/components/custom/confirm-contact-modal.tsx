@@ -39,15 +39,15 @@ export default function ConfirmContactModal({
       <DialogContent className="h-1/2 w-[200%] bg-[#131313] text-[#fff]">
         <DialogHeader className="flex justify-center items-center">
           <DialogTitle className="text-2xl text-[#fff]">
-            Confirmar contato
+            Confirm contact
           </DialogTitle>
         </DialogHeader>
         <div className="flex justify-center items-center flex-col gap-6">
           <CircleAlert className="text-[#F2BE38]" />
           <p className="flex w-2/3 text-center">
-            Você confirma que fez contato com o cliente? Ao confirmar, a próxima
-            data de contato recomendada será atualizada sem possibilidade de
-            reversão.
+            Do you confirm that you have contacted the client? Upon
+            confirmation, the next recommended contact date will be updated and
+            cannot be undone.
           </p>
         </div>
         <DialogFooter className="flex justify-end items-end">
@@ -55,13 +55,13 @@ export default function ConfirmContactModal({
             className="bg-[#10A45C] hover:bg-green-500 hover:text-black"
             onClick={handleConfirmContact}
           >
-            Confirmar
+            Confirm
           </Button>
           <Button
             className="bg-[#EF4E3D] hover:bg-red-500 hover:text-black"
             onClick={onClose}
           >
-            Cancelar
+            Cancel
           </Button>
         </DialogFooter>
       </DialogContent>
