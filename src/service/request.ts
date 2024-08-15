@@ -386,7 +386,7 @@ export async function getAllManagersOnOrganization(organizationUuid: string) {
 
     return result.data
   } catch (error) {
-    console.error('Abner:', error)
+    console.error(error)
     throw error
   }
 }
