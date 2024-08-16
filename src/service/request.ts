@@ -140,6 +140,17 @@ export type AssetsOrganizationForSelectedResponse = {
   icon: string
 }
 
+export type TManager = {
+  userUuid: string
+  active: boolean
+  user: {
+    name: string
+    email: string
+    phone: string | null
+    cpf: string | null
+  }
+}
+
 // Requests from api (backend)
 export async function login(
   email: string,
@@ -359,5 +370,23 @@ export async function updateAssetWalletInformations(
   } catch (error) {
     console.log(error)
     return false
+  }
+}
+
+export async function getAllManagersOnOrganization(organizationUuid: string) {
+  try {
+    const result = await instance.get(
+      `management/${organizationUuid}/managers`,
+      {
+        headers: {
+          'x-organization': organizationUuid,
+        },
+      },
+    )
+
+    return result.data
+  } catch (error) {
+    console.error(error)
+    throw error
   }
 }
