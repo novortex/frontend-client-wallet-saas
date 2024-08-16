@@ -35,7 +35,7 @@ export default function CreateWalletModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="h-4/5 w-[60%] bg-[#131313] text-[#fff] max-w-full">
+      <DialogContent className="h-4/5 w-[60%] bg-[#131313] text-[#fff] max-w-full border-transparent">
         <DialogHeader>
           <DialogTitle className="flex flex-row gap-4 text-3xl items-center">
             Register new Wallet <Wallet className="text-[#F2BE38]" />
