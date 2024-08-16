@@ -29,8 +29,6 @@ export default function CreateWalletModal({
   isOpen,
   onClose,
 }: CreateWalletModalProps) {
-  console.log('teste')
-
   const percentage = 20
 
   return (
@@ -75,7 +73,7 @@ export default function CreateWalletModal({
             <Label>Benchmark</Label>
             <Select>
               <SelectTrigger className="bg-[#131313] border-[#323232] text-[#959CB6]">
-                <SelectValue>Benchmark</SelectValue>
+                <SelectValue placeholder="Benchmark">Benchmark</SelectValue>
               </SelectTrigger>
               <SelectContent className="bg-[#131313] border-[#323232] text-[#959CB6]">
                 <SelectItem value="null">
@@ -123,7 +121,7 @@ export default function CreateWalletModal({
             <Label>Choose a manager</Label>
             <Select>
               <SelectTrigger className="bg-[#131313] border-[#323232] text-[#959CB6]">
-                <SelectValue>Name</SelectValue>
+                <SelectValue placeholder="Name">Name</SelectValue>
               </SelectTrigger>
               <SelectContent className="bg-[#131313] border-[#323232] text-[#959CB6]">
                 <SelectItem value="null">
