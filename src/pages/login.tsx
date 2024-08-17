@@ -36,7 +36,7 @@ export default function Login() {
           uuidOrganization: result?.user.uuidOrganizations,
         })
 
-        navigate('/clients')
+        navigate('/wallets')
 
         toast({
           className: 'bg-green-500 border-0',

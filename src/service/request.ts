@@ -151,6 +151,16 @@ export type TManager = {
   }
 }
 
+export type TCustomersOrganization = {
+  uuid: string
+  name: string
+  active: boolean
+  email: string
+  phone: string | null
+  cpf: string | null
+  isWallet: boolean
+}
+
 // Requests from api (backend)
 export async function login(
   email: string,
@@ -388,5 +398,22 @@ export async function getAllManagersOnOrganization(organizationUuid: string) {
   } catch (error) {
     console.error(error)
     throw error
+  }
+}
+
+export async function getAllCustomersOrganization(organizationUuid: string) {
+  try {
+    const result = await instance.get<TCustomersOrganization[]>(
+      `management/${organizationUuid}/clients`,
+      {
+        headers: {
+          'x-organization': organizationUuid,
+        },
+      },
+    )
+
+    return result.data
+  } catch (error) {
+    console.log(error)
   }
 }

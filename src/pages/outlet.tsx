@@ -1,5 +1,5 @@
 import { SideBar, SideBarItem } from '@/components/custom/sidebar'
-import { UsersIcon, Coins } from 'lucide-react'
+import { UsersIcon, Coins, Wallet2Icon } from 'lucide-react'
 import { Outlet, useLocation } from 'react-router-dom'
 import { Toaster } from '@/components/ui/toaster'
 
@@ -16,9 +16,14 @@ export default function Root() {
           <div className="mb-5">
             <h3 className="text-white font-medium">Admin</h3>
             <SideBarItem
+              icon={<Wallet2Icon size={20} />}
+              text="wallets"
+              href="/wallets"
+            ></SideBarItem>
+            <SideBarItem
               icon={<UsersIcon size={20} />}
-              text="Clients"
-              href="/clients"
+              text="Customers"
+              href="/customers"
             ></SideBarItem>
             <SideBarItem
               icon={<Coins size={20} />}

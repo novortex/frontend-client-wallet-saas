@@ -125,9 +125,9 @@ export default function Infos() {
             <BreadcrumbItem>
               <BreadcrumbLink
                 className="text-2xl text-white font-medium"
-                href="/clients"
+                href="/wallets"
               >
-                Clients
+                Wallets
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
