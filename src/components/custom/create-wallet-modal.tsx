@@ -19,6 +19,7 @@ import { Label } from '@/components/ui/label'
 import { Wallet, StepForwardIcon } from 'lucide-react'
 import { CircularProgressbar } from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist/styles.css'
+import { useState } from 'react'
 
 interface CreateWalletModalProps {
   isOpen: boolean
@@ -29,7 +30,31 @@ export default function CreateWalletModal({
   isOpen,
   onClose,
 }: CreateWalletModalProps) {
-  const percentage = 20
+  const [currency, setCurrency] = useState('')
+  const [performanceFee, setPerformanceFee] = useState('')
+  const [benchmark, setBenchmark] = useState('')
+  const [riskProfile, setRiskProfile] = useState('')
+  const [initialFee, setInitialFee] = useState('')
+  const [investedAmount, setInvestedAmount] = useState('')
+  const [contractChecked, setContractChecked] = useState(false)
+  const [manager, setManager] = useState('')
+
+  const calculateProgress = () => {
+    let progress = 0
+
+    if (currency) progress += 12.5
+    if (performanceFee) progress += 12.5
+    if (benchmark) progress += 12.5
+    if (riskProfile) progress += 12.5
+    if (initialFee) progress += 12.5
+    if (investedAmount) progress += 12.5
+    if (contractChecked) progress += 12.5
+    if (manager) progress += 12.5
+
+    return progress
+  }
+
+  const percentage = calculateProgress()
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -42,21 +67,24 @@ export default function CreateWalletModal({
         <div className="flex justify-evenly">
           <div className="w-[26%] h-full flex items-center flex-row">
             <div className="w-[35%]">
-              <Select>
+              <Select onValueChange={(value) => setCurrency(value)}>
                 <SelectTrigger className="bg-[#131313] border-[#323232] text-[#959CB6]">
-                  <SelectValue>USD</SelectValue>
+                  <SelectValue>{currency || 'USD'}</SelectValue>
                 </SelectTrigger>
                 <SelectContent className="bg-[#131313] border-[#323232] text-[#959CB6]">
-                  <SelectItem value="null">
-                    <div></div>
-                  </SelectItem>
+                  <SelectItem value="USD">USD</SelectItem>
+                  <SelectItem value="EUR">EUR</SelectItem>
+                  {/* Add more currency options if needed */}
                 </SelectContent>
               </Select>
             </div>
           </div>
           <div className="flex h-full w-[26%] justify-center items-center">
             <div style={{ width: 65, height: 65 }}>
-              <CircularProgressbar value={20} text={`${percentage}%`} />
+              <CircularProgressbar
+                value={percentage}
+                text={`${Math.round(percentage)}%`}
+              />
             </div>
           </div>
           <div className="flex h-full w-[26%]"></div>
@@ -67,31 +95,31 @@ export default function CreateWalletModal({
             <Input
               placeholder="Ex: 10%"
               className="bg-[#131313] border-[#323232] text-[#959CB6]"
+              value={performanceFee}
+              onChange={(e) => setPerformanceFee(e.target.value)}
             />
           </div>
           <div className="w-[26%]">
             <Label>Benchmark</Label>
-            <Select>
+            <Select onValueChange={(value) => setBenchmark(value)}>
               <SelectTrigger className="bg-[#131313] border-[#323232] text-[#959CB6]">
-                <SelectValue placeholder="Benchmark">Benchmark</SelectValue>
+                <SelectValue>{benchmark || 'Benchmark'}</SelectValue>
               </SelectTrigger>
               <SelectContent className="bg-[#131313] border-[#323232] text-[#959CB6]">
-                <SelectItem value="null">
-                  <div></div>
-                </SelectItem>
+                <SelectItem value="Benchmark1">Benchmark 1</SelectItem>
+                <SelectItem value="Benchmark2">Benchmark 2</SelectItem>
               </SelectContent>
             </Select>
           </div>
           <div className="w-[26%]">
             <Label>Risk Profile</Label>
-            <Select>
+            <Select onValueChange={(value) => setRiskProfile(value)}>
               <SelectTrigger className="bg-[#131313] border-[#323232] text-[#959CB6]">
-                <SelectValue>STANDARD</SelectValue>
+                <SelectValue>{riskProfile || 'STANDARD'}</SelectValue>
               </SelectTrigger>
               <SelectContent className="bg-[#131313] border-[#323232] text-[#959CB6]">
-                <SelectItem value="null">
-                  <div></div>
-                </SelectItem>
+                <SelectItem value="STANDARD">STANDARD</SelectItem>
+                <SelectItem value="HIGH">HIGH</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -102,6 +130,8 @@ export default function CreateWalletModal({
             <Input
               placeholder="Ex: $ 1,000"
               className="bg-[#131313] border-[#323232] text-[#959CB6]"
+              value={initialFee}
+              onChange={(e) => setInitialFee(e.target.value)}
             />
           </div>
           <div className="w-[26%] h-full">
@@ -109,24 +139,29 @@ export default function CreateWalletModal({
             <Input
               placeholder="Ex: $ 1,000"
               className="bg-[#131313] border-[#323232] text-[#959CB6]"
+              value={investedAmount}
+              onChange={(e) => setInvestedAmount(e.target.value)}
             />
           </div>
           <div className="w-[26%] h-full flex flex-row gap-5 items-center">
             <Label>Contract</Label>
-            <Checkbox className="border-gray-500" />
+            <Checkbox
+              className="border-gray-500"
+              checked={contractChecked}
+              onCheckedChange={() => setContractChecked(!contractChecked)}
+            />
           </div>
         </div>
         <div className="flex flex-row justify-evenly items-center">
           <div className="w-[26%]">
             <Label>Choose a manager</Label>
-            <Select>
+            <Select onValueChange={(value) => setManager(value)}>
               <SelectTrigger className="bg-[#131313] border-[#323232] text-[#959CB6]">
-                <SelectValue placeholder="Name">Name</SelectValue>
+                <SelectValue>{manager || 'Name'}</SelectValue>
               </SelectTrigger>
               <SelectContent className="bg-[#131313] border-[#323232] text-[#959CB6]">
-                <SelectItem value="null">
-                  <div></div>
-                </SelectItem>
+                <SelectItem value="Manager1">Manager 1</SelectItem>
+                <SelectItem value="Manager2">Manager 2</SelectItem>
               </SelectContent>
             </Select>
           </div>
