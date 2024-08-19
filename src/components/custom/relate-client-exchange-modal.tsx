@@ -19,6 +19,7 @@ import { Label } from '@/components/ui/label'
 import { StepForwardIcon, User } from 'lucide-react'
 import { CircularProgressbar } from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist/styles.css'
+import { useState } from 'react'
 
 interface RelateClientExchangeModalProps {
   isOpen: boolean
@@ -29,12 +30,39 @@ export default function RelateClientExchangeModal({
   isOpen,
   onClose,
 }: RelateClientExchangeModalProps) {
+  const [isCheckboxChecked, setIsCheckboxChecked] = useState(false)
+  const [exchange, setExchange] = useState('')
+  const [initialFee, setInitialFee] = useState(false)
+  const [exchangeInfo1, setExchangeInfo1] = useState('')
+  const [exchangeInfo2, setExchangeInfo2] = useState('')
+  const [exchangeInfo3, setExchangeInfo3] = useState('')
+
+  const handleCheckboxChange = () => {
+    setIsCheckboxChecked(!isCheckboxChecked)
+  }
+
+  const calculateProgress = () => {
+    let progress = 0
+    const fieldsCount = isCheckboxChecked ? 5 : 2
+
+    if (exchange) progress += 100 / fieldsCount
+    if (initialFee) progress += 100 / fieldsCount
+
+    if (isCheckboxChecked) {
+      if (exchangeInfo1) progress += 100 / fieldsCount
+      if (exchangeInfo2) progress += 100 / fieldsCount
+      if (exchangeInfo3) progress += 100 / fieldsCount
+    }
+
+    return progress
+  }
+
+  const percentage = calculateProgress()
+
   const closeModal = () => {
     console.log('enviado')
     onClose()
   }
-
-  const percentage = 20
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -46,52 +74,67 @@ export default function RelateClientExchangeModal({
         </DialogHeader>
         <div className="flex justify-center items-start">
           <div style={{ width: 65, height: 65 }}>
-            <CircularProgressbar value={20} text={`${percentage}%`} />
+            <CircularProgressbar
+              value={percentage}
+              text={`${Math.round(percentage)}%`}
+            />
           </div>
         </div>
         <div className="flex flex-row">
           <div className="w-[48%] flex flex-col justify-start items-center gap-10">
             <div className="w-2/3">
               <Label>Exchange</Label>
-              <Select>
+              <Select onValueChange={(value) => setExchange(value)}>
                 <SelectTrigger className="bg-[#131313] border-[#323232] text-[#959CB6]">
-                  <SelectValue placeholder="Exchange">Exchange</SelectValue>
+                  <SelectValue placeholder="Exchange">{exchange}</SelectValue>
                 </SelectTrigger>
                 <SelectContent className="bg-[#131313] border-[#323232] text-[#959CB6]">
-                  <SelectItem value="null">
-                    <div></div>
-                  </SelectItem>
+                  <SelectItem value="exchange1">Exchange 1</SelectItem>
+                  <SelectItem value="exchange2">Exchange 2</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div className="w-2/3 flex flex-row gap-4">
               <Label>Initial Fee is paid?</Label>
-              <Checkbox className="border-gray-500" />
+              <Checkbox
+                className="border-gray-500"
+                checked={initialFee}
+                onCheckedChange={() => setInitialFee(!initialFee)}
+              />
             </div>
           </div>
           <div className="flex items-center justify-center w-[4%]">
             <div className="w-[2px] bg-gray-500 h-full"></div>
           </div>
           <div className="w-[48%] flex flex-col justify-evenly items-center gap-5">
-            <div className="flex flex-row gap-4 ">
+            <div className="flex flex-row gap-4">
               <Label>Include exchange information?</Label>
-              <Checkbox className="border-gray-500" />
+              <Checkbox
+                className="border-gray-500"
+                checked={isCheckboxChecked}
+                onCheckedChange={handleCheckboxChange}
+              />
             </div>
             <Input
               className="w-2/3 bg-[#131313] border-[#323232] text-[#959CB6]"
-              placeholder="Name exchange"
+              placeholder="Email da conta"
+              value={exchangeInfo1}
+              onChange={(e) => setExchangeInfo1(e.target.value)}
+              disabled={!isCheckboxChecked}
             />
             <Input
               className="w-2/3 bg-[#131313] border-[#323232] text-[#959CB6]"
-              placeholder="Name exchange"
+              placeholder="Senha do email"
+              value={exchangeInfo2}
+              onChange={(e) => setExchangeInfo2(e.target.value)}
+              disabled={!isCheckboxChecked}
             />
             <Input
               className="w-2/3 bg-[#131313] border-[#323232] text-[#959CB6]"
-              placeholder="Name exchange"
-            />
-            <Input
-              className="w-2/3 bg-[#131313] border-[#323232] text-[#959CB6]"
-              placeholder="Name exchange"
+              placeholder="Senha da conta"
+              value={exchangeInfo3}
+              onChange={(e) => setExchangeInfo3(e.target.value)}
+              disabled={!isCheckboxChecked}
             />
           </div>
         </div>

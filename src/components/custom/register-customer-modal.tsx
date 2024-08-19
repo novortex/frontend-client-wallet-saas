@@ -23,6 +23,13 @@ export default function RegisterCustomerModal({
   onClose,
 }: RegisterCustomerModalProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [percentage, setPercentage] = useState(0)
+  const [inputValues, setInputValues] = useState({
+    name: '',
+    email: '',
+    cpf: '',
+    phone: '',
+  })
 
   const openModal = () => {
     setIsModalOpen(true)
@@ -33,7 +40,22 @@ export default function RegisterCustomerModal({
     setIsModalOpen(false)
   }
 
-  const percentage = 20
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    const isEmptyBefore = inputValues[name as keyof typeof inputValues] === ''
+    const isEmptyAfter = value === ''
+
+    setInputValues({
+      ...inputValues,
+      [name]: value,
+    })
+
+    if (isEmptyBefore && !isEmptyAfter) {
+      setPercentage((prev) => Math.min(prev + 25, 100))
+    } else if (!isEmptyBefore && isEmptyAfter) {
+      setPercentage((prev) => Math.max(prev - 25, 0))
+    }
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -45,7 +67,7 @@ export default function RegisterCustomerModal({
         </DialogHeader>
         <div className="flex justify-center items-start">
           <div style={{ width: 65, height: 65 }}>
-            <CircularProgressbar value={20} text={`${percentage}%`} />
+            <CircularProgressbar value={percentage} text={`${percentage}%`} />
           </div>
         </div>
         <div className="gap-4">
@@ -53,20 +75,32 @@ export default function RegisterCustomerModal({
             <Input
               className="w-1/3 bg-[#131313] border-[#323232] text-[#959CB6]"
               placeholder="Name"
+              name="name"
+              value={inputValues.name}
+              onChange={handleInputChange}
             />
             <Input
               className="w-1/3 bg-[#131313] border-[#323232] text-[#959CB6]"
               placeholder="Email"
+              name="email"
+              value={inputValues.email}
+              onChange={handleInputChange}
             />
           </div>
           <div className="w-full h-1/2 flex flex-row justify-evenly items-center">
             <Input
               className="w-1/3 bg-[#131313] border-[#323232] text-[#959CB6]"
               placeholder="CPF (optional)"
+              name="cpf"
+              value={inputValues.cpf}
+              onChange={handleInputChange}
             />
             <Input
               className="w-1/3 bg-[#131313] border-[#323232] text-[#959CB6]"
               placeholder="Phone (optional)"
+              name="phone"
+              value={inputValues.phone}
+              onChange={handleInputChange}
             />
           </div>
         </div>
