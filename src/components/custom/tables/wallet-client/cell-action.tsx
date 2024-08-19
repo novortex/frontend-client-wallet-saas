@@ -22,6 +22,7 @@ import {
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import { ClientActive } from './columns'
 import { updateAssetWalletInformations } from '@/service/request'
 import { useUserStore } from '@/store/user'
@@ -43,7 +44,37 @@ export default function CellActions({ rowInfos }: { rowInfos: ClientActive }) {
   const { walletUuid } = useParams()
   const { toast } = useToast()
 
+  const validateInputs = () => {
+    let isValid = true
+
+    const entryValue = newQuantityAssetRef.current?.value ?? '0'
+    const allocation = newIdealAllocationRef.current?.value ?? '0'
+
+    if (Number(entryValue) < 0) {
+      toast({
+        className: 'bg-red-500 border-0',
+        title: 'Validation Error',
+        description: 'Entry value cannot be negative',
+      })
+      isValid = false
+    }
+
+    const allocationValue = Number(allocation)
+    if (allocationValue < 0 || allocationValue > 100) {
+      toast({
+        className: 'bg-red-500 border-0',
+        title: 'Validation Error',
+        description: 'Allocation must be between 0 and 100',
+      })
+      isValid = false
+    }
+
+    return isValid
+  }
+
   const handleUpdateInformationAssetWallet = async () => {
+    if (!validateInputs()) return
+
     if (!newQuantityAssetRef.current && !newIdealAllocationRef.current) {
       return toast({
         className: 'bg-red-500 border-0',
@@ -64,7 +95,6 @@ export default function CellActions({ rowInfos }: { rowInfos: ClientActive }) {
       newIdealAllocationRef.current?.value ?? '0',
     )
 
-    // toast yellow for process
     const result = await updateAssetWalletInformations(
       uuidOrganization,
       walletUuid as string,
@@ -81,11 +111,7 @@ export default function CellActions({ rowInfos }: { rowInfos: ClientActive }) {
       })
     }
 
-    if (!signal) {
-      setSignal(true)
-    } else {
-      setSignal(false)
-    }
+    setSignal(!signal)
 
     return toast({
       className: 'bg-green-500 border-0',
@@ -134,7 +160,11 @@ export default function CellActions({ rowInfos }: { rowInfos: ClientActive }) {
                     <p>{rowInfos.asset.name} in this wallet</p>
                   </div>
 
-                  <div className="flex mt-5 gap-5">
+                  <div className="flex mt-5 gap-5 w-full">
+                    <Label className="w-1/2">Asset Value</Label>
+                    <Label className="w-1/2">Allocation</Label>
+                  </div>
+                  <div className="flex mt-5 gap-5 w-full">
                     <Input
                       className="w-1/2 h-full bg-[#131313] border-[#323232] text-[#959CB6]"
                       placeholder="Quantity"
