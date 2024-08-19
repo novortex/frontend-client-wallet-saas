@@ -373,6 +373,29 @@ export async function updateAssetWalletInformations(
   }
 }
 
+export async function confirmContactClient(
+  organizationUuid: string,
+  walletUuid: string,
+) {
+  try {
+    const result = await instance.patch(
+      'management/contact',
+      {
+        walletUuid,
+      },
+      {
+        headers: {
+          'x-organization': organizationUuid,
+        },
+      },
+    )
+    return result.data
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+
 export async function getAllManagersOnOrganization(organizationUuid: string) {
   try {
     const result = await instance.get(
@@ -383,10 +406,24 @@ export async function getAllManagersOnOrganization(organizationUuid: string) {
         },
       },
     )
-
     return result.data
   } catch (error) {
     console.error(error)
     throw error
   }
 }
+
+export async function convertedTimeZone(organizationUuid: string) {
+  try {
+    const result = await instance.get('management/timezone', {
+      headers: {
+        'x-organization': organizationUuid,
+      },
+    })
+    return result.data
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+
