@@ -14,12 +14,14 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { HandCoins } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 import filterIcon from '../../../../assets/icons/filter.svg'
 import exportIcon from '../../../../assets/icons/export.svg'
 
 import AddNewWalletModal from '../../add-new-wallet-modal'
+import OperationsModal from './operations'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -33,6 +35,7 @@ export function DataTable<TData, TValue>({
   walletUuid,
 }: DataTableProps<TData, TValue>) {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isOperationModalOpen, setIsOperationModalOpen] = useState(false)
 
   const openModal = () => {
     setIsModalOpen(true)
@@ -40,6 +43,14 @@ export function DataTable<TData, TValue>({
 
   const closeModal = () => {
     setIsModalOpen(false)
+  }
+
+  const openOperationModal = () => {
+    setIsOperationModalOpen(true)
+  }
+
+  const closeOperationModal = () => {
+    setIsOperationModalOpen(false)
   }
 
   const table = useReactTable({
@@ -58,6 +69,13 @@ export function DataTable<TData, TValue>({
           </Button>
           <Button className="bg-white text-black flex gap-2 hover:bg-gray-400 w-1/3 p-5">
             <img src={exportIcon} alt="" /> Export
+          </Button>
+          <Button
+            className="bg-[#1877F2] w-1/2 hover:bg-blue-600 p-5 gap-2"
+            onClick={openOperationModal}
+          >
+            <HandCoins />
+            Withdrawal / Deposit
           </Button>
           <Button
             className="bg-[#1877F2] w-1/2 hover:bg-blue-600 p-5"
@@ -117,6 +135,10 @@ export function DataTable<TData, TValue>({
         isOpen={isModalOpen}
         onClose={closeModal}
         walletUuid={walletUuid}
+      />
+      <OperationsModal
+        isOpen={isOperationModalOpen}
+        onClose={closeOperationModal}
       />
     </div>
   )
