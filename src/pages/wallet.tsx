@@ -23,10 +23,13 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
+import { HandCoins } from 'lucide-react'
+import OperationsModal from '@/components/custom/tables/wallet-client/operations'
 
 export default function Wallet() {
   const [data, setData] = useState<ClientActive[]>([])
   const [infosWallet, setInfosWallet] = useState<TWalletAssetsInfo>()
+  const [isOperationModalOpen, setIsOperationModalOpen] = useState(false)
   const [loading, setLoading] = useState(true)
   const [uuidOrganization] = useUserStore((state) => [
     state.user.uuidOrganization,
@@ -36,6 +39,14 @@ export default function Wallet() {
   const { walletUuid } = useParams()
 
   const { toast } = useToast()
+
+  const openOperationModal = () => {
+    setIsOperationModalOpen(true)
+  }
+
+  const closeOperationModal = () => {
+    setIsOperationModalOpen(false)
+  }
 
   useEffect(() => {
     async function getData(
@@ -145,6 +156,13 @@ export default function Wallet() {
           placeholder="Search for ..."
         />
         <div className="flex gap-5">
+          <Button
+            className="bg-[#1877F2] w-[45%] hover:bg-blue-600 p-5 gap-2 ml-4"
+            onClick={openOperationModal}
+          >
+            <HandCoins />
+            Withdrawal / Deposit
+          </Button>
           <Button type="button" variant="outline">
             Change history
           </Button>
@@ -219,6 +237,10 @@ export default function Wallet() {
           <h2>Alert when it happens Z</h2>
         </div>
       </div>
+      <OperationsModal
+        isOpen={isOperationModalOpen}
+        onClose={closeOperationModal}
+      />
     </div>
   )
 }
