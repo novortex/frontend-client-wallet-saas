@@ -17,6 +17,8 @@ import { Button } from '@/components/ui/button'
 
 import filterIcon from '../../../../assets/icons/filter.svg'
 import exportIcon from '../../../../assets/icons/export.svg'
+import RegisterCustomerModal from '../../register-customer-modal'
+import { useState } from 'react'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -33,6 +35,16 @@ export function DataTableCustomers<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
   })
 
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const openModal = () => {
+    setIsModalOpen(true)
+  }
+
+  const closeModal = () => {
+    setIsModalOpen(false)
+  }
+
   return (
     <div className="rounded-md">
       <div className="bg-[#171717] rounded-t-lg p-5 flex items-center justify-between">
@@ -44,7 +56,10 @@ export function DataTableCustomers<TData, TValue>({
           <Button className="bg-white text-black flex gap-2 hover:bg-gray-400 w-1/3 p-5">
             <img src={exportIcon} alt="" /> Export
           </Button>
-          <Button className="bg-[#1877F2] w-1/2 hover:bg-blue-600 p-5">
+          <Button
+            onClick={openModal}
+            className="bg-[#1877F2] w-1/2 hover:bg-blue-600 p-5"
+          >
             + Add new
           </Button>
         </div>
@@ -95,6 +110,7 @@ export function DataTableCustomers<TData, TValue>({
           )}
         </TableBody>
       </Table>
+      <RegisterCustomerModal isOpen={isModalOpen} onClose={closeModal} />
     </div>
   )
 }

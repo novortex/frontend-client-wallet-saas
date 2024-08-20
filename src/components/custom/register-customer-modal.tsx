@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '../ui/input'
 import { StepForwardIcon, User } from 'lucide-react'
-import { CircularProgressbar } from 'react-circular-progressbar'
+import { buildStyles, CircularProgressbar } from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist/styles.css'
 import RelateClientExchangeModal from './relate-client-exchange-modal'
 import { useState } from 'react'
@@ -67,7 +67,15 @@ export default function RegisterCustomerModal({
         </DialogHeader>
         <div className="flex justify-center items-start">
           <div style={{ width: 65, height: 65 }}>
-            <CircularProgressbar value={percentage} text={`${percentage}%`} />
+            <CircularProgressbar
+              styles={buildStyles({
+                pathColor: `#F2BE38`,
+                textColor: '#F2BE38',
+                trailColor: '',
+              })}
+              value={percentage}
+              text={`${percentage}%`}
+            />
           </div>
         </div>
         <div className="gap-4">
