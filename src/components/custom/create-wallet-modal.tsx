@@ -20,6 +20,7 @@ import { Wallet, StepForwardIcon } from 'lucide-react'
 import { CircularProgressbar } from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist/styles.css'
 import { useState } from 'react'
+import RelateClientExchangeModal from './relate-client-exchange-modal'
 
 interface CreateWalletModalProps {
   isOpen: boolean
@@ -38,6 +39,16 @@ export default function CreateWalletModal({
   const [investedAmount, setInvestedAmount] = useState('')
   const [contractChecked, setContractChecked] = useState(false)
   const [manager, setManager] = useState('')
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const openModal = () => {
+    setIsModalOpen(true)
+    onClose()
+  }
+
+  const closeModal = () => {
+    setIsModalOpen(false)
+  }
 
   const calculateProgress = () => {
     let progress = 0
@@ -169,13 +180,14 @@ export default function CreateWalletModal({
         <DialogFooter className="flex justify-end items-end">
           <Button
             className="bg-[#1877F2] w-1/6 hover:bg-blue-600 p-5 flex items-center justify-center gap-3"
-            onClick={onClose}
+            onClick={openModal}
           >
             <StepForwardIcon />
-            Finish
+            Continue
           </Button>
         </DialogFooter>
       </DialogContent>
+      <RelateClientExchangeModal isOpen={isModalOpen} onClose={closeModal} />
     </Dialog>
   )
 }

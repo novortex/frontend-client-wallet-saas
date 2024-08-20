@@ -10,7 +10,6 @@ import { Input } from '../ui/input'
 import { StepForwardIcon, User } from 'lucide-react'
 import { buildStyles, CircularProgressbar } from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist/styles.css'
-import RelateClientExchangeModal from './relate-client-exchange-modal'
 import { useState } from 'react'
 
 interface RegisterCustomerModalProps {
@@ -22,7 +21,6 @@ export default function RegisterCustomerModal({
   isOpen,
   onClose,
 }: RegisterCustomerModalProps) {
-  const [isModalOpen, setIsModalOpen] = useState(false)
   const [percentage, setPercentage] = useState(0)
   const [inputValues, setInputValues] = useState({
     name: '',
@@ -30,15 +28,6 @@ export default function RegisterCustomerModal({
     cpf: '',
     phone: '',
   })
-
-  const openModal = () => {
-    setIsModalOpen(true)
-    onClose()
-  }
-
-  const closeModal = () => {
-    setIsModalOpen(false)
-  }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -115,14 +104,13 @@ export default function RegisterCustomerModal({
         <DialogFooter className="flex justify-end items-end">
           <Button
             className="bg-[#1877F2] w-1/6 hover:bg-blue-600 p-5 flex items-center justify-center gap-3"
-            onClick={openModal}
+            onClick={onClose}
           >
             <StepForwardIcon />
-            Continue
+            Finish
           </Button>
         </DialogFooter>
       </DialogContent>
-      <RelateClientExchangeModal isOpen={isModalOpen} onClose={closeModal} />
     </Dialog>
   )
 }
