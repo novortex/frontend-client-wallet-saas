@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react'
 import SwitchTheme from '@/components/custom/switch-theme'
-import { getAllCustomersOrganization } from '@/service/request'
+import {
+  getAllBenchmark,
+  getAllCustomersOrganization,
+  getAllExchange,
+  getAllManagersOnOrganization,
+} from '@/service/request'
 import { useUserStore } from '@/store/user'
 import { useSignalStore } from '@/store/signalEffect'
 import { useToast } from '@/components/ui/use-toast'
@@ -9,6 +14,7 @@ import {
   columnsCustomerOrg,
   CustomersOrganization,
 } from '@/components/custom/tables/customers/columns'
+import { useManagerOrganization } from '@/store/managers_benckmark_exchanges'
 
 export function Customers() {
   const [data, setData] = useState<CustomersOrganization[]>([])
@@ -17,6 +23,9 @@ export function Customers() {
     state.user.uuidOrganization,
   ])
   const [signal] = useSignalStore((state) => [state.signal])
+  const [setManager, setBenchs, setExchanges] = useManagerOrganization(
+    (state) => [state.setManagers, state.setBenchs, state.setExchanges],
+  )
 
   const { toast } = useToast()
 
@@ -58,7 +67,22 @@ export function Customers() {
       }
     }
     getData(uuidOrganization, setData)
-  }, [uuidOrganization, signal, toast])
+
+    const fetchManagersAndBenchmarks = async () => {
+      try {
+        const managers = await getAllManagersOnOrganization(uuidOrganization)
+        const benchmarks = await getAllBenchmark(uuidOrganization)
+        const exchanges = await getAllExchange(uuidOrganization)
+
+        setManager(managers)
+        setBenchs(benchmarks)
+        setExchanges(exchanges)
+      } catch (error) {
+        console.error('Erro ao buscar gerentes:', error)
+      }
+    }
+    fetchManagersAndBenchmarks()
+  }, [uuidOrganization, signal, toast, setManager, setBenchs, setExchanges])
 
   if (loading) {
     return <div>Loading...</div>
