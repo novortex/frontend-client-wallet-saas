@@ -9,6 +9,7 @@ import Login from './pages/login.tsx'
 import Clients from './pages/clients.tsx'
 import AssetsOrg from './pages/assets-org.tsx'
 import Infos from './pages/infos.tsx'
+import Graphs from './pages/graphs.tsx'
 
 const router = createBrowserRouter([
   {
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
       {
         path: '/clients/:walletUuid/infos',
         element: <Infos />,
+      },
+      {
+        path: '/wallet/:walletUuid/graphs',
+        element: <Graphs />,
       },
     ],
   },

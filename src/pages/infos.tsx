@@ -384,7 +384,10 @@ export default function Infos() {
                   <p>Wallet</p>
                 </Button>
 
-                <Button className="bg-[#1877F2] hover:bg-blue-600 flex gap-3 pt-5 pb-5">
+                <Button
+                  onClick={() => navigate(`/wallet/${walletUuid}/graphs`)}
+                  className="bg-[#1877F2] hover:bg-blue-600 flex gap-3 pt-5 pb-5"
+                >
                   <BarChartBigIcon />
                   <p>Graphics</p>
                 </Button>
