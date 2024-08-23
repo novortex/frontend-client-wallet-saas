@@ -86,7 +86,7 @@ export default function Clients() {
   return (
     <div className="p-10">
       <div className="mb-10 flex items-center justify-between">
-        <h1 className="text-2xl text-white font-medium">Clients</h1>
+        <h1 className="text-2xl text-white font-medium">Wallets</h1>
         <SwitchTheme />
       </div>
       <div className="flex items-center justify-between mb-10">

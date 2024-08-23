@@ -21,15 +21,20 @@ import { CircularProgressbar } from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist/styles.css'
 import { useState } from 'react'
 import RelateClientExchangeModal from './relate-client-exchange-modal'
+import { useRegisterWallet } from '@/store/registerWallet'
+import { useManagerOrganization } from '@/store/managers_benckmark_exchanges'
+import { CustomersOrganization } from './tables/customers/columns'
 
 interface CreateWalletModalProps {
   isOpen: boolean
   onClose: () => void
+  rowInfos: CustomersOrganization
 }
 
 export default function CreateWalletModal({
   isOpen,
   onClose,
+  rowInfos,
 }: CreateWalletModalProps) {
   const [currency, setCurrency] = useState('')
   const [performanceFee, setPerformanceFee] = useState('')
@@ -38,11 +43,27 @@ export default function CreateWalletModal({
   const [initialFee, setInitialFee] = useState('')
   const [investedAmount, setInvestedAmount] = useState('')
   const [contractChecked, setContractChecked] = useState(false)
-  const [manager, setManager] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [manager, setManager] = useState('')
+
+  const [saveFirstModal] = useRegisterWallet((state) => [state.firstModal])
+  const [managersOrganization, benchs] = useManagerOrganization((state) => [
+    state.managers,
+    state.benchs,
+  ])
 
   const openModal = () => {
     setIsModalOpen(true)
+
+    saveFirstModal({
+      performanceFee: Number(performanceFee),
+      benchmark,
+      riskProfile,
+      initialFee: Number(initialFee),
+      investedAmount: Number(investedAmount),
+      contract: contractChecked,
+      manager,
+    })
     onClose()
   }
 
@@ -114,11 +135,18 @@ export default function CreateWalletModal({
             <Label>Benchmark</Label>
             <Select onValueChange={(value) => setBenchmark(value)}>
               <SelectTrigger className="bg-[#131313] border-[#323232] text-[#959CB6]">
-                <SelectValue>{benchmark || 'Benchmark'}</SelectValue>
+                <SelectValue>
+                  {benchmark
+                    ? benchs.find((mgr) => mgr.cuid === benchmark)?.name
+                    : 'Name'}
+                </SelectValue>
               </SelectTrigger>
               <SelectContent className="bg-[#131313] border-[#323232] text-[#959CB6]">
-                <SelectItem value="Benchmark1">Benchmark 1</SelectItem>
-                <SelectItem value="Benchmark2">Benchmark 2</SelectItem>
+                {benchs.map((bench) => (
+                  <SelectItem key={bench.name} value={bench.cuid}>
+                    {bench.name}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -129,8 +157,11 @@ export default function CreateWalletModal({
                 <SelectValue>{riskProfile || 'STANDARD'}</SelectValue>
               </SelectTrigger>
               <SelectContent className="bg-[#131313] border-[#323232] text-[#959CB6]">
+                <SelectItem value="SUPER_LOW_RISK">SUPER LOW RISK</SelectItem>
+                <SelectItem value="LOW_RISK">LOW RISK</SelectItem>
                 <SelectItem value="STANDARD">STANDARD</SelectItem>
-                <SelectItem value="HIGH">HIGH</SelectItem>
+                <SelectItem value="HIGH">HIGH RISK</SelectItem>
+                <SelectItem value="SUPER_HIGH_RISK">SUPER HIGH RISK</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -168,11 +199,19 @@ export default function CreateWalletModal({
             <Label>Choose a manager</Label>
             <Select onValueChange={(value) => setManager(value)}>
               <SelectTrigger className="bg-[#131313] border-[#323232] text-[#959CB6]">
-                <SelectValue>{manager || 'Name'}</SelectValue>
+                <SelectValue>
+                  {manager
+                    ? managersOrganization.find((mgr) => mgr.uuid === manager)
+                        ?.name
+                    : 'Name'}
+                </SelectValue>
               </SelectTrigger>
               <SelectContent className="bg-[#131313] border-[#323232] text-[#959CB6]">
-                <SelectItem value="Manager1">Manager 1</SelectItem>
-                <SelectItem value="Manager2">Manager 2</SelectItem>
+                {managersOrganization.map((manager) => (
+                  <SelectItem key={manager.uuid} value={manager.uuid}>
+                    {manager.name}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -187,7 +226,11 @@ export default function CreateWalletModal({
           </Button>
         </DialogFooter>
       </DialogContent>
-      <RelateClientExchangeModal isOpen={isModalOpen} onClose={closeModal} />
+      <RelateClientExchangeModal
+        rowInfos={rowInfos}
+        isOpen={isModalOpen}
+        onClose={closeModal}
+      />
     </Dialog>
   )
 }

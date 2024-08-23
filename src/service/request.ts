@@ -151,6 +151,16 @@ export type TManager = {
   }
 }
 
+export type TCustomersOrganization = {
+  uuid: string
+  name: string
+  active: boolean
+  email: string
+  phone: string | null
+  cpf: string | null
+  isWallet: boolean
+}
+
 // Requests from api (backend)
 export async function login(
   email: string,
@@ -229,7 +239,7 @@ export async function addCryptoOrg(organizationUuid: string, idCmc: number[]) {
 export async function registerNewCustomer(
   name: string,
   email: string,
-  organizationId: string,
+  organizationUuid: string,
   cpf?: string,
   phone?: string,
 ): Promise<TNewCustomerResponse> {
@@ -239,7 +249,7 @@ export async function registerNewCustomer(
       email,
       cpf,
       phone,
-      organizationId,
+      organizationUuid,
     }
 
     const result = await instance.post<TNewCustomerResponse>(
@@ -247,7 +257,7 @@ export async function registerNewCustomer(
       data,
       {
         headers: {
-          'x-organization': organizationId,
+          'x-organization': organizationUuid,
         },
       },
     )
@@ -413,6 +423,23 @@ export async function getAllManagersOnOrganization(organizationUuid: string) {
   }
 }
 
+export async function getAllCustomersOrganization(organizationUuid: string) {
+  try {
+    const result = await instance.get<TCustomersOrganization[]>(
+      `management/${organizationUuid}/clients`,
+      {
+        headers: {
+          'x-organization': organizationUuid,
+        },
+      },
+    )
+
+    return result.data
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 export async function convertedTimeZone(organizationUuid: string) {
   try {
     const result = await instance.get('management/timezone', {
@@ -427,3 +454,78 @@ export async function convertedTimeZone(organizationUuid: string) {
   }
 }
 
+export async function registerWalletForCustomer(
+  organizationUuid: string,
+  customerUuid: string,
+  investedAmount: number,
+  initialFee: number,
+  initialFeePaid: boolean,
+  riskProfile: string,
+  contract: boolean,
+  performanceFee: number,
+  benchmarkCuid: string,
+  exchangeUuid: string,
+  managerUuid: string,
+  accountEmail?: string,
+  emailPassword?: string,
+  exchangePassword?: string,
+) {
+  try {
+    const data = {
+      investedAmount,
+      initialFee,
+      initialFeePaid,
+      riskProfile,
+      contract,
+      performanceFee,
+      userUuid: customerUuid,
+      accountEmail,
+      emailPassword,
+      exchangePassword,
+      exchangeUuid,
+      benchmarkCuid,
+      managerUuid,
+    }
+
+    const result = await instance.post<TNewCustomerResponse>('wallet', data, {
+      headers: {
+        'x-organization': organizationUuid,
+      },
+    })
+
+    return result.data
+  } catch (error) {
+    console.error('Error registering new customer:', error)
+    throw error
+  }
+}
+
+export async function getAllBenchmark(organizationUuid: string) {
+  try {
+    const result = await instance.get('management/benchmark', {
+      headers: {
+        'x-organization': organizationUuid,
+      },
+    })
+
+    return result.data
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+
+export async function getAllExchange(organizationUuid: string) {
+  try {
+    const result = await instance.get('management/exchanges', {
+      headers: {
+        'x-organization': organizationUuid,
+      },
+    })
+
+    return result.data
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
