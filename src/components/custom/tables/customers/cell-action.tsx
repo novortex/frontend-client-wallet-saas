@@ -81,12 +81,7 @@ export default function CellActions({
                     Close
                   </Button>
                 </DialogClose>
-                <Button
-                  onClick={() => {
-                    console.log('edit customer')
-                  }}
-                  className="bg-green-500 hover:bg-green-600 text-black"
-                >
+                <Button className="bg-green-500 hover:bg-green-600 text-black">
                   Save
                 </Button>
               </DialogFooter>

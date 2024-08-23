@@ -140,8 +140,6 @@ export default function RelateClientExchangeModal({
       exchangeInfo3,
     )
 
-    console.log(result)
-
     if (!result) {
       return toast({
         className: 'bg-red-500 border-0',
