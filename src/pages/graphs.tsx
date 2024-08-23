@@ -4,7 +4,6 @@ import { CardDashboard } from '@/components/custom/card-dashboard'
 import WalletGraph from '@/components/custom/graph-wallet'
 
 export default function Graphs() {
-  console.log('oi')
 
   return (
     <div className="p-10">
