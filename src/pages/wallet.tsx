@@ -124,9 +124,9 @@ export default function Wallet() {
             <BreadcrumbItem>
               <BreadcrumbLink
                 className="text-2xl text-white font-medium"
-                href="/clients"
+                href="/wallets"
               >
-                Clients
+                Wallets
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />

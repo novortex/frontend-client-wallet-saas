@@ -6,10 +6,12 @@ import ErrorPage from './pages/404.tsx'
 import Root from './pages/outlet.tsx'
 import Wallet from './pages/wallet.tsx'
 import Login from './pages/login.tsx'
-import Clients from './pages/clients.tsx'
+import Clients from './pages/wallets.tsx'
 import AssetsOrg from './pages/assets-org.tsx'
 import Infos from './pages/infos.tsx'
 import Graphs from './pages/graphs.tsx'
+import { Customers } from './pages/customers.tsx'
+
 
 const router = createBrowserRouter([
   {
@@ -26,8 +28,12 @@ const router = createBrowserRouter([
         element: <Wallet />,
       },
       {
-        path: '/clients',
+        path: '/wallets',
         element: <Clients />,
+      },
+      {
+        path: '/customers',
+        element: <Customers />,
       },
       {
         path: '/admin/orgs',
