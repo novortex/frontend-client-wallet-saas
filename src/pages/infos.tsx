@@ -189,7 +189,9 @@ export default function Infos() {
         <div className="flex flex-col w-3/5">
           <div className="flex justify-between mb-5">
             <div className="flex gap-5">
-              <h1 className="text-3xl text-white">{walletI.user.name}</h1>
+              <h1 className="text-3xl text-white">
+                {walletI.user.name || '-'}
+              </h1>
               {walletInfos.lastContactAt == null ||
               (timeZone &&
                 walletI.monthCloseDate &&
@@ -226,7 +228,7 @@ export default function Infos() {
           <div className="mb-14">
             <div className="h-full w-1/2 flex items-center justify-start gap-2 text-[#959CB6] text-xl">
               <img className="w-6" src={responsibleIcon} alt="" />
-              <p>{walletInfos.manager}</p>
+              <p>{walletInfos.manager || '-'}</p>
             </div>
             <div className="flex text-xl">
               <DollarSign className="text-[#F2BE38]" />
@@ -310,7 +312,7 @@ export default function Infos() {
               <div className="flex gap-3">
                 <Calendar className="text-[#F2BE38]" />
                 <p className="text-white">
-                  Benchmark: {walletI.benchmark.name}
+                  Benchmark: {walletI.benchmark.name || '-'}
                 </p>
               </div>
               <div className="flex gap-3">
@@ -329,7 +331,9 @@ export default function Infos() {
             <div className="w-full p-2 grid grid-cols-2 gap-5">
               <div className="flex gap-3">
                 <Calendar className="text-[#F2BE38]" />
-                <p className="text-white">Exchange: {walletI.exchange.name}</p>
+                <p className="text-white">
+                  Exchange: {walletI.exchange.name || '-'}
+                </p>
               </div>
               <div className="flex gap-3">
                 <Calendar className="text-[#F2BE38]" />
