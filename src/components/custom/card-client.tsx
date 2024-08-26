@@ -86,7 +86,7 @@ export default function CardClient({
           <div className="relative h-full w-1/2 flex items-center justify-end">
             <div className="relative group">
               <img src={infoIcon} alt="Info Icon" className="cursor-pointer" />
-              <div className="absolute top-full right-full mb-2 w-[650%] px-4 py-2 bg-black text-sm text-white text-start rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="absolute bottom-full right-full mb-2 w-[650%] px-4 py-2 bg-black text-sm text-white text-start rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
                 {name}
                 <br />
                 email: {email}
