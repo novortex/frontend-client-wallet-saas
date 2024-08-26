@@ -174,10 +174,10 @@ export default function Wallet() {
       {infosWallet && (
         <div className="flex gap-5 mb-10">
           <CardDashboard
-            title="Date of entry"
+            title="Start date"
             data={
-              infosWallet.enterDate !== null
-                ? formatDate(infosWallet.enterDate?.toString())
+              infosWallet.startDate !== null
+                ? formatDate(infosWallet.startDate?.toString())
                 : '-'
             }
           />

@@ -52,7 +52,7 @@ export default function Infos() {
   })
 
   const [walletI, setWalletI] = useState<TWallet>({
-    enterDate: '',
+    startDate: '',
     investedAmount: 0,
     currentAmount: 0,
     closeDate: '',
@@ -358,8 +358,12 @@ export default function Infos() {
           <div className="flex justify-end gap-7 mb-5">
             <div className="bg-[#171717] flex flex-col items-center p-10 rounded-lg">
               <Calendar className="text-[#F2BE38]" />
-              <p className="text-white">Enter Date</p>
-              <p className="text-[#959CB6]">{formatDate(walletI.enterDate)}</p>
+              <p className="text-white">Start Date</p>
+              <p className="text-[#959CB6]">
+                {walletI.startDate !== null
+                  ? formatDate(walletI.startDate?.toString())
+                  : '-'}
+              </p>
             </div>
             <div className="bg-[#171717] flex flex-col items-center p-10 rounded-lg">
               <Calendar className="text-[#F2BE38]" />

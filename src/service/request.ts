@@ -11,7 +11,7 @@ export type TWalletInfos = {
 }
 
 export type TWallet = {
-  enterDate: string // or Date
+  startDate: string // or Date
   investedAmount: number
   currentAmount: number
   closeDate: string // or Date
@@ -42,7 +42,7 @@ export type TWallet = {
 }
 
 export type TWalletAssetsInfo = {
-  enterDate: Date | null
+  startDate: Date | null
   investedAmount: number
   currentAmount: number
   monthCloseDate: Date | null
