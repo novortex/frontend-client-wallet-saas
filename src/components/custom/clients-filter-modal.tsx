@@ -47,7 +47,7 @@ export default function ClientsFilterModal({
         const result = await getAllManagersOnOrganization(uuidOrganization)
         // Processar os dados da API e definir o estado dos gerentes
         const managersData = result.map((item: any) => ({
-          name: item.user.name,
+          name: item.name,
         }))
         setManagers(managersData)
       } catch (error) {
