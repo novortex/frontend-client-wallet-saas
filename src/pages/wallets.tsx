@@ -67,11 +67,15 @@ export default function Clients() {
 
   // Filtrar clientes com base no termo de pesquisa e gerentes em cache
   const filteredClients = clients.filter((client) => {
-    const nameMatches = client.infosClient.name
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase())
+    const nameMatches =
+      client.infosClient.name
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      client.managerName.toLowerCase().includes(searchTerm.toLowerCase())
+
     const managerMatches =
       cachedManagers.length === 0 || cachedManagers.includes(client.managerName)
+
     return nameMatches && managerMatches
   })
 
