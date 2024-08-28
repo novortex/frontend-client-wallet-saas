@@ -62,24 +62,27 @@ export default function RegisterCustomerModal({
       phone: '',
     }
 
-    // Validação do nome: deve conter nome e sobrenome, sem números, e cada nome deve ter pelo menos duas letras
-    if (!/^[A-Za-z]{2,}(?:\s[A-Za-z]{2,})+$/.test(inputValues.name)) {
+    // Validação do nome: obrigatório, deve conter nome e sobrenome, apenas letras, e cada nome deve começar com uma letra maiúscula e ter pelo menos duas letras
+    if (!/^[A-Z][a-z]{1,}(?:\s[A-Z][a-z]{1,})+$/.test(inputValues.name)) {
       newErrors.name =
-        'Nome deve conter nome e sobrenome, apenas letras e no mínimo duas letras cada.'
+        'Nome deve conter nome e sobrenome, cada um começando com letra maiúscula e contendo pelo menos duas letras.'
     }
 
-    // Validação do email: deve ter um formato de email válido
+    // Validação do email: obrigatório e deve ter um formato de email válido
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inputValues.email)) {
       newErrors.email = 'Formato de email inválido.'
     }
 
-    // Validação do CPF: apenas números, com entre 8 e 14 dígitos
-    if (!/^\d{8,14}$/.test(inputValues.cpf)) {
+    // Validação do CPF: opcional, só valida se preenchido e deve conter entre 8 e 14 dígitos numéricos
+    if (inputValues.cpf && !/^\d{8,14}$/.test(inputValues.cpf)) {
       newErrors.cpf = 'CPF deve conter entre 8 e 14 dígitos numéricos.'
     }
 
-    // Validação do telefone: deve estar no formato +XX (XX)XXXXX-XXXX
-    if (!/^\+\d{2}\s\(\d{2}\)\d{5}-\d{4}$/.test(inputValues.phone)) {
+    // Validação do telefone: opcional, só valida se preenchido e deve estar no formato +XX (XX)XXXXX-XXXX
+    if (
+      inputValues.phone &&
+      !/^\+\d{2}\s\(\d{2}\)\d{5}-\d{4}$/.test(inputValues.phone)
+    ) {
       newErrors.phone = 'Formato de telefone inválido. Use +XX (XX)XXXXX-XXXX.'
     }
 
