@@ -15,6 +15,7 @@ import { useUserStore } from '@/store/user'
 import { useSignalStore } from '@/store/signalEffect'
 import { useToast } from '../ui/use-toast'
 import { registerNewCustomer } from '@/service/request'
+import { Label } from '../ui/label'
 
 interface RegisterCustomerModalProps {
   isOpen: boolean
@@ -27,6 +28,12 @@ export default function RegisterCustomerModal({
 }: RegisterCustomerModalProps) {
   const [percentage, setPercentage] = useState(0)
   const [inputValues, setInputValues] = useState({
+    name: '',
+    email: '',
+    cpf: '',
+    phone: '',
+  })
+  const [errors, setErrors] = useState({
     name: '',
     email: '',
     cpf: '',
@@ -47,7 +54,49 @@ export default function RegisterCustomerModal({
   const cpfRef = useRef<HTMLInputElement>(null)
   const phoneRef = useRef<HTMLInputElement>(null)
 
+  const validateInputs = () => {
+    const newErrors = {
+      name: '',
+      email: '',
+      cpf: '',
+      phone: '',
+    }
+
+    // Validação do nome: deve conter nome e sobrenome, sem números, e cada nome deve ter pelo menos duas letras
+    if (!/^[A-Za-z]{2,}(?:\s[A-Za-z]{2,})+$/.test(inputValues.name)) {
+      newErrors.name =
+        'Nome deve conter nome e sobrenome, apenas letras e no mínimo duas letras cada.'
+    }
+
+    // Validação do email: deve ter um formato de email válido
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inputValues.email)) {
+      newErrors.email = 'Formato de email inválido.'
+    }
+
+    // Validação do CPF: apenas números, com entre 8 e 14 dígitos
+    if (!/^\d{8,14}$/.test(inputValues.cpf)) {
+      newErrors.cpf = 'CPF deve conter entre 8 e 14 dígitos numéricos.'
+    }
+
+    // Validação do telefone: deve estar no formato +XX (XX)XXXXX-XXXX
+    if (!/^\+\d{2}\s\(\d{2}\)\d{5}-\d{4}$/.test(inputValues.phone)) {
+      newErrors.phone = 'Formato de telefone inválido. Use +XX (XX)XXXXX-XXXX.'
+    }
+
+    setErrors(newErrors)
+    return !Object.values(newErrors).some((error) => error)
+  }
+
   const handleRegisterCustomer = async () => {
+    if (!validateInputs()) {
+      toast({
+        className: 'bg-red-500 border-0',
+        title: 'Erro na validação dos inputs',
+        description: 'Corrija os erros e tente novamente.',
+      })
+      return
+    }
+
     const name = nameRef.current?.value
     const email = emailRef.current?.value
     const cpf = cpfRef.current?.value
@@ -60,12 +109,6 @@ export default function RegisterCustomerModal({
       title: 'Processing add customer in organization',
       description: 'Demo Vault !!',
     })
-
-    //     name: string,
-    //   email: string,
-    //   organizationUuid: string,
-    //   cpf?: string,
-    //   phone?: string
 
     const customer = await registerNewCustomer(
       name as string,
@@ -152,40 +195,60 @@ export default function RegisterCustomerModal({
         </div>
         <div className="gap-4">
           <div className="w-full h-1/2 flex flex-row justify-evenly items-center">
-            <Input
-              className="w-1/3 bg-[#131313] border-[#323232] text-[#959CB6]"
-              placeholder="Name"
-              name="name"
-              value={inputValues.name}
-              onChange={handleInputChange}
-              ref={nameRef}
-            />
-            <Input
-              className="w-1/3 bg-[#131313] border-[#323232] text-[#959CB6]"
-              placeholder="Email"
-              name="email"
-              value={inputValues.email}
-              onChange={handleInputChange}
-              ref={emailRef}
-            />
+            <div className="h-full w-[45%] flex flex-col items-center justify-center text-center gap-3">
+              <Input
+                className="w-2/3 bg-[#131313] border-[#323232] text-[#959CB6]"
+                placeholder="Name"
+                name="name"
+                value={inputValues.name}
+                onChange={handleInputChange}
+                ref={nameRef}
+              />
+              {errors.name && (
+                <Label className="w-2/3 text-red-500">{errors.name}</Label>
+              )}
+            </div>
+            <div className="h-full w-[45%] flex flex-col items-center justify-center text-center gap-3">
+              <Input
+                className="w-2/3 bg-[#131313] border-[#323232] text-[#959CB6]"
+                placeholder="Email"
+                name="email"
+                value={inputValues.email}
+                onChange={handleInputChange}
+                ref={emailRef}
+              />
+              {errors.email && (
+                <Label className="w-2/3 text-red-500">{errors.email}</Label>
+              )}
+            </div>
           </div>
           <div className="w-full h-1/2 flex flex-row justify-evenly items-center">
-            <Input
-              className="w-1/3 bg-[#131313] border-[#323232] text-[#959CB6]"
-              placeholder="CPF (optional)"
-              name="cpf"
-              value={inputValues.cpf}
-              onChange={handleInputChange}
-              ref={cpfRef}
-            />
-            <Input
-              className="w-1/3 bg-[#131313] border-[#323232] text-[#959CB6]"
-              placeholder="Phone (optional)"
-              name="phone"
-              value={inputValues.phone}
-              onChange={handleInputChange}
-              ref={phoneRef}
-            />
+            <div className="h-full w-[45%] flex flex-col items-center justify-center text-center gap-3">
+              <Input
+                className="w-2/3 bg-[#131313] border-[#323232] text-[#959CB6]"
+                placeholder="CPF (optional)"
+                name="cpf"
+                value={inputValues.cpf}
+                onChange={handleInputChange}
+                ref={cpfRef}
+              />
+              {errors.cpf && (
+                <Label className="w-2/3 text-red-500">{errors.cpf}</Label>
+              )}
+            </div>
+            <div className="h-full w-[45%] flex flex-col items-center justify-center text-center gap-3">
+              <Input
+                className="w-2/3 bg-[#131313] border-[#323232] text-[#959CB6]"
+                placeholder="Phone (optional)"
+                name="phone"
+                value={inputValues.phone}
+                onChange={handleInputChange}
+                ref={phoneRef}
+              />
+              {errors.phone && (
+                <Label className="w-2/3 text-red-500">{errors.phone}</Label>
+              )}
+            </div>
           </div>
         </div>
         <DialogFooter className="flex justify-end items-end">
