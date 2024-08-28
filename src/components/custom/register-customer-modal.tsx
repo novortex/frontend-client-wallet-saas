@@ -75,7 +75,7 @@ export default function RegisterCustomerModal({
 
     // Validação do CPF: opcional, só valida se preenchido e deve conter entre 8 e 14 dígitos numéricos
     if (inputValues.cpf && !/^\d{8,14}$/.test(inputValues.cpf)) {
-      newErrors.cpf = 'CPF deve conter entre 8 e 14 dígitos numéricos.'
+      newErrors.cpf = 'CPF deve conter entre 8 e 14 dígitos e apenas numeros.'
     }
 
     // Validação do telefone: opcional, só valida se preenchido e deve estar no formato +XX (XX)XXXXX-XXXX
@@ -201,7 +201,7 @@ export default function RegisterCustomerModal({
             <div className="h-full w-[45%] flex flex-col items-center justify-center text-center gap-3">
               <Input
                 className="w-2/3 bg-[#131313] border-[#323232] text-[#959CB6]"
-                placeholder="Name"
+                placeholder="Name *"
                 name="name"
                 value={inputValues.name}
                 onChange={handleInputChange}
@@ -214,7 +214,7 @@ export default function RegisterCustomerModal({
             <div className="h-full w-[45%] flex flex-col items-center justify-center text-center gap-3">
               <Input
                 className="w-2/3 bg-[#131313] border-[#323232] text-[#959CB6]"
-                placeholder="Email"
+                placeholder="Email *"
                 name="email"
                 value={inputValues.email}
                 onChange={handleInputChange}
