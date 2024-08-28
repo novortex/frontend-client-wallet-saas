@@ -258,6 +258,13 @@ export default function Wallet() {
       <CloseWalletModal
         isOpen={isCloseWalletModalOpen}
         onClose={closeCloseWalletModal}
+        startDate={
+          infosWallet &&
+          infosWallet.startDate !== null &&
+          infosWallet.startDate !== undefined
+            ? formatDate(infosWallet.startDate.toString())
+            : undefined
+        }
       />
     </div>
   )
