@@ -65,37 +65,39 @@ export default function CreateWalletModal({
 
     // Validação da Performance Fee: deve ser um número entre 0 e 100
     if (
-      !/^\d+(\.\d+)?$/.test(performanceFee) ||
-      +performanceFee < 0 ||
-      +performanceFee > 100
+      !/^\d+(,\d+)?$/.test(performanceFee) ||
+      +performanceFee.replace(',', '.') < 0 ||
+      +performanceFee.replace(',', '.') > 100
     ) {
       newErrors.performanceFee =
-        'Performance Fee deve ser um número entre 0 e 100.'
+        'Performance Fee must be a number between 0 and 100.'
     }
 
     // Validação do Benchmark: deve ser selecionado
     if (!benchmark) {
-      newErrors.benchmark = 'Benchmark deve ser selecionado.'
+      newErrors.benchmark = 'Benchmark must be selected.'
     }
 
     // Validação do Risk Profile: deve ser selecionado
     if (!riskProfile) {
-      newErrors.riskProfile = 'Risk Profile deve ser selecionado.'
+      newErrors.riskProfile = 'Risk Profile must be selected.'
     }
 
-    // Validação do Initial Fee: deve ser um número positivo
-    if (!/^\d+(\.\d+)?$/.test(initialFee)) {
-      newErrors.initialFee = 'Initial Fee deve ser um número positivo.'
+    // Validação do Initial Fee: deve ser um número positivo e aceitar vírgula como separador decimal
+    if (!/^\d+(,\d+)?$/.test(initialFee)) {
+      newErrors.initialFee =
+        'Initial Fee must include only numbers and comma (Ex: 199,99).'
     }
 
-    // Validação do Invested Amount: deve ser um número positivo
-    if (!/^\d+(\.\d+)?$/.test(investedAmount)) {
-      newErrors.investedAmount = 'Invested Amount deve ser um número positivo.'
+    // Validação do Invested Amount: deve ser um número positivo e aceitar vírgula como separador decimal
+    if (!/^\d+(,\d+)?$/.test(investedAmount)) {
+      newErrors.investedAmount =
+        'Invested Amount must include only numbers and comma (Ex: 199,99).'
     }
 
     // Validação do Manager: deve ser selecionado
     if (!manager) {
-      newErrors.manager = 'Manager deve ser selecionado.'
+      newErrors.manager = 'Manager must be selected.'
     }
 
     // Definir os erros e retornar se a validação passou
@@ -187,7 +189,7 @@ export default function CreateWalletModal({
           <div className="w-[26%]">
             <Label>Performance Fee *</Label>
             <Input
-              placeholder="Ex: 10%"
+              placeholder="Ex: 10"
               className="bg-[#131313] border-[#323232] text-[#959CB6]"
               value={performanceFee}
               onChange={(e) => setPerformanceFee(e.target.value)}
@@ -241,11 +243,10 @@ export default function CreateWalletModal({
           <div className="w-[26%] h-full">
             <Label>Initial Fee $ *</Label>
             <Input
-              placeholder="Ex: $ 1,000"
+              placeholder="Ex: 1000"
               className="bg-[#131313] border-[#323232] text-[#959CB6]"
               value={initialFee}
               onChange={(e) => setInitialFee(e.target.value)}
-              type="number"
               min="0"
               step="any"
             />
@@ -256,11 +257,10 @@ export default function CreateWalletModal({
           <div className="w-[26%] h-full">
             <Label>Invested amount *</Label>
             <Input
-              placeholder="Ex: $ 1,000"
+              placeholder="Ex: 1000"
               className="bg-[#131313] border-[#323232] text-[#959CB6]"
               value={investedAmount}
               onChange={(e) => setInvestedAmount(e.target.value)}
-              type="number"
               min="0"
               step="any"
             />
