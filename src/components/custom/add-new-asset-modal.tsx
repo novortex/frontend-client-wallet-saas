@@ -68,9 +68,17 @@ export default function AddNewAssetModal({
     })
   }
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    // Regex to allow only digits
+    if (/^\d*$/.test(value)) {
+      setAssetId(value)
+    }
+  }
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="h-1/3 w-[200%] bg-[#131313] text-[#fff]">
+      <DialogContent className="h-1/3 w-[200%] bg-[#131313] text-[#fff] border-transparent">
         <DialogHeader>
           <DialogTitle className="text-3xl text-[#fff]">New Asset</DialogTitle>
         </DialogHeader>
@@ -79,7 +87,7 @@ export default function AddNewAssetModal({
             placeholder="idCMC"
             className="w-full h-full bg-[#272727] border-[#323232] text-[#959CB6]"
             value={assetId}
-            onChange={(e) => setAssetId(e.target.value)}
+            onChange={handleChange}
           />
           <div className="w-full flex flex-row gap-1">
             <p className="text-[#fff]">Check the desired asset ID at</p>
