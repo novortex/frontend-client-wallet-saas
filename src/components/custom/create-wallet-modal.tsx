@@ -84,15 +84,15 @@ export default function CreateWalletModal({
     }
 
     // Validação do Initial Fee: deve ser um número positivo e aceitar vírgula como separador decimal
-    if (!/^\d+(,\d+)?$/.test(initialFee)) {
+    if (!/^\d+(,\d{1,2})?$/.test(initialFee)) {
       newErrors.initialFee =
-        'Initial Fee must include only numbers and comma (Ex: 199,99).'
+        'Initial Fee must include only numbers and a comma with up to two decimal places (e.g., 199,99).'
     }
 
     // Validação do Invested Amount: deve ser um número positivo e aceitar vírgula como separador decimal
-    if (!/^\d+(,\d+)?$/.test(investedAmount)) {
+    if (!/^\d+(,\d{1,2})?$/.test(investedAmount)) {
       newErrors.investedAmount =
-        'Invested Amount must include only numbers and comma (Ex: 199,99).'
+        'Invested Amount must include only numbers and a comma with up to two decimal places (e.g., 199,99).'
     }
 
     // Validação do Manager: deve ser selecionado
