@@ -75,7 +75,7 @@ export default function CardClient({
 
   return (
     <Card
-      className="rounded-[12px] border border-[#272727] bg-[#171717] w-[32%] h-[300px] hover:bg-[#373737] cursor-pointer"
+      className="rounded-[12px] border border-[#272727] bg-[#171717] w-[100%] h-[300px] hover:bg-[#373737] cursor-pointer"
       onClick={handleCardClick}
     >
       <CardHeader className="w-full h-1/2 gap-3">

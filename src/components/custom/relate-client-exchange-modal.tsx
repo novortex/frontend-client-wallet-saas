@@ -220,7 +220,7 @@ export default function RelateClientExchangeModal({
 
           <Input
             className="w-2/3 bg-[#131313] border-[#323232] text-[#959CB6]"
-            placeholder="Email da conta"
+            placeholder="Account email"
             value={exchangeInfo1}
             onChange={(e) => setExchangeInfo1(e.target.value)}
           />
@@ -229,13 +229,13 @@ export default function RelateClientExchangeModal({
           )}
           <Input
             className="w-2/3 bg-[#131313] border-[#323232] text-[#959CB6]"
-            placeholder="Senha do email"
+            placeholder="Email password"
             value={exchangeInfo2}
             onChange={(e) => setExchangeInfo2(e.target.value)}
           />
           <Input
             className="w-2/3 bg-[#131313] border-[#323232] text-[#959CB6]"
-            placeholder="Senha da conta"
+            placeholder="Account password"
             value={exchangeInfo3}
             onChange={(e) => setExchangeInfo3(e.target.value)}
           />

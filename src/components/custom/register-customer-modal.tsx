@@ -65,17 +65,17 @@ export default function RegisterCustomerModal({
     // Validação do nome: obrigatório, deve conter nome e sobrenome, apenas letras, e cada nome deve começar com uma letra maiúscula e ter pelo menos duas letras
     if (!/^[A-Z][a-z]{1,}(?:\s[A-Z][a-z]{1,})+$/.test(inputValues.name)) {
       newErrors.name =
-        'Nome deve conter nome e sobrenome, cada um começando com letra maiúscula e contendo pelo menos duas letras.'
+        'Name must include both first and last names, each starting with a capital letter and containing at least two letters.'
     }
 
     // Validação do email: obrigatório e deve ter um formato de email válido
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inputValues.email)) {
-      newErrors.email = 'Formato de email inválido.'
+      newErrors.email = 'Invalid email format.'
     }
 
     // Validação do CPF: opcional, só valida se preenchido e deve conter entre 8 e 14 dígitos numéricos
     if (inputValues.cpf && !/^\d{8,14}$/.test(inputValues.cpf)) {
-      newErrors.cpf = 'CPF deve conter entre 8 e 14 dígitos e apenas numeros.'
+      newErrors.cpf = 'CPF must contain between 8 e 14 digits and only numbers.'
     }
 
     // Validação do telefone: opcional, só valida se preenchido e deve estar no formato +XX (XX)XXXXX-XXXX
@@ -83,7 +83,7 @@ export default function RegisterCustomerModal({
       inputValues.phone &&
       !/^\+\d{2}\s\(\d{2}\)\d{5}-\d{4}$/.test(inputValues.phone)
     ) {
-      newErrors.phone = 'Formato de telefone inválido. Use +XX (XX)XXXXX-XXXX.'
+      newErrors.phone = 'Invalid phone format. Use +XX (XX)XXXXX-XXXX.'
     }
 
     setErrors(newErrors)
@@ -94,8 +94,8 @@ export default function RegisterCustomerModal({
     if (!validateInputs()) {
       toast({
         className: 'bg-red-500 border-0',
-        title: 'Erro na validação dos inputs',
-        description: 'Corrija os erros e tente novamente.',
+        title: 'Error validating inputs',
+        description: 'Fix the errors and try again.',
       })
       return
     }

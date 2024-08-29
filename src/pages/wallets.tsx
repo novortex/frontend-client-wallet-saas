@@ -120,7 +120,7 @@ export default function Clients() {
           </Button>
         </div>
       </div>
-      <div className="w-full flex gap-7">
+      <div className="w-full grid grid-cols-3 flex gap-7 ">
         {filteredClients &&
           filteredClients.map((client, index) => (
             <CardClient
