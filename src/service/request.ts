@@ -317,7 +317,7 @@ export async function addCryptoWalletClient(
     const result = await instance.post(
       `wallet/${walletUuid}/asset`,
       {
-        assetId: assetUuid,
+        assetUuid,
         quantity,
         targetAllocation,
       },

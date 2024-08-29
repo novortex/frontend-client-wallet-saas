@@ -45,6 +45,9 @@ export default function RelateClientExchangeModal({
   const [exchangeInfo3, setExchangeInfo3] = useState('')
   const [ExchangeSelected, setExchangeSelected] = useState('')
 
+  const [exchangeError, setExchangeError] = useState('')
+  const [emailError, setEmailError] = useState('')
+
   const [exchanges] = useManagerOrganization((state) => [state.exchanges])
 
   const [setSignal, signal] = useSignalStore((state) => [
@@ -88,10 +91,33 @@ export default function RelateClientExchangeModal({
     return progress
   }
 
-  const percentage = calculateProgress()
+  const validateEmail = (email: string) => {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return emailPattern.test(email)
+  }
 
-  const closeModal = () => {
-    onClose()
+  const handleFormValidation = () => {
+    let valid = true
+
+    if (!ExchangeSelected) {
+      setExchangeError('Exchange is required.')
+      valid = false
+    } else {
+      setExchangeError('')
+    }
+
+    if (exchangeInfo1 && !validateEmail(exchangeInfo1)) {
+      setEmailError('Invalid email format.')
+      valid = false
+    } else {
+      setEmailError('')
+    }
+
+    return valid
+  }
+
+  const closeModal = async () => {
+    if (!handleFormValidation()) return
 
     toast({
       className: 'bg-yellow-500 border-0',
@@ -99,31 +125,7 @@ export default function RelateClientExchangeModal({
       description: 'Demo Vault !!',
     })
 
-    // const values = {
-    //   ...firstModal,
-    //   initialFeeIsPaid: initialFee,
-    //   emailAccount: exchangeInfo1,
-    //   passwordEmail: exchangeInfo2,
-    //   passwordAccount: exchangeInfo3,
-    // }
-
-    // organizationUuid: string,
-    // customerUuid: string,
-    // investedAmount: number,
-    // initialFee: number,
-    // initialFeePaid: boolean,
-    // riskProfile: string,
-    // contract: boolean,
-    // performanceFee: number,
-    // benchmarkCuid: string,
-    // exchangeUuid: string,
-    // managerUuid: string,
-    // accountEmail?: string,
-    // emailPassword?: string,
-    // exchangePassword?: string,
-
-    // do a request to save the data
-    const result = registerWalletForCustomer(
+    const result = await registerWalletForCustomer(
       uuidOrganization,
       rowInfos.id,
       investedAmount,
@@ -154,12 +156,16 @@ export default function RelateClientExchangeModal({
       setSignal(false)
     }
 
+    onClose()
+
     return toast({
       className: 'bg-green-500 border-0',
       title: 'Success !! wallet created for this customer ',
       description: 'Demo Vault !!',
     })
   }
+
+  const percentage = calculateProgress()
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -189,7 +195,7 @@ export default function RelateClientExchangeModal({
             />
           </div>
           <div className="w-4/6">
-            <Label>Exchanges</Label>
+            <Label>Exchanges *</Label>
             <Select onValueChange={(value) => setExchangeSelected(value)}>
               <SelectTrigger className="bg-[#131313] border-[#323232] text-[#959CB6]">
                 <SelectValue>
@@ -207,23 +213,29 @@ export default function RelateClientExchangeModal({
                 ))}
               </SelectContent>
             </Select>
+            {exchangeError && (
+              <Label className="text-red-500 mt-2">{exchangeError}</Label>
+            )}
           </div>
 
           <Input
             className="w-2/3 bg-[#131313] border-[#323232] text-[#959CB6]"
-            placeholder="Email da conta"
+            placeholder="Account email"
             value={exchangeInfo1}
             onChange={(e) => setExchangeInfo1(e.target.value)}
           />
+          {emailError && (
+            <Label className="text-red-500 mt-2">{emailError}</Label>
+          )}
           <Input
             className="w-2/3 bg-[#131313] border-[#323232] text-[#959CB6]"
-            placeholder="Senha do email"
+            placeholder="Email password"
             value={exchangeInfo2}
             onChange={(e) => setExchangeInfo2(e.target.value)}
           />
           <Input
             className="w-2/3 bg-[#131313] border-[#323232] text-[#959CB6]"
-            placeholder="Senha da conta"
+            placeholder="Account password"
             value={exchangeInfo3}
             onChange={(e) => setExchangeInfo3(e.target.value)}
           />

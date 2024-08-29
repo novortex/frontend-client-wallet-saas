@@ -52,19 +52,82 @@ export default function CreateWalletModal({
     state.benchs,
   ])
 
-  const openModal = () => {
-    setIsModalOpen(true)
+  // Função para validar os inputs
+  const validateInputs = () => {
+    const newErrors = {
+      performanceFee: '',
+      benchmark: '',
+      riskProfile: '',
+      initialFee: '',
+      investedAmount: '',
+      manager: '',
+    }
 
-    saveFirstModal({
-      performanceFee: Number(performanceFee),
-      benchmark,
-      riskProfile,
-      initialFee: Number(initialFee),
-      investedAmount: Number(investedAmount),
-      contract: contractChecked,
-      manager,
-    })
-    onClose()
+    // Validação da Performance Fee: deve ser um número entre 0 e 100
+    if (
+      !/^\d+(\.\d{0,2})?$/.test(performanceFee) ||
+      +performanceFee < 0 ||
+      +performanceFee > 100
+    ) {
+      newErrors.performanceFee =
+        'Performance Fee must be a number between 0 and 100 with up to two decimal places.'
+    }
+
+    // Validação do Benchmark: deve ser selecionado
+    if (!benchmark) {
+      newErrors.benchmark = 'Benchmark must be selected.'
+    }
+
+    // Validação do Risk Profile: deve ser selecionado
+    if (!riskProfile) {
+      newErrors.riskProfile = 'Risk Profile must be selected.'
+    }
+
+    // Validação do Initial Fee: deve ser um número positivo e aceitar ponto como separador decimal
+    if (!/^\d+(\.\d{1,2})?$/.test(initialFee)) {
+      newErrors.initialFee =
+        'Initial Fee must include only numbers and a point with up to two decimal places (e.g., 199.99).'
+    }
+
+    // Validação do Invested Amount: deve ser um número positivo e aceitar ponto como separador decimal
+    if (!/^\d+(\.\d{1,2})?$/.test(investedAmount)) {
+      newErrors.investedAmount =
+        'Invested Amount must include only numbers and a point with up to two decimal places (e.g., 199.99).'
+    }
+    // Validação do Manager: deve ser selecionado
+    if (!manager) {
+      newErrors.manager = 'Manager must be selected.'
+    }
+
+    // Definir os erros e retornar se a validação passou
+    setErrors(newErrors)
+    return !Object.values(newErrors).some((error) => error)
+  }
+
+  const [errors, setErrors] = useState({
+    performanceFee: '',
+    benchmark: '',
+    riskProfile: '',
+    initialFee: '',
+    investedAmount: '',
+    manager: '',
+  })
+
+  const openModal = () => {
+    if (validateInputs()) {
+      setIsModalOpen(true)
+
+      saveFirstModal({
+        performanceFee: Number(performanceFee),
+        benchmark,
+        riskProfile,
+        initialFee: Number(initialFee),
+        investedAmount: Number(investedAmount),
+        contract: contractChecked,
+        manager,
+      })
+      onClose()
+    }
   }
 
   const closeModal = () => {
@@ -123,16 +186,19 @@ export default function CreateWalletModal({
         </div>
         <div className="flex flex-row justify-evenly items-center">
           <div className="w-[26%]">
-            <Label>Performance Fee</Label>
+            <Label>Performance Fee *</Label>
             <Input
-              placeholder="Ex: 10%"
+              placeholder="Ex: 10"
               className="bg-[#131313] border-[#323232] text-[#959CB6]"
               value={performanceFee}
               onChange={(e) => setPerformanceFee(e.target.value)}
             />
+            {errors.performanceFee && (
+              <p className="text-red-500">{errors.performanceFee}</p>
+            )}
           </div>
           <div className="w-[26%]">
-            <Label>Benchmark</Label>
+            <Label>Benchmark *</Label>
             <Select onValueChange={(value) => setBenchmark(value)}>
               <SelectTrigger className="bg-[#131313] border-[#323232] text-[#959CB6]">
                 <SelectValue>
@@ -149,9 +215,12 @@ export default function CreateWalletModal({
                 ))}
               </SelectContent>
             </Select>
+            {errors.benchmark && (
+              <p className="text-red-500">{errors.benchmark}</p>
+            )}
           </div>
           <div className="w-[26%]">
-            <Label>Risk Profile</Label>
+            <Label>Risk Profile *</Label>
             <Select onValueChange={(value) => setRiskProfile(value)}>
               <SelectTrigger className="bg-[#131313] border-[#323232] text-[#959CB6]">
                 <SelectValue>{riskProfile || 'STANDARD'}</SelectValue>
@@ -164,26 +233,39 @@ export default function CreateWalletModal({
                 <SelectItem value="SUPER_HIGH_RISK">SUPER HIGH RISK</SelectItem>
               </SelectContent>
             </Select>
+            {errors.riskProfile && (
+              <p className="text-red-500">{errors.riskProfile}</p>
+            )}
           </div>
         </div>
         <div className="flex flex-row justify-evenly items-center">
           <div className="w-[26%] h-full">
-            <Label>Initial Fee $</Label>
+            <Label>Initial Fee $ *</Label>
             <Input
-              placeholder="Ex: $ 1,000"
+              placeholder="Ex: 1000"
               className="bg-[#131313] border-[#323232] text-[#959CB6]"
               value={initialFee}
               onChange={(e) => setInitialFee(e.target.value)}
+              min="0"
+              step="any"
             />
+            {errors.initialFee && (
+              <p className="text-red-500">{errors.initialFee}</p>
+            )}
           </div>
           <div className="w-[26%] h-full">
-            <Label>Invested amount</Label>
+            <Label>Invested amount *</Label>
             <Input
-              placeholder="Ex: $ 1,000"
+              placeholder="Ex: 1000"
               className="bg-[#131313] border-[#323232] text-[#959CB6]"
               value={investedAmount}
               onChange={(e) => setInvestedAmount(e.target.value)}
+              min="0"
+              step="any"
             />
+            {errors.investedAmount && (
+              <p className="text-red-500">{errors.investedAmount}</p>
+            )}
           </div>
           <div className="w-[26%] h-full flex flex-row gap-5 items-center">
             <Label>Contract</Label>
@@ -196,7 +278,7 @@ export default function CreateWalletModal({
         </div>
         <div className="flex flex-row justify-evenly items-center">
           <div className="w-[26%]">
-            <Label>Choose a manager</Label>
+            <Label>Choose a manager *</Label>
             <Select onValueChange={(value) => setManager(value)}>
               <SelectTrigger className="bg-[#131313] border-[#323232] text-[#959CB6]">
                 <SelectValue>
@@ -214,6 +296,7 @@ export default function CreateWalletModal({
                 ))}
               </SelectContent>
             </Select>
+            {errors.manager && <p className="text-red-500">{errors.manager}</p>}
           </div>
         </div>
         <DialogFooter className="flex justify-end items-end">

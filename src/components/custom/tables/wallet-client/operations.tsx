@@ -31,18 +31,54 @@ export default function OperationsModal({
   const [operation, setOperation] = useState('')
   const [amount, setAmount] = useState('')
 
+  const [operationError, setOperationError] = useState('')
+  const [amountError, setAmountError] = useState('')
+
   const { toast } = useToast()
 
-  const sendOperation = () => {
-    if (parseFloat(amount) < 0) {
-      toast({
-        className: 'bg-red-500 border-0',
-        title: 'Validation Error',
-        description: 'Amount cannot be negative',
-      })
-      console.error('Error: The amount cannot be negative.')
-      return
+  const validateAmount = (amount: string) => {
+    // Verifica se o valor é um número positivo e contém apenas números e pontos
+    const numberPattern = /^\d+(\.\d{1,2})?$/
+    if (!numberPattern.test(amount)) {
+      setAmountError(
+        'Amount must be a positive number and can only contain numbers and points, with up to two decimal places (e.g., 199.99).',
+      )
+      return false
     }
+
+    // Verifica se o valor é positivo
+    if (parseFloat(amount) <= 0) {
+      setAmountError('Amount must be a positive number.')
+      return false
+    }
+
+    setAmountError('')
+    return true
+  }
+
+  const sendOperation = () => {
+    let valid = true
+
+    // Verifica se uma operação foi selecionada
+    if (!operation) {
+      setOperationError('Operation is required.')
+      valid = false
+    } else {
+      setOperationError('')
+    }
+
+    // Valida o campo de valor
+    if (!validateAmount(amount)) {
+      valid = false
+    }
+
+    if (!valid) return
+
+    toast({
+      className: 'bg-yellow-500 border-0',
+      title: 'Processing operation',
+      description: `Operation: ${operation}, Amount: ${amount}`,
+    })
 
     console.log(`Operation: ${operation}, Amount: ${amount}`)
 
@@ -50,6 +86,7 @@ export default function OperationsModal({
     setAmount('')
     onClose()
   }
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="bg-[#131313] h-1/2 text-[#fff] border-transparent">
@@ -69,6 +106,9 @@ export default function OperationsModal({
               <SelectItem value="Deposit">Deposit</SelectItem>
             </SelectContent>
           </Select>
+          {operationError && (
+            <Label className="text-red-500 mt-2">{operationError}</Label>
+          )}
         </div>
         <div className="w-full flex justify-center gap-2 flex-col">
           <Label>Amount</Label>
@@ -78,6 +118,9 @@ export default function OperationsModal({
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
           />
+          {amountError && (
+            <Label className="text-red-500 mt-2">{amountError}</Label>
+          )}
         </div>
         <div className="w-full flex items-center">
           <Info className="w-[10%] text-blue-600" />
