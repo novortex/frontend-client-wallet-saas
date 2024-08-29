@@ -121,26 +121,23 @@ export default function AddNewWalletModal({
     }
 
     // Validate Entry Value
-    if (
-      !/^\d+(,\d{0,2})?$/.test(entryValue) ||
-      parseFloat(entryValue.replace(',', '.')) <= 0
-    ) {
+    if (!/^\d+(\.\d{0,2})?$/.test(entryValue) || parseFloat(entryValue) <= 0) {
       errorsCopy.entryValue =
-        'Asset value must be a positive number with up to two decimal places after comma.'
+        'Asset value must be a positive number with up to two decimal places after the point.'
       isValid = false
     } else {
       errorsCopy.entryValue = ''
     }
 
     // Validate Allocation
-    const allocationValue = parseFloat(allocation.replace(',', '.'))
+    const allocationValue = parseFloat(allocation)
     if (
-      !/^\d+(,\d{0,2})?$/.test(allocation) ||
+      !/^\d+(\.\d{0,2})?$/.test(allocation) ||
       allocationValue < 0 ||
       allocationValue > 100
     ) {
       errorsCopy.allocation =
-        'Allocation must be a number between 0 and 100 with up to two decimal places after comma.'
+        'Allocation must be a number between 0 and 100 with up to two decimal places after the point.'
       isValid = false
     } else {
       errorsCopy.allocation = ''

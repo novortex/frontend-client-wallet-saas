@@ -65,12 +65,12 @@ export default function CreateWalletModal({
 
     // Validação da Performance Fee: deve ser um número entre 0 e 100
     if (
-      !/^\d+(,\d+)?$/.test(performanceFee) ||
-      +performanceFee.replace(',', '.') < 0 ||
-      +performanceFee.replace(',', '.') > 100
+      !/^\d+(\.\d{0,2})?$/.test(performanceFee) ||
+      +performanceFee < 0 ||
+      +performanceFee > 100
     ) {
       newErrors.performanceFee =
-        'Performance Fee must be a number between 0 and 100.'
+        'Performance Fee must be a number between 0 and 100 with up to two decimal places.'
     }
 
     // Validação do Benchmark: deve ser selecionado
@@ -83,18 +83,17 @@ export default function CreateWalletModal({
       newErrors.riskProfile = 'Risk Profile must be selected.'
     }
 
-    // Validação do Initial Fee: deve ser um número positivo e aceitar vírgula como separador decimal
-    if (!/^\d+(,\d{1,2})?$/.test(initialFee)) {
+    // Validação do Initial Fee: deve ser um número positivo e aceitar ponto como separador decimal
+    if (!/^\d+(\.\d{1,2})?$/.test(initialFee)) {
       newErrors.initialFee =
-        'Initial Fee must include only numbers and a comma with up to two decimal places (e.g., 199,99).'
+        'Initial Fee must include only numbers and a point with up to two decimal places (e.g., 199.99).'
     }
 
-    // Validação do Invested Amount: deve ser um número positivo e aceitar vírgula como separador decimal
-    if (!/^\d+(,\d{1,2})?$/.test(investedAmount)) {
+    // Validação do Invested Amount: deve ser um número positivo e aceitar ponto como separador decimal
+    if (!/^\d+(\.\d{1,2})?$/.test(investedAmount)) {
       newErrors.investedAmount =
-        'Invested Amount must include only numbers and a comma with up to two decimal places (e.g., 199,99).'
+        'Invested Amount must include only numbers and a point with up to two decimal places (e.g., 199.99).'
     }
-
     // Validação do Manager: deve ser selecionado
     if (!manager) {
       newErrors.manager = 'Manager must be selected.'

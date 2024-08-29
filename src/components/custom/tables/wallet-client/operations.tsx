@@ -37,20 +37,17 @@ export default function OperationsModal({
   const { toast } = useToast()
 
   const validateAmount = (amount: string) => {
-    // Verifica se o valor é um número positivo e contém apenas números e vírgulas
-    const numberPattern = /^\d+(,\d{1,2})?$/
+    // Verifica se o valor é um número positivo e contém apenas números e pontos
+    const numberPattern = /^\d+(\.\d{1,2})?$/
     if (!numberPattern.test(amount)) {
       setAmountError(
-        'Amount must be a positive number and can only contain numbers and commas, with up to two decimal places (e.g., 199,99).',
+        'Amount must be a positive number and can only contain numbers and points, with up to two decimal places (e.g., 199.99).',
       )
       return false
     }
 
-    // Remove a vírgula para conversão e verificação adicional
-    const normalizedAmount = amount.replace(',', '.')
-
     // Verifica se o valor é positivo
-    if (parseFloat(normalizedAmount) <= 0) {
+    if (parseFloat(amount) <= 0) {
       setAmountError('Amount must be a positive number.')
       return false
     }
