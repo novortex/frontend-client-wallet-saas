@@ -25,11 +25,13 @@ import {
 } from '@/components/ui/breadcrumb'
 import { HandCoins } from 'lucide-react'
 import OperationsModal from '@/components/custom/tables/wallet-client/operations'
+import CloseWalletModal from '@/components/custom/closing-wallet-modal'
 
 export default function Wallet() {
   const [data, setData] = useState<ClientActive[]>([])
   const [infosWallet, setInfosWallet] = useState<TWalletAssetsInfo>()
   const [isOperationModalOpen, setIsOperationModalOpen] = useState(false)
+  const [isCloseWalletModalOpen, setIsCloseWalletOpen] = useState(false)
   const [loading, setLoading] = useState(true)
   const [uuidOrganization] = useUserStore((state) => [
     state.user.uuidOrganization,
@@ -46,6 +48,14 @@ export default function Wallet() {
 
   const closeOperationModal = () => {
     setIsOperationModalOpen(false)
+  }
+
+  const openCloseWalletModal = () => {
+    setIsCloseWalletOpen(true)
+  }
+
+  const closeCloseWalletModal = () => {
+    setIsCloseWalletOpen(false)
   }
 
   useEffect(() => {
@@ -166,7 +176,11 @@ export default function Wallet() {
           <Button type="button" variant="outline">
             Change history
           </Button>
-          <Button className="bg-[#EF4E3D] p-5" type="button">
+          <Button
+            className="bg-[#EF4E3D] p-5"
+            type="button"
+            onClick={openCloseWalletModal}
+          >
             Closing
           </Button>
         </div>
@@ -240,6 +254,17 @@ export default function Wallet() {
       <OperationsModal
         isOpen={isOperationModalOpen}
         onClose={closeOperationModal}
+      />
+      <CloseWalletModal
+        isOpen={isCloseWalletModalOpen}
+        onClose={closeCloseWalletModal}
+        startDate={
+          infosWallet &&
+          infosWallet.startDate !== null &&
+          infosWallet.startDate !== undefined
+            ? formatDate(infosWallet.startDate.toString())
+            : undefined
+        }
       />
     </div>
   )
