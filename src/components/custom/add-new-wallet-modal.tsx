@@ -206,7 +206,7 @@ export default function AddNewWalletModal({
             <div className="flex flex-col w-1/2 gap-3">
               <Input
                 className="w-full h-full bg-[#131313] border-[#323232] text-[#959CB6]"
-                placeholder="Asset value"
+                placeholder="Asset quantity"
                 value={entryValue}
                 onChange={(e) => setEntryValue(e.target.value)}
               />
