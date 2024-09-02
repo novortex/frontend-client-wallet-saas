@@ -25,7 +25,7 @@ export function SideBar({
   const userInfo = useUserStore((state) => state.user)
 
   return (
-    <aside className={`h-screen ${expanded ? 'w-1/6' : 'w-20'}`}>
+    <aside className={`h-screen ${expanded ? 'w-1/6' : 'w-20'} z-10`}>
       <nav
         className={`h-full fixed flex flex-col bg-[#171717] shadow-sm transition-all ${expanded ? 'w-1/6' : 'w-20'}`}
       >
