@@ -457,6 +457,7 @@ export async function convertedTimeZone(organizationUuid: string) {
 export async function registerWalletForCustomer(
   organizationUuid: string,
   customerUuid: string,
+  currency: string,
   investedAmount: number,
   initialFee: number,
   initialFeePaid: boolean,
@@ -472,6 +473,7 @@ export async function registerWalletForCustomer(
 ) {
   try {
     const data = {
+      currency,
       investedAmount,
       initialFee,
       initialFeePaid,
@@ -523,6 +525,20 @@ export async function getAllExchange(organizationUuid: string) {
       },
     })
 
+    return result.data
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+
+export async function getAllFiatCurrencies(organizationUuid: string) {
+  try {
+    const result = await instance.get('management/fiat-currencies', {
+      headers: {
+        'x-organization': organizationUuid,
+      },
+    })
     return result.data
   } catch (error) {
     console.error(error)
