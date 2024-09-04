@@ -18,8 +18,12 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useEffect, useState } from 'react'
 import { useToast } from '@/components/ui/use-toast'
-import { getAllFiatCurrencies } from '@/service/request'
+import {
+  getAllFiatCurrencies,
+  createDepositWithdrawal,
+} from '@/service/request'
 import { useUserStore } from '@/store/user'
+import { useParams } from 'react-router-dom'
 
 interface OperationsModalProps {
   isOpen: boolean
@@ -43,6 +47,8 @@ export default function OperationsModal({
     state.user.uuidOrganization,
   ])
 
+  const { walletUuid } = useParams()
+
   const { toast } = useToast()
 
   useEffect(() => {
@@ -62,7 +68,6 @@ export default function OperationsModal({
   }, [uuidOrganization])
 
   const validateAmount = (amount: string) => {
-    // Verifica se o valor é um número positivo e contém apenas números e pontos
     const numberPattern = /^\d+(\.\d{1,2})?$/
     if (!numberPattern.test(amount)) {
       setAmountError(
@@ -71,7 +76,6 @@ export default function OperationsModal({
       return false
     }
 
-    // Verifica se o valor é positivo
     if (parseFloat(amount) <= 0) {
       setAmountError('Amount must be a positive number.')
       return false
@@ -81,10 +85,9 @@ export default function OperationsModal({
     return true
   }
 
-  const sendOperation = () => {
+  const sendOperation = async () => {
     let valid = true
 
-    // Verifica se uma operação foi selecionada
     if (!operation) {
       setOperationError('Operation is required.')
       valid = false
@@ -99,20 +102,41 @@ export default function OperationsModal({
       setCurrencyError('')
     }
 
-    // Valida o campo de valor
     if (!validateAmount(amount)) {
       valid = false
     }
 
+    if (!walletUuid) throw new Error('Wallet UUID is required.')
+
     if (!valid) return
 
-    toast({
-      className: 'bg-yellow-500 border-0',
-      title: 'Processing operation',
-      description: `Operation: ${operation}, Amount: ${amount}, Currency: ${currency}`,
-    })
+    const isWithdrawal = operation === 'Withdrawal'
 
-    console.log(`Operation: ${operation}, Amount: ${amount}`)
+    try {
+      const result = await createDepositWithdrawal(
+        uuidOrganization,
+        parseFloat(amount),
+        walletUuid,
+        currency,
+        isWithdrawal,
+      )
+
+      toast({
+        className: 'bg-green-500 border-0',
+        title: 'Operation successful',
+        description: `Operation: ${operation}, Amount: ${amount}, Currency: ${currency}`,
+      })
+
+      console.log('Operation successful:', result)
+    } catch (error) {
+      toast({
+        className: 'bg-red-500 border-0',
+        title: 'Operation failed',
+        description: 'Something went wrong. Please try again later.',
+      })
+
+      console.error('Operation failed:', error)
+    }
 
     setOperation('')
     setAmount('')
@@ -121,7 +145,7 @@ export default function OperationsModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-[#131313] h-2/3 text-[#fff] border-transparent">
+      <DialogContent className="bg-[#131313] h-4/5 text-[#fff] border-transparent">
         <DialogHeader>
           <DialogTitle className="flex flex-row gap-4 text-3xl items-center">
             Withdrawal / Deposit <HandCoins className="text-[#F2BE38]" />

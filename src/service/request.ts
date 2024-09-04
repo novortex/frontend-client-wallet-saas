@@ -545,3 +545,22 @@ export async function getAllFiatCurrencies(organizationUuid: string) {
     throw error
   }
 }
+
+export async function createDepositWithdrawal(
+  organizationUuid: string,
+  amount: number,
+  walletUuid: string,
+  currency: string,
+  isWithdrawal: boolean,
+) {
+  try {
+    const data = { amount, walletUuid, currency, isWithdrawal }
+    const result = await instance.post('wallet/deposit-withdrawal', data, {
+      headers: { 'x-organization': organizationUuid },
+    })
+    return result.data
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
