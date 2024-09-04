@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 
 type RegisterWallet = {
+  currency: string
   performanceFee: number
   benchmark: string
   riskProfile: string
@@ -10,6 +11,7 @@ type RegisterWallet = {
   manager: string
 
   firstModal: (value: {
+    currency: string
     performanceFee: number
     benchmark: string
     riskProfile: string
@@ -21,6 +23,7 @@ type RegisterWallet = {
 }
 
 export const useRegisterWallet = create<RegisterWallet>()((set) => ({
+  currency: '',
   performanceFee: 0,
   benchmark: '',
   riskProfile: '',
@@ -35,6 +38,7 @@ export const useRegisterWallet = create<RegisterWallet>()((set) => ({
 
   firstModal(value) {
     set({
+      currency: value.currency,
       performanceFee: value.performanceFee,
       benchmark: value.benchmark,
       riskProfile: value.riskProfile,

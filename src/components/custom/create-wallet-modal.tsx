@@ -19,11 +19,13 @@ import { Label } from '@/components/ui/label'
 import { Wallet, StepForwardIcon } from 'lucide-react'
 import { CircularProgressbar } from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist/styles.css'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import RelateClientExchangeModal from './relate-client-exchange-modal'
 import { useRegisterWallet } from '@/store/registerWallet'
 import { useManagerOrganization } from '@/store/managers_benckmark_exchanges'
 import { CustomersOrganization } from './tables/customers/columns'
+import { getAllFiatCurrencies } from '@/service/request'
+import { useUserStore } from '@/store/user'
 
 interface CreateWalletModalProps {
   isOpen: boolean
@@ -45,11 +47,15 @@ export default function CreateWalletModal({
   const [contractChecked, setContractChecked] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [manager, setManager] = useState('')
+  const [fiatCurrencies, setFiatCurrencies] = useState<string[]>([])
 
   const [saveFirstModal] = useRegisterWallet((state) => [state.firstModal])
   const [managersOrganization, benchs] = useManagerOrganization((state) => [
     state.managers,
     state.benchs,
+  ])
+  const [uuidOrganization] = useUserStore((state) => [
+    state.user.uuidOrganization,
   ])
 
   // Função para validar os inputs
@@ -118,6 +124,7 @@ export default function CreateWalletModal({
       setIsModalOpen(true)
 
       saveFirstModal({
+        currency,
         performanceFee: Number(performanceFee),
         benchmark,
         riskProfile,
@@ -133,6 +140,22 @@ export default function CreateWalletModal({
   const closeModal = () => {
     setIsModalOpen(false)
   }
+
+  useEffect(() => {
+    const fetchFiatCurrencies = async () => {
+      try {
+        const result = await getAllFiatCurrencies(uuidOrganization)
+
+        const currencyAbbreviations = Object.keys(result.currencies)
+
+        setFiatCurrencies(currencyAbbreviations)
+      } catch (error) {
+        console.error('Error fetching currencies', error)
+      }
+    }
+
+    fetchFiatCurrencies()
+  }, [uuidOrganization])
 
   const calculateProgress = () => {
     let progress = 0
@@ -164,12 +187,14 @@ export default function CreateWalletModal({
             <div className="w-[35%]">
               <Select onValueChange={(value) => setCurrency(value)}>
                 <SelectTrigger className="bg-[#131313] border-[#323232] text-[#959CB6]">
-                  <SelectValue>{currency || 'USD'}</SelectValue>
+                  <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="bg-[#131313] border-[#323232] text-[#959CB6]">
-                  <SelectItem value="USD">USD</SelectItem>
-                  <SelectItem value="EUR">EUR</SelectItem>
-                  {/* Add more currency options if needed */}
+                  {fiatCurrencies.map((currency) => (
+                    <SelectItem key={currency} value={currency}>
+                      {currency}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>

@@ -57,6 +57,7 @@ export default function RelateClientExchangeModal({
 
   const [
     {
+      currency,
       benchmark,
       contract,
       initialFee,
@@ -128,6 +129,7 @@ export default function RelateClientExchangeModal({
     const result = await registerWalletForCustomer(
       uuidOrganization,
       rowInfos.id,
+      currency,
       investedAmount,
       initialFee,
       initialFeeIsPaid,
