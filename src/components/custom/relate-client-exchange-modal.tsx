@@ -93,6 +93,12 @@ export default function RelateClientExchangeModal({
   }
 
   const validateEmail = (email: string) => {
+    // Verifica se há espaços no final do e-mail
+    if (/\s$/.test(email)) {
+      return false
+    }
+
+    // Define o padrão de validação para o e-mail
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     return emailPattern.test(email)
   }
