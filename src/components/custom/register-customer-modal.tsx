@@ -65,8 +65,13 @@ export default function RegisterCustomerModal({
     // Normaliza a string removendo espaços extras
     const normalizedName = inputValues.name.replace(/\s+/g, ' ').trim()
 
-    // Validação do nome: obrigatório, deve conter nome e sobrenome, apenas letras, e cada nome deve começar com uma letra maiúscula e ter pelo menos duas letras
-    if (!/^[A-Z][a-z]{1,}(?:\s[A-Z][a-z]{1,})+\s*$/.test(normalizedName)) {
+    // Validação do nome: obrigatório, deve conter nome e sobrenome, apenas letras (incluindo acentos),
+    // e cada nome deve começar com uma letra maiúscula e ter pelo menos duas letras
+    if (
+      !/^[A-ZÀ-ÖØ-Ý][a-zà-öø-ÿ]{1,}(?:\s[A-ZÀ-ÖØ-Ý][a-zà-öø-ÿ]{1,})+\s*$/.test(
+        normalizedName,
+      )
+    ) {
       newErrors.name =
         'Name must include both first and last names, each starting with a capital letter and containing at least two letters.'
     }
