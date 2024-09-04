@@ -121,9 +121,8 @@ export default function AddNewWalletModal({
     }
 
     // Validate Entry Value
-    if (!/^\d+(\.\d{0,2})?$/.test(entryValue) || parseFloat(entryValue) <= 0) {
-      errorsCopy.entryValue =
-        'Asset value must be a positive number with up to two decimal places after the point.'
+    if (!/^\d+(\.\d{0,30})?$/.test(entryValue) || parseFloat(entryValue) <= 0) {
+      errorsCopy.entryValue = 'Asset value must be a positive number.'
       isValid = false
     } else {
       errorsCopy.entryValue = ''
@@ -168,7 +167,7 @@ export default function AddNewWalletModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="h-2/5 w-[200%] bg-[#131313] text-[#fff] border-transparent">
+      <DialogContent className="h-[45%] w-[200%] bg-[#131313] text-[#fff] border-transparent">
         <DialogHeader>
           <DialogTitle className="text-3xl text-[#fff]">New Asset</DialogTitle>
         </DialogHeader>
