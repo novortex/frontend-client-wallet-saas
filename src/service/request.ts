@@ -570,9 +570,13 @@ export async function updateCurrentAmount(
   walletUuid: string,
 ) {
   try {
-    const result = await instance.put(`wallet/${walletUuid}/currentAmount`, {
-      headers: { 'x-organization': organizationUuid },
-    })
+    const result = await instance.put(
+      `wallet/${walletUuid}/currentAmount`,
+      {},
+      {
+        headers: { 'x-organization': organizationUuid },
+      },
+    )
     return result.data
   } catch (error) {
     console.error(error)
