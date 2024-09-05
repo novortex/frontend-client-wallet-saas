@@ -564,3 +564,18 @@ export async function createDepositWithdrawal(
     throw error
   }
 }
+
+export async function updateCurrentAmount(
+  organizationUuid: string,
+  walletUuid: string,
+) {
+  try {
+    const result = await instance.put(`wallet/${walletUuid}/currentAmount`, {
+      headers: { 'x-organization': organizationUuid },
+    })
+    return result.data
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
