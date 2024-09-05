@@ -10,8 +10,12 @@ import { Input } from '@/components/ui/input'
 
 import SwitchTheme from '@/components/custom/switch-theme'
 import { useToast } from '@/components/ui/use-toast'
-import { getAllAssetsWalletClient, TWalletAssetsInfo } from '@/service/request'
-import { useParams } from 'react-router-dom'
+import {
+  getAllAssetsWalletClient,
+  TWalletAssetsInfo,
+  updateCurrentAmount,
+} from '@/service/request'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useUserStore } from '@/store/user'
 import { formatDate } from '@/utils'
 import { useSignalStore } from '@/store/signalEffect'
@@ -39,7 +43,7 @@ export default function Wallet() {
   const [signal] = useSignalStore((state) => [state.signal])
 
   const { walletUuid } = useParams()
-
+  const navigate = useNavigate()
   const { toast } = useToast()
 
   const openOperationModal = () => {
@@ -68,6 +72,8 @@ export default function Wallet() {
       >,
     ) {
       try {
+        await updateCurrentAmount(uuidOrganization, walletUuid)
+
         const result = await getAllAssetsWalletClient(
           uuidOrganization,
           walletUuid,
@@ -173,7 +179,11 @@ export default function Wallet() {
             <HandCoins />
             Withdrawal / Deposit
           </Button>
-          <Button type="button" variant="outline">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => navigate(`/wallet/${walletUuid}/history`)}
+          >
             Change history
           </Button>
           <Button

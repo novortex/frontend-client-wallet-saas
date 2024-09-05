@@ -10,8 +10,8 @@ import Clients from './pages/wallets.tsx'
 import AssetsOrg from './pages/assets-org.tsx'
 import Infos from './pages/infos.tsx'
 import Graphs from './pages/graphs.tsx'
+import History from './pages/history.tsx'
 import { Customers } from './pages/customers.tsx'
-
 
 const router = createBrowserRouter([
   {
@@ -46,6 +46,10 @@ const router = createBrowserRouter([
       {
         path: '/wallet/:walletUuid/graphs',
         element: <Graphs />,
+      },
+      {
+        path: 'wallet/:walletUuid/history',
+        element: <History />,
       },
     ],
   },
