@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button'
 import { confirmContactClient } from '@/service/request'
 import { useParams } from 'react-router-dom'
 import { useUserStore } from '@/store/user'
+import { useSignalStore } from '@/store/signalEffect'
 
 interface ConfirmContactModalProps {
   isOpen: boolean
@@ -22,11 +23,22 @@ export default function ConfirmContactModal({
 }: ConfirmContactModalProps) {
   const { walletUuid } = useParams()
   const uuidOrganization = useUserStore((state) => state.user.uuidOrganization)
+  const [setSignal, signal] = useSignalStore((state) => [
+    state.setSignal,
+    state.signal,
+  ])
 
   const handleConfirmContact = async () => {
     try {
       if (walletUuid && uuidOrganization) {
         await confirmContactClient(uuidOrganization, walletUuid)
+
+        if (!signal) {
+          setSignal(true)
+        } else {
+          setSignal(false)
+        }
+
         onClose()
       }
     } catch (error) {
