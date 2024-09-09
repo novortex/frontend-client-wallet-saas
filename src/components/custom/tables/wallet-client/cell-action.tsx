@@ -24,7 +24,10 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { ClientActive } from './columns'
-import { updateAssetWalletInformations } from '@/service/request'
+import {
+  deleteAssetWallet,
+  updateAssetWalletInformations,
+} from '@/service/request'
 import { useUserStore } from '@/store/user'
 import { useParams } from 'react-router-dom'
 import { useToast } from '@/components/ui/use-toast'
@@ -116,6 +119,36 @@ export default function CellActions({ rowInfos }: { rowInfos: ClientActive }) {
     return toast({
       className: 'bg-green-500 border-0',
       title: 'Success update !!',
+      description: 'Demo Vault !!',
+    })
+  }
+
+  const handleDeleteAssetWallet = async () => {
+    toast({
+      className: 'bg-yellow-500 border-0',
+      title: 'Processing delete Asset in wallet',
+      description: 'Demo Vault !!',
+    })
+
+    const result = await deleteAssetWallet(
+      uuidOrganization,
+      walletUuid as string,
+      rowInfos.id,
+    )
+
+    if (result.error) {
+      return toast({
+        className: 'bg-red-500 border-0',
+        title: 'Failed delete Asset in Wallet',
+        description: 'Demo Vault !!',
+      })
+    }
+
+    setSignal(!signal)
+
+    return toast({
+      className: 'bg-green-500 border-0',
+      title: 'Success delete !!',
       description: 'Demo Vault !!',
     })
   }
@@ -214,17 +247,31 @@ export default function CellActions({ rowInfos }: { rowInfos: ClientActive }) {
                   <TriangleAlert className="text-yellow-400 w-5" />
                 </DialogTitle>
                 <DialogDescription>
-                  Disabled the{' '}
-                  <span className="font-bold text-white">
-                    {rowInfos.asset.name}
-                  </span>{' '}
-                  for all wallets
-                  <p className="mt-5 font-bold text-yellow-200">
-                    Warning: You are about to disable this crypto asset for all
-                    wallets. This action is irreversible and will affect all
-                    users holding this asset. Please confirm that you want to
-                    proceed with this operation.
+                  <p className="flex">
+                    Disabled the
+                    <span className="font-bold text-white ml-2">
+                      {rowInfos.asset.name}
+                    </span>
+                    <div className="ml-2 animate-bounce">
+                      <img
+                        src={rowInfos.asset.urlImage}
+                        alt={rowInfos.asset.name}
+                        className="w-6 h-6 mr-2"
+                      />
+                    </div>
                   </p>
+                  {!(
+                    rowInfos.assetQuantity === 0 &&
+                    rowInfos.idealAllocation === 0
+                  ) ? (
+                    <p className="mt-5 font-bold text-yellow-200">
+                      {' '}
+                      Warning: It is not possible to disable this crypto asset
+                      because it still has allocated values and remaining
+                      quantities. Please check the allocations and ensure there
+                      is no balance before attempting again.
+                    </p>
+                  ) : null}
                 </DialogDescription>
               </DialogHeader>
               <DialogFooter>
@@ -234,7 +281,13 @@ export default function CellActions({ rowInfos }: { rowInfos: ClientActive }) {
                   </Button>
                 </DialogClose>
                 <Button
-                  disabled
+                  disabled={
+                    !(
+                      rowInfos.assetQuantity === 0 &&
+                      rowInfos.idealAllocation === 0
+                    )
+                  }
+                  onClick={handleDeleteAssetWallet}
                   className="bg-blue-500 hover:bg-blue-600 text-black"
                 >
                   Disabled
