@@ -35,6 +35,7 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
 import ConfirmContactModal from '@/components/custom/confirm-contact-modal'
+import { useSignalStore } from '@/store/signalEffect'
 
 export default function Infos() {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -84,6 +85,7 @@ export default function Infos() {
   const { walletUuid } = useParams()
 
   const uuidOrganization = useUserStore((state) => state.user.uuidOrganization)
+  const [signal] = useSignalStore((state) => [state.signal])
 
   const openModal = () => {
     setIsModalOpen(true)
@@ -121,16 +123,13 @@ export default function Infos() {
         return false
       }
 
-      // console.log(result.walletInfo.lastRebalance)
-      // console.log(result.walletPreInfos.lastContactAt)
-
       setWalletI(result.walletInfo)
       setWalletInfos(result.walletPreInfos)
       setWalletCommission(result.walletCommission)
     }
 
     getInfo()
-  }, [navigate, uuidOrganization, walletUuid])
+  }, [navigate, uuidOrganization, walletUuid, signal])
 
   useEffect(() => {
     const fetchTimeZone = async () => {
