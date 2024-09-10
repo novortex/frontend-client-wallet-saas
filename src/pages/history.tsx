@@ -2,6 +2,7 @@ import SwitchTheme from '@/components/custom/switch-theme'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import filterIcon from '../assets/image/filter-lines.png'
+import HistoryThread from '@/components/custom/history-thread'
 
 export default function History() {
   console.log('oi')
@@ -28,6 +29,17 @@ export default function History() {
             <p>Filters</p>
           </Button>
         </div>
+      </div>
+      <div>
+        <HistoryThread
+          user="Arthur Fraige"
+          operationType="DEPOSIT"
+          active="Bitcoin"
+          date="01/01/2024"
+          hour="10:00"
+          oldValue={20}
+          newValue={30}
+        />
       </div>
     </div>
   )
