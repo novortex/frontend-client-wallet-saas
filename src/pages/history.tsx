@@ -3,9 +3,36 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import filterIcon from '../assets/image/filter-lines.png'
 import HistoryThread from '@/components/custom/history-thread'
+import { getWalletHistoric } from '@/service/request'
+import { useUserStore } from '@/store/user'
+import { useParams } from 'react-router-dom'
+import { useEffect, useState } from 'react'
 
 export default function History() {
-  console.log('oi')
+  const [historic, setHistoric] = useState([])
+  const [organizationUuid] = useUserStore((state) => [
+    state.user.uuidOrganization,
+  ])
+  const { walletUuid } = useParams()
+
+  useEffect(() => {
+    async function fetchHistoric() {
+      if (organizationUuid && walletUuid) {
+        try {
+          const data = await getWalletHistoric(organizationUuid, walletUuid)
+          setHistoric(data)
+        } catch (error) {
+          console.error('Failed to fetch historic:', error)
+        }
+      } else {
+        console.error('organizationUuid or walletUuid is undefined')
+      }
+    }
+
+    fetchHistoric()
+  }, [organizationUuid, walletUuid])
+
+  console.log(historic)
 
   return (
     <div className="p-10">

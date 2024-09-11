@@ -23,7 +23,6 @@ export default function HistoryThread({
   oldValue,
   newValue,
 }: HistoryThreadProps) {
-  console.log('jambers')
   return (
     <div className="flex flex-col gap-3">
       <div className="flex flex-row items-center gap-3 text-lg text-[#fff]">

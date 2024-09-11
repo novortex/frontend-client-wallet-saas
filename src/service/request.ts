@@ -583,3 +583,18 @@ export async function updateCurrentAmount(
     throw error
   }
 }
+
+export async function getWalletHistoric(
+  organizationUuid: string,
+  walletUuid: string,
+) {
+  try {
+    const result = await instance.get(`historic/${walletUuid}`, {
+      headers: { 'x-organization': organizationUuid },
+    })
+    return result.data
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
