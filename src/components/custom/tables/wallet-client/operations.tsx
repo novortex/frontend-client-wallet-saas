@@ -24,6 +24,7 @@ import {
 } from '@/service/request'
 import { useUserStore } from '@/store/user'
 import { useParams } from 'react-router-dom'
+import { useSignalStore } from '@/store/signalEffect'
 
 interface OperationsModalProps {
   isOpen: boolean
@@ -45,6 +46,10 @@ export default function OperationsModal({
   const [fiatCurrencies, setFiatCurrencies] = useState<string[]>([])
   const [uuidOrganization] = useUserStore((state) => [
     state.user.uuidOrganization,
+  ])
+  const [signal, setSignal] = useSignalStore((state) => [
+    state.signal,
+    state.setSignal,
   ])
 
   const { walletUuid } = useParams()
@@ -113,6 +118,12 @@ export default function OperationsModal({
     const isWithdrawal = operation === 'Withdrawal'
 
     try {
+      toast({
+        className: 'bg-yellow-500 border-0',
+        title: 'Operation in progress',
+        description: `Operation: ${operation}, Amount: ${amount}, Currency: ${currency}`,
+      })
+
       const result = await createDepositWithdrawal(
         uuidOrganization,
         parseFloat(amount),
@@ -126,6 +137,12 @@ export default function OperationsModal({
         title: 'Operation successful',
         description: `Operation: ${operation}, Amount: ${amount}, Currency: ${currency}`,
       })
+
+      if (!signal) {
+        setSignal(true)
+      } else {
+        setSignal(false)
+      }
 
       console.log('Operation successful:', result)
     } catch (error) {

@@ -81,7 +81,7 @@ export default function CardClient({
       <CardHeader className="w-full h-1/2 gap-3">
         <CardTitle className="flex flex-row">
           <div className="h-full w-1/2 flex items-center justify-start text-[#fff] text-2xl">
-            <p>{name}</p>
+            <p className="truncate max-w-full">{name}</p>
           </div>
           <div className="relative h-full w-1/2 flex items-center justify-end">
             <div className="relative group">

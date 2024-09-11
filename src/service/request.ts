@@ -583,6 +583,25 @@ export async function updateCurrentAmount(
     throw error
   }
 }
+      
+export async function deleteAssetWallet(
+  organizationUuid: string,
+  walletUuid: string,
+  assetUuid: string,
+) {
+  try {
+    const result = await instance.delete(
+      `wallet/${walletUuid}/assets/${assetUuid}`,
+      {
+        headers: { 'x-organization': organizationUuid },
+      },
+    )
+    return result.data
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
 
 export async function getWalletHistoric(
   organizationUuid: string,
@@ -598,3 +617,4 @@ export async function getWalletHistoric(
     throw error
   }
 }
+
