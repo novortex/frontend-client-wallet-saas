@@ -8,8 +8,39 @@ import { useUserStore } from '@/store/user'
 import { useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 
+// Definir a interface para os dados de histórico
+interface HistoricEntry {
+  cuid: string
+  historyType:
+    | 'SELL_ASSET'
+    | 'BUY_ASSET'
+    | 'INCREASE_ALLOCATION'
+    | 'DECREASE_ALLOCATION'
+    | 'ADD_ASSET'
+    | 'DELETE_ASSET'
+    | 'WITHDRAWAL'
+    | 'DEPOSIT'
+    | 'START_WALLET'
+    | 'CLOSE_WALLET'
+  createAt: string
+  data: {
+    before: number
+    after: number
+    icon: string
+    asset: string
+    quantity: number
+    target_allocation: number
+    withdrawal_value_in_organization_fiat: number
+    deposit_amount_in_organization_fiat: number
+  }
+  user: {
+    name: string
+  }
+}
+
 export default function History() {
-  const [historic, setHistoric] = useState([])
+  // Tipando o estado como um array de HistoricEntry
+  const [historic, setHistoric] = useState<HistoricEntry[]>([])
   const [organizationUuid] = useUserStore((state) => [
     state.user.uuidOrganization,
   ])
@@ -31,8 +62,6 @@ export default function History() {
 
     fetchHistoric()
   }, [organizationUuid, walletUuid])
-
-  console.log(historic)
 
   return (
     <div className="p-10">
@@ -58,15 +87,23 @@ export default function History() {
         </div>
       </div>
       <div>
-        <HistoryThread
-          user="Arthur Fraige"
-          operationType="DEPOSIT"
-          active="Bitcoin"
-          date="01/01/2024"
-          hour="10:00"
-          oldValue={20}
-          newValue={30}
-        />
+        {historic.map((entry) => (
+          <HistoryThread
+            key={entry.cuid}
+            user={entry.user.name}
+            operationType={entry.historyType}
+            asset={entry.data.asset}
+            date={new Date(entry.createAt).toLocaleDateString()}
+            hour={new Date(entry.createAt).toLocaleTimeString()}
+            assetIcon={entry.data.icon}
+            oldValue={entry.data.before}
+            newValue={entry.data.after}
+            addAssetQuantity={entry.data.quantity}
+            addAssetAllocation={entry.data.target_allocation}
+            depositValue={entry.data.deposit_amount_in_organization_fiat}
+            withdrawalValue={entry.data.withdrawal_value_in_organization_fiat}
+          />
+        ))}
       </div>
     </div>
   )

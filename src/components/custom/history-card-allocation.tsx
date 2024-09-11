@@ -32,7 +32,7 @@ export default function HistoryCardAllocation({
         </CardDescription>
         <div className="w-1/3 h-full flex justify-end">
           <p
-            className={`w-1/2 flex items-center justify-center bg-opacity-50 rounded-[40px] ${tagStyles}`}
+            className={`w-1/2 flex items-center justify-center bg-opacity-30 rounded-[40px] ${tagStyles}`}
           >
             {tagText}
           </p>

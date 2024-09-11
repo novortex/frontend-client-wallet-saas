@@ -21,7 +21,7 @@ export default function HistoryCardBuySell({
     <Card className="w-2/5 h-full min-h-[220px] rounded-[12px] border border-[#272727] bg-[#131313] flex flex-col">
       <CardHeader className="flex justify-center items-end">
         <p
-          className={`w-1/6 flex items-center justify-center rounded-[40px] bg-opacity-50 ${tagStyles}`}
+          className={`w-1/6 flex items-center justify-center rounded-[40px] bg-opacity-30 ${tagStyles}`}
         >
           {tagText}
         </p>
