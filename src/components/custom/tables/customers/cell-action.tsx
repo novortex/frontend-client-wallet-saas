@@ -27,6 +27,15 @@ import CreateWalletModal from '../../create-wallet-modal'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { useManagerOrganization } from '@/store/managers_benckmark_exchanges'
+import { Checkbox } from '@/components/ui/checkbox'
 
 export default function CellActions({
   rowInfos,
@@ -34,8 +43,15 @@ export default function CellActions({
   rowInfos: CustomersOrganization
 }) {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
-
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [fiatCurrencies] = useState<string[]>([])
+  const [, setCurrency] = useState('')
+  const [contractChecked, setContractChecked] = useState(false)
+  const [manager, setManager] = useState('')
+
+  const [managersOrganization] = useManagerOrganization((state) => [
+    state.managers,
+  ])
 
   const openModal = () => {
     setIsModalOpen(true)
@@ -76,7 +92,7 @@ export default function CellActions({
               <Tabs defaultValue="Profile">
                 <TabsList className="flex justify-between gap-5 bg-[#1C1C1C]">
                   <TabsTrigger
-                    className="w-1/2 bg-[#171717] text-[#F2BE38]  data-[state=active]:bg-yellow-500"
+                    className="w-1/2 bg-[#171717] text-[#F2BE38] data-[state=active]:bg-yellow-500"
                     value="Profile"
                   >
                     Profile
@@ -95,10 +111,12 @@ export default function CellActions({
                         Name
                       </Label>
                       <Input
-                        className="bg-[#131313] border-[#323232] text-[#959CB6]"
-                        type="Name"
+                        className="bg-[#131313] border-[#323232] text-white"
+                        type="text"
                         id="Name"
+                        value={rowInfos.name}
                         placeholder="Name"
+                        required
                       />
                     </div>
 
@@ -107,10 +125,12 @@ export default function CellActions({
                         ID
                       </Label>
                       <Input
-                        className=" bg-[#131313] border-[#323232] text-[#959CB6]"
-                        type="ID"
+                        className="bg-[#131313] border-[#323232] text-white"
+                        type="text"
                         id="ID"
+                        value={rowInfos.cpf || ''}
                         placeholder="ID"
+                        required
                       />
                     </div>
                     <div>
@@ -118,10 +138,12 @@ export default function CellActions({
                         Email
                       </Label>
                       <Input
-                        className=" bg-[#131313] border-[#323232] text-[#959CB6]"
+                        className="bg-[#131313] border-[#323232] text-white"
                         type="email"
                         id="email"
+                        value={rowInfos.email}
                         placeholder="Email"
+                        required
                       />
                     </div>
                     <div>
@@ -129,84 +151,137 @@ export default function CellActions({
                         Phone
                       </Label>
                       <Input
-                        className=" bg-[#131313] border-[#323232] text-[#959CB6]"
-                        type="Phone"
+                        className="bg-[#131313] border-[#323232] text-white"
+                        type="tel"
                         id="Phone"
+                        value={rowInfos.phone || ''}
                         placeholder="Phone"
+                        required
                       />
                     </div>
                   </div>
                 </TabsContent>
                 <TabsContent className="mt-10" value="Wallet">
                   <div className="grid justify-items-center grid-cols-2 gap-5">
-                    <div>
+                    <div className="w-full">
                       <Label className="ml-2" htmlFor="Name">
                         Exchange
                       </Label>
-                      <Input
-                        className="bg-[#131313] border-[#323232] text-[#959CB6]"
-                        type="Name"
-                        id="Name"
-                        placeholder="Name"
-                      />
+                      <Select
+                        onValueChange={(value) => setCurrency(value)}
+                        required
+                      >
+                        <SelectTrigger className="bg-[#131313] border-[#323232] text-white">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent className="bg-[#131313] border-[#323232] text-white">
+                          {fiatCurrencies.map((currency) => (
+                            <SelectItem key={currency} value={currency}>
+                              {currency}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </div>
 
                     <div>
-                      <Label className="ml-2" htmlFor="ID">
+                      <Label className="ml-2" htmlFor="Email Password">
                         Email Password
                       </Label>
                       <Input
-                        className=" bg-[#131313] border-[#323232] text-[#959CB6]"
-                        type="ID"
-                        id="ID"
-                        placeholder="ID"
+                        className="bg-[#131313] border-[#323232] text-white"
+                        type="password"
+                        id="Email Password"
+                        placeholder="Email Password"
+                        required
                       />
                     </div>
                     <div>
-                      <Label className="ml-2" htmlFor="email">
-                        Email ( Exchage )
+                      <Label className="ml-2" htmlFor="EmailExchage">
+                        Email ( Exchange )
                       </Label>
                       <Input
-                        className=" bg-[#131313] border-[#323232] text-[#959CB6]"
+                        className="bg-[#131313] border-[#323232] text-white"
                         type="email"
-                        id="email"
-                        placeholder="Email"
+                        id="Email Exchage"
+                        placeholder="Email Exchange"
+                        required
                       />
                     </div>
                     <div>
-                      <Label className="ml-2" htmlFor="Phone">
+                      <Label className="ml-2" htmlFor="Exchange Password">
                         Exchange Password
                       </Label>
                       <Input
-                        className=" bg-[#131313] border-[#323232] text-[#959CB6]"
-                        type="Phone"
-                        id="Phone"
-                        placeholder="Phone"
+                        className="bg-[#131313] border-[#323232] text-white"
+                        type="password"
+                        id="Exchange Password"
+                        placeholder="Exchange Password"
+                        required
                       />
                     </div>
 
-                    <div>
+                    <div className="w-full">
                       <Label className="ml-2" htmlFor="Phone">
                         Manager
                       </Label>
-                      <Input
-                        className=" bg-[#131313] border-[#323232] text-[#959CB6]"
-                        type="Phone"
-                        id="Phone"
-                        placeholder="Phone"
-                      />
+                      <Select
+                        onValueChange={(value) => setManager(value)}
+                        required
+                      >
+                        <SelectTrigger className="bg-[#131313] border-[#323232] text-white">
+                          <SelectValue>
+                            {manager
+                              ? managersOrganization.find(
+                                  (mgr) => mgr.uuid === manager,
+                                )?.name
+                              : 'Name'}
+                          </SelectValue>
+                        </SelectTrigger>
+                        <SelectContent className="bg-[#131313] border-[#323232] text-white">
+                          {managersOrganization.map((manager) => (
+                            <SelectItem key={manager.uuid} value={manager.uuid}>
+                              {manager.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="w-full mt-4">
+                      <div className="mb-3 flex gap-3">
+                        <Checkbox
+                          className="border-gray-500"
+                          checked={contractChecked}
+                          onCheckedChange={() =>
+                            setContractChecked(!contractChecked)
+                          }
+                        />
+                        <Label>Initial Fee is paid?</Label>
+                      </div>
+
+                      <div className="flex gap-3">
+                        <Checkbox
+                          className="border-gray-500"
+                          checked={contractChecked}
+                          onCheckedChange={() =>
+                            setContractChecked(!contractChecked)
+                          }
+                        />
+                        <Label>Contract</Label>
+                      </div>
                     </div>
                   </div>
                 </TabsContent>
               </Tabs>
 
-              <DialogFooter>
+              <DialogFooter className="mt-5">
                 <DialogClose asChild>
                   <Button className="bg-red-500 hover:bg-red-600 text-white">
                     Close
                   </Button>
                 </DialogClose>
-                <Button className="bg-green-500 hover:bg-green-600 text-black">
+                <Button className="bg-blue-500 hover:bg-blue-600 text-white">
                   Save
                 </Button>
               </DialogFooter>
