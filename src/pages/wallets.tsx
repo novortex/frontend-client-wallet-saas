@@ -3,7 +3,6 @@ import SwitchTheme from '@/components/custom/switch-theme'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import filterIcon from '../assets/image/filter-lines.png'
-import AddNewClientModal from '@/components/custom/add-new-client-modal'
 import ClientsFilterModal from '@/components/custom/clients-filter-modal'
 import { useState, useEffect } from 'react'
 import { getWalletOrganization, TClientInfosResponse } from '@/service/request'
@@ -13,7 +12,6 @@ import { formatDate } from '@/utils'
 import { useSignalStore } from '@/store/signalEffect'
 
 export default function Clients() {
-  const [isModalOpen, setIsModalOpen] = useState(false)
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false)
   const [uuidOrganization] = useUserStore((state) => [
     state.user.uuidOrganization,
@@ -44,14 +42,6 @@ export default function Clients() {
 
     fetchWalletsAndClients()
   }, [toast, uuidOrganization, signal])
-
-  const openModal = () => {
-    setIsModalOpen(true)
-  }
-
-  const closeModal = () => {
-    setIsModalOpen(false)
-  }
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value)
@@ -95,7 +85,7 @@ export default function Clients() {
       </div>
       <div className="flex items-center justify-between mb-10">
         <Input
-          className="bg-[#171717] w-3/4 border-0 text-white focus:ring-0"
+          className="bg-[#171717] w-5/6 border-0 text-white focus:ring-0"
           type="text"
           placeholder="Search for ..."
           value={searchTerm}
@@ -110,13 +100,6 @@ export default function Clients() {
           >
             <img src={filterIcon} alt="" />
             <p>Filters</p>
-          </Button>
-          <Button
-            className="bg-[#1877F2] p-5"
-            type="button"
-            onClick={openModal}
-          >
-            + Add New
           </Button>
         </div>
       </div>
@@ -145,7 +128,6 @@ export default function Clients() {
             />
           ))}
       </div>
-      <AddNewClientModal isOpen={isModalOpen} onClose={closeModal} />
       <ClientsFilterModal
         isOpen={isFilterModalOpen}
         onClose={closeFilterModal}
