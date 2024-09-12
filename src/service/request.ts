@@ -565,6 +565,25 @@ export async function createDepositWithdrawal(
   }
 }
 
+export async function updateCurrentAmount(
+  organizationUuid: string,
+  walletUuid: string,
+) {
+  try {
+    const result = await instance.put(
+      `wallet/${walletUuid}/currentAmount`,
+      {},
+      {
+        headers: { 'x-organization': organizationUuid },
+      },
+    )
+    return result.data
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+      
 export async function deleteAssetWallet(
   organizationUuid: string,
   walletUuid: string,
@@ -583,3 +602,19 @@ export async function deleteAssetWallet(
     throw error
   }
 }
+
+export async function getWalletHistoric(
+  organizationUuid: string,
+  walletUuid: string,
+) {
+  try {
+    const result = await instance.get(`historic/${walletUuid}`, {
+      headers: { 'x-organization': organizationUuid },
+    })
+    return result.data
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+

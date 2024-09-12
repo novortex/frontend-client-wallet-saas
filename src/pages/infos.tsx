@@ -22,6 +22,7 @@ import {
   TWalletCommission,
   TWalletInfos,
   convertedTimeZone,
+  updateCurrentAmount,
 } from '@/service/request'
 import { useUserStore } from '@/store/user'
 import { formatDate } from '@/utils'
@@ -116,6 +117,8 @@ export default function Infos() {
       if (!walletUuid) {
         return navigate('client')
       }
+
+      await updateCurrentAmount(uuidOrganization, walletUuid)
 
       const result = await getInfosCustomer(walletUuid, uuidOrganization)
 
