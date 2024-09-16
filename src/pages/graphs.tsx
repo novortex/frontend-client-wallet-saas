@@ -1,9 +1,45 @@
+import { useEffect, useState } from 'react'
 import SwitchTheme from '@/components/custom/switch-theme'
 import { Input } from '@/components/ui/input'
 import { CardDashboard } from '@/components/custom/card-dashboard'
 import WalletGraph from '@/components/custom/graph-wallet'
+import { getGraphData } from '@/service/request'
+import { useParams } from 'react-router-dom'
+import { useUserStore } from '@/store/user'
+
+interface graphDataEntry {
+  cuid: string
+  amountPercentage: number
+  cryptoMoney: number
+  benchmarkMoney: number
+  walletUuid: string
+  createAt: string
+}
 
 export default function Graphs() {
+  const [graphData, setGraphData] = useState<graphDataEntry[]>([])
+  const { walletUuid } = useParams()
+  const [uuidOrganization] = useUserStore((state) => [
+    state.user.uuidOrganization,
+  ])
+
+  useEffect(() => {
+    async function fetchGraphData() {
+      if (uuidOrganization && walletUuid) {
+        try {
+          const data = await getGraphData(uuidOrganization, walletUuid)
+          setGraphData(data)
+        } catch (error) {
+          console.error('Failed to fetch historic:', error)
+        }
+      } else {
+        console.error('organizationUuid or walletUuid is undefined')
+      }
+    }
+    fetchGraphData()
+  }, [uuidOrganization, walletUuid])
+
+  console.log(graphData)
 
   return (
     <div className="p-10">

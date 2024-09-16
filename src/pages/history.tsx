@@ -32,6 +32,8 @@ interface HistoricEntry {
     target_allocation: number
     withdrawal_value_in_organization_fiat: number
     deposit_amount_in_organization_fiat: number
+    invested_amount_in_organization_fiat: number
+    close_wallet_value_in_organization_fiat: number
   }
   user: {
     name: string
@@ -102,6 +104,8 @@ export default function History() {
             addAssetAllocation={entry.data.target_allocation}
             depositValue={entry.data.deposit_amount_in_organization_fiat}
             withdrawalValue={entry.data.withdrawal_value_in_organization_fiat}
+            initialValue={entry.data.invested_amount_in_organization_fiat}
+            closeValue={entry.data.close_wallet_value_in_organization_fiat}
           />
         ))}
       </div>
