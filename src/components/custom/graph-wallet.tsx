@@ -14,22 +14,10 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from '@/components/ui/chart'
-import { useState } from 'react'
-
-const chartDataMonth = [
-  { value: '25000', month: 'January', wallet: '26000', Benchmark: '28000' },
-  { value: '30000', month: 'February', wallet: '29000', Benchmark: '27500' },
-  { value: '35000', month: 'March', wallet: '34000', Benchmark: '28500' },
-  { value: '40000', month: 'April', wallet: '35000', Benchmark: '29500' },
-  { value: '45000', month: 'May', wallet: '37000', Benchmark: '30000' },
-  { value: '50000', month: 'June', wallet: '48000', Benchmark: '32000' },
-  { value: '55000', month: 'July', wallet: '50000', Benchmark: '63000' },
-  { value: '60000', month: 'August', wallet: '51000', Benchmark: '34000' },
-  { value: '65000', month: 'September', wallet: '60000', Benchmark: '35000' },
-  { value: '70000', month: 'October', wallet: '62000', Benchmark: '36500' },
-  { value: '75000', month: 'November', wallet: '68000', Benchmark: '38000' },
-  { value: '80000', month: 'December', wallet: '70000', Benchmark: '40000' },
-]
+import { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { useUserStore } from '@/store/user'
+import { getGraphData } from '@/service/request'
 
 const chartConfig = {
   desktop: {
@@ -38,9 +26,68 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
+interface graphDataEntry {
+  cuid: string
+  amountPercentage: number
+  cryptoMoney: number
+  benchmarkMoney: number
+  walletUuid: string
+  createAt: string
+}
+
 export default function WalletGraph() {
   const [showWallet, setShowWallet] = useState(true)
   const [showBenchmark, setShowBenchmark] = useState(true)
+  const [graphData, setGraphData] = useState<graphDataEntry[]>([])
+  const { walletUuid } = useParams()
+  const [uuidOrganization] = useUserStore((state) => [
+    state.user.uuidOrganization,
+  ])
+
+  useEffect(() => {
+    async function fetchGraphData() {
+      if (uuidOrganization && walletUuid) {
+        try {
+          const data = await getGraphData(uuidOrganization, walletUuid)
+
+          // Ordenar os dados por data (createAt) e tipar os parâmetros
+          const sortedData = data.sort(
+            (a: graphDataEntry, b: graphDataEntry) =>
+              new Date(a.createAt).getTime() - new Date(b.createAt).getTime(),
+          )
+
+          setGraphData(sortedData)
+        } catch (error) {
+          console.error('Failed to fetch historic:', error)
+        }
+      } else {
+        console.error('organizationUuid or walletUuid is undefined')
+      }
+    }
+    fetchGraphData()
+  }, [uuidOrganization, walletUuid])
+
+  // Mapeamento dos dados retornados da API para o formato esperado pelo gráfico
+  const formattedChartData = graphData.map((entry) => ({
+    month: new Date(entry.createAt).toLocaleString('default', {
+      month: 'long',
+    }), // Converte a data para o nome do mês
+    value: entry.cryptoMoney, // Torna o "value" dinâmico com base em wallet
+    wallet: entry.cryptoMoney,
+    Benchmark: entry.benchmarkMoney,
+  }))
+
+  // Encontrar os valores mínimos e máximos entre "cryptoMoney" e "benchmarkMoney"
+  const minValue = Math.min(
+    ...graphData.map((entry) =>
+      Math.min(entry.cryptoMoney, entry.benchmarkMoney),
+    ),
+  )
+  const maxValue = Math.max(
+    ...graphData.map((entry) =>
+      Math.max(entry.cryptoMoney, entry.benchmarkMoney),
+    ),
+  )
 
   return (
     <Card className="bg-[#131313] text-card-foreground p-4 rounded-lg shadow-lg border-transparent">
@@ -69,17 +116,17 @@ export default function WalletGraph() {
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="mb-4">
-          <LineChart data={chartDataMonth}>
+          <LineChart data={formattedChartData}>
             <CartesianGrid vertical={false} horizontal={true} />
             <XAxis
               dataKey="month"
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              tickFormatter={(value) => value.slice(0, 3)}
+              tickFormatter={(value) => value.slice(0, 3)} // Exibe os primeiros 3 caracteres do mês
             />
             <YAxis
-              dataKey="value"
+              domain={[minValue, maxValue]} // Domínio definido com base nos valores mínimo e máximo
               tickLine={false}
               axisLine={false}
               tickMargin={8}
@@ -87,7 +134,7 @@ export default function WalletGraph() {
             {showWallet && (
               <Line
                 dataKey="wallet"
-                type="monotone"
+                type="linear" // Alterado para reta
                 stroke="#1878f3"
                 strokeWidth={1.5}
                 dot={true}
@@ -96,7 +143,7 @@ export default function WalletGraph() {
             {showBenchmark && (
               <Line
                 dataKey="Benchmark"
-                type="monotone"
+                type="linear" // Alterado para reta
                 stroke="#11a45c"
                 strokeWidth={1.5}
                 dot={true}
