@@ -2,6 +2,7 @@ import HistoryCardAllocation from './history-card-allocation'
 import HistoryCardBuySell from './history-card-buy-sell'
 import HistoryCardAddDelete from './history-card-add-delete'
 import HistoryCardDepositWithdrawal from './history-card-deposit-withdrawal'
+import HistoryCardStartClose from './history-card-start-close-wallet'
 import sellIcon from '../../assets/image/history-sell-icon.png'
 import buyIcon from '../../assets/image/history-buy-icon.png'
 import increaseAllocationIcon from '../../assets/image/history-inc-allocation-icon.png'
@@ -10,6 +11,8 @@ import addAssetIcon from '../../assets/image/history-add-asset-icon.png'
 import deleteAssetIcon from '../../assets/image/history-delete-asset-icon.png'
 import depositIcon from '../../assets/image/history-deposit-icon.png'
 import withdrawalIcon from '../../assets/image/history-withdrawal-icon.png'
+import startWalletIcon from '../../assets/image/history-start-wallet-icon.png'
+import closeWalletIcon from '../../assets/image/history-close-wallet-icon.png'
 
 interface HistoryThreadProps {
   user: string
@@ -24,6 +27,8 @@ interface HistoryThreadProps {
   addAssetAllocation?: number
   depositValue?: number
   withdrawalValue?: number
+  initialValue?: number
+  closeValue?: number
 }
 
 const getIcon = (operationType: string) => {
@@ -44,6 +49,10 @@ const getIcon = (operationType: string) => {
       return depositIcon
     case 'WITHDRAWAL':
       return withdrawalIcon
+    case 'START_WALLET':
+      return startWalletIcon
+    case 'CLOSE_WALLET':
+      return closeWalletIcon
     default:
       return ''
   }
@@ -62,6 +71,8 @@ export default function HistoryThread({
   addAssetAllocation,
   depositValue,
   withdrawalValue,
+  initialValue,
+  closeValue,
 }: HistoryThreadProps) {
   const renderOperationDescription = () => {
     switch (operationType) {
@@ -147,6 +158,19 @@ export default function HistoryThread({
             ({hour})
           </div>
         )
+      case 'START_WALLET':
+        return (
+          <div className="flex flex-row gap-1.5">
+            <p className="font-bold">{user}</p> started wallet on {date} ({hour}
+            )
+          </div>
+        )
+      case 'CLOSE_WALLET':
+        return (
+          <div className="flex flex-row gap-1.5">
+            <p className="font-bold">{user}</p> closed wallet on {date} ({hour})
+          </div>
+        )
       default:
         return (
           <div className="flex flex-row text-[#fff]">
@@ -225,9 +249,24 @@ export default function HistoryThread({
           />
         )
       case 'START_WALLET':
-        return <div className="text-[#fff]">Start Wallet Placeholder</div>
+        return (
+          <HistoryCardStartClose
+            walletState={true}
+            date={date}
+            hour={hour}
+            initialValue={initialValue ?? 0}
+          />
+        )
       case 'CLOSE_WALLET':
-        return <div className="text-[#fff]">Close Wallet Placeholder</div>
+        return (
+          <HistoryCardStartClose
+            walletState={false}
+            date={date}
+            hour={hour}
+            initialValue={initialValue ?? 0}
+            closeValue={closeValue ?? 0}
+          />
+        )
       default:
         return <div className="text-[#fff]">Operação não identificada</div>
     }

@@ -583,7 +583,7 @@ export async function updateCurrentAmount(
     throw error
   }
 }
-      
+
 export async function deleteAssetWallet(
   organizationUuid: string,
   walletUuid: string,
@@ -618,3 +618,17 @@ export async function getWalletHistoric(
   }
 }
 
+export async function getGraphData(
+  organizationUuid: string,
+  walletUuid: string,
+) {
+  try {
+    const result = await instance.get(`wallet/${walletUuid}/graphData`, {
+      headers: { 'x-organization': organizationUuid },
+    })
+    return result.data
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
