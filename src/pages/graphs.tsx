@@ -2,8 +2,136 @@ import SwitchTheme from '@/components/custom/switch-theme'
 import { Input } from '@/components/ui/input'
 import { CardDashboard } from '@/components/custom/card-dashboard'
 import WalletGraph from '@/components/custom/graph-wallet'
+import {
+  getAllAssetsWalletClient,
+  getGraphData,
+  TWalletAssetsInfo,
+  updateCurrentAmount,
+} from '@/service/request'
+import { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { useUserStore } from '@/store/user'
+import { ClientActive } from '@/components/custom/tables/wallet-client/columns'
+import { useToast } from '@/components/ui/use-toast'
+import { useSignalStore } from '@/store/signalEffect'
+import { formatDate } from '@/utils'
+
+interface graphDataEntry {
+  cuid: string
+  amountPercentage: number
+  cryptoMoney: number
+  benchmarkMoney: number
+  walletUuid: string
+  createAt: string
+}
 
 export default function Graphs() {
+  const [data, setData] = useState<ClientActive[]>([])
+  const [infosWallet, setInfosWallet] = useState<TWalletAssetsInfo>()
+  const [loading, setLoading] = useState(true)
+  const [graphData, setGraphData] = useState<graphDataEntry[]>([])
+  const [uuidOrganization] = useUserStore((state) => [
+    state.user.uuidOrganization,
+  ])
+  const { walletUuid } = useParams()
+  const { toast } = useToast()
+  const [signal] = useSignalStore((state) => [state.signal])
+
+  useEffect(() => {
+    async function getData(
+      uuidOrganization: string,
+      walletUuid: string,
+      setData: React.Dispatch<React.SetStateAction<ClientActive[]>>,
+      setInfosWallet: React.Dispatch<
+        React.SetStateAction<TWalletAssetsInfo | undefined>
+      >,
+    ) {
+      try {
+        await updateCurrentAmount(uuidOrganization, walletUuid)
+
+        const result = await getAllAssetsWalletClient(
+          uuidOrganization,
+          walletUuid,
+        )
+
+        if (!result) {
+          return toast({
+            className: 'bg-red-500 border-0 text-white',
+            title: 'Failed get assets organization :(',
+            description: 'Demo Vault !!',
+          })
+        }
+
+        setInfosWallet(result.wallet)
+
+        const dataTable: ClientActive[] = result.assets.map((item) => ({
+          id: item.uuid,
+          asset: {
+            urlImage: item.icon,
+            name: item.name,
+          },
+          investedAmount: item.investedAmount,
+          assetQuantity: item.quantityAsset,
+          price: item.price,
+          allocation: item.currentAllocation,
+          idealAllocation: item.idealAllocation,
+          idealAmount: item.idealAmountInMoney,
+          buyOrSell: item.buyOrSell,
+        }))
+
+        setData(dataTable)
+        setLoading(false)
+      } catch (error) {
+        toast({
+          className: 'bg-red-500 border-0 text-white',
+          title: 'Failed get assets organization :(',
+          description: 'Demo Vault !!',
+        })
+      }
+    }
+
+    if (!walletUuid) {
+      toast({
+        className: 'bg-red-500 border-0 text-white',
+        title: 'Failed get assets organization :(',
+        description: 'Demo Vault !!',
+      })
+
+      return
+    }
+
+    getData(uuidOrganization, walletUuid, setData, setInfosWallet)
+  }, [toast, uuidOrganization, walletUuid, signal])
+
+  useEffect(() => {
+    async function fetchGraphData() {
+      if (uuidOrganization && walletUuid) {
+        try {
+          const data = await getGraphData(uuidOrganization, walletUuid)
+
+          // Ordenar os dados por data (createAt) de forma decrescente (mais recente primeiro)
+          const sortedData = data.sort(
+            (a: graphDataEntry, b: graphDataEntry) =>
+              new Date(b.createAt).getTime() - new Date(a.createAt).getTime(),
+          )
+
+          setGraphData(sortedData)
+        } catch (error) {
+          console.error('Failed to fetch historic:', error)
+        }
+      } else {
+        console.error('organizationUuid or walletUuid is undefined')
+      }
+    }
+    fetchGraphData()
+  }, [uuidOrganization, walletUuid])
+
+  console.log(graphData)
+
+  if (loading) {
+    return <div>Loading...</div>
+  }
+
   return (
     <div className="p-10">
       <div className="mb-10 flex items-center justify-between">
@@ -18,16 +146,45 @@ export default function Graphs() {
         />
       </div>
       <div className="w-full h-1/3 mb-5 flex flex-row justify-between">
-        <CardDashboard title="Entry date" data="123123" />
-        <CardDashboard title="Closing date" data="123123" />
-        <CardDashboard title="Initial value" data="123123" />
-        <CardDashboard title="Current value" data="123123" />
+        <CardDashboard
+          title="Entry date"
+          data={
+            infosWallet?.startDate !== null
+              ? formatDate(infosWallet.startDate?.toString())
+              : '-'
+          }
+        />
+        <CardDashboard
+          title="Closing date"
+          data={
+            infosWallet?.monthCloseDate !== null
+              ? formatDate(infosWallet.monthCloseDate?.toString())
+              : '-'
+          }
+        />
+        <CardDashboard
+          title="Initial value"
+          data={infosWallet?.investedAmount}
+        />
+        <CardDashboard
+          title="Current value"
+          data={infosWallet?.currentAmount}
+        />
       </div>
       <div className="w-full h-1/3 mb-10 flex flex-row justify-between">
-        <CardDashboard title="Performance fee" data="123123" />
-        <CardDashboard title="Last rebalance" data="123123" />
-        <CardDashboard title="Current value in benchmark" data="123123" />
-        <CardDashboard title="Current value ideal portfolio" data="123123" />
+        <CardDashboard
+          title="Performance fee"
+          data={infosWallet?.performanceFee}
+        />
+        <CardDashboard
+          title="Last rebalance"
+          data={infosWallet?.lastRebalance}
+        />
+        <CardDashboard
+          title="Current value in benchmark"
+          data={graphData[0].benchmarkMoney}
+        />
+        <CardDashboard title="Current value ideal portfolio" data="-" />
       </div>
       <div className="w-full h-1/3">
         <WalletGraph />
