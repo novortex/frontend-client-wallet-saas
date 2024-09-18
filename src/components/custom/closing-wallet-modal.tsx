@@ -8,6 +8,17 @@ import {
 import { StepForwardIcon } from 'lucide-react'
 import CardCloseWallet from './close-wallet-card'
 import { formatDate } from '@/utils'
+import ConfirmCloseWalletModal from './confirm-close-wallet-modal'
+import {
+  getInfosCustomer,
+  TWallet,
+  TWalletCommission,
+  TWalletInfos,
+  updateCurrentAmount,
+} from '@/service/request'
+import { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { useUserStore } from '@/store/user'
 
 interface CloseWalletModalProps {
   isOpen: boolean
@@ -20,20 +31,111 @@ export default function CloseWalletModal({
   onClose,
   startDate,
 }: CloseWalletModalProps) {
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const openModal = () => {
+    setIsModalOpen(true)
+  }
+
+  const closeModal = () => {
+    setIsModalOpen(false)
+  }
+
+  const sendToConfirm = () => {
+    onClose()
+    openModal()
+  }
+
   const closingDate = new Date()
+
+  const [walletCommission, setWalletCommission] = useState<TWalletCommission[]>(
+    [],
+  )
+  const [walletInfos, setWalletInfos] = useState<TWalletInfos>({
+    manager: '',
+    lastContactAt: '',
+  })
+
+  const [walletI, setWalletI] = useState<TWallet>({
+    startDate: '',
+    investedAmount: 0,
+    currentAmount: 0,
+    closeDate: '',
+    initialFee: null,
+    initialFeePaid: false,
+    riskProfile: '',
+    monthCloseDate: '',
+    contract: false,
+    performanceFee: 0,
+    benchmark: { name: '' },
+    currentValueBenchmark: 0,
+    lastRebalance: null,
+    nextBalance: null,
+    user: {
+      name: '',
+      email: '',
+      phone: '',
+      cpf: '',
+    },
+    exchange: {
+      accountEmail: '',
+      emailPassword: '',
+      exchangePassword: '',
+      name: '',
+    },
+  })
+
+  const { walletUuid } = useParams()
+  const uuidOrganization = useUserStore((state) => state.user.uuidOrganization)
+
+  useEffect(() => {
+    const getInfo = async () => {
+      await updateCurrentAmount(uuidOrganization, walletUuid)
+
+      const result = await getInfosCustomer(walletUuid, uuidOrganization)
+
+      if (!result) {
+        return false
+      }
+
+      setWalletI(result.walletInfo)
+      setWalletInfos(result.walletPreInfos)
+      setWalletCommission(result.walletCommission)
+    }
+
+    getInfo()
+  }, [uuidOrganization, walletUuid])
+
+  const benchMarkSurpassedValue = () => {
+    const benchmarkValue = walletI.currentValueBenchmark
+    const currentValue = walletI.currentAmount
+    const result = currentValue - benchmarkValue
+    return result
+  }
+
+  const profitability = () => {
+    const initialValue = walletI.investedAmount
+    const currentValue = walletI.currentAmount
+    const result = currentValue - initialValue
+    return result
+  }
+
+  console.log(walletCommission)
+  console.log(walletInfos)
+  console.log(walletI)
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="h-4/5 w-[60%] bg-[#131313] text-[#fff] max-w-full border-transparent">
+      <DialogContent className="h-[90%] w-[70%] bg-[#131313] text-[#fff] max-w-full border-transparent">
         <DialogHeader className="flex flex-col h-4/5">
           <div className="flex flex-row w-full h-1/2 items-end justify-between">
             <DialogTitle className="text-3xl">Closing wallet cycle</DialogTitle>
             <Button
-              className="bg-[#1877F2] w-[10%] hover:bg-blue-600 p-5 flex items-center justify-center gap-3"
-              onClick={onClose}
+              className="bg-[#1877F2] w-[15%] hover:bg-blue-600 p-5 flex items-center justify-center gap-3"
+              onClick={sendToConfirm}
             >
               <StepForwardIcon />
-              Finish
+              Confirm
             </Button>
           </div>
           <div className="flex flex-row items-center w-full h-1/2 gap-10">
@@ -45,7 +147,7 @@ export default function CloseWalletModal({
           <div className="flex flex-row w-full justify-between">
             <CardCloseWallet
               description={'Current value'}
-              value={3}
+              value={walletI.currentAmount}
               tagValue={3}
               tagDescription={'OF INITIAL VALUE'}
               tagColor1={1}
@@ -53,7 +155,7 @@ export default function CloseWalletModal({
             />
             <CardCloseWallet
               description={'Benchmark surpassed value'}
-              value={3}
+              value={benchMarkSurpassedValue()}
               tagValue={3}
               tagDescription={'OF BENCHMARK VALUE'}
               tagColor1={2}
@@ -61,7 +163,7 @@ export default function CloseWalletModal({
             />
             <CardCloseWallet
               description={'Profitability'}
-              value={3}
+              value={profitability()}
               tagValue={3}
               tagDescription={'FOR COMMISSIONS'}
               tagColor1={4}
@@ -98,6 +200,7 @@ export default function CloseWalletModal({
           </div>
         </div>
       </DialogContent>
+      <ConfirmCloseWalletModal isOpen={isModalOpen} onClose={closeModal} />
     </Dialog>
   )
 }
