@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,7 +19,6 @@ import {
   MoreHorizontal,
   PencilIcon,
   TriangleAlert,
-  StepForward,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { CustomersOrganization } from './columns'
@@ -36,6 +35,10 @@ import {
 } from '@/components/ui/select'
 import { useManagerOrganization } from '@/store/managers_benckmark_exchanges'
 import { Checkbox } from '@/components/ui/checkbox'
+import { updateCustomer, updateWallet } from '@/service/request'
+import { useUserStore } from '@/store/user'
+import { useToast } from '@/components/ui/use-toast'
+import { useSignalStore } from '@/store/signalEffect'
 
 export default function CellActions({
   rowInfos,
@@ -44,21 +47,142 @@ export default function CellActions({
 }) {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [fiatCurrencies] = useState<string[]>([])
-  const [, setCurrency] = useState('')
-  const [contractChecked, setContractChecked] = useState(false)
-  const [manager, setManager] = useState('')
+  const [contractChecked, setContractChecked] = useState<boolean>(
+    !!rowInfos.contract,
+  )
+  const [initialFeeIsPaid, setInitialFeeIsPaid] = useState(
+    rowInfos.initialFeePaid,
+  )
+  const [manager, setManager] = useState(rowInfos.manager?.managerUuid || '')
+  const [ExchangeSelected, setExchangeSelected] = useState(
+    rowInfos.exchange?.exchangeUuid || '',
+  )
+  const nameRef = useRef<HTMLInputElement>(null)
+  const emailRef = useRef<HTMLInputElement>(null)
+  const cpfRef = useRef<HTMLInputElement>(null)
+  const phoneRef = useRef<HTMLInputElement>(null)
 
-  const [managersOrganization] = useManagerOrganization((state) => [
+  const accountPasswordRef = useRef<HTMLInputElement>(null)
+  const emailExchangeRef = useRef<HTMLInputElement>(null)
+  const emailPasswordRef = useRef<HTMLInputElement>(null)
+
+  const [managersOrganization, exchanges] = useManagerOrganization((state) => [
     state.managers,
+    state.exchanges,
   ])
 
-  const openModal = () => {
-    setIsModalOpen(true)
-  }
+  const [uuidOrganization] = useUserStore((state) => [
+    state.user.uuidOrganization,
+  ])
+
+  const [setSignal, signal] = useSignalStore((state) => [
+    state.setSignal,
+    state.signal,
+  ])
 
   const closeModal = () => {
     setIsModalOpen(false)
+  }
+
+  const { toast } = useToast()
+
+  const handleUpdateCustomer = async () => {
+    try {
+      if (
+        !nameRef.current ||
+        !emailRef.current ||
+        !cpfRef.current ||
+        !phoneRef.current
+      ) {
+        return toast({
+          className: 'bg-red-500 border-0',
+          title: 'Validation Error',
+          description: 'Please fill all fields',
+        })
+      }
+
+      toast({
+        className: 'bg-yellow-500 border-0',
+        title: 'Processing add Asset in organization',
+        description: 'Demo Vault !!',
+      })
+
+      const result = await updateCustomer(uuidOrganization, rowInfos.id, {
+        name: nameRef.current?.value ?? '',
+        email: emailRef.current?.value ?? '',
+        cpf: cpfRef.current?.value ?? '',
+        phone: phoneRef.current?.value ?? '',
+      })
+
+      if (result !== true) {
+        return toast({
+          className: 'bg-red-500 border-0',
+          title: 'Failed add Asset in organization',
+          description: 'Demo Vault !!',
+        })
+      }
+
+      setSignal(!signal)
+
+      return toast({
+        className: 'bg-green-500 border-0',
+        title: 'Success update !!',
+        description: 'Demo Vault !!',
+      })
+    } catch (error) {
+      return toast({
+        className: 'bg-red-500 border-0',
+        title: 'Failed add Asset in organization',
+        description: 'Demo Vault !!',
+      })
+    }
+  }
+
+  const handleUpdateWallet = async () => {
+    try {
+      toast({
+        className: 'bg-yellow-500 border-0',
+        title: 'Processing add Asset in organization',
+        description: 'Demo Vault !!',
+      })
+
+      const result = await updateWallet(
+        uuidOrganization,
+        rowInfos.walletUuid || '',
+        {
+          accountPassword: accountPasswordRef.current?.value ?? '',
+          contract: contractChecked,
+          emailExchange: emailExchangeRef.current?.value ?? '',
+          emailPassword: emailPasswordRef.current?.value ?? '',
+          exchangeUuid: ExchangeSelected,
+          initialFeeIsPaid: initialFeeIsPaid ?? false,
+          manager,
+        },
+      )
+
+      if (result !== true) {
+        return toast({
+          className: 'bg-red-500 border-0',
+          title: 'Failed add Asset in organization',
+          description: 'Demo Vault !!',
+        })
+      }
+
+      setSignal(!signal)
+
+      return toast({
+        className: 'bg-green-500 border-0',
+        title: 'Success update !!',
+        description: 'Demo Vault !!',
+      })
+    } catch (error) {
+      return toast({
+        className: 'bg-red-500 border-0',
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        title: `${(error as any).response?.data?.message[0] ?? 'Unknown error'}`,
+        description: 'Demo Vault !!',
+      })
+    }
   }
 
   return (
@@ -104,6 +228,8 @@ export default function CellActions({
                     Wallet
                   </TabsTrigger>
                 </TabsList>
+
+                {/* Conteúdo da aba Profile */}
                 <TabsContent className="mt-10" value="Profile">
                   <div className="grid justify-items-center grid-cols-2 gap-5">
                     <div>
@@ -114,7 +240,8 @@ export default function CellActions({
                         className="bg-[#131313] border-[#323232] text-white"
                         type="text"
                         id="Name"
-                        value={rowInfos.name}
+                        defaultValue={rowInfos.name}
+                        ref={nameRef}
                         placeholder="Name"
                         required
                       />
@@ -128,11 +255,13 @@ export default function CellActions({
                         className="bg-[#131313] border-[#323232] text-white"
                         type="text"
                         id="ID"
-                        value={rowInfos.cpf || ''}
+                        defaultValue={rowInfos.cpf || ''}
+                        ref={cpfRef}
                         placeholder="ID"
                         required
                       />
                     </div>
+
                     <div>
                       <Label className="ml-2" htmlFor="email">
                         Email
@@ -141,11 +270,13 @@ export default function CellActions({
                         className="bg-[#131313] border-[#323232] text-white"
                         type="email"
                         id="email"
-                        value={rowInfos.email}
+                        defaultValue={rowInfos.email}
+                        ref={emailRef}
                         placeholder="Email"
                         required
                       />
                     </div>
+
                     <div>
                       <Label className="ml-2" htmlFor="Phone">
                         Phone
@@ -154,153 +285,195 @@ export default function CellActions({
                         className="bg-[#131313] border-[#323232] text-white"
                         type="tel"
                         id="Phone"
-                        value={rowInfos.phone || ''}
+                        defaultValue={rowInfos.phone || ''}
+                        ref={phoneRef}
                         placeholder="Phone"
                         required
                       />
                     </div>
                   </div>
+
+                  {/* Botão Save para a aba Profile */}
+                  <div className="mt-12 flex justify-end gap-5">
+                    <DialogClose asChild>
+                      <Button
+                        onClick={handleUpdateCustomer} // Função para salvar Profile
+                        className="bg-blue-500 hover:bg-blue-600 text-white"
+                      >
+                        Save Profile
+                      </Button>
+                    </DialogClose>
+
+                    <DialogClose asChild>
+                      <Button className="bg-red-500 hover:bg-red-600 text-white">
+                        Close
+                      </Button>
+                    </DialogClose>
+                  </div>
                 </TabsContent>
+
+                {/* Conteúdo da aba Wallet */}
                 <TabsContent className="mt-10" value="Wallet">
-                  <div className="grid justify-items-center grid-cols-2 gap-5">
-                    <div className="w-full">
-                      <Label className="ml-2" htmlFor="Name">
-                        Exchange
-                      </Label>
-                      <Select
-                        onValueChange={(value) => setCurrency(value)}
-                        required
-                      >
-                        <SelectTrigger className="bg-[#131313] border-[#323232] text-white">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent className="bg-[#131313] border-[#323232] text-white">
-                          {fiatCurrencies.map((currency) => (
-                            <SelectItem key={currency} value={currency}>
-                              {currency}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div>
-                      <Label className="ml-2" htmlFor="Email Password">
-                        Email Password
-                      </Label>
-                      <Input
-                        className="bg-[#131313] border-[#323232] text-white"
-                        type="password"
-                        id="Email Password"
-                        placeholder="Email Password"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <Label className="ml-2" htmlFor="EmailExchage">
-                        Email ( Exchange )
-                      </Label>
-                      <Input
-                        className="bg-[#131313] border-[#323232] text-white"
-                        type="email"
-                        id="Email Exchage"
-                        placeholder="Email Exchange"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <Label className="ml-2" htmlFor="Exchange Password">
-                        Exchange Password
-                      </Label>
-                      <Input
-                        className="bg-[#131313] border-[#323232] text-white"
-                        type="password"
-                        id="Exchange Password"
-                        placeholder="Exchange Password"
-                        required
-                      />
-                    </div>
-
-                    <div className="w-full">
-                      <Label className="ml-2" htmlFor="Phone">
-                        Manager
-                      </Label>
-                      <Select
-                        onValueChange={(value) => setManager(value)}
-                        required
-                      >
-                        <SelectTrigger className="bg-[#131313] border-[#323232] text-white">
-                          <SelectValue>
-                            {manager
-                              ? managersOrganization.find(
-                                  (mgr) => mgr.uuid === manager,
-                                )?.name
-                              : 'Name'}
-                          </SelectValue>
-                        </SelectTrigger>
-                        <SelectContent className="bg-[#131313] border-[#323232] text-white">
-                          {managersOrganization.map((manager) => (
-                            <SelectItem key={manager.uuid} value={manager.uuid}>
-                              {manager.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div className="w-full mt-4">
-                      <div className="mb-3 flex gap-3">
-                        <Checkbox
-                          className="border-gray-500"
-                          checked={contractChecked}
-                          onCheckedChange={() =>
-                            setContractChecked(!contractChecked)
-                          }
-                        />
-                        <Label>Initial Fee is paid?</Label>
+                  {rowInfos.isWallet ? (
+                    <div className="grid justify-items-center grid-cols-2 gap-5">
+                      <div className="w-full">
+                        <Label className="ml-2" htmlFor="Name">
+                          Exchange
+                        </Label>
+                        <Select
+                          onValueChange={(value) => setExchangeSelected(value)}
+                          defaultValue={ExchangeSelected}
+                        >
+                          <SelectTrigger className="bg-[#131313] border-[#323232] text-[#959CB6]">
+                            <SelectValue>
+                              {ExchangeSelected
+                                ? exchanges.find(
+                                    (mgr) => mgr.uuid === ExchangeSelected,
+                                  )?.name
+                                : 'Name'}
+                            </SelectValue>
+                          </SelectTrigger>
+                          <SelectContent className="bg-[#131313] border-[#323232] text-[#959CB6]">
+                            {exchanges.map((bench) => (
+                              <SelectItem key={bench.uuid} value={bench.uuid}>
+                                {bench.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       </div>
 
-                      <div className="flex gap-3">
-                        <Checkbox
-                          className="border-gray-500"
-                          checked={contractChecked}
-                          onCheckedChange={() =>
-                            setContractChecked(!contractChecked)
-                          }
+                      <div>
+                        <Label className="ml-2" htmlFor="Email Password">
+                          Email Password
+                        </Label>
+                        <Input
+                          className="bg-[#131313] border-[#323232] text-white"
+                          type="text"
+                          id="Email Password"
+                          placeholder="Email Password"
+                          ref={emailPasswordRef}
+                          defaultValue={rowInfos.emailPassword || ''}
+                          required
                         />
-                        <Label>Contract</Label>
+                      </div>
+
+                      <div>
+                        <Label className="ml-2" htmlFor="EmailExchage">
+                          Email ( Exchange )
+                        </Label>
+                        <Input
+                          className="bg-[#131313] border-[#323232] text-white"
+                          type="email"
+                          id="Email Exchage"
+                          ref={emailExchangeRef}
+                          placeholder="Email Exchange"
+                          defaultValue={rowInfos.emailExchange || ''}
+                          required
+                        />
+                      </div>
+
+                      <div>
+                        <Label className="ml-2" htmlFor="Exchange Password">
+                          Exchange Password
+                        </Label>
+                        <Input
+                          className="bg-[#131313] border-[#323232] text-white"
+                          type="text"
+                          id="Exchange Password"
+                          placeholder="Exchange Password"
+                          ref={accountPasswordRef}
+                          defaultValue={rowInfos.exchangePassword || ''}
+                          required
+                        />
+                      </div>
+
+                      <div className="w-full">
+                        <Label className="ml-2" htmlFor="Phone">
+                          Manager
+                        </Label>
+                        <Select
+                          onValueChange={(value) => setManager(value)}
+                          defaultValue={manager}
+                          required
+                        >
+                          <SelectTrigger className="bg-[#131313] border-[#323232] text-white">
+                            <SelectValue>
+                              {manager
+                                ? managersOrganization.find(
+                                    (mgr) => mgr.uuid === manager,
+                                  )?.name
+                                : 'Name'}
+                            </SelectValue>
+                          </SelectTrigger>
+                          <SelectContent className="bg-[#131313] border-[#323232] text-white">
+                            {managersOrganization.map((manager) => (
+                              <SelectItem
+                                key={manager.uuid}
+                                value={manager.uuid}
+                              >
+                                {manager.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div className="w-full mt-4">
+                        <div className="mb-3 flex gap-3">
+                          <Checkbox
+                            className="border-gray-500"
+                            checked={!!contractChecked}
+                            onCheckedChange={() =>
+                              setContractChecked(!contractChecked)
+                            }
+                          />
+                          <Label>Initial Fee is paid?</Label>
+                        </div>
+
+                        <div className="flex gap-3">
+                          <Checkbox
+                            className="border-gray-500"
+                            checked={initialFeeIsPaid ?? false}
+                            onCheckedChange={() =>
+                              setInitialFeeIsPaid(!initialFeeIsPaid)
+                            }
+                          />
+                          <Label>Contract</Label>
+                        </div>
                       </div>
                     </div>
+                  ) : (
+                    <p className="text-yellow-500">
+                      Please create a wallet first before filling these details.
+                    </p>
+                  )}
+
+                  {/* Botão Save para a aba Wallet */}
+                  <div className="mt-12 flex justify-end gap-5">
+                    <DialogClose asChild>
+                      <Button
+                        onClick={handleUpdateWallet} // Função para salvar Wallet
+                        className="bg-blue-500 hover:bg-blue-600 text-white"
+                      >
+                        Save Wallet
+                      </Button>
+                    </DialogClose>
+
+                    <DialogClose asChild>
+                      <Button className="bg-red-500 hover:bg-red-600 text-white">
+                        Close
+                      </Button>
+                    </DialogClose>
                   </div>
                 </TabsContent>
               </Tabs>
 
               <DialogFooter className="mt-5">
-                <DialogClose asChild>
-                  <Button className="bg-red-500 hover:bg-red-600 text-white">
-                    Close
-                  </Button>
-                </DialogClose>
-                <Button className="bg-blue-500 hover:bg-blue-600 text-white">
-                  Save
-                </Button>
+                <DialogClose asChild></DialogClose>
               </DialogFooter>
             </DialogContent>
           </Dialog>
-
-          {rowInfos.isWallet === false ? (
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button
-                  className="flex justify-center gap-3 hover:bg-black hover:text-white"
-                  variant="secondary"
-                  onClick={openModal}
-                >
-                  <StepForward className="w-5" /> Continue
-                </Button>
-              </DialogTrigger>
-            </Dialog>
-          ) : null}
 
           <Dialog>
             <DialogTrigger asChild>

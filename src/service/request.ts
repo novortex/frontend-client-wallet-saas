@@ -159,6 +159,20 @@ export type TCustomersOrganization = {
   phone: string | null
   cpf: string | null
   isWallet: boolean
+  walletUuid: string | null
+  exchange: {
+    exchangeUuid: string
+    exchangeName: string
+  } | null
+  emailExchange: string | null
+  emailPassword: string | null
+  exchangePassword: string | null
+  manager: {
+    managerUuid: string
+    managerName: string
+  } | null
+  initialFeePaid: boolean | null
+  contract: string | null
 }
 
 // Requests from api (backend)
@@ -624,6 +638,55 @@ export async function getGraphData(
 ) {
   try {
     const result = await instance.get(`wallet/${walletUuid}/graphData`, {
+      headers: { 'x-organization': organizationUuid },
+    })
+    return result.data
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+
+export async function updateCustomer(
+  organizationUuid: string,
+  customerUuid: string,
+  data: {
+    name: string
+    email: string
+    cpf: string | null
+    phone: string | null
+  },
+) {
+  try {
+    const result = await instance.put(
+      `management/customer/${customerUuid}`,
+      data,
+      {
+        headers: { 'x-organization': organizationUuid },
+      },
+    )
+    return result.data
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+
+export async function updateWallet(
+  organizationUuid: string,
+  walletUuid: string,
+  data: {
+    initialFeeIsPaid: boolean
+    contract: boolean
+    exchangeUuid: string
+    manager: string
+    emailExchange: string
+    emailPassword: string
+    accountPassword: string
+  },
+) {
+  try {
+    const result = await instance.put(`management/wallet/${walletUuid}`, data, {
       headers: { 'x-organization': organizationUuid },
     })
     return result.data

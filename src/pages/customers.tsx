@@ -54,6 +54,14 @@ export function Customers() {
           phone: item.phone,
           cpf: item.cpf,
           isWallet: item.isWallet,
+          walletUuid: item.walletUuid,
+          exchange: item.exchange,
+          emailExchange: item.emailExchange,
+          emailPassword: item.emailPassword,
+          exchangePassword: item.exchangePassword,
+          manager: item.manager,
+          initialFeePaid: item.initialFeePaid,
+          contract: item.contract,
         }))
 
         setDate(dataTable)
