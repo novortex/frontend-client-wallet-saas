@@ -1,6 +1,7 @@
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from 'recharts'
 import { Checkbox } from '../ui/checkbox'
 import { Label } from '../ui/label'
+import { Button } from '../ui/button'
 import {
   Card,
   CardContent,
@@ -18,6 +19,8 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useUserStore } from '@/store/user'
 import { getGraphData } from '@/service/request'
+import filterIcon from '../../assets/icons/filter.svg'
+import GraphFilterModal from './graph-filter-modal'
 
 const chartConfig = {
   desktop: {
@@ -38,11 +41,20 @@ interface graphDataEntry {
 export default function WalletGraph() {
   const [showWallet, setShowWallet] = useState(true)
   const [showBenchmark, setShowBenchmark] = useState(true)
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false)
   const [graphData, setGraphData] = useState<graphDataEntry[]>([])
   const { walletUuid } = useParams()
   const [uuidOrganization] = useUserStore((state) => [
     state.user.uuidOrganization,
   ])
+
+  const openFilterModal = () => {
+    setIsFilterModalOpen(true)
+  }
+
+  const closeFilterModal = () => {
+    setIsFilterModalOpen(false)
+  }
 
   useEffect(() => {
     async function fetchGraphData() {
@@ -93,21 +105,36 @@ export default function WalletGraph() {
     <Card className="bg-[#131313] text-card-foreground p-4 rounded-lg shadow-lg border-transparent">
       <CardHeader className="mb-4 gap-10">
         <CardTitle className="text-2xl font-semibold flex flex-row gap-5">
-          <div className="flex flex-row text-[#fff] gap-2 items-center">
-            <Checkbox
-              checked={showWallet}
-              onCheckedChange={(checked) => setShowWallet(checked === true)}
-              className="border-transparent bg-[#1878f3] data-[state=checked]:bg-[#1878f3]"
-            />
-            <Label className="text-lg">Wallet</Label>
+          <div className="flex flex-row gap-5 w-1/2">
+            <div className="flex flex-row text-[#fff] gap-2 items-center">
+              <Checkbox
+                checked={showWallet}
+                onCheckedChange={(checked) => setShowWallet(checked === true)}
+                className="border-transparent bg-[#1878f3] data-[state=checked]:bg-[#1878f3]"
+              />
+              <Label className="text-lg">Wallet</Label>
+            </div>
+            <div className="flex flex-row text-[#fff] gap-2 items-center">
+              <Checkbox
+                checked={showBenchmark}
+                onCheckedChange={(checked) =>
+                  setShowBenchmark(checked === true)
+                }
+                className="border-transparent bg-[#11a45c] data-[state=checked]:bg-[#11a45c]"
+              />
+              <Label className="text-lg">Benchmark</Label>
+            </div>
           </div>
-          <div className="flex flex-row text-[#fff] gap-2 items-center">
-            <Checkbox
-              checked={showBenchmark}
-              onCheckedChange={(checked) => setShowBenchmark(checked === true)}
-              className="border-transparent bg-[#11a45c] data-[state=checked]:bg-[#11a45c]"
-            />
-            <Label className="text-lg">Benchmark</Label>
+          <div className="w-1/2 flex justify-end">
+            <Button
+              type="button"
+              variant="outline"
+              className="gap-2 hover:bg-gray-700"
+              onClick={openFilterModal}
+            >
+              <img src={filterIcon} alt="" />
+              <p>Filters</p>
+            </Button>
           </div>
         </CardTitle>
         <CardDescription className="text-sm text-muted-foreground text-[#fff] text-lg">
@@ -153,6 +180,7 @@ export default function WalletGraph() {
           </LineChart>
         </ChartContainer>
       </CardContent>
+      <GraphFilterModal isOpen={isFilterModalOpen} onClose={closeFilterModal} />
     </Card>
   )
 }
