@@ -147,8 +147,6 @@ export default function Infos() {
     fetchTimeZone()
   }, [uuidOrganization])
 
-  console.log(timeZone)
-
   return (
     <div className="p-10">
       <div className="mb-10 flex items-center justify-between">
