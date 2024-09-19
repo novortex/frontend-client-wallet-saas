@@ -131,8 +131,6 @@ export default function Wallet() {
 
   const closeModalState = !!infosWallet?.isClosed
 
-  console.log(infosWallet?.isClosed)
-
   if (loading) {
     return <div>Loading...</div>
   }
