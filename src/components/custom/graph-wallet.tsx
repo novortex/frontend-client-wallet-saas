@@ -1,7 +1,7 @@
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from 'recharts'
 import { Checkbox } from '../ui/checkbox'
 import { Label } from '../ui/label'
-import { Button } from '../ui/button'
+import { Switch } from '../ui/switch'
 import {
   Card,
   CardContent,
@@ -19,8 +19,6 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useUserStore } from '@/store/user'
 import { getGraphData } from '@/service/request'
-import filterIcon from '../../assets/icons/filter.svg'
-import GraphFilterModal from './graph-filter-modal'
 
 const chartConfig = {
   desktop: {
@@ -41,20 +39,12 @@ interface graphDataEntry {
 export default function WalletGraph() {
   const [showWallet, setShowWallet] = useState(true)
   const [showBenchmark, setShowBenchmark] = useState(true)
-  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false)
   const [graphData, setGraphData] = useState<graphDataEntry[]>([])
+  const [isMonthlyView, setIsMonthlyView] = useState(false) // Estado para o switch
   const { walletUuid } = useParams()
   const [uuidOrganization] = useUserStore((state) => [
     state.user.uuidOrganization,
   ])
-
-  const openFilterModal = () => {
-    setIsFilterModalOpen(true)
-  }
-
-  const closeFilterModal = () => {
-    setIsFilterModalOpen(false)
-  }
 
   useEffect(() => {
     async function fetchGraphData() {
@@ -62,7 +52,6 @@ export default function WalletGraph() {
         try {
           const data = await getGraphData(uuidOrganization, walletUuid)
 
-          // Ordenar os dados por data (createAt) e tipar os parâmetros
           const sortedData = data.sort(
             (a: graphDataEntry, b: graphDataEntry) =>
               new Date(a.createAt).getTime() - new Date(b.createAt).getTime(),
@@ -79,17 +68,48 @@ export default function WalletGraph() {
     fetchGraphData()
   }, [uuidOrganization, walletUuid])
 
+  // Função para filtrar o último valor de cada mês
+  const getLastEntryOfEachMonth = (data: graphDataEntry[]) => {
+    const months = new Map<string, graphDataEntry>()
+
+    data.forEach((entry) => {
+      const monthYear = new Date(entry.createAt).toLocaleDateString('default', {
+        month: 'long',
+        year: '2-digit',
+      })
+      // Substituirá a entrada do mês anterior com o valor mais recente
+      months.set(monthYear, entry)
+    })
+
+    return Array.from(months.values())
+  }
+
   // Mapeamento dos dados retornados da API para o formato esperado pelo gráfico
   const formattedChartData = graphData.map((entry) => ({
-    month: new Date(entry.createAt).toLocaleString('default', {
-      month: 'long',
-    }), // Converte a data para o nome do mês
-    value: entry.cryptoMoney, // Torna o "value" dinâmico com base em wallet
+    date: new Date(entry.createAt).toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+    }), // Formata a data para dd/MM
+    value: entry.cryptoMoney,
     wallet: entry.cryptoMoney,
     Benchmark: entry.benchmarkMoney,
   }))
 
-  // Encontrar os valores mínimos e máximos entre "cryptoMoney" e "benchmarkMoney"
+  // Formatar dados para visualização mensal
+  const monthlyData = getLastEntryOfEachMonth(graphData).map((entry) => ({
+    date: new Date(entry.createAt).toLocaleDateString('en-US', {
+      month: 'short',
+      year: '2-digit',
+    }), // Formata para Sep/24, Oct/24
+    value: entry.cryptoMoney,
+    wallet: entry.cryptoMoney,
+    Benchmark: entry.benchmarkMoney,
+  }))
+
+  // Selecionar os dados com base na visualização atual (dias ou meses)
+  const chartData = isMonthlyView ? monthlyData : formattedChartData
+
+  // Encontrar os valores mínimos e máximos
   const minValue = Math.min(
     ...graphData.map((entry) =>
       Math.min(entry.cryptoMoney, entry.benchmarkMoney),
@@ -125,16 +145,12 @@ export default function WalletGraph() {
               <Label className="text-lg">Benchmark</Label>
             </div>
           </div>
-          <div className="w-1/2 flex justify-end">
-            <Button
-              type="button"
-              variant="outline"
-              className="gap-2 hover:bg-gray-700"
-              onClick={openFilterModal}
-            >
-              <img src={filterIcon} alt="" />
-              <p>Filters</p>
-            </Button>
+          <div className="w-1/2 flex justify-end text-sm gap-4 items-center text-[#fff]">
+            <p>View: Days / Months</p>
+            <Switch
+              checked={isMonthlyView}
+              onCheckedChange={setIsMonthlyView} // Alterna a visualização
+            />
           </div>
         </CardTitle>
         <CardDescription className="text-sm text-muted-foreground text-[#fff] text-lg">
@@ -143,17 +159,16 @@ export default function WalletGraph() {
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="mb-4">
-          <LineChart data={formattedChartData}>
+          <LineChart data={chartData}>
             <CartesianGrid vertical={false} horizontal={true} />
             <XAxis
-              dataKey="month"
+              dataKey="date"
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              tickFormatter={(value) => value.slice(0, 3)} // Exibe os primeiros 3 caracteres do mês
             />
             <YAxis
-              domain={[minValue, maxValue]} // Domínio definido com base nos valores mínimo e máximo
+              domain={[minValue, maxValue]}
               tickLine={false}
               axisLine={false}
               tickMargin={8}
@@ -161,7 +176,7 @@ export default function WalletGraph() {
             {showWallet && (
               <Line
                 dataKey="wallet"
-                type="linear" // Alterado para reta
+                type="linear"
                 stroke="#1878f3"
                 strokeWidth={1.5}
                 dot={true}
@@ -170,7 +185,7 @@ export default function WalletGraph() {
             {showBenchmark && (
               <Line
                 dataKey="Benchmark"
-                type="linear" // Alterado para reta
+                type="linear"
                 stroke="#11a45c"
                 strokeWidth={1.5}
                 dot={true}
@@ -180,7 +195,6 @@ export default function WalletGraph() {
           </LineChart>
         </ChartContainer>
       </CardContent>
-      <GraphFilterModal isOpen={isFilterModalOpen} onClose={closeFilterModal} />
     </Card>
   )
 }
