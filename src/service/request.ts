@@ -48,6 +48,7 @@ export type TWalletAssetsInfo = {
   monthCloseDate: Date | null
   performanceFee: number
   lastRebalance: Date | null
+  isClosed: boolean
 }
 
 type TAsset = {
@@ -672,6 +673,25 @@ export async function updateCustomer(
   }
 }
 
+export async function closeWallet(
+  organizationUuid: string,
+  walletUuid: string,
+) {
+  try {
+    const result = await instance.put(
+      `wallet/${walletUuid}/closeWallet`,
+      {},
+      {
+        headers: { 'x-organization': organizationUuid },
+      },
+    )
+    return result.data
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+
 export async function updateWallet(
   organizationUuid: string,
   walletUuid: string,
@@ -689,6 +709,25 @@ export async function updateWallet(
     const result = await instance.put(`management/wallet/${walletUuid}`, data, {
       headers: { 'x-organization': organizationUuid },
     })
+    return result.data
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+
+export async function startWallet(
+  organizationUuid: string,
+  walletUuid: string,
+) {
+  try {
+    const result = await instance.put(
+      `wallet/${walletUuid}/startWallet`,
+      {},
+      {
+        headers: { 'x-organization': organizationUuid },
+      },
+    )
     return result.data
   } catch (error) {
     console.error(error)

@@ -29,7 +29,8 @@ import {
 } from '@/components/ui/breadcrumb'
 import { HandCoins } from 'lucide-react'
 import OperationsModal from '@/components/custom/tables/wallet-client/operations'
-import CloseWalletModal from '@/components/custom/closing-wallet-modal'
+// import CloseWalletModal from '@/components/custom/closing-wallet-modal'
+import ConfirmCloseWalletModal from '@/components/custom/confirm-close-wallet-modal'
 
 export default function Wallet() {
   const [data, setData] = useState<ClientActive[]>([])
@@ -128,6 +129,8 @@ export default function Wallet() {
     getData(uuidOrganization, walletUuid, setData, setInfosWallet)
   }, [toast, uuidOrganization, walletUuid, signal])
 
+  const closeModalState = !!infosWallet?.isClosed
+
   if (loading) {
     return <div>Loading...</div>
   }
@@ -187,11 +190,11 @@ export default function Wallet() {
             Change history
           </Button>
           <Button
-            className="bg-[#EF4E3D] p-5"
+            className={`p-5 ${infosWallet?.isClosed ? 'bg-[#10A45C]' : 'bg-[#EF4E3D]'}`}
             type="button"
             onClick={openCloseWalletModal}
           >
-            Closing
+            {infosWallet?.isClosed ? 'Start Wallet' : 'Close Wallet'}
           </Button>
         </div>
       </div>
@@ -207,15 +210,27 @@ export default function Wallet() {
           />
           <CardDashboard
             title="Invested Amount"
-            data={String(infosWallet.investedAmount)}
+            data={
+              infosWallet?.investedAmount !== undefined
+                ? Number(infosWallet.investedAmount).toFixed(2)
+                : '-'
+            }
           />
           <CardDashboard
             title="Current Amount"
-            data={String(infosWallet.currentAmount)}
+            data={
+              infosWallet?.currentAmount !== undefined
+                ? Number(infosWallet.currentAmount).toFixed(2)
+                : '-'
+            }
           />
           <CardDashboard
             title="Performance fee"
-            data={String(infosWallet.performanceFee)}
+            data={
+              infosWallet?.performanceFee !== undefined
+                ? Number(infosWallet.performanceFee).toFixed(2)
+                : '-'
+            }
           />
           <CardDashboard
             title="Last rebalancing"
@@ -265,16 +280,10 @@ export default function Wallet() {
         isOpen={isOperationModalOpen}
         onClose={closeOperationModal}
       />
-      <CloseWalletModal
+      <ConfirmCloseWalletModal
         isOpen={isCloseWalletModalOpen}
         onClose={closeCloseWalletModal}
-        startDate={
-          infosWallet &&
-          infosWallet.startDate !== null &&
-          infosWallet.startDate !== undefined
-            ? formatDate(infosWallet.startDate.toString())
-            : undefined
-        }
+        startWallet={closeModalState}
       />
     </div>
   )

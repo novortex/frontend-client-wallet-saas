@@ -147,8 +147,6 @@ export default function Infos() {
     fetchTimeZone()
   }, [uuidOrganization])
 
-  console.log(timeZone)
-
   return (
     <div className="p-10">
       <div className="mb-10 flex items-center justify-between">
@@ -271,20 +269,28 @@ export default function Infos() {
               <div className="flex gap-3">
                 <Calendar className="text-[#F2BE38]" />
                 <p className="text-white">
-                  Initial amount invested: {walletI.investedAmount}
+                  Initial amount invested:{' '}
+                  {walletI.investedAmount !== undefined
+                    ? Number(walletI.investedAmount).toFixed(2)
+                    : '-'}
                 </p>
               </div>
               <div className="flex gap-3">
                 <Calendar className="text-[#F2BE38]" />
                 <p className="text-white">
                   Current value referring to the benchmark:{' '}
-                  {walletI.currentValueBenchmark}
+                  {walletI.currentValueBenchmark !== undefined
+                    ? Number(walletI.currentValueBenchmark).toFixed(2)
+                    : '-'}
                 </p>
               </div>
               <div className="flex gap-3">
                 <Calendar className="text-[#F2BE38]" />
                 <p className="text-white">
-                  Current value: {walletI.currentAmount}
+                  Current value:{' '}
+                  {walletI.currentAmount !== undefined
+                    ? Number(walletI.currentAmount).toFixed(2)
+                    : '-'}
                 </p>
               </div>
               <div className="flex gap-3">
@@ -299,7 +305,10 @@ export default function Infos() {
               <div className="flex gap-3">
                 <Calendar className="text-[#F2BE38]" />
                 <p className="text-white">
-                  Performance fee: {walletI.performanceFee}
+                  Performance fee:{' '}
+                  {walletI.performanceFee !== undefined
+                    ? Number(walletI.performanceFee).toFixed(2)
+                    : '-'}
                 </p>
               </div>
               <div className="flex gap-3">
@@ -339,7 +348,12 @@ export default function Infos() {
               </div>
               <div className="flex gap-3">
                 <Calendar className="text-[#F2BE38]" />
-                <p className="text-white">Initial fee: {walletI.initialFee}</p>
+                <p className="text-white">
+                  Initial fee:{' '}
+                  {walletI.initialFee !== undefined
+                    ? Number(walletI.initialFee).toFixed(2)
+                    : '-'}
+                </p>
               </div>
               <div className="flex gap-3">
                 <Button

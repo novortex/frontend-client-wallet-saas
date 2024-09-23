@@ -43,7 +43,7 @@ export default function AssetsOrg() {
             urlImage: item.icon,
             name: item.name,
           },
-          price: `U$ ${item.price}`,
+          price: item.price,
           appearances: `${item.qntInWallet} wallets`,
           porcentOfApp: `${item.presencePercentage}%`,
           quantSLowRisk: `${item.riskProfileCounts.superLowRisk} Wallets`,

@@ -36,7 +36,7 @@ export type AssetOrgs = {
     urlImage: string
     name: string
   }
-  price: string
+  price: number
   appearances: string
   porcentOfApp: string
   quantSLowRisk: string
@@ -62,6 +62,10 @@ export const columnsAssetOrg: ColumnDef<AssetOrgs>[] = [
   {
     accessorKey: 'price',
     header: 'Price',
+    cell: ({ row }) => {
+      const price = row.original.price
+      return price ? `U$ ${price.toFixed(2)}` : 'N/A'
+    },
   },
   {
     accessorKey: 'appearances',
@@ -70,6 +74,10 @@ export const columnsAssetOrg: ColumnDef<AssetOrgs>[] = [
   {
     accessorKey: 'porcentOfApp',
     header: '% of App.',
+    cell: ({ row }) => {
+      const percent = parseFloat(row.original.porcentOfApp)
+      return percent ? percent.toFixed(2) + '%' : '0%'
+    },
   },
   {
     accessorKey: 'quantSLowRisk',
