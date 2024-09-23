@@ -12,6 +12,20 @@ export type CustomersOrganization = {
   phone: string | null
   cpf: string | null
   isWallet: boolean
+  walletUuid: string | null
+  exchange: {
+    exchangeUuid: string
+    exchangeName: string
+  } | null
+  emailExchange: string | null
+  emailPassword: string | null
+  exchangePassword: string | null
+  manager: {
+    managerUuid: string
+    managerName: string
+  } | null
+  initialFeePaid: boolean | null
+  contract: string | null
 }
 
 export const columnsCustomerOrg: ColumnDef<CustomersOrganization>[] = [
