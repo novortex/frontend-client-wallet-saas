@@ -210,15 +210,27 @@ export default function Wallet() {
           />
           <CardDashboard
             title="Invested Amount"
-            data={String(infosWallet.investedAmount)}
+            data={
+              infosWallet?.investedAmount !== undefined
+                ? Number(infosWallet.investedAmount).toFixed(2)
+                : '-'
+            }
           />
           <CardDashboard
             title="Current Amount"
-            data={String(infosWallet.currentAmount)}
+            data={
+              infosWallet?.currentAmount !== undefined
+                ? Number(infosWallet.currentAmount).toFixed(2)
+                : '-'
+            }
           />
           <CardDashboard
             title="Performance fee"
-            data={String(infosWallet.performanceFee)}
+            data={
+              infosWallet?.performanceFee !== undefined
+                ? Number(infosWallet.performanceFee).toFixed(2)
+                : '-'
+            }
           />
           <CardDashboard
             title="Last rebalancing"
