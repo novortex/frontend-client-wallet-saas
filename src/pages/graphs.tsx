@@ -164,17 +164,29 @@ export default function Graphs() {
         />
         <CardDashboard
           title="Initial value"
-          data={infosWallet?.investedAmount}
+          data={
+            infosWallet?.investedAmount !== undefined
+              ? Number(infosWallet.investedAmount).toFixed(2)
+              : '-'
+          }
         />
         <CardDashboard
           title="Current value"
-          data={infosWallet?.currentAmount}
+          data={
+            infosWallet?.currentAmount !== undefined
+              ? Number(infosWallet.currentAmount).toFixed(2)
+              : '-'
+          }
         />
       </div>
       <div className="w-full h-1/3 mb-10 flex flex-row justify-between">
         <CardDashboard
           title="Performance fee"
-          data={infosWallet?.performanceFee}
+          data={
+            infosWallet?.performanceFee !== undefined
+              ? Number(infosWallet.performanceFee).toFixed(2)
+              : '-'
+          }
         />
         <CardDashboard
           title="Last rebalance"
@@ -182,7 +194,11 @@ export default function Graphs() {
         />
         <CardDashboard
           title="Current value in benchmark"
-          data={graphData[0].benchmarkMoney}
+          data={
+            graphData[0]?.benchmarkMoney !== undefined
+              ? Number(graphData[0].benchmarkMoney).toFixed(2)
+              : '-'
+          }
         />
         <CardDashboard title="Current value ideal portfolio" data="-" />
       </div>
