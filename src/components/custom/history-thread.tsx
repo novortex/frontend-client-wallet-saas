@@ -254,7 +254,7 @@ export default function HistoryThread({
             walletState={true}
             date={date}
             hour={hour}
-            initialValue={initialValue ?? 0}
+            initialValue={initialValue?.toFixed(2) ?? 0}
           />
         )
       case 'CLOSE_WALLET':
@@ -263,8 +263,8 @@ export default function HistoryThread({
             walletState={false}
             date={date}
             hour={hour}
-            initialValue={initialValue ?? 0}
-            closeValue={closeValue ?? 0}
+            initialValue={initialValue?.toFixed(2) ?? 0}
+            closeValue={closeValue?.toFixed(2) ?? 0}
           />
         )
       default:
