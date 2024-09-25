@@ -734,3 +734,42 @@ export async function startWallet(
     throw error
   }
 }
+
+export async function downloadPdf() {
+  const pdfData = {
+    client_name: 'Pedro Gattai',
+    start_date: '29 de fevereiro de 2024',
+    start_date_formated: '29/02/2024',
+    end_date: '27 de agosto de 2024',
+    end_date_formated: '27/08/2024',
+    initial_value: '100.000,00',
+    benchmark: 'CDI',
+    vault_performance: '40%',
+    vault_value: '77.668,94',
+    next_closure: '27 de fevereiro de 2025',
+    dollar_value: '5,20',
+    benchmark_price_start: '3.000',
+    benchmark_price_end: '59.000,00',
+    benchmark_avg_performance: '5,33%',
+    wallet_benchmark_value: '110.000,00',
+    wallet_closing_value: '115.000,00',
+    profit_above_benchmark: '5.000,00',
+  }
+
+  try {
+    const response = await instance.post('/file', pdfData, {
+      responseType: 'blob', // Define o tipo de resposta como blob para arquivos binários (como PDFs)
+      headers: { 'Content-Type': 'application/json' },
+    })
+
+    // Cria um link para download
+    const url = window.URL.createObjectURL(new Blob([response.data]))
+    const link = document.createElement('a')
+    link.href = url
+    link.setAttribute('download', 'close_wallet.pdf') // Nome do arquivo que será baixado
+    document.body.appendChild(link)
+    link.click() // Simula o clique no link para iniciar o download
+  } catch (error) {
+    console.error('Erro ao fazer download do PDF:', error)
+  }
+}

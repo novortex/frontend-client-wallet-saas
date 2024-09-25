@@ -6,6 +6,7 @@ import {
   CardDescription,
   CardFooter,
 } from '@/components/ui/card'
+import { Button } from '../ui/button'
 
 interface HistoryCardStartCloseProps {
   walletState: boolean
@@ -45,6 +46,9 @@ export default function HistoryCardStartClose({
           <CardDescription className="flex flex-row gap-2 text-lg">
             Close Value: <p className="text-[#fff]">{closeValue}</p>
           </CardDescription>
+        )}
+        {!walletState && (
+          <Button className="bg-white text-black">Export</Button>
         )}
       </CardContent>
       <CardFooter></CardFooter>
