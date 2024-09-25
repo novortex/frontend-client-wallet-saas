@@ -26,7 +26,7 @@ interface graphDataEntry {
 }
 
 export default function Graphs() {
-  const [data, setData] = useState<ClientActive[]>([])
+  const [, setData] = useState<ClientActive[]>([])
   const [infosWallet, setInfosWallet] = useState<TWalletAssetsInfo>()
   const [loading, setLoading] = useState(true)
   const [graphData, setGraphData] = useState<graphDataEntry[]>([])
@@ -150,7 +150,7 @@ export default function Graphs() {
           title="Entry date"
           data={
             infosWallet?.startDate !== null
-              ? formatDate(infosWallet.startDate?.toString())
+              ? formatDate(infosWallet?.startDate?.toString() ?? '-')
               : '-'
           }
         />
@@ -158,7 +158,7 @@ export default function Graphs() {
           title="Closing date"
           data={
             infosWallet?.monthCloseDate !== null
-              ? formatDate(infosWallet.monthCloseDate?.toString())
+              ? formatDate(infosWallet?.monthCloseDate?.toString() ?? '-')
               : '-'
           }
         />
@@ -190,7 +190,11 @@ export default function Graphs() {
         />
         <CardDashboard
           title="Last rebalance"
-          data={infosWallet?.lastRebalance}
+          data={
+            infosWallet?.lastRebalance
+              ? formatDate(infosWallet.lastRebalance.toString())
+              : '-'
+          }
         />
         <CardDashboard
           title="Current value in benchmark"

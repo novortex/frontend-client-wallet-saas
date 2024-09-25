@@ -44,12 +44,15 @@ export default function ConfirmCloseWalletModal({
 
   // Função que envia a solicitação correta (startWallet ou closeWallet)
   const handleSendWalletAction = async () => {
-    if (startWallet) {
-      // Chama a função startWallet
-      await requestStartWallet(uuidOrganization, walletUuid)
-    } else {
-      // Chama a função closeWallet
-      await closeWallet(uuidOrganization, walletUuid)
+    if (walletUuid) {
+      if (startWallet) {
+        // Chama a função startWallet
+
+        await requestStartWallet(uuidOrganization, walletUuid)
+      } else {
+        // Chama a função closeWallet
+        await closeWallet(uuidOrganization, walletUuid)
+      }
     }
 
     if (!signal) {
