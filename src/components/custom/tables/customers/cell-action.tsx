@@ -18,6 +18,7 @@ import {
   EyeOffIcon,
   MoreHorizontal,
   PencilIcon,
+  StepForward,
   TriangleAlert,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -85,6 +86,10 @@ export default function CellActions({
   }
 
   const { toast } = useToast()
+
+  const openModal = () => {
+    setIsModalOpen(true)
+  }
 
   const handleUpdateCustomer = async () => {
     try {
@@ -474,6 +479,20 @@ export default function CellActions({
               </DialogFooter>
             </DialogContent>
           </Dialog>
+
+          {rowInfos.isWallet === false ? (
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button
+                  className="flex justify-center gap-3 hover:bg-black hover:text-white"
+                  variant="secondary"
+                  onClick={openModal}
+                >
+                  <StepForward className="w-5" /> Continue
+                </Button>
+              </DialogTrigger>
+            </Dialog>
+          ) : null}
 
           <Dialog>
             <DialogTrigger asChild>
