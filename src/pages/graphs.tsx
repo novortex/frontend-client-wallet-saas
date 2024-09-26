@@ -15,6 +15,14 @@ import { ClientActive } from '@/components/custom/tables/wallet-client/columns'
 import { useToast } from '@/components/ui/use-toast'
 import { useSignalStore } from '@/store/signalEffect'
 import { formatDate } from '@/utils'
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb'
 
 interface graphDataEntry {
   cuid: string
@@ -135,7 +143,33 @@ export default function Graphs() {
   return (
     <div className="p-10">
       <div className="mb-10 flex items-center justify-between">
-        <h1 className="text-2xl text-white font-medium">Graphs</h1>
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink
+                className="text-2xl text-white font-medium"
+                href="/wallets"
+              >
+                Wallets
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink
+                className="text-2xl text-white font-medium"
+                href={`/clients/${walletUuid}/infos`}
+              >
+                Information clients
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage className="text-2xl text-white font-medium">
+                Wallet Graphic
+              </BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
         <SwitchTheme />
       </div>
       <div className="flex items-center justify-between mb-10">

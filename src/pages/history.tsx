@@ -7,6 +7,14 @@ import { getWalletHistoric } from '@/service/request'
 import { useUserStore } from '@/store/user'
 import { useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb'
 
 // Definir a interface para os dados de histórico
 interface HistoricEntry {
@@ -68,7 +76,42 @@ export default function History() {
   return (
     <div className="p-10">
       <div className="mb-10 flex items-center justify-between">
-        <h1 className="text-2xl text-white font-medium">Changes</h1>
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink
+                className="text-2xl text-white font-medium"
+                href="/wallets"
+              >
+                Wallets
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink
+                className="text-2xl text-white font-medium"
+                href={`/clients/${walletUuid}/infos`}
+              >
+                Information clients
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink
+                className="text-2xl text-white font-medium"
+                href={`/wallet/${walletUuid}/assets`}
+              >
+                Client wallet
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage className="text-2xl text-white font-medium">
+                Historic
+              </BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
         <SwitchTheme />
       </div>
       <div className="flex items-center justify-between mb-10">
@@ -89,25 +132,28 @@ export default function History() {
         </div>
       </div>
       <div>
-        {historic.map((entry) => (
-          <HistoryThread
-            key={entry.cuid}
-            user={entry.user.name}
-            operationType={entry.historyType}
-            asset={entry.data.asset}
-            date={new Date(entry.createAt).toLocaleDateString()}
-            hour={new Date(entry.createAt).toLocaleTimeString()}
-            assetIcon={entry.data.icon}
-            oldValue={entry.data.before}
-            newValue={entry.data.after}
-            addAssetQuantity={entry.data.quantity}
-            addAssetAllocation={entry.data.target_allocation}
-            depositValue={entry.data.deposit_amount_in_organization_fiat}
-            withdrawalValue={entry.data.withdrawal_value_in_organization_fiat}
-            initialValue={entry.data.invested_amount_in_organization_fiat}
-            closeValue={entry.data.close_wallet_value_in_organization_fiat}
-          />
-        ))}
+        {historic
+          .slice()
+          .reverse()
+          .map((entry) => (
+            <HistoryThread
+              key={entry.cuid}
+              user={entry.user.name}
+              operationType={entry.historyType}
+              asset={entry.data.asset}
+              date={new Date(entry.createAt).toLocaleDateString()}
+              hour={new Date(entry.createAt).toLocaleTimeString()}
+              assetIcon={entry.data.icon}
+              oldValue={entry.data.before}
+              newValue={entry.data.after}
+              addAssetQuantity={entry.data.quantity}
+              addAssetAllocation={entry.data.target_allocation}
+              depositValue={entry.data.deposit_amount_in_organization_fiat}
+              withdrawalValue={entry.data.withdrawal_value_in_organization_fiat}
+              initialValue={entry.data.invested_amount_in_organization_fiat}
+              closeValue={entry.data.close_wallet_value_in_organization_fiat}
+            />
+          ))}
       </div>
     </div>
   )

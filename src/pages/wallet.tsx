@@ -187,7 +187,7 @@ export default function Wallet() {
             variant="outline"
             onClick={() => navigate(`/wallet/${walletUuid}/history`)}
           >
-            Change history
+            Historic
           </Button>
           <Button
             className={`p-5 ${infosWallet?.isClosed ? 'bg-[#10A45C]' : 'bg-[#EF4E3D]'}`}
