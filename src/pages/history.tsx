@@ -89,25 +89,28 @@ export default function History() {
         </div>
       </div>
       <div>
-        {historic.map((entry) => (
-          <HistoryThread
-            key={entry.cuid}
-            user={entry.user.name}
-            operationType={entry.historyType}
-            asset={entry.data.asset}
-            date={new Date(entry.createAt).toLocaleDateString()}
-            hour={new Date(entry.createAt).toLocaleTimeString()}
-            assetIcon={entry.data.icon}
-            oldValue={entry.data.before}
-            newValue={entry.data.after}
-            addAssetQuantity={entry.data.quantity}
-            addAssetAllocation={entry.data.target_allocation}
-            depositValue={entry.data.deposit_amount_in_organization_fiat}
-            withdrawalValue={entry.data.withdrawal_value_in_organization_fiat}
-            initialValue={entry.data.invested_amount_in_organization_fiat}
-            closeValue={entry.data.close_wallet_value_in_organization_fiat}
-          />
-        ))}
+        {historic
+          .slice()
+          .reverse()
+          .map((entry) => (
+            <HistoryThread
+              key={entry.cuid}
+              user={entry.user.name}
+              operationType={entry.historyType}
+              asset={entry.data.asset}
+              date={new Date(entry.createAt).toLocaleDateString()}
+              hour={new Date(entry.createAt).toLocaleTimeString()}
+              assetIcon={entry.data.icon}
+              oldValue={entry.data.before}
+              newValue={entry.data.after}
+              addAssetQuantity={entry.data.quantity}
+              addAssetAllocation={entry.data.target_allocation}
+              depositValue={entry.data.deposit_amount_in_organization_fiat}
+              withdrawalValue={entry.data.withdrawal_value_in_organization_fiat}
+              initialValue={entry.data.invested_amount_in_organization_fiat}
+              closeValue={entry.data.close_wallet_value_in_organization_fiat}
+            />
+          ))}
       </div>
     </div>
   )
