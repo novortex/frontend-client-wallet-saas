@@ -194,8 +194,8 @@ export default function CellActions({ rowInfos }: { rowInfos: ClientActive }) {
                   </div>
 
                   <div className="flex mt-5 gap-5 w-full">
-                    <Label className="w-1/2">Asset Quantity</Label>
-                    <Label className="w-1/2">Allocation</Label>
+                    <Label className="w-1/2">Asset Quantity (Ex: 100)</Label>
+                    <Label className="w-1/2">Ideal Allocation (%)</Label>
                   </div>
                   <div className="flex mt-5 gap-5 w-full">
                     <Input
