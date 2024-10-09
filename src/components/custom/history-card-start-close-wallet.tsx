@@ -7,6 +7,9 @@ import {
   CardFooter,
 } from '@/components/ui/card'
 import { Button } from '../ui/button'
+import { HistoricEntry } from '@/pages/history'
+import { downloadPdf } from '@/service/request'
+import { useUserStore } from '@/store/user'
 
 interface HistoryCardStartCloseProps {
   walletState: boolean
@@ -14,6 +17,7 @@ interface HistoryCardStartCloseProps {
   hour: string
   initialValue: number
   closeValue?: number
+  data_: HistoricEntry
 }
 
 export default function HistoryCardStartClose({
@@ -22,10 +26,36 @@ export default function HistoryCardStartClose({
   hour,
   initialValue,
   closeValue,
+  data_,
 }: HistoryCardStartCloseProps) {
   const borderStyle = walletState ? 'border-[#23CE20]' : 'border-[#C81C1C]'
   const walletTitle = walletState ? 'Start Wallet' : 'Close Wallet'
   const walletValue = walletState ? 'Intial Value' : 'Invested Value'
+  const { data } = data_
+
+  const [user] = useUserStore((state) => [state.user])
+
+  const handleExport = async () => {
+    await downloadPdf(
+      data.client_name,
+      data.start_date,
+      data.start_date_formated,
+      data.close_date,
+      data.close_date_formated,
+      String(data.invested_amount_in_organization_fiat),
+      data.benchmark,
+      String(data.company_comission),
+      String(data.total_commision),
+      data.dollar_value,
+      String(data.benchmark_price_start.amount),
+      String(data.benchmark_price_end.amount),
+      String(data.benchmark_value),
+      String(data.close_wallet_value_in_organization_fiat),
+      String(data.benchmark_exceeded_value),
+      data.assets,
+      user.uuidOrganization,
+    )
+  }
 
   return (
     <Card className={`${borderStyle} rounded-[12px] border bg-[#131313] w-1/3`}>
@@ -48,7 +78,9 @@ export default function HistoryCardStartClose({
           </CardDescription>
         )}
         {!walletState && (
-          <Button className="bg-white text-black">Export</Button>
+          <Button onClick={handleExport} className="bg-white text-black">
+            Export
+          </Button>
         )}
       </CardContent>
       <CardFooter></CardFooter>
