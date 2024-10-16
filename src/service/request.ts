@@ -35,10 +35,10 @@ export type TWallet = {
   nextBalance: Date | null // or Date
   exchange: {
     name: string
-    accountEmail: string
-    exchangePassword: string
-    emailPassword: string
   }
+  accountEmail: string
+  exchangePassword: string
+  emailPassword: string
 }
 
 export type TWalletAssetsInfo = {
