@@ -49,7 +49,7 @@ export const columns: ColumnDef<ClientActive>[] = [
     header: 'Asset quantity',
     cell: ({ row }) => {
       const assetQuantity = Number(row.original.assetQuantity)
-      return !isNaN(assetQuantity) ? assetQuantity.toFixed(2) : 'N/A'
+      return !isNaN(assetQuantity) ? assetQuantity.toFixed(6) : 'N/A'
     },
   },
   {
