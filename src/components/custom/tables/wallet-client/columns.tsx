@@ -3,6 +3,8 @@
 import { ColumnDef } from '@tanstack/react-table'
 
 import CellActions from './cell-action'
+import { ArrowUpDown } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -35,14 +37,32 @@ export const columns: ColumnDef<ClientActive>[] = [
         <span>{row.original.asset.name}</span>
       </div>
     ),
+    filterFn: (row, _columnId, filterValue) => {
+      return row.original.asset.name
+        .toLowerCase()
+        .includes(filterValue.toLowerCase())
+    },
   },
   {
     accessorKey: 'investedAmount',
-    header: 'Invested amount',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          className="pl-0"
+        >
+          Invested amount
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
     cell: ({ row }) => {
       const investedAmount = Number(row.original.investedAmount)
       return !isNaN(investedAmount) ? investedAmount.toFixed(2) : 'N/A'
     },
+    sortingFn: 'basic',
+    sortDescFirst: true,
   },
   {
     accessorKey: 'assetQuantity',

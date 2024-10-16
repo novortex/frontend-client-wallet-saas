@@ -254,7 +254,7 @@ export default function CreateWalletModal({
                 <SelectItem value="SUPER_LOW_RISK">SUPER LOW RISK</SelectItem>
                 <SelectItem value="LOW_RISK">LOW RISK</SelectItem>
                 <SelectItem value="STANDARD">STANDARD</SelectItem>
-                <SelectItem value="HIGH">HIGH RISK</SelectItem>
+                <SelectItem value="HIGH_RISK">HIGH RISK</SelectItem>
                 <SelectItem value="SUPER_HIGH_RISK">SUPER HIGH RISK</SelectItem>
               </SelectContent>
             </Select>
