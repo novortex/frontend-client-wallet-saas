@@ -12,7 +12,6 @@ export type CustomersOrganization = {
   active: boolean
   email: string
   phone: string | null
-  cpf: string | null
   isWallet: boolean
   walletUuid: string | null
   exchange: {
@@ -45,14 +44,6 @@ export const columnsCustomerOrg: ColumnDef<CustomersOrganization>[] = [
     cell: ({ getValue }) => {
       const phone = getValue<string | null>()
       return phone ?? ' - '
-    },
-  },
-  {
-    accessorKey: 'cpf',
-    header: 'CPF',
-    cell: ({ getValue }) => {
-      const cpf = getValue<string | null>()
-      return cpf ?? ' - '
     },
   },
   {
