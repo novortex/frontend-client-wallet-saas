@@ -13,6 +13,7 @@ import depositIcon from '../../assets/image/history-deposit-icon.png'
 import withdrawalIcon from '../../assets/image/history-withdrawal-icon.png'
 import startWalletIcon from '../../assets/image/history-start-wallet-icon.png'
 import closeWalletIcon from '../../assets/image/history-close-wallet-icon.png'
+import { HistoricEntry } from '@/pages/history'
 
 interface HistoryThreadProps {
   user: string
@@ -29,6 +30,7 @@ interface HistoryThreadProps {
   withdrawalValue?: number
   initialValue?: number
   closeValue?: number
+  data: HistoricEntry
 }
 
 const getIcon = (operationType: string) => {
@@ -73,6 +75,7 @@ export default function HistoryThread({
   withdrawalValue,
   initialValue,
   closeValue,
+  data,
 }: HistoryThreadProps) {
   const renderOperationDescription = () => {
     switch (operationType) {
@@ -255,6 +258,7 @@ export default function HistoryThread({
             date={date}
             hour={hour}
             initialValue={Number(initialValue?.toFixed(2)) ?? 0}
+            data_={data}
           />
         )
       case 'CLOSE_WALLET':
@@ -265,6 +269,7 @@ export default function HistoryThread({
             hour={hour}
             initialValue={Number(initialValue?.toFixed(2)) ?? 0}
             closeValue={Number(closeValue?.toFixed(2)) ?? 0}
+            data_={data}
           />
         )
       default:

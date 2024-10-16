@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { instance } from '@/config/api'
 
 export type TWalletCommission = {
@@ -735,31 +736,51 @@ export async function startWallet(
   }
 }
 
-export async function downloadPdf() {
+export async function downloadPdf(
+  client_name: string,
+  start_date: string,
+  start_date_formated: string,
+  end_date: string,
+  end_date_formated: string,
+  invested_amount_in_organization_fiat: string,
+  benchmark_name: string,
+  company_comission: string,
+  total_comission: string,
+  dollar_value: string,
+  benchmark_price_start: string,
+  benchmark_price_end: string,
+  wallet_benchmark_value: string,
+  close_wallet_value_in_organization_fiat: string,
+  wallet_benchmark_exceeded_value: string,
+  assets: { name: string; allocation: number }[],
+  organizationUuid: string,
+) {
   const pdfData = {
-    client_name: 'Pedro Gattai',
-    start_date: '29 de fevereiro de 2024',
-    start_date_formated: '29/02/2024',
-    end_date: '27 de agosto de 2024',
-    end_date_formated: '27/08/2024',
-    initial_value: '100.000,00',
-    benchmark: 'CDI',
-    vault_performance: '40%',
-    vault_value: '77.668,94',
-    next_closure: '27 de fevereiro de 2025',
-    dollar_value: '5,20',
-    benchmark_price_start: '3.000',
-    benchmark_price_end: '59.000,00',
-    benchmark_avg_performance: '5,33%',
-    wallet_benchmark_value: '110.000,00',
-    wallet_closing_value: '115.000,00',
-    profit_above_benchmark: '5.000,00',
+    client_name,
+    start_date,
+    start_date_formated,
+    end_date,
+    end_date_formated,
+    invested_amount_in_organization_fiat,
+    benchmark_name,
+    company_comission,
+    total_comission,
+    dollar_value,
+    benchmark_price_start,
+    benchmark_price_end,
+    wallet_benchmark_value,
+    close_wallet_value_in_organization_fiat,
+    wallet_benchmark_exceeded_value,
+    assets,
   }
 
   try {
-    const response = await instance.post('/file', pdfData, {
+    const response = await instance.post('management/generate-pdf', pdfData, {
       responseType: 'blob', // Define o tipo de resposta como blob para arquivos binários (como PDFs)
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'x-organization': organizationUuid,
+      },
     })
 
     // Cria um link para download
