@@ -25,7 +25,6 @@ export type TWallet = {
   user: {
     name: string
     email: string
-    cpf: string
     phone: string
   }
   benchmark: {
@@ -67,7 +66,6 @@ type TAsset = {
 
 type TUserLoginInfos = {
   user: {
-    cpf: string | null
     createAt: string // or Date if you prefer working with Date objects instead of ISO strings
     email: string
     name: string
@@ -106,7 +104,6 @@ export type TNewCustomerResponse = {
   email: string
   password: string
   phone: string | null
-  cpf: string | null
   role: string
   createAt: string
   updateAt: string
@@ -125,7 +122,6 @@ export type TClientInfosResponse = {
     name: string
     email: string
     phone?: string
-    cpf?: string
   }
   lastBalance: Date | null
   nextBalance: Date | null
@@ -149,7 +145,6 @@ export type TManager = {
     name: string
     email: string
     phone: string | null
-    cpf: string | null
   }
 }
 
@@ -159,7 +154,6 @@ export type TCustomersOrganization = {
   active: boolean
   email: string
   phone: string | null
-  cpf: string | null
   isWallet: boolean
   walletUuid: string | null
   exchange: {
@@ -256,14 +250,12 @@ export async function registerNewCustomer(
   name: string,
   email: string,
   organizationUuid: string,
-  cpf?: string,
   phone?: string,
 ): Promise<TNewCustomerResponse> {
   try {
     const data = {
       name,
       email,
-      cpf,
       phone,
       organizationUuid,
     }
@@ -656,7 +648,6 @@ export async function updateCustomer(
   data: {
     name: string
     email: string
-    cpf: string | null
     phone: string | null
   },
 ) {

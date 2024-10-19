@@ -72,7 +72,6 @@ export default function Infos() {
       name: '',
       email: '',
       phone: '',
-      cpf: '',
     },
     exchange: {
       name: '',
@@ -436,7 +435,6 @@ export default function Infos() {
         onClose={closeModal}
         name={walletI.user.name}
         email={walletI.user.email}
-        cpf={walletI.user.cpf}
         phone={walletI.user.phone}
       />
       <ExchangeInfoModal

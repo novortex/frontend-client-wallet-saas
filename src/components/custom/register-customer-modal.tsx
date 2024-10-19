@@ -40,13 +40,11 @@ export default function RegisterCustomerModal({
   const [inputValues, setInputValues] = useState({
     name: '',
     email: '',
-    cpf: '',
     phone: '',
   })
   const [errors, setErrors] = useState({
     name: '',
     email: '',
-    cpf: '',
     phone: '',
   })
   const [uuidOrganization] = useUserStore((state) => [
@@ -61,13 +59,11 @@ export default function RegisterCustomerModal({
 
   const nameRef = useRef<HTMLInputElement>(null)
   const emailRef = useRef<HTMLInputElement>(null)
-  const cpfRef = useRef<HTMLInputElement>(null)
 
   const validateInputs = () => {
     const newErrors = {
       name: '',
       email: '',
-      cpf: '',
       phone: '',
     }
 
@@ -88,12 +84,6 @@ export default function RegisterCustomerModal({
     // Validação do email: obrigatório e deve ter um formato de email válido
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inputValues.email)) {
       newErrors.email = 'Invalid email format.'
-    }
-
-    // Validação do CPF: opcional, só valida se preenchido e deve conter entre 8 e 14 dígitos numéricos
-    if (inputValues.cpf && !/^\d{8,14}$/.test(inputValues.cpf)) {
-      newErrors.cpf =
-        'CPF must contain between 8 and 14 digits and only numbers.'
     }
 
     setErrors(newErrors)
@@ -127,7 +117,6 @@ export default function RegisterCustomerModal({
 
     const name = nameRef.current?.value
     const email = emailRef.current?.value
-    const cpf = cpfRef.current?.value
 
     onClose()
 
@@ -144,7 +133,6 @@ export default function RegisterCustomerModal({
       name as string,
       email as string,
       uuidOrganization,
-      cpf,
       formattedPhone,
     )
 
@@ -153,7 +141,6 @@ export default function RegisterCustomerModal({
         ...item,
         name: '',
         email: '',
-        cpf: '',
         phone: '',
       }))
 
@@ -168,7 +155,6 @@ export default function RegisterCustomerModal({
       ...item,
       name: '',
       email: '',
-      cpf: '',
       phone: '',
     }))
 
@@ -225,7 +211,7 @@ export default function RegisterCustomerModal({
         </div>
         <div className="gap-4 flex flex-col items-center">
           {/* Linha superior: Name e Email */}
-          <div className="w-full h-1/2 flex flex-row justify-evenly items-center">
+          <div className="w-full h-1/2 flex flex-col gap-5 justify-evenly items-center">
             <div className="h-full w-[45%] flex flex-col items-center justify-center text-center gap-3">
               <Input
                 className="w-2/3 bg-[#131313] border-[#323232] text-[#959CB6]"
@@ -239,6 +225,7 @@ export default function RegisterCustomerModal({
                 <Label className="w-2/3 text-red-500">{errors.name}</Label>
               )}
             </div>
+
             <div className="h-full w-[45%] flex flex-col items-center justify-center text-center gap-3">
               <Input
                 className="w-2/3 bg-[#131313] border-[#323232] text-[#959CB6]"
@@ -252,56 +239,41 @@ export default function RegisterCustomerModal({
                 <Label className="w-2/3 text-red-500">{errors.email}</Label>
               )}
             </div>
-          </div>
 
-          {/* Linha inferior: CPF e Telefone */}
-          <div className="w-full h-1/2 flex flex-row justify-evenly items-center">
-            <div className="h-full w-[45%] flex flex-col items-center justify-center text-center gap-3">
-              <Input
-                className="w-2/3 bg-[#131313] border-[#323232] text-[#959CB6]"
-                placeholder="CPF (optional)"
-                name="cpf"
-                value={inputValues.cpf}
-                onChange={handleInputChange}
-                ref={cpfRef}
+            <div className="h-full w-[30%] flex flex-col items-center justify-center text-center gap-3">
+              <PhoneInput
+                country={'br'}
+                containerClass="flex bg-[#131313] border-[#323232] rounded-md border"
+                inputClass="bg-[#131313] border-none text-[#959CB6]"
+                dropdownClass="text-black"
+                searchClass="bg-[#131313] border-[#323232] text-[#959CB6] "
+                inputStyle={{
+                  backgroundColor: '#131313',
+                  color: '#959CB6',
+                  border: 'none',
+                }}
+                value={phone}
+                onChange={(phone, country) => {
+                  // eslint-disable-next-line no-unused-expressions
+                  setPhone(phone)
+                  if (
+                    country &&
+                    'name' in country &&
+                    'dialCode' in country &&
+                    'countryCode' in country &&
+                    'format' in country
+                  ) {
+                    setPhoneCountry(country as CountryData)
+                  }
+                }}
               />
-              {errors.cpf && (
-                <Label className="w-2/3 text-red-500">{errors.cpf}</Label>
+              {errors.phone && (
+                <Label className="w-2/3 text-red-500">{errors.phone}</Label>
               )}
             </div>
           </div>
 
-          <div className="w-[30%]">
-            <PhoneInput
-              country={'br'}
-              containerClass="flex bg-[#131313] border-[#323232] rounded-md border"
-              inputClass="bg-[#131313] border-none text-[#959CB6]"
-              dropdownClass="text-black"
-              searchClass="bg-[#131313] border-[#323232] text-[#959CB6] "
-              inputStyle={{
-                backgroundColor: '#131313',
-                color: '#959CB6',
-                border: 'none',
-              }}
-              value={phone}
-              onChange={(phone, country) => {
-                // eslint-disable-next-line no-unused-expressions
-                setPhone(phone)
-                if (
-                  country &&
-                  'name' in country &&
-                  'dialCode' in country &&
-                  'countryCode' in country &&
-                  'format' in country
-                ) {
-                  setPhoneCountry(country as CountryData)
-                }
-              }}
-            />
-            {errors.phone && (
-              <Label className="w-2/3 text-red-500">{errors.phone}</Label>
-            )}
-          </div>
+          <div className="w-[30%]"></div>
         </div>
         <DialogFooter className="flex justify-end items-end">
           <Button

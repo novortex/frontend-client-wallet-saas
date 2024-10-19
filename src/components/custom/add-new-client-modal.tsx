@@ -26,7 +26,6 @@ export default function AddNewClientModal({
 }: AddNewClientModalProps) {
   const [name, setName] = React.useState('')
   const [email, setEmail] = React.useState('')
-  const [cpf, setCpf] = React.useState('')
   const [phone, setPhone] = React.useState('')
   //   const [isModalOpen, setIsModalOpen] = React.useState(false)
   const [uuidOrganization] = useUserStore((state) => [
@@ -56,7 +55,6 @@ export default function AddNewClientModal({
         name,
         email,
         uuidOrganization,
-        cpf,
         phone,
       )
 
@@ -72,7 +70,6 @@ export default function AddNewClientModal({
       // TODO: change for REF
       setName('')
       setEmail('')
-      setCpf('')
       setPhone('')
 
       if (!signal) {
@@ -116,12 +113,6 @@ export default function AddNewClientModal({
             />
           </div>
           <div className="w-full h-1/2 flex flex-row justify-between gap-4 items-center">
-            <Input
-              className="w-1/2 h-full bg-[#272727] border-[#323232] text-[#959CB6]"
-              placeholder="CPF (optional)"
-              value={cpf}
-              onChange={(e) => setCpf(e.target.value)}
-            />
             <Input
               className="w-1/2 h-full bg-[#272727] border-[#323232] text-[#959CB6]"
               placeholder="Phone (optional)"

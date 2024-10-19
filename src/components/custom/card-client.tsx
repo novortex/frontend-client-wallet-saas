@@ -17,7 +17,6 @@ interface CardClientProps {
   nextRebalancing: string | null
   lastRebalancing: string | null
   email: string
-  cpf?: string
   phone?: string
   walletUuid: string
 }
@@ -59,7 +58,6 @@ export default function CardClient({
   nextRebalancing,
   lastRebalancing,
   email,
-  cpf,
   phone,
   walletUuid,
 }: CardClientProps) {
@@ -69,7 +67,7 @@ export default function CardClient({
   const navigate = useNavigate()
   const handleCardClick = () => {
     navigate(`/clients/${walletUuid}/infos`, {
-      state: { name, email, cpf, phone },
+      state: { name, email, phone },
     })
   }
 
@@ -92,8 +90,6 @@ export default function CardClient({
                 email: {email}
                 <br />
                 phone: {phone}
-                <br />
-                cpf: {cpf}
               </div>
             </div>
           </div>

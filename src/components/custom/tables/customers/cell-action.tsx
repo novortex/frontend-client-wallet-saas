@@ -60,7 +60,6 @@ export default function CellActions({
   )
   const nameRef = useRef<HTMLInputElement>(null)
   const emailRef = useRef<HTMLInputElement>(null)
-  const cpfRef = useRef<HTMLInputElement>(null)
   const phoneRef = useRef<HTMLInputElement>(null)
 
   const accountPasswordRef = useRef<HTMLInputElement>(null)
@@ -93,12 +92,7 @@ export default function CellActions({
 
   const handleUpdateCustomer = async () => {
     try {
-      if (
-        !nameRef.current ||
-        !emailRef.current ||
-        !cpfRef.current ||
-        !phoneRef.current
-      ) {
+      if (!nameRef.current || !emailRef.current || !phoneRef.current) {
         return toast({
           className: 'bg-red-500 border-0',
           title: 'Validation Error',
@@ -115,7 +109,6 @@ export default function CellActions({
       const result = await updateCustomer(uuidOrganization, rowInfos.id, {
         name: nameRef.current?.value ?? '',
         email: emailRef.current?.value ?? '',
-        cpf: cpfRef.current?.value ?? '',
         phone: phoneRef.current?.value ?? '',
       })
 
@@ -248,21 +241,6 @@ export default function CellActions({
                         defaultValue={rowInfos.name}
                         ref={nameRef}
                         placeholder="Name"
-                        required
-                      />
-                    </div>
-
-                    <div>
-                      <Label className="ml-2" htmlFor="ID">
-                        ID
-                      </Label>
-                      <Input
-                        className="bg-[#131313] border-[#323232] text-white"
-                        type="text"
-                        id="ID"
-                        defaultValue={rowInfos.cpf || ''}
-                        ref={cpfRef}
-                        placeholder="ID"
                         required
                       />
                     </div>
