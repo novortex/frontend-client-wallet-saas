@@ -568,9 +568,10 @@ export async function createDepositWithdrawal(
   walletUuid: string,
   currency: string,
   isWithdrawal: boolean,
+  date?: Date,
 ) {
   try {
-    const data = { amount, walletUuid, currency, isWithdrawal }
+    const data = { amount, walletUuid, currency, isWithdrawal, date }
     const result = await instance.post('wallet/deposit-withdrawal', data, {
       headers: { 'x-organization': organizationUuid },
     })

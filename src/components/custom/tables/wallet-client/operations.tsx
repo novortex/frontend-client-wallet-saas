@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Checkbox } from '@/components/ui/checkbox'
 import { useEffect, useState } from 'react'
 import { useToast } from '@/components/ui/use-toast'
 import {
@@ -55,6 +56,10 @@ export default function OperationsModal({
   const { walletUuid } = useParams()
 
   const { toast } = useToast()
+
+  // Estado para controlar o checkbox
+  const [isCustomDateEnabled, setIsCustomDateEnabled] = useState(false)
+  const [customDate, setCustomDate] = useState('')
 
   useEffect(() => {
     const fetchFiatCurrencies = async () => {
@@ -162,7 +167,7 @@ export default function OperationsModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-[#131313] h-4/5 text-[#fff] border-transparent">
+      <DialogContent className="bg-[#131313] h-[85%] text-[#fff] border-transparent">
         <DialogHeader>
           <DialogTitle className="flex flex-row gap-4 text-3xl items-center">
             Withdrawal / Deposit <HandCoins className="text-[#F2BE38]" />
@@ -212,6 +217,25 @@ export default function OperationsModal({
           {amountError && (
             <Label className="text-red-500 mt-2">{amountError}</Label>
           )}
+        </div>
+        <div className="w-full flex justify-center gap-4 flex-col">
+          <div className="flex flex-row gap-2 items-center">
+            <Checkbox
+              className="border-gray-500"
+              onCheckedChange={(checked) =>
+                setIsCustomDateEnabled(checked === true)
+              }
+            />
+
+            <Label>Set Deposit or Withdrawal on a different date</Label>
+          </div>
+          <Input
+            className="w-1/2 bg-[#131313] border-[#323232] text-[#959CB6]"
+            placeholder="Date"
+            value={customDate}
+            onChange={(e) => setCustomDate(e.target.value)}
+            disabled={!isCustomDateEnabled} // Habilita ou desabilita o Input com base no estado
+          />
         </div>
         <div className="w-full flex items-center">
           <Info className="w-[10%] text-blue-600" />
