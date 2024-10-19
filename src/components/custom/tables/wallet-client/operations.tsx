@@ -95,6 +95,15 @@ export default function OperationsModal({
     return true
   }
 
+  const formatDate = (value: string) => {
+    const cleanedValue = value.replace(/\D/g, '')
+
+    if (cleanedValue.length <= 2) return cleanedValue
+    if (cleanedValue.length <= 4)
+      return `${cleanedValue.slice(0, 2)}/${cleanedValue.slice(2, 4)}`
+    return `${cleanedValue.slice(0, 2)}/${cleanedValue.slice(2, 4)}/${cleanedValue.slice(4, 8)}`
+  }
+
   const sendOperation = async () => {
     let valid = true
 
@@ -129,12 +138,18 @@ export default function OperationsModal({
         description: `Operation: ${operation}, Amount: ${amount}, Currency: ${currency}`,
       })
 
+      const customDateFormatted =
+        isCustomDateEnabled && customDate
+          ? new Date(customDate.split('/').reverse().join('-'))
+          : undefined
+
       const result = await createDepositWithdrawal(
         uuidOrganization,
         parseFloat(amount),
         walletUuid,
         currency,
         isWithdrawal,
+        customDateFormatted,
       )
 
       toast({
@@ -231,10 +246,11 @@ export default function OperationsModal({
           </div>
           <Input
             className="w-1/2 bg-[#131313] border-[#323232] text-[#959CB6]"
-            placeholder="Date"
+            placeholder="DD/MM/YYYY"
             value={customDate}
-            onChange={(e) => setCustomDate(e.target.value)}
-            disabled={!isCustomDateEnabled} // Habilita ou desabilita o Input com base no estado
+            onChange={(e) => setCustomDate(formatDate(e.target.value))}
+            maxLength={10}
+            disabled={!isCustomDateEnabled}
           />
         </div>
         <div className="w-full flex items-center">
