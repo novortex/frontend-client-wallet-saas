@@ -69,12 +69,12 @@ export function DataTableCustomers<TData, TValue>({
         <div className="flex gap-5 items-center">
           <div className="flex items-center py-4 w-full">
             <Input
-              placeholder="Filter emails..."
+              placeholder="Filter name customer..."
               value={
-                (table.getColumn('email')?.getFilterValue() as string) ?? ''
+                (table.getColumn('name')?.getFilterValue() as string) ?? ''
               }
               onChange={(event) =>
-                table.getColumn('email')?.setFilterValue(event.target.value)
+                table.getColumn('name')?.setFilterValue(event.target.value)
               }
               className="bg-gray-800 text-gray-400 border-transparent h-11"
             />
