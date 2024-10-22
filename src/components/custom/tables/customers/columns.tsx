@@ -2,6 +2,8 @@
 
 import { ColumnDef } from '@tanstack/react-table'
 import CellActions from './cell-action'
+import { ArrowUpDown } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
 // Define the shape of our data
 export type CustomersOrganization = {
@@ -10,7 +12,6 @@ export type CustomersOrganization = {
   active: boolean
   email: string
   phone: string | null
-  cpf: string | null
   isWallet: boolean
   walletUuid: string | null
   exchange: {
@@ -46,16 +47,18 @@ export const columnsCustomerOrg: ColumnDef<CustomersOrganization>[] = [
     },
   },
   {
-    accessorKey: 'cpf',
-    header: 'CPF',
-    cell: ({ getValue }) => {
-      const cpf = getValue<string | null>()
-      return cpf ?? ' - '
-    },
-  },
-  {
     accessorKey: 'active',
-    header: 'Status',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Status
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
     cell: ({ getValue }) => {
       const active = getValue<boolean>()
       return (
@@ -69,7 +72,17 @@ export const columnsCustomerOrg: ColumnDef<CustomersOrganization>[] = [
   },
   {
     accessorKey: 'isWallet',
-    header: 'Stage',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Stage
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
     cell: ({ getValue }) => {
       const isWallet = getValue<boolean>()
       return (

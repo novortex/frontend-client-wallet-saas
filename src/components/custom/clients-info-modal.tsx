@@ -10,7 +10,6 @@ interface AddNewAssetModalProps {
   onClose: () => void
   name: string
   email: string
-  cpf: string
   phone: string
 }
 
@@ -19,7 +18,6 @@ export default function ClientsInfoModal({
   onClose,
   name,
   email,
-  cpf,
   phone,
 }: AddNewAssetModalProps) {
   return (
@@ -50,14 +48,6 @@ export default function ClientsInfoModal({
           </div>
           <div className="h-full w-1/2 flex justify-start items-center text-[#959CB6]">
             {phone}
-          </div>
-        </div>
-        <div className="flex flex-row">
-          <div className="h-full w-1/2 flex justify-start items-center">
-            CPF
-          </div>
-          <div className="h-full w-1/2 flex justify-start items-center text-[#959CB6]">
-            {cpf}
           </div>
         </div>
       </DialogContent>

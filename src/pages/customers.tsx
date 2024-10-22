@@ -52,7 +52,6 @@ export function Customers() {
           active: item.active,
           email: item.email,
           phone: item.phone,
-          cpf: item.cpf,
           isWallet: item.isWallet,
           walletUuid: item.walletUuid,
           exchange: item.exchange,

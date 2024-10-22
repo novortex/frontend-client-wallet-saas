@@ -72,14 +72,13 @@ export default function Infos() {
       name: '',
       email: '',
       phone: '',
-      cpf: '',
     },
     exchange: {
-      accountEmail: '',
-      emailPassword: '',
-      exchangePassword: '',
       name: '',
     },
+    accountEmail: '',
+    emailPassword: '',
+    exchangePassword: '',
   })
 
   const navigate = useNavigate()
@@ -436,15 +435,14 @@ export default function Infos() {
         onClose={closeModal}
         name={walletI.user.name}
         email={walletI.user.email}
-        cpf={walletI.user.cpf}
         phone={walletI.user.phone}
       />
       <ExchangeInfoModal
         isOpen={isModalExchangeOpen}
         onClose={closeModalopenModalExchange}
-        accountEmail={walletI.exchange.accountEmail}
-        emailPassword={walletI.exchange.emailPassword}
-        exchangePassword={walletI.exchange.exchangePassword}
+        accountEmail={walletI.accountEmail}
+        emailPassword={walletI.emailPassword}
+        exchangePassword={walletI.exchangePassword}
       />
       <ConfirmContactModal
         isOpen={isModalContactOpen}

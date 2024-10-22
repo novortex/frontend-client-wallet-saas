@@ -16,6 +16,9 @@ import { useSignalStore } from '@/store/signalEffect'
 import { useToast } from '../ui/use-toast'
 import { registerNewCustomer } from '@/service/request'
 import { Label } from '../ui/label'
+import PhoneInput, { CountryData } from 'react-phone-input-2'
+import 'react-phone-input-2/lib/style.css'
+import { CountryCode, parsePhoneNumber } from 'libphonenumber-js'
 
 interface RegisterCustomerModalProps {
   isOpen: boolean
@@ -27,16 +30,21 @@ export default function RegisterCustomerModal({
   onClose,
 }: RegisterCustomerModalProps) {
   const [percentage, setPercentage] = useState(0)
+  const [phone, setPhone] = useState('')
+  const [phoneCountry, setPhoneCountry] = useState<CountryData>({
+    name: '',
+    dialCode: '',
+    countryCode: '',
+    format: '',
+  })
   const [inputValues, setInputValues] = useState({
     name: '',
     email: '',
-    cpf: '',
     phone: '',
   })
   const [errors, setErrors] = useState({
     name: '',
     email: '',
-    cpf: '',
     phone: '',
   })
   const [uuidOrganization] = useUserStore((state) => [
@@ -51,14 +59,11 @@ export default function RegisterCustomerModal({
 
   const nameRef = useRef<HTMLInputElement>(null)
   const emailRef = useRef<HTMLInputElement>(null)
-  const cpfRef = useRef<HTMLInputElement>(null)
-  const phoneRef = useRef<HTMLInputElement>(null)
 
   const validateInputs = () => {
     const newErrors = {
       name: '',
       email: '',
-      cpf: '',
       phone: '',
     }
 
@@ -81,22 +86,23 @@ export default function RegisterCustomerModal({
       newErrors.email = 'Invalid email format.'
     }
 
-    // Validação do CPF: opcional, só valida se preenchido e deve conter entre 8 e 14 dígitos numéricos
-    if (inputValues.cpf && !/^\d{8,14}$/.test(inputValues.cpf)) {
-      newErrors.cpf =
-        'CPF must contain between 8 and 14 digits and only numbers.'
-    }
-
-    // Validação do telefone: opcional, só valida se preenchido e deve estar no formato +XX (XX)XXXXX-XXXX
-    if (
-      inputValues.phone &&
-      !/^\+\d{2}\(\d{2}\)\d{5}-\d{4}$/.test(inputValues.phone)
-    ) {
-      newErrors.phone = 'Invalid phone format. Use +XX(XX)XXXXX-XXXX.'
-    }
-
     setErrors(newErrors)
     return !Object.values(newErrors).some((error) => error)
+  }
+
+  const formatPhoneNumber = (phone: string) => {
+    try {
+      const phoneNumber = parsePhoneNumber(
+        phone,
+        phoneCountry.countryCode.toUpperCase() as CountryCode,
+      )
+
+      // Formata o número internacional com o formato adequado
+      return phoneNumber.formatInternational()
+    } catch (error) {
+      console.error('Invalid phone number:', error)
+      return phone // Retorna o número original em caso de erro
+    }
   }
 
   const handleRegisterCustomer = async () => {
@@ -111,8 +117,6 @@ export default function RegisterCustomerModal({
 
     const name = nameRef.current?.value
     const email = emailRef.current?.value
-    const cpf = cpfRef.current?.value
-    const phone = phoneRef.current?.value
 
     onClose()
 
@@ -122,12 +126,14 @@ export default function RegisterCustomerModal({
       description: 'Demo Vault !!',
     })
 
+    const formattedPhone = formatPhoneNumber(phone)
+    console.log(formattedPhone)
+
     const customer = await registerNewCustomer(
       name as string,
       email as string,
       uuidOrganization,
-      cpf,
-      phone,
+      formattedPhone,
     )
 
     if (!customer) {
@@ -135,7 +141,6 @@ export default function RegisterCustomerModal({
         ...item,
         name: '',
         email: '',
-        cpf: '',
         phone: '',
       }))
 
@@ -150,7 +155,6 @@ export default function RegisterCustomerModal({
       ...item,
       name: '',
       email: '',
-      cpf: '',
       phone: '',
     }))
 
@@ -205,8 +209,9 @@ export default function RegisterCustomerModal({
             />
           </div>
         </div>
-        <div className="gap-4">
-          <div className="w-full h-1/2 flex flex-row justify-evenly items-center">
+        <div className="gap-4 flex flex-col items-center">
+          {/* Linha superior: Name e Email */}
+          <div className="w-full h-1/2 flex flex-col gap-5 justify-evenly items-center">
             <div className="h-full w-[45%] flex flex-col items-center justify-center text-center gap-3">
               <Input
                 className="w-2/3 bg-[#131313] border-[#323232] text-[#959CB6]"
@@ -220,6 +225,7 @@ export default function RegisterCustomerModal({
                 <Label className="w-2/3 text-red-500">{errors.name}</Label>
               )}
             </div>
+
             <div className="h-full w-[45%] flex flex-col items-center justify-center text-center gap-3">
               <Input
                 className="w-2/3 bg-[#131313] border-[#323232] text-[#959CB6]"
@@ -233,35 +239,41 @@ export default function RegisterCustomerModal({
                 <Label className="w-2/3 text-red-500">{errors.email}</Label>
               )}
             </div>
-          </div>
-          <div className="w-full h-1/2 flex flex-row justify-evenly items-center">
-            <div className="h-full w-[45%] flex flex-col items-center justify-center text-center gap-3">
-              <Input
-                className="w-2/3 bg-[#131313] border-[#323232] text-[#959CB6]"
-                placeholder="CPF (optional)"
-                name="cpf"
-                value={inputValues.cpf}
-                onChange={handleInputChange}
-                ref={cpfRef}
-              />
-              {errors.cpf && (
-                <Label className="w-2/3 text-red-500">{errors.cpf}</Label>
-              )}
-            </div>
-            <div className="h-full w-[45%] flex flex-col items-center justify-center text-center gap-3">
-              <Input
-                className="w-2/3 bg-[#131313] border-[#323232] text-[#959CB6]"
-                placeholder="Phone (optional)"
-                name="phone"
-                value={inputValues.phone}
-                onChange={handleInputChange}
-                ref={phoneRef}
+
+            <div className="h-full w-[30%] flex flex-col items-center justify-center text-center gap-3">
+              <PhoneInput
+                country={'br'}
+                containerClass="flex bg-[#131313] border-[#323232] rounded-md border"
+                inputClass="bg-[#131313] border-none text-[#959CB6]"
+                dropdownClass="text-black"
+                searchClass="bg-[#131313] border-[#323232] text-[#959CB6] "
+                inputStyle={{
+                  backgroundColor: '#131313',
+                  color: '#959CB6',
+                  border: 'none',
+                }}
+                value={phone}
+                onChange={(phone, country) => {
+                  // eslint-disable-next-line no-unused-expressions
+                  setPhone(phone)
+                  if (
+                    country &&
+                    'name' in country &&
+                    'dialCode' in country &&
+                    'countryCode' in country &&
+                    'format' in country
+                  ) {
+                    setPhoneCountry(country as CountryData)
+                  }
+                }}
               />
               {errors.phone && (
                 <Label className="w-2/3 text-red-500">{errors.phone}</Label>
               )}
             </div>
           </div>
+
+          <div className="w-[30%]"></div>
         </div>
         <DialogFooter className="flex justify-end items-end">
           <Button

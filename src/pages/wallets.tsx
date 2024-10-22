@@ -112,7 +112,6 @@ export default function Clients() {
               name={client.infosClient.name}
               email={client.infosClient.email}
               phone={client.infosClient.phone}
-              cpf={client.infosClient.cpf}
               alerts={0}
               responsible={client.managerName}
               lastRebalancing={
