@@ -31,6 +31,7 @@ import { HandCoins } from 'lucide-react'
 import OperationsModal from '@/components/custom/tables/wallet-client/operations'
 // import CloseWalletModal from '@/components/custom/closing-wallet-modal'
 import ConfirmCloseWalletModal from '@/components/custom/confirm-close-wallet-modal'
+import ConfirmRebalanceModal from '@/components/custom/modal/confirm-rebalance-modal'
 
 export default function Wallet() {
   const [data, setData] = useState<ClientActive[]>([])
@@ -38,6 +39,7 @@ export default function Wallet() {
   const [isOperationModalOpen, setIsOperationModalOpen] = useState(false)
   const [isCloseWalletModalOpen, setIsCloseWalletOpen] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [isModalRebalnce, setisModalRebalance] = useState(false)
   const [uuidOrganization] = useUserStore((state) => [
     state.user.uuidOrganization,
   ])
@@ -61,6 +63,10 @@ export default function Wallet() {
 
   const closeCloseWalletModal = () => {
     setIsCloseWalletOpen(false)
+  }
+
+  const openOrCloseModalRebalanced = () => {
+    setisModalRebalance(!isModalRebalnce)
   }
 
   useEffect(() => {
@@ -190,6 +196,13 @@ export default function Wallet() {
             Historic
           </Button>
           <Button
+            type="button"
+            className="bg-[#F2BE38] text-black"
+            onClick={openOrCloseModalRebalanced}
+          >
+            Rebalanced
+          </Button>
+          <Button
             className={`p-5 ${infosWallet?.isClosed ? 'bg-[#10A45C]' : 'bg-[#EF4E3D]'}`}
             type="button"
             onClick={openCloseWalletModal}
@@ -284,6 +297,10 @@ export default function Wallet() {
         isOpen={isCloseWalletModalOpen}
         onClose={closeCloseWalletModal}
         startWallet={closeModalState}
+      />
+      <ConfirmRebalanceModal
+        isOpen={isModalRebalnce}
+        onClose={openOrCloseModalRebalanced}
       />
     </div>
   )

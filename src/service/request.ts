@@ -786,3 +786,22 @@ export async function downloadPdf(
     console.error('Erro ao fazer download do PDF:', error)
   }
 }
+
+export async function rebalanceWallet(
+  organizationUuid: string,
+  walletUuid: string,
+) {
+  try {
+    const result = await instance.put(
+      `wallet/${walletUuid}/rebalanceWallet`,
+      {},
+      {
+        headers: { 'x-organization': organizationUuid },
+      },
+    )
+    return result.data
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
