@@ -7,7 +7,6 @@ import {
 import { DataTable } from '@/components/custom/tables/wallet-client/data-table'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-
 import SwitchTheme from '@/components/custom/switch-theme'
 import { useToast } from '@/components/ui/use-toast'
 import {
@@ -29,7 +28,6 @@ import {
 } from '@/components/ui/breadcrumb'
 import { HandCoins } from 'lucide-react'
 import OperationsModal from '@/components/custom/tables/wallet-client/operations'
-// import CloseWalletModal from '@/components/custom/closing-wallet-modal'
 import ConfirmCloseWalletModal from '@/components/custom/confirm-close-wallet-modal'
 import ConfirmRebalanceModal from '@/components/custom/modal/confirm-rebalance-modal'
 
