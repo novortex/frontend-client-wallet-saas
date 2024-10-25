@@ -1,9 +1,8 @@
-import axios from 'axios'
+    import axios from 'axios'
 
-// http://localhost:3000/
-const url = import.meta.env.VITE_API_URL
+    const url = process.env.VITE_API_URL || 'http://localhost:3000'; 
 
-export const instance = axios.create({
-  baseURL: url,
-  withCredentials: true,
-})
+    export const instance = axios.create({
+    baseURL: url,
+    withCredentials: true,
+    })
