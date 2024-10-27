@@ -24,7 +24,7 @@ import RelateClientExchangeModal from './relate-client-exchange-modal'
 import { useRegisterWallet } from '@/store/registerWallet'
 import { useManagerOrganization } from '@/store/managers_benckmark_exchanges'
 import { CustomersOrganization } from './tables/customers/columns'
-import { getAllFiatCurrencies } from '@/service/request'
+import { getAllFiatCurrencies } from '@/services/request'
 import { useUserStore } from '@/store/user'
 
 interface CreateWalletModalProps {

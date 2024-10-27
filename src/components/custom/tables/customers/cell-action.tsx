@@ -36,7 +36,7 @@ import {
 } from '@/components/ui/select'
 import { useManagerOrganization } from '@/store/managers_benckmark_exchanges'
 import { Checkbox } from '@/components/ui/checkbox'
-import { updateCustomer, updateWallet } from '@/service/request'
+import { updateCustomer, updateWallet } from '@/services/request'
 import { useUserStore } from '@/store/user'
 import { useToast } from '@/components/ui/use-toast'
 import { useSignalStore } from '@/store/signalEffect'

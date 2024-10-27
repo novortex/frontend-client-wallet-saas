@@ -5,13 +5,13 @@ import { Input } from '@/components/ui/input'
 import filterIcon from '../assets/image/filter-lines.png'
 import ClientsFilterModal from '@/components/custom/clients-filter-modal'
 import { useState, useEffect } from 'react'
-import { getWalletOrganization, TClientInfosResponse } from '@/service/request'
+import { getWalletOrganization, TClientInfosResponse } from '@/services/request'
 import { useUserStore } from '@/store/user'
 import { useToast } from '@/components/ui/use-toast'
 import { formatDate } from '@/utils'
 import { useSignalStore } from '@/store/signalEffect'
 
-export default function Clients() {
+export function Clients() {
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false)
   const [uuidOrganization] = useUserStore((state) => [
     state.user.uuidOrganization,

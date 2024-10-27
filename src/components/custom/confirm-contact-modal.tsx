@@ -7,7 +7,7 @@ import {
 } from '@/components/ui/dialog'
 import { CircleAlert } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { confirmContactClient } from '@/service/request'
+import { confirmContactClient } from '@/services/request'
 import { useParams } from 'react-router-dom'
 import { useUserStore } from '@/store/user'
 import { useSignalStore } from '@/store/signalEffect'

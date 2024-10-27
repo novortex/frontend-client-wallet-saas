@@ -12,7 +12,7 @@ import {
 import {
   closeWallet,
   startWallet as requestStartWallet,
-} from '@/service/request'
+} from '@/services/request'
 import { useParams } from 'react-router-dom'
 import { useUserStore } from '@/store/user'
 import { useSignalStore } from '@/store/signalEffect'

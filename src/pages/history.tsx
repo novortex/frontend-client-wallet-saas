@@ -3,7 +3,7 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import filterIcon from '../assets/image/filter-lines.png'
 import HistoryThread from '@/components/custom/history-thread'
-import { getWalletHistoric } from '@/service/request'
+import { getWalletHistoric } from '@/services/request'
 import { useUserStore } from '@/store/user'
 import { useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
@@ -72,7 +72,7 @@ export interface HistoricEntry {
   }
 }
 
-export default function History() {
+export function History() {
   // Tipando o estado como um array de HistoricEntry
   const [historic, setHistoric] = useState<HistoricEntry[]>([])
   const [organizationUuid] = useUserStore((state) => [

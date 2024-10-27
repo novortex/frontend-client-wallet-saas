@@ -13,7 +13,7 @@ import {
   getAllAssetsWalletClient,
   TWalletAssetsInfo,
   updateCurrentAmount,
-} from '@/service/request'
+} from '@/services/request'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useUserStore } from '@/store/user'
 import { formatDate } from '@/utils'
@@ -31,7 +31,7 @@ import OperationsModal from '@/components/custom/tables/wallet-client/operations
 import ConfirmCloseWalletModal from '@/components/custom/confirm-close-wallet-modal'
 import ConfirmRebalanceModal from '@/components/custom/modal/confirm-rebalance-modal'
 
-export default function Wallet() {
+export function Wallet() {
   const [data, setData] = useState<ClientActive[]>([])
   const [infosWallet, setInfosWallet] = useState<TWalletAssetsInfo>()
   const [isOperationModalOpen, setIsOperationModalOpen] = useState(false)

@@ -6,6 +6,16 @@ module.exports = {
         ],
         ["@babel/preset-react", { runtime: "automatic" }],
         "@babel/preset-typescript",
+        [
+            "babel-preset-vite",
+            {
+                env: true,
+                glob: false,
+            },
+        ],
     ],
-    plugins: ["@babel/plugin-transform-runtime"],
+    plugins: [
+        "@babel/plugin-transform-runtime",
+        "babel-plugin-transform-import-meta",
+    ],
 };

@@ -22,7 +22,7 @@ import { useToast } from '@/components/ui/use-toast'
 import {
   getAllFiatCurrencies,
   createDepositWithdrawal,
-} from '@/service/request'
+} from '@/services/request'
 import { useUserStore } from '@/store/user'
 import { useParams } from 'react-router-dom'
 import { useSignalStore } from '@/store/signalEffect'

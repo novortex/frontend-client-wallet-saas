@@ -1,8 +1,7 @@
-    import axios from 'axios'
+import axios from "axios";
+const url = "https://backend-wallet-saas-developer.up.railway.app";
 
-    const url = process.env.VITE_API_URL || 'http://localhost:3000'; 
-
-    export const instance = axios.create({
+export const instance = axios.create({
     baseURL: url,
     withCredentials: true,
-    })
+});

@@ -1,11 +1,3 @@
+// setup-tests.js
 import '@testing-library/jest-dom';
-
-Object.defineProperty(global, 'import', {
-    value: {
-      meta: {
-        env: {
-          VITE_API_URL: 'http://localhost:3000', 
-        },
-      },
-    },
-  });
+process.env.VITE_API_URL = "https://backend-wallet-saas-developer.up.railway.app";

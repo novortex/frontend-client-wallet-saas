@@ -18,7 +18,7 @@ import {
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useUserStore } from '@/store/user'
-import { getGraphData } from '@/service/request'
+import { getGraphData } from '@/services/request'
 
 const chartConfig = {
   desktop: {

@@ -5,7 +5,7 @@ import {
   getAllCustomersOrganization,
   getAllExchange,
   getAllManagersOnOrganization,
-} from '@/service/request'
+} from '@/services/request'
 import { useUserStore } from '@/store/user'
 import { useSignalStore } from '@/store/signalEffect'
 import { useToast } from '@/components/ui/use-toast'
