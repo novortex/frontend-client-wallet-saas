@@ -1,15 +1,16 @@
 import CardClient from '@/components/custom/card-client'
-import SwitchTheme from '@/components/custom/switch-theme'
+import {SwitchTheme} from '@/components/custom/switch-theme'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import filterIcon from '../assets/image/filter-lines.png'
 import ClientsFilterModal from '@/components/custom/clients-filter-modal'
 import { useState, useEffect } from 'react'
-import { getWalletOrganization, TClientInfosResponse } from '@/services/request'
+import { getWalletOrganization } from '@/services/request'
 import { useUserStore } from '@/store/user'
 import { useToast } from '@/components/ui/use-toast'
 import { formatDate } from '@/utils'
 import { useSignalStore } from '@/store/signalEffect'
+import { TClientInfosResponse } from '@/types/customer.type'
 
 export function Clients() {
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false)

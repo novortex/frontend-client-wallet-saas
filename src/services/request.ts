@@ -1,164 +1,15 @@
 import { instance } from '@/config/api'
-
-export type TWalletCommission = {
-  name: string
-  commission: number
-}
-
-export type TWalletInfos = {
-  manager: string
-  lastContactAt: string | null
-}
-
-export type TWallet = {
-  startDate: string // or Date
-  investedAmount: number
-  currentAmount: number
-  closeDate: string // or Date
-  initialFee: number | null
-  initialFeePaid: boolean
-  riskProfile: string // Adjust based on your risk profiles
-  monthCloseDate: string // or Date
-  contract: boolean
-  performanceFee: number
-  user: {
-    name: string
-    email: string
-    phone: string
-  }
-  benchmark: {
-    name: string
-  }
-  currentValueBenchmark: number
-  lastRebalance: Date | null
-  nextBalance: Date | null // or Date
-  exchange: {
-    name: string
-  }
-  accountEmail: string
-  exchangePassword: string
-  emailPassword: string
-}
-
-export type TWalletAssetsInfo = {
-  startDate: Date | null
-  investedAmount: number
-  currentAmount: number
-  monthCloseDate: Date | null
-  performanceFee: number
-  lastRebalance: Date | null
-  isClosed: boolean
-}
-
-type TAsset = {
-  uuid: string
-  name: string
-  icon: string
-  investedAmount: number
-  quantityAsset: number
-  price: number
-  currentAllocation: number
-  idealAllocation: number
-  idealAmountInMoney: number
-  buyOrSell: number
-}
-
-
-type TRiskProfileCounts = {
-  superLowRisk: number
-  lowRisk: number
-  standard: number
-}
-
-type TInfosCustomerResponse = {
-  walletCommission: TWalletCommission[]
-  walletPreInfos: TWalletInfos
-  walletInfo: TWallet
-}
-
-type TAssetsOrganizationResponse = {
-  uuid: string
-  icon: string
-  name: string
-  price: number
-  qntInWallet: number
-  presencePercentage: string
-  riskProfileCounts: TRiskProfileCounts
-}
-
-export type TNewCustomerResponse = {
-  uuid: string
-  name: string
-  email: string
-  password: string
-  phone: string | null
-  role: string
-  createAt: string
-  updateAt: string
-  UserOrganizations: {
-    userUuid: string
-    organizationUuid: string
-    active: boolean
-  }[]
-  uncryptedPassword: string
-}
-
-export type TClientInfosResponse = {
-  walletUuid: string
-  managerName: string
-  infosClient: {
-    name: string
-    email: string
-    phone?: string
-  }
-  lastBalance: Date | null
-  nextBalance: Date | null
-}
-
-type WalletDataResponse = {
-  wallet: TWalletAssetsInfo
-  assets: TAsset[]
-}
-
-export type AssetsOrganizationForSelectedResponse = {
-  uuid: string
-  name: string
-  icon: string
-}
-
-export type TManager = {
-  userUuid: string
-  active: boolean
-  user: {
-    name: string
-    email: string
-    phone: string | null
-  }
-}
-
-export type TCustomersOrganization = {
-  uuid: string
-  name: string
-  active: boolean
-  email: string
-  phone: string | null
-  isWallet: boolean
-  walletUuid: string | null
-  exchange: {
-    exchangeUuid: string
-    exchangeName: string
-  } | null
-  emailExchange: string | null
-  emailPassword: string | null
-  exchangePassword: string | null
-  manager: {
-    managerUuid: string
-    managerName: string
-  } | null
-  initialFeePaid: boolean | null
-  contract: string | null
-}
-
+import { AssetsOrganizationForSelectedResponse } from '@/types/asset.type'
+import {
+  TClientInfosResponse,
+  TCustomersOrganization,
+  TNewCustomerResponse,
+} from '@/types/customer.type'
+import {
+  TAssetsOrganizationResponse,
+  TInfosCustomerResponse,
+  WalletDataResponse,
+} from '@/types/response.type'
 
 export async function getInfosCustomer(
   walletUuid: string,
@@ -263,26 +114,6 @@ export async function getWalletOrganization(
   } catch (error) {
     console.error(error)
     throw error
-  }
-}
-
-export async function getAllAssetsWalletClient(
-  organizationUuid: string,
-  walletUuid: string,
-) {
-  try {
-    const result = await instance.get<WalletDataResponse>(
-      `wallet/${walletUuid}/walletAssets`,
-      {
-        headers: {
-          'x-organization': organizationUuid,
-        },
-      },
-    )
-
-    return result.data
-  } catch (error) {
-    console.log(error)
   }
 }
 
@@ -539,25 +370,6 @@ export async function createDepositWithdrawal(
     const result = await instance.post('wallet/deposit-withdrawal', data, {
       headers: { 'x-organization': organizationUuid },
     })
-    return result.data
-  } catch (error) {
-    console.error(error)
-    throw error
-  }
-}
-
-export async function updateCurrentAmount(
-  organizationUuid: string,
-  walletUuid: string,
-) {
-  try {
-    const result = await instance.put(
-      `wallet/${walletUuid}/currentAmount`,
-      {},
-      {
-        headers: { 'x-organization': organizationUuid },
-      },
-    )
     return result.data
   } catch (error) {
     console.error(error)

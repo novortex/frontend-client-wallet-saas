@@ -1,4 +1,4 @@
-import SwitchTheme from '@/components/custom/switch-theme'
+import {SwitchTheme} from '@/components/custom/switch-theme'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import filterIcon from '../assets/image/filter-lines.png'
