@@ -7,7 +7,7 @@ import {
   mockResponse,
   organizationUuid,
   walletUuid,
-} from '../mocks/wallet.mock'
+} from '../../mocks/wallet.mock'
 
 jest.mock('@/config/api', () => ({
   instance: {

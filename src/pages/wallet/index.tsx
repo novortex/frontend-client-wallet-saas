@@ -10,7 +10,7 @@ import ConfirmRebalanceModal from '@/components/custom/modal/confirm-rebalance-m
 import { columns } from '@/components/custom/tables/wallet-client/columns'
 import { useWallet } from '@/hooks/useWallet'
 import { useWalletModals } from '@/hooks/useWalletModals'
-import { Loading } from '@/components/ui/loading'
+import { Loading } from '@/components/custom/loading'
 
 export function Wallet() {
   const { walletUuid } = useParams()

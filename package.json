@@ -88,7 +88,8 @@
     "jest": {
         "transform": {
             "^.+\\.(js|jsx|ts|tsx)$": "babel-jest",
-            "^.+\\.(gif|ttf|eot|svg|png)$": "jest-transform-stub"
+            "^.+\\.(gif|ttf|eot|svg|png)$": "jest-transform-stub",
+            "\\.(css|less)$": "jest-transform-stub"
         },
         "testEnvironment": "jsdom",
         "setupFilesAfterEnv": [
