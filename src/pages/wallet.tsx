@@ -30,6 +30,7 @@ import { HandCoins } from 'lucide-react'
 import OperationsModal from '@/components/custom/tables/wallet-client/operations'
 import ConfirmCloseWalletModal from '@/components/custom/confirm-close-wallet-modal'
 import ConfirmRebalanceModal from '@/components/custom/modal/confirm-rebalance-modal'
+import { Loading } from '@/components/custom/loading'
 
 export function Wallet() {
   const [data, setData] = useState<ClientActive[]>([])
@@ -136,7 +137,7 @@ export function Wallet() {
   const closeModalState = !!infosWallet?.isClosed
 
   if (loading) {
-    return <div>Loading...</div>
+    return <Loading />
   }
 
   return (
