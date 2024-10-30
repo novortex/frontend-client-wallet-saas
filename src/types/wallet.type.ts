@@ -47,3 +47,58 @@ export type TWalletAssetsInfo = {
   monthCloseDate: string | Date | null
   isClosed: boolean
 }
+
+export type HistoricEntry = {
+  cuid: string
+  historyType:
+    | 'SELL_ASSET'
+    | 'BUY_ASSET'
+    | 'INCREASE_ALLOCATION'
+    | 'DECREASE_ALLOCATION'
+    | 'ADD_ASSET'
+    | 'DELETE_ASSET'
+    | 'WITHDRAWAL'
+    | 'DEPOSIT'
+    | 'START_WALLET'
+    | 'CLOSE_WALLET'
+  createAt: string
+  data: {
+    client_name: string
+    start_date: string
+    start_date_formated: string
+    close_date: string
+    close_date_formated: string
+    invested_amount_in_organization_fiat: number
+    benchmark: string
+    company_comission: number
+    total_commision: number
+    dollar_value: string
+    benchmark_price_start: {
+      cuid: string
+      amount: number
+      createAt: string
+      benchmarkCuid: string
+    }
+    benchmark_price_end: {
+      cuid: string
+      amount: number
+      createAt: string
+      benchmarkCuid: string
+    }
+    benchmark_value: string
+    close_wallet_value_in_organization_fiat: number
+    benchmark_exceeded_value: number
+    assets: { name: string; allocation: number }[]
+    before: number
+    after: number
+    icon: string
+    asset: string
+    quantity: number
+    target_allocation: number
+    withdrawal_value_in_organization_fiat: number
+    deposit_amount_in_organization_fiat: number
+  }
+  user: {
+    name: string
+  }
+}

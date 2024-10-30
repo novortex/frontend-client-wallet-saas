@@ -15,7 +15,7 @@ describe('authService', () => {
   })
 
   describe('login', () => {
-    it('should login successfully', async () => {
+    it('Given that the user provides valid login credentials, When the login function is called, Then the user should be logged in successfully and the response should match the expected user data.', async () => {
       // Arrange
       const mockResponse = {
         user: {
@@ -48,7 +48,7 @@ describe('authService', () => {
       })
     })
 
-    it('should handle login error', async () => {
+    it('Given that the user provides invalid login credentials, When the login function is called, Then it should handle the login error and throw an appropriate error message.', async () => {
       // Arrange
       const email = 'test@example.com'
       const password = 'wrongpassword'

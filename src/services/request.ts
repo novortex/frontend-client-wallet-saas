@@ -1,5 +1,4 @@
 import { instance } from '@/config/api'
-import { AssetsOrganizationForSelectedResponse } from '@/types/asset.type'
 import {
   TClientInfosResponse,
   TCustomersOrganization,
@@ -8,7 +7,6 @@ import {
 import {
   TAssetsOrganizationResponse,
   TInfosCustomerResponse,
-  WalletDataResponse,
 } from '@/types/response.type'
 
 export async function getInfosCustomer(
@@ -114,54 +112,6 @@ export async function getWalletOrganization(
   } catch (error) {
     console.error(error)
     throw error
-  }
-}
-
-export async function addCryptoWalletClient(
-  organizationUuid: string,
-  walletUuid: string,
-  assetUuid: string,
-  quantity: number,
-  targetAllocation: number,
-) {
-  try {
-    const result = await instance.post(
-      `wallet/${walletUuid}/asset`,
-      {
-        assetUuid,
-        quantity,
-        targetAllocation,
-      },
-      {
-        headers: {
-          'x-organization': organizationUuid,
-        },
-      },
-    )
-
-    return result.data
-  } catch (error) {
-    console.log(error)
-    return false
-  }
-}
-
-export async function getAllAssetsInOrgForAddWalletClient(
-  organizationUuid: string,
-) {
-  try {
-    const result = await instance.get<AssetsOrganizationForSelectedResponse[]>(
-      `wallet/${organizationUuid}/assets`,
-      {
-        headers: {
-          'x-organization': organizationUuid,
-        },
-      },
-    )
-
-    return result.data
-  } catch (error) {
-    console.log(error)
   }
 }
 
@@ -389,21 +339,6 @@ export async function deleteAssetWallet(
         headers: { 'x-organization': organizationUuid },
       },
     )
-    return result.data
-  } catch (error) {
-    console.error(error)
-    throw error
-  }
-}
-
-export async function getWalletHistoric(
-  organizationUuid: string,
-  walletUuid: string,
-) {
-  try {
-    const result = await instance.get(`historic/${walletUuid}`, {
-      headers: { 'x-organization': organizationUuid },
-    })
     return result.data
   } catch (error) {
     console.error(error)

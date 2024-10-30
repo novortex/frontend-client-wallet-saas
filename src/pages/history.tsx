@@ -1,9 +1,9 @@
-import {SwitchTheme} from '@/components/custom/switch-theme'
+import { SwitchTheme } from '@/components/custom/switch-theme'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import filterIcon from '../assets/image/filter-lines.png'
 import HistoryThread from '@/components/custom/history-thread'
-import { getWalletHistoric } from '@/services/request'
+import { getWalletHistoric } from '@/services/walletService'
 import { useUserStore } from '@/store/user'
 import { useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
@@ -15,65 +15,9 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
-
-// Definir a interface para os dados de histórico
-export interface HistoricEntry {
-  cuid: string
-  historyType:
-    | 'SELL_ASSET'
-    | 'BUY_ASSET'
-    | 'INCREASE_ALLOCATION'
-    | 'DECREASE_ALLOCATION'
-    | 'ADD_ASSET'
-    | 'DELETE_ASSET'
-    | 'WITHDRAWAL'
-    | 'DEPOSIT'
-    | 'START_WALLET'
-    | 'CLOSE_WALLET'
-  createAt: string
-  data: {
-    client_name: string
-    start_date: string
-    start_date_formated: string
-    close_date: string
-    close_date_formated: string
-    invested_amount_in_organization_fiat: number
-    benchmark: string
-    company_comission: number
-    total_commision: number
-    dollar_value: string
-    benchmark_price_start: {
-      cuid: string
-      amount: number
-      createAt: string
-      benchmarkCuid: string
-    }
-    benchmark_price_end: {
-      cuid: string
-      amount: number
-      createAt: string
-      benchmarkCuid: string
-    }
-    benchmark_value: string
-    close_wallet_value_in_organization_fiat: number
-    benchmark_exceeded_value: number
-    assets: { name: string; allocation: number }[]
-    before: number
-    after: number
-    icon: string
-    asset: string
-    quantity: number
-    target_allocation: number
-    withdrawal_value_in_organization_fiat: number
-    deposit_amount_in_organization_fiat: number
-  }
-  user: {
-    name: string
-  }
-}
+import { HistoricEntry } from '@/types/wallet.type'
 
 export function History() {
-  // Tipando o estado como um array de HistoricEntry
   const [historic, setHistoric] = useState<HistoricEntry[]>([])
   const [organizationUuid] = useUserStore((state) => [
     state.user.uuidOrganization,

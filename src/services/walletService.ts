@@ -1,5 +1,6 @@
 import { instance } from '@/config/api'
 import { WalletDataResponse } from '@/types/response.type'
+import { HistoricEntry } from '@/types/wallet.type'
 
 async function getAllAssetsWalletClient(
   organizationUuid: string,
@@ -40,4 +41,20 @@ async function updateCurrentAmount(
   }
 }
 
-export { getAllAssetsWalletClient, updateCurrentAmount }
+async function getWalletHistoric(organizationUuid: string, walletUuid: string) {
+  try {
+    const result = await instance.get<HistoricEntry[]>(
+      `historic/${walletUuid}`,
+      {
+        headers: { 'x-organization': organizationUuid },
+      },
+    )
+
+    return result.data
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+
+export { getAllAssetsWalletClient, updateCurrentAmount, getWalletHistoric }

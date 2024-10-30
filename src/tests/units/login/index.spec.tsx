@@ -10,7 +10,6 @@ describe('Login Component', () => {
   beforeEach(() => {
     ;(useLogin as jest.Mock).mockReturnValue({
       handleLogin: jest.fn().mockImplementation(async () => {
-        // Simula um atraso de 1 segundo na resposta
         return new Promise((resolve) => {
           setTimeout(() => {
             resolve({ success: true })
@@ -20,7 +19,7 @@ describe('Login Component', () => {
     })
   })
 
-  it('should render Login component with welcome message and input fields', () => {
+  it('Given that the Login component is rendered, When the component is displayed, Then it should show the welcome message and input fields for email and password, along with the Sign In button.', () => {
     // Arrange & Act
     render(
       <MemoryRouter>
@@ -35,7 +34,7 @@ describe('Login Component', () => {
     expect(screen.getByText(/Sign In/i)).toBeInTheDocument()
   })
 
-  it('should call handleLogin when Sign In button is clicked with valid inputs', async () => {
+  it('Given that valid email and password inputs are provided, When the Sign In button is clicked, Then it should call the handleLogin function with the provided email and password.', async () => {
     // Arrange
     render(
       <MemoryRouter>
@@ -61,7 +60,7 @@ describe('Login Component', () => {
     )
   })
 
-  it('should disable the Sign In button while logging in', async () => {
+  it('Given that the Sign In button is clicked, When the login process is in progress, Then it should disable the Sign In button until the login process is complete, and then re-enable it after a timeout.', async () => {
     // Arrange
     render(
       <MemoryRouter>
