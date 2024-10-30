@@ -13,7 +13,7 @@ import depositIcon from '../../assets/image/history-deposit-icon.png'
 import withdrawalIcon from '../../assets/image/history-withdrawal-icon.png'
 import startWalletIcon from '../../assets/image/history-start-wallet-icon.png'
 import closeWalletIcon from '../../assets/image/history-close-wallet-icon.png'
-import { HistoricEntry } from '@/pages/history'
+import { HistoricEntry } from '@/types/wallet.type'
 
 interface HistoryThreadProps {
   user: string
