@@ -1,4 +1,3 @@
-// App.jsx
 import './index.css'
 import { Route, Routes, useLocation } from 'react-router-dom'
 import { Wallet } from '@/pages/wallet/index'
