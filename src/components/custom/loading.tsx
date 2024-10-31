@@ -1,4 +1,4 @@
-import '../../loading.css'
+import '../../css/loading.css'
 
 export function Loading() {
   return (
