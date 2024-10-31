@@ -1,42 +1,37 @@
-import { Button } from '@/components/ui/button'
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@/components/ui/alert-dialog'
+import './index.css'
+import { Route, Routes, useLocation } from 'react-router-dom'
+import { Graphs } from '@/pages/graphs'
+import { History } from '@/pages/history'
+import { Clients } from '@/pages/wallets'
+import { Infos } from '@/pages/infos'
+import { Customers } from '@/pages/customers'
+import { AssetsOrg } from '@/pages/assets-org'
+import { Login } from '@/pages/login'
+import { ErrorPage } from '@/pages/404'
+import Root from './pages/outlet'
+import { Wallet } from './pages/wallet'
 
-function App() {
+export function App() {
+  // to-do: remove this in future for use the real logic for side bar and auth
+  const location = useLocation()
+  const isLoginRoute = location.pathname === '/'
+
   return (
-    <div>
-      <h1 className="text-3xl font-bold underline">Hello world!</h1>
-      <Button className="bg-yellow-400">
-        Click me ( componente do shancd ui )
-      </Button>
+    <Routes>
+      <Route path="/" element={<Login />} />
 
-      <AlertDialog>
-        <AlertDialogTrigger>Open</AlertDialogTrigger>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete your
-              account and remove your data from our servers.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction>Continue</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </div>
+      {!isLoginRoute && (
+        <Route element={<Root />}>
+          <Route path="/wallet/:walletUuid/assets" element={<Wallet />} />
+          <Route path="/wallets" element={<Clients />} />
+          <Route path="/customers" element={<Customers />} />
+          <Route path="/admin/orgs" element={<AssetsOrg />} />
+          <Route path="/clients/:walletUuid/infos" element={<Infos />} />
+          <Route path="/wallet/:walletUuid/graphs" element={<Graphs />} />
+          <Route path="/wallet/:walletUuid/history" element={<History />} />
+          <Route path="*" element={<ErrorPage />} />
+        </Route>
+      )}
+    </Routes>
   )
 }
-
-export default App

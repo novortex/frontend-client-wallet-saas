@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import { instance } from '@/config/api'
 
 export type TWalletCommission = {
@@ -64,17 +63,6 @@ type TAsset = {
   buyOrSell: number
 }
 
-type TUserLoginInfos = {
-  user: {
-    createAt: string // or Date if you prefer working with Date objects instead of ISO strings
-    email: string
-    name: string
-    phone: string | null
-    role: 'ADMIN' | 'USER' | 'OTHER_ROLE' // Adjust based on different roles you have
-    updateAt: string // or Date if preferred
-    uuidOrganizations: string
-  }
-}
 
 type TRiskProfileCounts = {
   superLowRisk: number
@@ -171,22 +159,6 @@ export type TCustomersOrganization = {
   contract: string | null
 }
 
-// Requests from api (backend)
-export async function login(
-  email: string,
-  password: string,
-): Promise<TUserLoginInfos | undefined> {
-  try {
-    const result = await instance.post<TUserLoginInfos>('auth/login', {
-      email,
-      password,
-    })
-
-    return result.data
-  } catch (error) {
-    console.log(error)
-  }
-}
 
 export async function getInfosCustomer(
   walletUuid: string,

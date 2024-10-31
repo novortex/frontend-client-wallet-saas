@@ -7,14 +7,13 @@ import {
 import { DataTable } from '@/components/custom/tables/wallet-client/data-table'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-
 import SwitchTheme from '@/components/custom/switch-theme'
 import { useToast } from '@/components/ui/use-toast'
 import {
   getAllAssetsWalletClient,
   TWalletAssetsInfo,
   updateCurrentAmount,
-} from '@/service/request'
+} from '@/services/request'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useUserStore } from '@/store/user'
 import { formatDate } from '@/utils'
@@ -29,11 +28,11 @@ import {
 } from '@/components/ui/breadcrumb'
 import { HandCoins } from 'lucide-react'
 import OperationsModal from '@/components/custom/tables/wallet-client/operations'
-// import CloseWalletModal from '@/components/custom/closing-wallet-modal'
 import ConfirmCloseWalletModal from '@/components/custom/confirm-close-wallet-modal'
 import ConfirmRebalanceModal from '@/components/custom/modal/confirm-rebalance-modal'
+import { Loading } from '@/components/custom/loading'
 
-export default function Wallet() {
+export function Wallet() {
   const [data, setData] = useState<ClientActive[]>([])
   const [infosWallet, setInfosWallet] = useState<TWalletAssetsInfo>()
   const [isOperationModalOpen, setIsOperationModalOpen] = useState(false)
@@ -138,7 +137,7 @@ export default function Wallet() {
   const closeModalState = !!infosWallet?.isClosed
 
   if (loading) {
-    return <div>Loading...</div>
+    return <Loading />
   }
 
   return (

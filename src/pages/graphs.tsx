@@ -7,7 +7,7 @@ import {
   getGraphData,
   TWalletAssetsInfo,
   updateCurrentAmount,
-} from '@/service/request'
+} from '@/services/request'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useUserStore } from '@/store/user'
@@ -33,7 +33,7 @@ interface graphDataEntry {
   createAt: string
 }
 
-export default function Graphs() {
+export function Graphs() {
   const [, setData] = useState<ClientActive[]>([])
   const [infosWallet, setInfosWallet] = useState<TWalletAssetsInfo>()
   const [loading, setLoading] = useState(true)

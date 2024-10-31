@@ -23,7 +23,7 @@ import {
   TWalletInfos,
   convertedTimeZone,
   updateCurrentAmount,
-} from '@/service/request'
+} from '@/services/request'
 import { useUserStore } from '@/store/user'
 import { formatDate } from '@/utils'
 import ExchangeInfoModal from '@/components/custom/modal/clients-info-modal'
@@ -38,7 +38,7 @@ import {
 import ConfirmContactModal from '@/components/custom/confirm-contact-modal'
 import { useSignalStore } from '@/store/signalEffect'
 
-export default function Infos() {
+export function Infos() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isModalExchangeOpen, setIsModalExchangeOpen] = useState(false)
   const [isModalContactOpen, setisModalContactOpen] = useState(false)

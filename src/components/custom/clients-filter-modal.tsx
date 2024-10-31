@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/select'
 import responsibleIcon from '../../assets/image/responsible-icon.png'
 import { useUserStore } from '@/store/user'
-import { getAllManagersOnOrganization } from '@/service/request'
+import { getAllManagersOnOrganization } from '@/services/request'
 
 interface ClientsFilterModalProps {
   isOpen: boolean

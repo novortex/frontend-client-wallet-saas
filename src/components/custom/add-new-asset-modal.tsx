@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '../ui/input'
 import * as React from 'react'
-import { addCryptoOrg } from '@/service/request'
+import { addCryptoOrg } from '@/services/request'
 import { useUserStore } from '@/store/user'
 import { useToast } from '../ui/use-toast'
 import { useSignalStore } from '@/store/signalEffect'
