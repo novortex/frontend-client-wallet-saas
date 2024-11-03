@@ -116,7 +116,8 @@
         "collectCoverage": true,
         "moduleNameMapper": {
             "^@/(.*)$": "<rootDir>/src/$1",
-            "^@/assets/images/.*\\.(gif|ttf|eot|svg|png)$": "jest-transform-stub"
+            "^@/assets/images/.*\\.(gif|ttf|eot|svg|png)$": "jest-transform-stub",
+            "\\.(css|less)$": "identity-obj-proxy"
         },
         "transformIgnorePatterns": [
             "/node_modules/(?!(axios)/)"
