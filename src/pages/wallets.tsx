@@ -1,5 +1,5 @@
 import CardClient from '@/components/custom/card-client'
-import {SwitchTheme} from '@/components/custom/switch-theme'
+import { SwitchTheme } from '@/components/custom/switch-theme'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import filterIcon from '../assets/image/filter-lines.png'

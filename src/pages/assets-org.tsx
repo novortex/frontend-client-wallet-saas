@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import {SwitchTheme} from '@/components/custom/switch-theme'
+import { SwitchTheme } from '@/components/custom/switch-theme'
 import { DataTableAssetOrg } from '@/components/custom/tables/assets-org/data-table'
 import {
   AssetOrgs,
