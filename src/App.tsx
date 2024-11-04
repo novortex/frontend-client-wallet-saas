@@ -1,5 +1,6 @@
 import './index.css'
 import { Route, Routes, useLocation } from 'react-router-dom'
+import { Wallet } from '@/pages/wallet/index'
 import { Graphs } from '@/pages/graphs'
 import { History } from '@/pages/history'
 import { Clients } from '@/pages/wallets'
@@ -9,7 +10,6 @@ import { AssetsOrg } from '@/pages/assets-org'
 import { Login } from '@/pages/login'
 import { ErrorPage } from '@/pages/404'
 import Root from './pages/outlet'
-import { Wallet } from './pages/wallet'
 
 export function App() {
   // to-do: remove this in future for use the real logic for side bar and auth

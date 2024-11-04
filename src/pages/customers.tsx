@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import SwitchTheme from '@/components/custom/switch-theme'
+import { SwitchTheme } from '@/components/custom/switch-theme'
 import {
   getAllBenchmark,
   getAllCustomersOrganization,

@@ -1,4 +1,4 @@
-import SwitchTheme from '@/components/custom/switch-theme'
+import { SwitchTheme } from '@/components/custom/switch-theme'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
@@ -16,14 +16,7 @@ import responsibleIcon from '../assets/image/responsible-icon.png'
 import ClientsInfoModal from '@/components/custom/clients-info-modal'
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import {
-  getInfosCustomer,
-  TWallet,
-  TWalletCommission,
-  TWalletInfos,
-  convertedTimeZone,
-  updateCurrentAmount,
-} from '@/services/request'
+import { getInfosCustomer, convertedTimeZone } from '@/services/request'
 import { useUserStore } from '@/store/user'
 import { formatDate } from '@/utils'
 import ExchangeInfoModal from '@/components/custom/modal/clients-info-modal'
@@ -37,6 +30,8 @@ import {
 } from '@/components/ui/breadcrumb'
 import ConfirmContactModal from '@/components/custom/confirm-contact-modal'
 import { useSignalStore } from '@/store/signalEffect'
+import { TWallet, TWalletCommission, TWalletInfos } from '@/types/wallet.type'
+import { updateCurrentAmount } from '@/services/walletService'
 
 export function Infos() {
   const [isModalOpen, setIsModalOpen] = useState(false)

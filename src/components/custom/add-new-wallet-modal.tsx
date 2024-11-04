@@ -19,14 +19,14 @@ import {
 import { useState, useEffect } from 'react'
 
 import { useToast } from '../ui/use-toast'
-import {
-  addCryptoWalletClient,
-  AssetsOrganizationForSelectedResponse,
-  getAllAssetsInOrgForAddWalletClient,
-} from '@/services/request'
 import { useUserStore } from '@/store/user'
 import { useSignalStore } from '@/store/signalEffect'
 import { Label } from '../ui/label'
+import { AssetsOrganizationForSelectedResponse } from '@/types/asset.type'
+import {
+  addCryptoWalletClient,
+  getAllAssetsInOrgForAddWalletClient,
+} from '@/services/assetsService'
 
 interface AddNewWalletModalProps {
   isOpen: boolean
@@ -34,7 +34,7 @@ interface AddNewWalletModalProps {
   walletUuid: string
 }
 
-export default function AddNewWalletModal({
+export function AddNewWalletModal({
   isOpen,
   onClose,
   walletUuid,

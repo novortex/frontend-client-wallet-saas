@@ -24,7 +24,7 @@ import { Input } from '@/components/ui/input'
 import filterIcon from '../../../../assets/icons/filter.svg'
 import exportIcon from '../../../../assets/icons/export.svg'
 
-import AddNewWalletModal from '../../add-new-wallet-modal'
+import { AddNewWalletModal } from '../../add-new-wallet-modal'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]

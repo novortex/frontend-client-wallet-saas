@@ -1,13 +1,11 @@
-import SwitchTheme from '@/components/custom/switch-theme'
+import { SwitchTheme } from '@/components/custom/switch-theme'
 import { Input } from '@/components/ui/input'
 import { CardDashboard } from '@/components/custom/card-dashboard'
 import WalletGraph from '@/components/custom/graph-wallet'
 import {
   getAllAssetsWalletClient,
-  getGraphData,
-  TWalletAssetsInfo,
   updateCurrentAmount,
-} from '@/services/request'
+} from '@/services/walletService'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useUserStore } from '@/store/user'
@@ -23,6 +21,8 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
+import { TWalletAssetsInfo } from '@/types/wallet.type'
+import { getGraphData } from '@/services/request'
 
 interface graphDataEntry {
   cuid: string
