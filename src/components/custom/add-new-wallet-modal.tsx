@@ -121,7 +121,7 @@ export function AddNewWalletModal({
     }
 
     // Validate Entry Value
-    if (!/^\d+(\.\d{0,30})?$/.test(entryValue) || parseFloat(entryValue) <= 0) {
+    if (!/^\d+(\.\d{0,30})?$/.test(entryValue) || parseFloat(entryValue) < 0) {
       errorsCopy.entryValue = 'Asset value must be a positive number.'
       isValid = false
     } else {
