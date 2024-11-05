@@ -415,6 +415,7 @@ export async function updateWallet(
     emailExchange: string
     emailPassword: string
     accountPassword: string
+    performanceFee: number
   },
 ) {
   try {

@@ -25,6 +25,7 @@ export type CustomersOrganization = {
     managerUuid: string
     managerName: string
   } | null
+  performanceFee: number | null
   initialFeePaid: boolean | null
   contract: string | null
 }

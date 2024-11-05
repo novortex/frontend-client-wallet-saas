@@ -59,6 +59,7 @@ export function Customers() {
           emailPassword: item.emailPassword,
           exchangePassword: item.exchangePassword,
           manager: item.manager,
+          performanceFee: item.performanceFee,
           initialFeePaid: item.initialFeePaid,
           contract: item.contract,
         }))
