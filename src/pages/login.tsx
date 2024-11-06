@@ -3,6 +3,7 @@ import { useRef, useState } from 'react'
 import { useLogin } from '@/hooks/useLogin'
 import { LogoSection, WelcomeMessage } from '@/components/custom/WelcomeMessage'
 import { LoginForm } from '@/components/custom/forms/LoginForm'
+import { toast } from '@/components/ui/use-toast'
 
 export function Login() {
   const navigate = useNavigate()
@@ -27,12 +28,22 @@ export function Login() {
     try {
       const { success } = await handleLogin(email, password)
       if (success) {
+        toast({
+          className: 'bg-green-500 border-0',
+          title: 'Login successful ',
+          description: 'Demo Vault !!',
+        })
         navigate('/wallets')
       } else {
         console.error('Login falhou')
       }
     } catch (error) {
       console.error('Erro ao tentar logar:', error)
+      toast({
+        className: 'bg-red-500 border-0 text-white',
+        title: `Failed to login`,
+        description: 'Verifique suas credenciais e tente novamente.',
+      })
     } finally {
       setIsLoading(false)
     }
