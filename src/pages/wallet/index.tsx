@@ -57,6 +57,7 @@ export function Wallet() {
         closeModalState={infosWallet.isClosed}
         isModalRebalance={isModalRebalance}
         openOrCloseModalRebalanced={openOrCloseModalRebalanced}
+        fetchData={fetchData}
       />
       <OperationsModal
         isOpen={isOperationModalOpen}
