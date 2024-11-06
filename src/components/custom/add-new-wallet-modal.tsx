@@ -32,12 +32,14 @@ interface AddNewWalletModalProps {
   isOpen: boolean
   onClose: () => void
   walletUuid: string
+  fetchData: () => Promise<void>
 }
 
 export function AddNewWalletModal({
   isOpen,
   onClose,
   walletUuid,
+  fetchData,
 }: AddNewWalletModalProps) {
   const [selectedAsset, setSelectedAsset] = useState('')
   const [entryValue, setEntryValue] = useState('')
@@ -100,6 +102,8 @@ export function AddNewWalletModal({
     } else {
       setSignal(false)
     }
+
+    fetchData()
 
     return toast({
       className: 'bg-green-500 border-0',
