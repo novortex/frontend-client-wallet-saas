@@ -3,6 +3,7 @@ import {
   getAllAssetsWalletClient,
   updateCurrentAmount,
   getWalletHistoric, // Importar a função que queremos testar
+  calculateRebalanceInWallet,
 } from '@/services/walletService'
 import {
   mockResponse,
@@ -112,5 +113,40 @@ describe('walletService', () => {
         headers: { 'x-organization': organizationUuid },
       })
     })
+  })
+
+  it('Given that the API request to calculate rebalance is successful, When calculateRebalanceInWallet is called with valid wallet UUID and data, Then it should return the expected result data.', async () => {
+    // Arrange
+    const mockData = { minAmount: 100, minPercentage: 10 }
+    const mockResponse = { data: { rebalance: 'calculated' } }
+
+    ;(instance.get as jest.Mock).mockResolvedValue(mockResponse)
+
+    // Act
+    const result = await calculateRebalanceInWallet(walletUuid, mockData)
+
+    // Assert
+    expect(result).toEqual(mockResponse.data)
+    expect(instance.get).toHaveBeenCalledWith(
+      `${walletUuid}/rebalanceWallet`,
+      { data: mockData }, // ensure query parameters are passed correctly
+    )
+  })
+
+  it('Given that the API request to calculate rebalance fails, When calculateRebalanceInWallet is called, Then it should throw an error.', async () => {
+    // Arrange
+    const mockData = { minAmount: 100, minPercentage: 10 }
+    const errorMessage = 'Network Error'
+
+    ;(instance.get as jest.Mock).mockRejectedValue(new Error(errorMessage))
+
+    // Act & Assert
+    await expect(
+      calculateRebalanceInWallet(walletUuid, mockData),
+    ).rejects.toThrow(errorMessage)
+    expect(instance.get).toHaveBeenCalledWith(
+      `${walletUuid}/rebalanceWallet`,
+      { data: mockData }, // ensure query parameters are passed correctly
+    )
   })
 })

@@ -57,4 +57,22 @@ async function getWalletHistoric(organizationUuid: string, walletUuid: string) {
   }
 }
 
-export { getAllAssetsWalletClient, updateCurrentAmount, getWalletHistoric }
+async function calculateRebalanceInWallet(
+  walletUuid: string,
+  data: { minAmount: number; minPercentage: number },
+) {
+  try {
+    const result = await instance.get(`${walletUuid}/rebalanceWallet`, { data })
+    return result.data
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+
+export {
+  getAllAssetsWalletClient,
+  updateCurrentAmount,
+  getWalletHistoric,
+  calculateRebalanceInWallet,
+}

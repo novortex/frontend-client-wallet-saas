@@ -25,6 +25,8 @@ import filterIcon from '../../../../assets/icons/filter.svg'
 import exportIcon from '../../../../assets/icons/export.svg'
 
 import { AddNewWalletModal } from '../../add-new-wallet-modal'
+import { Calculator } from 'lucide-react'
+import { RebalanceModal } from '../../rebalanceModal'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -40,6 +42,7 @@ export function DataTable<TData, TValue>({
   fetchData,
 }: DataTableProps<TData, TValue>) {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isOpenRebalanceModal, setIsOpenRebalanceModal] = useState(false)
   const [sorting, setSorting] = useState<SortingState>([
     { id: 'investedAmount', desc: true },
   ])
@@ -71,7 +74,7 @@ export function DataTable<TData, TValue>({
     <div className="rounded-md">
       <div className="bg-[#171717] rounded-t-lg p-5 flex items-center justify-between">
         <h1 className="text-xl text-white w-1/3">Assets wallet</h1>
-        <div className="flex gap-5 w-1/2">
+        <div className="flex gap-5 w-fit">
           <Input
             placeholder="Filter asset name..."
             value={(table.getColumn('asset')?.getFilterValue() as string) ?? ''}
@@ -80,6 +83,13 @@ export function DataTable<TData, TValue>({
             }
             className="bg-gray-800 text-gray-400 border-transparent h-11"
           />
+          <Button
+            onClick={() => setIsOpenRebalanceModal(true)}
+            className="bg-[#F2BE38] hover:bg-[#F2BE38] text-[14px] text-black flex items-center justify-center gap-2 "
+          >
+            <Calculator />
+            calculate rebalance
+          </Button>
           <Button className="bg-white text-black flex gap-2 hover:bg-gray-400 w-1/3 p-5">
             <img src={filterIcon} alt="" /> Filters
           </Button>
@@ -145,6 +155,11 @@ export function DataTable<TData, TValue>({
         onClose={closeModal}
         walletUuid={walletUuid}
         fetchData={fetchData}
+      />
+
+      <RebalanceModal
+        open={isOpenRebalanceModal}
+        onOpenChange={setIsOpenRebalanceModal}
       />
     </div>
   )
