@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import {
   getAllAssetsWalletClient,
   updateCurrentAmount,
@@ -17,36 +17,24 @@ export function useWallet(walletUuid: string) {
   ])
   const { toast } = useToast()
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!walletUuid) {
-        toast({
-          className: 'bg-red-500 border-0 text-white',
-          title: 'Failed get assets organization :(',
-          description: 'Demo Vault !!',
-        })
-        return
+  const fetchData = useCallback(async () => {
+    setLoading(true)
+    try {
+      await updateCurrentAmount(uuidOrganization, walletUuid)
+      const result = await getAllAssetsWalletClient(
+        uuidOrganization,
+        walletUuid,
+      )
+
+      if (!result) {
+        throw new Error('Failed to fetch assets')
       }
 
-      try {
-        await updateCurrentAmount(uuidOrganization, walletUuid)
-        const result = await getAllAssetsWalletClient(
-          uuidOrganization,
-          walletUuid,
-        )
-
-        if (!result) {
-          throw new Error('Failed to fetch assets')
-        }
-
-        setInfosWallet(result.wallet)
-
-        const dataTable: ClientActive[] = result.assets.map((item) => ({
+      setInfosWallet(result.wallet)
+      setData(
+        result.assets.map((item) => ({
           id: item.uuid,
-          asset: {
-            urlImage: item.icon,
-            name: item.name,
-          },
+          asset: { urlImage: item.icon, name: item.name },
           investedAmount: item.investedAmount,
           assetQuantity: item.quantityAsset,
           price: item.price,
@@ -54,22 +42,22 @@ export function useWallet(walletUuid: string) {
           idealAllocation: item.idealAllocation,
           idealAmount: item.idealAmountInMoney,
           buyOrSell: item.buyOrSell,
-        }))
-
-        setData(dataTable)
-      } catch (error) {
-        toast({
-          className: 'bg-red-500 border-0 text-white',
-          title: 'Failed get assets organization :(',
-          description: 'Demo Vault !!',
-        })
-      } finally {
-        setLoading(false)
-      }
+        })),
+      )
+    } catch (error) {
+      toast({
+        className: 'bg-red-500 border-0 text-white',
+        title: 'Failed to get assets organization',
+        description: 'Demo Vault!',
+      })
+    } finally {
+      setLoading(false)
     }
-
-    fetchData()
   }, [toast, uuidOrganization, walletUuid])
 
-  return { data, infosWallet, loading }
+  useEffect(() => {
+    fetchData()
+  }, [fetchData])
+
+  return { data, infosWallet, loading, fetchData }
 }

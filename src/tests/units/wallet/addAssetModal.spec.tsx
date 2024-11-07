@@ -23,6 +23,8 @@ jest.mock('@/services/assetsService', () => ({
 }))
 
 describe('AddNewWalletModal Component', () => {
+  const fetchDataMock = jest.fn()
+
   beforeEach(() => {
     ;(useUserStore as unknown as jest.Mock).mockImplementation(() => [
       { uuidOrganization: 'test-org-id' },
@@ -41,6 +43,7 @@ describe('AddNewWalletModal Component', () => {
         isOpen={true}
         onClose={() => {}}
         walletUuid="test-wallet-id"
+        fetchData={fetchDataMock}
       />,
     )
 
@@ -66,6 +69,7 @@ describe('AddNewWalletModal Component', () => {
         isOpen={true}
         onClose={handleClose}
         walletUuid="test-wallet-id"
+        fetchData={fetchDataMock}
       />,
     )
 
@@ -84,6 +88,7 @@ describe('AddNewWalletModal Component', () => {
         isOpen={true}
         onClose={() => {}}
         walletUuid="test-wallet-id"
+        fetchData={fetchDataMock}
       />,
     )
 

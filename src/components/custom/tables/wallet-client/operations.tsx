@@ -30,11 +30,13 @@ import { useSignalStore } from '@/store/signalEffect'
 interface OperationsModalProps {
   isOpen: boolean
   onClose: () => void
+  fetchData: () => Promise<void>
 }
 
 export default function OperationsModal({
   isOpen,
   onClose,
+  fetchData,
 }: OperationsModalProps) {
   const [operation, setOperation] = useState('')
   const [amount, setAmount] = useState('')
@@ -152,6 +154,8 @@ export default function OperationsModal({
         customDateFormatted,
       )
 
+      fetchData()
+
       toast({
         className: 'bg-green-500 border-0',
         title: 'Operation successful',
@@ -163,7 +167,6 @@ export default function OperationsModal({
       } else {
         setSignal(false)
       }
-
       console.log('Operation successful:', result)
     } catch (error) {
       toast({

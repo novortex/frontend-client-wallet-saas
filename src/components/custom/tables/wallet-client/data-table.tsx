@@ -30,12 +30,14 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
   walletUuid: string
+  fetchData: () => Promise<void>
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   walletUuid,
+  fetchData,
 }: DataTableProps<TData, TValue>) {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [sorting, setSorting] = useState<SortingState>([
@@ -142,6 +144,7 @@ export function DataTable<TData, TValue>({
         isOpen={isModalOpen}
         onClose={closeModal}
         walletUuid={walletUuid}
+        fetchData={fetchData}
       />
     </div>
   )

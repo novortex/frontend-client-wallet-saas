@@ -13,6 +13,8 @@ const mockUseWalletModals = useWalletModals as jest.Mock
 const pagePath = '/wallet/4091e88c-bfa5-4608-8514-212502fb2598/assets'
 
 describe('DataTable Component', () => {
+  const fetchDataMock = jest.fn()
+
   beforeEach(() => {
     jest.clearAllMocks()
   })
@@ -39,7 +41,12 @@ describe('DataTable Component', () => {
     // Act
     render(
       <MemoryRouter initialEntries={[pagePath]}>
-        <DataTable columns={columns} data={data} walletUuid={walletUuid} />
+        <DataTable
+          columns={columns}
+          data={data}
+          walletUuid={walletUuid}
+          fetchData={fetchDataMock}
+        />
       </MemoryRouter>,
     )
 
@@ -74,7 +81,12 @@ describe('DataTable Component', () => {
     // Act
     render(
       <MemoryRouter initialEntries={[pagePath]}>
-        <DataTable columns={columns} data={data} walletUuid={walletUuid} />
+        <DataTable
+          columns={columns}
+          data={data}
+          walletUuid={walletUuid}
+          fetchData={fetchDataMock}
+        />
       </MemoryRouter>,
     )
 
@@ -110,7 +122,12 @@ describe('DataTable Component', () => {
     // Act
     render(
       <MemoryRouter initialEntries={[pagePath]}>
-        <DataTable columns={columns} data={data} walletUuid={walletUuid} />
+        <DataTable
+          columns={columns}
+          data={data}
+          walletUuid={walletUuid}
+          fetchData={fetchDataMock}
+        />
       </MemoryRouter>,
     )
 

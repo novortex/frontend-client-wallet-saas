@@ -11,6 +11,7 @@ interface TriggerSectionInterface {
   closeModalState: boolean
   isModalRebalance: boolean
   openOrCloseModalRebalanced: () => void
+  fetchData: () => Promise<void>
 }
 
 const TriggerSection: React.FC<TriggerSectionInterface> = ({
@@ -21,6 +22,7 @@ const TriggerSection: React.FC<TriggerSectionInterface> = ({
   closeModalState,
   isModalRebalance,
   openOrCloseModalRebalanced,
+  fetchData,
 }) => {
   return (
     <div className="mt-5">
@@ -33,6 +35,7 @@ const TriggerSection: React.FC<TriggerSectionInterface> = ({
       <OperationsModal
         isOpen={isOperationModalOpen}
         onClose={closeOperationModal}
+        fetchData={fetchData}
       />
       <ConfirmCloseWalletModal
         isOpen={isCloseWalletModalOpen}

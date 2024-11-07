@@ -14,7 +14,9 @@ import { Loading } from '@/components/custom/loading'
 
 export function Wallet() {
   const { walletUuid } = useParams()
-  const { data, infosWallet, loading } = useWallet(walletUuid as string)
+  const { data, infosWallet, loading, fetchData } = useWallet(
+    walletUuid as string,
+  )
   const {
     isOperationModalOpen,
     openOperationModal,
@@ -45,6 +47,7 @@ export function Wallet() {
         columns={columns}
         data={data}
         walletUuid={walletUuid as string}
+        fetchData={fetchData}
       />
       <TriggerSection
         isOperationModalOpen={isOperationModalOpen}
@@ -54,10 +57,12 @@ export function Wallet() {
         closeModalState={infosWallet.isClosed}
         isModalRebalance={isModalRebalance}
         openOrCloseModalRebalanced={openOrCloseModalRebalanced}
+        fetchData={fetchData}
       />
       <OperationsModal
         isOpen={isOperationModalOpen}
         onClose={closeOperationModal}
+        fetchData={fetchData}
       />
       <ConfirmCloseWalletModal
         isOpen={isCloseWalletModalOpen}
