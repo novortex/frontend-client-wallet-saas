@@ -1,6 +1,6 @@
 import { instance } from '@/config/api'
 import { WalletDataResponse } from '@/types/response.type'
-import { HistoricEntry } from '@/types/wallet.type'
+import { HistoricEntry, RebalanceReturn } from '@/types/wallet.type'
 
 async function getAllAssetsWalletClient(
   organizationUuid: string,
@@ -59,10 +59,20 @@ async function getWalletHistoric(organizationUuid: string, walletUuid: string) {
 
 async function calculateRebalanceInWallet(
   walletUuid: string,
+  organizationUuid: string,
   data: { minAmount: number; minPercentage: number },
-) {
+): Promise<RebalanceReturn[]> {
   try {
-    const result = await instance.get(`${walletUuid}/rebalanceWallet`, { data })
+    const result = await instance.post<RebalanceReturn[]>(
+      `wallet/${walletUuid}/rebalanceWallet`,
+      data,
+      {
+        headers: { 'x-organization': organizationUuid },
+      },
+    )
+
+    console.log(`data =>`, data)
+    console.log(`result =>`, result)
     return result.data
   } catch (error) {
     console.error(error)

@@ -14,9 +14,8 @@ import { Loading } from '@/components/custom/loading'
 
 export function Wallet() {
   const { walletUuid } = useParams()
-  const { data, infosWallet, loading, fetchData } = useWallet(
-    walletUuid as string,
-  )
+  const { data, infosWallet, loading, fetchData, calculateRebalance } =
+    useWallet(walletUuid as string)
   const {
     isOperationModalOpen,
     openOperationModal,
@@ -48,6 +47,7 @@ export function Wallet() {
         data={data}
         walletUuid={walletUuid as string}
         fetchData={fetchData}
+        calculateRebalance={calculateRebalance}
       />
       <TriggerSection
         isOperationModalOpen={isOperationModalOpen}
