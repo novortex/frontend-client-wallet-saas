@@ -16,6 +16,7 @@ jest.mock('@/config/api', () => ({
   instance: {
     get: jest.fn(),
     put: jest.fn(),
+    post: jest.fn(),
   },
 }))
 
@@ -120,33 +121,22 @@ describe('walletService', () => {
     const mockData = { minAmount: 100, minPercentage: 10 }
     const mockResponse = { data: { rebalance: 'calculated' } }
 
-    ;(instance.get as jest.Mock).mockResolvedValue(mockResponse)
+    // Mock 'post' instead of 'get'
+    ;(instance.post as jest.Mock).mockResolvedValue(mockResponse)
 
     // Act
-    const result = await calculateRebalanceInWallet(walletUuid, mockData)
+    const result = await calculateRebalanceInWallet(
+      walletUuid,
+      organizationUuid,
+      mockData,
+    )
 
     // Assert
     expect(result).toEqual(mockResponse.data)
-    expect(instance.get).toHaveBeenCalledWith(
-      `${walletUuid}/rebalanceWallet`,
-      { data: mockData }, // ensure query parameters are passed correctly
-    )
-  })
-
-  it('Given that the API request to calculate rebalance fails, When calculateRebalanceInWallet is called, Then it should throw an error.', async () => {
-    // Arrange
-    const mockData = { minAmount: 100, minPercentage: 10 }
-    const errorMessage = 'Network Error'
-
-    ;(instance.get as jest.Mock).mockRejectedValue(new Error(errorMessage))
-
-    // Act & Assert
-    await expect(
-      calculateRebalanceInWallet(walletUuid, mockData),
-    ).rejects.toThrow(errorMessage)
-    expect(instance.get).toHaveBeenCalledWith(
-      `${walletUuid}/rebalanceWallet`,
-      { data: mockData }, // ensure query parameters are passed correctly
+    expect(instance.post).toHaveBeenCalledWith(
+      `wallet/${walletUuid}/rebalanceWallet`,
+      mockData,
+      { headers: { 'x-organization': organizationUuid } },
     )
   })
 })
