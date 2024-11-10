@@ -68,10 +68,12 @@ export function Wallet() {
         isOpen={isCloseWalletModalOpen}
         onClose={closeCloseWalletModal}
         startWallet={infosWallet.isClosed}
+        fetchData={fetchData}
       />
       <ConfirmRebalanceModal
         isOpen={isModalRebalance}
         onClose={openOrCloseModalRebalanced}
+        fetchData={fetchData}
       />
     </div>
   )

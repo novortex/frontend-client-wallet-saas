@@ -41,10 +41,16 @@ const TriggerSection: React.FC<TriggerSectionInterface> = ({
         isOpen={isCloseWalletModalOpen}
         onClose={closeCloseWalletModal}
         startWallet={closeModalState}
+        fetchData={function (): Promise<void> {
+          throw new Error('Function not implemented.')
+        }}
       />
       <ConfirmRebalanceModal
         isOpen={isModalRebalance}
         onClose={openOrCloseModalRebalanced}
+        fetchData={function (): Promise<void> {
+          throw new Error('Function not implemented.')
+        }}
       />
     </div>
   )

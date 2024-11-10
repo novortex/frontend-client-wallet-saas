@@ -21,12 +21,14 @@ interface confirmCloseWalletModalProps {
   isOpen: boolean
   onClose: () => void
   startWallet: boolean
+  fetchData: () => Promise<void>
 }
 
 export default function ConfirmCloseWalletModal({
   isOpen,
   onClose,
   startWallet,
+  fetchData,
 }: confirmCloseWalletModalProps) {
   const [inputValue, setInputValue] = useState('')
   const { walletUuid } = useParams()
@@ -60,6 +62,8 @@ export default function ConfirmCloseWalletModal({
     } else {
       setSignal(false)
     }
+
+    fetchData()
 
     onClose()
   }
