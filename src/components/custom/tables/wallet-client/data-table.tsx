@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -47,6 +47,14 @@ export function DataTable<TData, TValue>({
     { id: 'investedAmount', desc: true },
   ])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [idealAllocationSum, setIdealAllocationSum] = useState<number>(0)
+
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    const sum = data.reduce((total, row) => total + row.idealAllocation, 0)
+    setIdealAllocationSum(sum)
+  }, [data])
 
   const openModal = () => {
     setIsModalOpen(true)
@@ -108,13 +116,16 @@ export function DataTable<TData, TValue>({
             >
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableHead key={header.id} className="text-white">
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
+                  <TableHead key={header.id} className="text-white ">
+                    {header.isPlaceholder ? null : header.id ===
+                      'idealAllocation' ? (
+                      <>Ideal allocation({idealAllocationSum.toFixed(2)})%</>
+                    ) : (
+                      flexRender(
+                        header.column.columnDef.header,
+                        header.getContext(),
+                      )
+                    )}
                   </TableHead>
                 )
               })}
