@@ -102,3 +102,11 @@ export type HistoricEntry = {
     name: string
   }
 }
+
+export type RebalanceReturn = {
+  action: string
+  amount: string
+  assetIcon: string
+  assetName: string
+  targetAllocation: string
+}

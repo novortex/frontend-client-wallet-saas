@@ -20,17 +20,20 @@ import {
 } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-
 import filterIcon from '../../../../assets/icons/filter.svg'
 import exportIcon from '../../../../assets/icons/export.svg'
-
 import { AddNewWalletModal } from '../../add-new-wallet-modal'
+import { RebalanceModal } from '../../rebalanceModal'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
   walletUuid: string
   fetchData: () => Promise<void>
+  calculateRebalance: (rebalanceData: {
+    minAmount: number
+    minPercentage: number
+  }) => Promise<unknown[]>
 }
 
 export function DataTable<TData, TValue>({
@@ -69,9 +72,9 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="rounded-md">
-      <div className="bg-[#171717] rounded-t-lg p-5 flex items-center justify-between">
+      <div className="bg-[#171717] rounded-t-lg p-5 flex items-center justify-between w-full">
         <h1 className="text-xl text-white w-1/3">Assets wallet</h1>
-        <div className="flex gap-5 w-1/2">
+        <div className="flex gap-5 w-fit">
           <Input
             placeholder="Filter asset name..."
             value={(table.getColumn('asset')?.getFilterValue() as string) ?? ''}
@@ -80,6 +83,8 @@ export function DataTable<TData, TValue>({
             }
             className="bg-gray-800 text-gray-400 border-transparent h-11"
           />
+
+          <RebalanceModal walletUuid={walletUuid} />
           <Button className="bg-white text-black flex gap-2 hover:bg-gray-400 w-1/3 p-5">
             <img src={filterIcon} alt="" /> Filters
           </Button>

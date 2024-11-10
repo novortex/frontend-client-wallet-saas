@@ -15,6 +15,11 @@ const pagePath = '/wallet/4091e88c-bfa5-4608-8514-212502fb2598/assets'
 describe('DataTable Component', () => {
   const fetchDataMock = jest.fn()
 
+  const calculateRebalanceMock = jest.fn().mockResolvedValue([
+    { amount: 100, percentage: 10 },
+    { amount: 200, percentage: 20 },
+  ])
+
   beforeEach(() => {
     jest.clearAllMocks()
   })
@@ -46,6 +51,7 @@ describe('DataTable Component', () => {
           data={data}
           walletUuid={walletUuid}
           fetchData={fetchDataMock}
+          calculateRebalance={calculateRebalanceMock}
         />
       </MemoryRouter>,
     )
@@ -86,6 +92,7 @@ describe('DataTable Component', () => {
           data={data}
           walletUuid={walletUuid}
           fetchData={fetchDataMock}
+          calculateRebalance={calculateRebalanceMock}
         />
       </MemoryRouter>,
     )
@@ -127,6 +134,7 @@ describe('DataTable Component', () => {
           data={data}
           walletUuid={walletUuid}
           fetchData={fetchDataMock}
+          calculateRebalance={calculateRebalanceMock}
         />
       </MemoryRouter>,
     )

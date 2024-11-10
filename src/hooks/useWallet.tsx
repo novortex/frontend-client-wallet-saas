@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from 'react'
 import {
+  calculateRebalanceInWallet,
   getAllAssetsWalletClient,
   updateCurrentAmount,
 } from '@/services/walletService'
@@ -55,9 +56,38 @@ export function useWallet(walletUuid: string) {
     }
   }, [toast, uuidOrganization, walletUuid])
 
+  const calculateRebalance = useCallback(
+    async (rebalanceData: { minAmount: number; minPercentage: number }) => {
+      try {
+        const result = await calculateRebalanceInWallet(
+          walletUuid,
+          uuidOrganization,
+          rebalanceData,
+        )
+
+        toast({
+          className: 'bg-green-500 border-0 text-white',
+          title: 'Rebalance Successful',
+          description: 'Wallet has been rebalanced successfully!',
+        })
+
+        return result
+      } catch (error) {
+        toast({
+          className: 'bg-red-500 border-0 text-white',
+          title: 'Failed to rebalance wallet',
+          description:
+            'An error occurred during rebalancing. Please try again.',
+        })
+        throw error
+      }
+    },
+    [toast, walletUuid],
+  )
+
   useEffect(() => {
     fetchData()
   }, [fetchData])
 
-  return { data, infosWallet, loading, fetchData }
+  return { data, infosWallet, loading, fetchData, calculateRebalance }
 }
