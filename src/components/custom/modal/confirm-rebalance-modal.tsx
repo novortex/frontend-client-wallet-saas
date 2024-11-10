@@ -15,11 +15,13 @@ import { useSignalStore } from '@/store/signalEffect'
 interface ConfirmContactModalProps {
   isOpen: boolean
   onClose: () => void
+  fetchData: () => Promise<void>
 }
 
 export default function ConfirmRebalanceModal({
   isOpen,
   onClose,
+  fetchData,
 }: ConfirmContactModalProps) {
   const { walletUuid } = useParams()
   const uuidOrganization = useUserStore((state) => state.user.uuidOrganization)
@@ -39,6 +41,7 @@ export default function ConfirmRebalanceModal({
           setSignal(false)
         }
 
+        fetchData()
         onClose()
       }
     } catch (error) {
