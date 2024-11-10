@@ -1,5 +1,6 @@
 import './index.css'
-import { Route, Routes, useLocation } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
+import { useState, useEffect } from 'react'
 import { Wallet } from '@/pages/wallet/index'
 import { Graphs } from '@/pages/graphs'
 import { History } from '@/pages/history'
@@ -9,19 +10,28 @@ import { Customers } from '@/pages/customers'
 import { AssetsOrg } from '@/pages/assets-org'
 import { Login } from '@/pages/login'
 import { ErrorPage } from '@/pages/404'
-import Root from './pages/outlet'
+import { AdviceToTeam } from './pages/AdviceToTeam'
 
 export function App() {
-  // to-do: remove this in future for use the real logic for side bar and auth
-  const location = useLocation()
-  const isLoginRoute = location.pathname === '/'
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768)
+    }
+
+    handleResize()
+
+    window.addEventListener('resize', handleResize)
+
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   return (
     <Routes>
-      <Route path="/" element={<Login />} />
-
-      {!isLoginRoute && (
-        <Route element={<Root />}>
+      {!isMobile && (
+        <>
+          <Route path="/" element={<Login />} />
           <Route path="/wallet/:walletUuid/assets" element={<Wallet />} />
           <Route path="/wallets" element={<Clients />} />
           <Route path="/customers" element={<Customers />} />
@@ -30,8 +40,10 @@ export function App() {
           <Route path="/wallet/:walletUuid/graphs" element={<Graphs />} />
           <Route path="/wallet/:walletUuid/history" element={<History />} />
           <Route path="*" element={<ErrorPage />} />
-        </Route>
+        </>
       )}
+
+      {isMobile && <Route path="/" element={<AdviceToTeam />} />}
     </Routes>
   )
 }
