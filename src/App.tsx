@@ -1,5 +1,5 @@
 import './index.css'
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, useLocation } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { Wallet } from '@/pages/wallet/index'
 import { Graphs } from '@/pages/graphs'
@@ -11,9 +11,12 @@ import { AssetsOrg } from '@/pages/assets-org'
 import { Login } from '@/pages/login'
 import { ErrorPage } from '@/pages/404'
 import { AdviceToTeam } from './pages/AdviceToTeam'
+import Root from './pages/outlet'
 
 export function App() {
   const [isMobile, setIsMobile] = useState(false)
+  const location = useLocation()
+  const isLoginRoute = location.pathname === '/'
 
   useEffect(() => {
     const handleResize = () => {
@@ -21,7 +24,6 @@ export function App() {
     }
 
     handleResize()
-
     window.addEventListener('resize', handleResize)
 
     return () => window.removeEventListener('resize', handleResize)
@@ -29,21 +31,26 @@ export function App() {
 
   return (
     <Routes>
-      {!isMobile && (
+      {isMobile ? (
+        <Route path="/" element={<AdviceToTeam />} />
+      ) : (
         <>
           <Route path="/" element={<Login />} />
-          <Route path="/wallet/:walletUuid/assets" element={<Wallet />} />
-          <Route path="/wallets" element={<Clients />} />
-          <Route path="/customers" element={<Customers />} />
-          <Route path="/admin/orgs" element={<AssetsOrg />} />
-          <Route path="/clients/:walletUuid/infos" element={<Infos />} />
-          <Route path="/wallet/:walletUuid/graphs" element={<Graphs />} />
-          <Route path="/wallet/:walletUuid/history" element={<History />} />
-          <Route path="*" element={<ErrorPage />} />
+
+          {!isLoginRoute && (
+            <Route element={<Root />}>
+              <Route path="/wallet/:walletUuid/assets" element={<Wallet />} />
+              <Route path="/wallets" element={<Clients />} />
+              <Route path="/customers" element={<Customers />} />
+              <Route path="/admin/orgs" element={<AssetsOrg />} />
+              <Route path="/clients/:walletUuid/infos" element={<Infos />} />
+              <Route path="/wallet/:walletUuid/graphs" element={<Graphs />} />
+              <Route path="/wallet/:walletUuid/history" element={<History />} />
+              <Route path="*" element={<ErrorPage />} />
+            </Route>
+          )}
         </>
       )}
-
-      {isMobile && <Route path="/" element={<AdviceToTeam />} />}
     </Routes>
   )
 }
