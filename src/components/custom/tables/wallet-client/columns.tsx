@@ -23,7 +23,9 @@ export type ClientActive = {
   buyOrSell: number
 }
 
-export const columns: ColumnDef<ClientActive>[] = [
+export const createColumns = (
+  fetchData: () => void,
+): ColumnDef<ClientActive>[] => [
   {
     accessorKey: 'asset',
     header: 'Asset',
@@ -114,6 +116,8 @@ export const columns: ColumnDef<ClientActive>[] = [
   },
   {
     id: 'actions',
-    cell: ({ row }) => <CellActions rowInfos={row.original} />,
+    cell: ({ row }) => (
+      <CellActions rowInfos={row.original} fetchData={fetchData} />
+    ),
   },
 ]

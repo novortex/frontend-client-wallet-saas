@@ -33,7 +33,13 @@ import { useParams } from 'react-router-dom'
 import { useToast } from '@/components/ui/use-toast'
 import { useSignalStore } from '@/store/signalEffect'
 
-export default function CellActions({ rowInfos }: { rowInfos: ClientActive }) {
+export default function CellActions({
+  rowInfos,
+  fetchData,
+}: {
+  rowInfos: ClientActive
+  fetchData: () => void
+}) {
   const newQuantityAssetRef = useRef<HTMLInputElement>(null)
   const newIdealAllocationRef = useRef<HTMLInputElement>(null)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
@@ -116,6 +122,7 @@ export default function CellActions({ rowInfos }: { rowInfos: ClientActive }) {
 
     setSignal(!signal)
 
+    fetchData()
     return toast({
       className: 'bg-green-500 border-0',
       title: 'Success update !!',
