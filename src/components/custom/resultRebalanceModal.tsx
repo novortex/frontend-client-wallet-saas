@@ -55,11 +55,7 @@ export function ResultRebalanceModal({
                     />
 
                     <p className="text-[#8BF067] text-[11px] w-fit">
-                      +
-                      {Math.round(
-                        Number(result.amount) * Number(result.targetAllocation),
-                      )}{' '}
-                      USD
+                      +{Math.round(Number(result.amount))} USD
                     </p>
 
                     <p className="text-[#8BF067] text-[11px]">
@@ -88,7 +84,11 @@ export function ResultRebalanceModal({
                     <p className="text-white text-[14px] w-fit">
                       {result.assetName}
                     </p>
-                    {Math.round(Number(result.amount))} USD
+                    <p className="text-[#FF6666] text-[11px] w-fit">
+                      {' '}
+                      {Math.round(Number(result.amount))} USD
+                    </p>
+
                     <p className="text-[#FF6666] text-[11px]">
                       {/* Target: {result.targetAllocation * 100}% */}
                     </p>
