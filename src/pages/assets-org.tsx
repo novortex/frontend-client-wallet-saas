@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react'
-import SwitchTheme from '@/components/custom/switch-theme'
+import { SwitchTheme } from '@/components/custom/switch-theme'
 import { DataTableAssetOrg } from '@/components/custom/tables/assets-org/data-table'
 import {
   AssetOrgs,
   columnsAssetOrg,
 } from '@/components/custom/tables/assets-org/columns'
-import { getAllAssetsOrg } from '@/service/request'
+import { getAllAssetsOrg } from '@/services/request'
 import { useUserStore } from '@/store/user'
 import { useSignalStore } from '@/store/signalEffect'
 import { useToast } from '@/components/ui/use-toast'
 
-export default function AssetsOrg() {
+export function AssetsOrg() {
   const [data, setData] = useState<AssetOrgs[]>([])
   const [loading, setLoading] = useState(true)
   const [uuidOrganization] = useUserStore((state) => [

@@ -9,7 +9,7 @@ import {
 import { Input } from '../ui/input'
 import * as React from 'react'
 // import RelateClientModal from './relate-client-modal'
-import { registerNewCustomer } from '@/service/request'
+import { registerNewCustomer } from '@/services/request'
 import { useUserStore } from '@/store/user'
 import { AlertCircle } from 'lucide-react'
 import { useSignalStore } from '@/store/signalEffect'

@@ -9,7 +9,7 @@ export type TUser = {
   uuidOrganization: string
 }
 
-type UserStore = {
+export type UserStore = {
   user: TUser
   setUser: (user: TUser) => void
   cleanUser: () => void

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -20,28 +20,41 @@ import {
 } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-
 import filterIcon from '../../../../assets/icons/filter.svg'
 import exportIcon from '../../../../assets/icons/export.svg'
-
-import AddNewWalletModal from '../../add-new-wallet-modal'
+import { AddNewWalletModal } from '../../add-new-wallet-modal'
+import { RebalanceModal } from '../../rebalanceModal'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
   walletUuid: string
+  fetchData: () => Promise<void>
+  calculateRebalance: (rebalanceData: {
+    minAmount: number
+    minPercentage: number
+  }) => Promise<unknown[]>
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   walletUuid,
+  fetchData,
 }: DataTableProps<TData, TValue>) {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [sorting, setSorting] = useState<SortingState>([
     { id: 'investedAmount', desc: true },
   ])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [idealAllocationSum, setIdealAllocationSum] = useState<number>(0)
+
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    const sum = data.reduce((total, row) => total + row.idealAllocation, 0)
+    setIdealAllocationSum(sum)
+  }, [data])
 
   const openModal = () => {
     setIsModalOpen(true)
@@ -67,9 +80,9 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="rounded-md">
-      <div className="bg-[#171717] rounded-t-lg p-5 flex items-center justify-between">
+      <div className="bg-[#171717] rounded-t-lg p-5 flex items-center justify-between w-full">
         <h1 className="text-xl text-white w-1/3">Assets wallet</h1>
-        <div className="flex gap-5 w-1/2">
+        <div className="flex gap-5 w-fit">
           <Input
             placeholder="Filter asset name..."
             value={(table.getColumn('asset')?.getFilterValue() as string) ?? ''}
@@ -78,6 +91,8 @@ export function DataTable<TData, TValue>({
             }
             className="bg-gray-800 text-gray-400 border-transparent h-11"
           />
+
+          <RebalanceModal walletUuid={walletUuid} />
           <Button className="bg-white text-black flex gap-2 hover:bg-gray-400 w-1/3 p-5">
             <img src={filterIcon} alt="" /> Filters
           </Button>
@@ -101,13 +116,16 @@ export function DataTable<TData, TValue>({
             >
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableHead key={header.id} className="text-white">
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
+                  <TableHead key={header.id} className="text-white ">
+                    {header.isPlaceholder ? null : header.id ===
+                      'idealAllocation' ? (
+                      <>Ideal allocation({idealAllocationSum.toFixed(2)})%</>
+                    ) : (
+                      flexRender(
+                        header.column.columnDef.header,
+                        header.getContext(),
+                      )
+                    )}
                   </TableHead>
                 )
               })}
@@ -142,6 +160,7 @@ export function DataTable<TData, TValue>({
         isOpen={isModalOpen}
         onClose={closeModal}
         walletUuid={walletUuid}
+        fetchData={fetchData}
       />
     </div>
   )

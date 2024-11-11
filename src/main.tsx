@@ -1,62 +1,17 @@
-import React from 'react'
 import ReactDOM from 'react-dom/client'
-import './index.css'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import ErrorPage from './pages/404.tsx'
-import Root from './pages/outlet.tsx'
-import Wallet from './pages/wallet.tsx'
-import Login from './pages/login.tsx'
-import Clients from './pages/wallets.tsx'
-import AssetsOrg from './pages/assets-org.tsx'
-import Infos from './pages/infos.tsx'
-import Graphs from './pages/graphs.tsx'
-import History from './pages/history.tsx'
-import { Customers } from './pages/customers.tsx'
+import { App } from './App'
+import { BrowserRouter } from 'react-router-dom'
+import { Toaster } from './components/ui/toaster'
 
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <Root />,
-    errorElement: <ErrorPage />,
-    children: [
-      {
-        path: '/',
-        element: <Login />,
-      },
-      {
-        path: '/wallet/:walletUuid/assets',
-        element: <Wallet />,
-      },
-      {
-        path: '/wallets',
-        element: <Clients />,
-      },
-      {
-        path: '/customers',
-        element: <Customers />,
-      },
-      {
-        path: '/admin/orgs',
-        element: <AssetsOrg />,
-      },
-      {
-        path: '/clients/:walletUuid/infos',
-        element: <Infos />,
-      },
-      {
-        path: '/wallet/:walletUuid/graphs',
-        element: <Graphs />,
-      },
-      {
-        path: 'wallet/:walletUuid/history',
-        element: <History />,
-      },
-    ],
-  },
-])
+const rootElement = document.getElementById('root')
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>,
-)
+if (rootElement) {
+  ReactDOM.createRoot(rootElement).render(
+    <BrowserRouter>
+      <App />
+      <Toaster />
+    </BrowserRouter>,
+  )
+} else {
+  console.error("Root element with id 'root' not found")
+}

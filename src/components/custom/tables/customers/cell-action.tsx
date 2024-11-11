@@ -36,7 +36,7 @@ import {
 } from '@/components/ui/select'
 import { useManagerOrganization } from '@/store/managers_benckmark_exchanges'
 import { Checkbox } from '@/components/ui/checkbox'
-import { updateCustomer, updateWallet } from '@/service/request'
+import { updateCustomer, updateWallet } from '@/services/request'
 import { useUserStore } from '@/store/user'
 import { useToast } from '@/components/ui/use-toast'
 import { useSignalStore } from '@/store/signalEffect'
@@ -58,6 +58,12 @@ export default function CellActions({
   const [ExchangeSelected, setExchangeSelected] = useState(
     rowInfos.exchange?.exchangeUuid || '',
   )
+  const [performanceFee, setPerformanceFee] = useState(
+    rowInfos.performanceFee ? String(rowInfos.performanceFee) : '',
+  )
+
+  console.log(rowInfos.performanceFee)
+
   const nameRef = useRef<HTMLInputElement>(null)
   const emailRef = useRef<HTMLInputElement>(null)
   const phoneRef = useRef<HTMLInputElement>(null)
@@ -155,6 +161,7 @@ export default function CellActions({
           exchangeUuid: ExchangeSelected,
           initialFeeIsPaid: initialFeeIsPaid ?? false,
           manager,
+          performanceFee: parseFloat(String(performanceFee)),
         },
       )
 
@@ -402,6 +409,21 @@ export default function CellActions({
                         </Select>
                       </div>
 
+                      <div>
+                        <Label className="ml-2" htmlFor="performanceFee">
+                          Performance Fee
+                        </Label>
+                        <Input
+                          className="bg-[#131313] border-[#323232] text-white"
+                          type="text"
+                          id="performanceFee"
+                          value={String(performanceFee)}
+                          onChange={(e) => setPerformanceFee(e.target.value)}
+                          placeholder="Enter performance fee"
+                          required
+                        />
+                      </div>
+
                       <div className="w-full mt-4">
                         <div className="mb-3 flex gap-3">
                           <Checkbox
@@ -458,6 +480,7 @@ export default function CellActions({
             </DialogContent>
           </Dialog>
 
+          {/* botão para cadastrar wallet */}
           {rowInfos.isWallet === false ? (
             <Dialog>
               <DialogTrigger asChild>
@@ -472,6 +495,7 @@ export default function CellActions({
             </Dialog>
           ) : null}
 
+          {/* botão para desabilitar um usuario, deve ser implementad essa função ainda */}
           <Dialog>
             <DialogTrigger asChild>
               <Button

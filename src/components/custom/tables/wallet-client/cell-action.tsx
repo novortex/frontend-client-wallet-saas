@@ -27,7 +27,7 @@ import { ClientActive } from './columns'
 import {
   deleteAssetWallet,
   updateAssetWalletInformations,
-} from '@/service/request'
+} from '@/services/request'
 import { useUserStore } from '@/store/user'
 import { useParams } from 'react-router-dom'
 import { useToast } from '@/components/ui/use-toast'

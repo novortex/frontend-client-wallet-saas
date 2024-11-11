@@ -1,7 +1,6 @@
 import { SideBar, SideBarItem } from '@/components/custom/sidebar'
 import { UsersIcon, Coins, Wallet2Icon } from 'lucide-react'
 import { Outlet, useLocation } from 'react-router-dom'
-import { Toaster } from '@/components/ui/toaster'
 
 // TODO: colocar a verificação da pagina para não aparecer a navegação no login
 export default function Root() {
@@ -43,7 +42,6 @@ export default function Root() {
       <div className="w-screen" id="detail">
         <Outlet />
       </div>
-      <Toaster />
     </div>
   )
 }

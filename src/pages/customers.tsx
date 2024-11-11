@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
-import SwitchTheme from '@/components/custom/switch-theme'
+import { SwitchTheme } from '@/components/custom/switch-theme'
 import {
   getAllBenchmark,
   getAllCustomersOrganization,
   getAllExchange,
   getAllManagersOnOrganization,
-} from '@/service/request'
+} from '@/services/request'
 import { useUserStore } from '@/store/user'
 import { useSignalStore } from '@/store/signalEffect'
 import { useToast } from '@/components/ui/use-toast'
@@ -59,6 +59,7 @@ export function Customers() {
           emailPassword: item.emailPassword,
           exchangePassword: item.exchangePassword,
           manager: item.manager,
+          performanceFee: item.performanceFee,
           initialFeePaid: item.initialFeePaid,
           contract: item.contract,
         }))

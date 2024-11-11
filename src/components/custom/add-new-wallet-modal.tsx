@@ -19,25 +19,27 @@ import {
 import { useState, useEffect } from 'react'
 
 import { useToast } from '../ui/use-toast'
-import {
-  addCryptoWalletClient,
-  AssetsOrganizationForSelectedResponse,
-  getAllAssetsInOrgForAddWalletClient,
-} from '@/service/request'
 import { useUserStore } from '@/store/user'
 import { useSignalStore } from '@/store/signalEffect'
 import { Label } from '../ui/label'
+import { AssetsOrganizationForSelectedResponse } from '@/types/asset.type'
+import {
+  addCryptoWalletClient,
+  getAllAssetsInOrgForAddWalletClient,
+} from '@/services/assetsService'
 
 interface AddNewWalletModalProps {
   isOpen: boolean
   onClose: () => void
   walletUuid: string
+  fetchData: () => Promise<void>
 }
 
-export default function AddNewWalletModal({
+export function AddNewWalletModal({
   isOpen,
   onClose,
   walletUuid,
+  fetchData,
 }: AddNewWalletModalProps) {
   const [selectedAsset, setSelectedAsset] = useState('')
   const [entryValue, setEntryValue] = useState('')
@@ -101,6 +103,8 @@ export default function AddNewWalletModal({
       setSignal(false)
     }
 
+    fetchData()
+
     return toast({
       className: 'bg-green-500 border-0',
       title: 'Success !! new Asset in organization',
@@ -121,7 +125,7 @@ export default function AddNewWalletModal({
     }
 
     // Validate Entry Value
-    if (!/^\d+(\.\d{0,30})?$/.test(entryValue) || parseFloat(entryValue) <= 0) {
+    if (!/^\d+(\.\d{0,30})?$/.test(entryValue) || parseFloat(entryValue) < 0) {
       errorsCopy.entryValue = 'Asset value must be a positive number.'
       isValid = false
     } else {
