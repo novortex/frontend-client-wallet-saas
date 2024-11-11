@@ -7,7 +7,7 @@ import { TriggerSection } from './TriggerSection'
 import OperationsModal from '@/components/custom/tables/wallet-client/operations'
 import ConfirmCloseWalletModal from '@/components/custom/confirm-close-wallet-modal'
 import ConfirmRebalanceModal from '@/components/custom/modal/confirm-rebalance-modal'
-import { columns } from '@/components/custom/tables/wallet-client/columns'
+import { createColumns } from '@/components/custom/tables/wallet-client/columns'
 import { useWallet } from '@/hooks/useWallet'
 import { useWalletModals } from '@/hooks/useWalletModals'
 import { Loading } from '@/components/custom/loading'
@@ -43,7 +43,7 @@ export function Wallet() {
       />
       {infosWallet && <WalletInfo {...infosWallet} />}
       <DataTable
-        columns={columns}
+        columns={createColumns(fetchData)}
         data={data}
         walletUuid={walletUuid as string}
         fetchData={fetchData}
