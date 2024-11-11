@@ -202,15 +202,6 @@ export const columnsAssetOrg: ColumnDef<AssetOrgs>[] = [
                 </DialogContent>
               </Dialog>
             </div>
-            {/* <DropdownMenuItem
-              onClick={() => console.log(uuidAssetOrganization.id)}
-              className="flex justify-center gap-3 border-b border-[#D4D7E3]"
-            >
-              <PencilIcon className="w-5" /> Edit fpfkweopk
-            </DropdownMenuItem>
-            <DropdownMenuItem className="flex justify-center gap-3">
-              <EyeOffIcon className="w-5" /> Disable
-            </DropdownMenuItem> */}
           </DropdownMenuContent>
         </DropdownMenu>
       )
