@@ -63,13 +63,20 @@ export default function CardClient({
 }: CardClientProps) {
   const alertColor = getTagAlertColor(alerts)
   const alertTextColor = getTextAlertColor(alerts)
-
   const navigate = useNavigate()
+
   const handleCardClick = () => {
     navigate(`/clients/${walletUuid}/infos`, {
       state: { name, email, phone },
     })
   }
+
+  // Check if the current date is after nextRebalancing
+  const isDelayedRebalancing =
+    nextRebalancing && new Date() > new Date(nextRebalancing)
+
+  console.log(`nextRebalacing =>`, nextRebalancing)
+  console.log(`today =>`, new Date())
 
   return (
     <Card
@@ -99,11 +106,18 @@ export default function CardClient({
             <img src={responsibleIcon} alt="" />
             <p>{responsible}</p>
           </div>
-          <div className="h-full w-1/2 flex items-center justify-end">
-            <div
-              className={`${alertColor} w-1/2 h-full flex justify-center items-center rounded-[20px] font-bold`}
-            >
-              <p className={`${alertTextColor}`}>{alerts} alerts</p>
+          <div className="flex flex-col w-full">
+            <div className="h-full flex-col p-4 flex items-center justify-end">
+              <div
+                className={`${alertColor} h-full flex flex-col justify-center items-center rounded-[20px] font-bold`}
+              >
+                <p className={`${alertTextColor} text-[12px] p-2`}>
+                  {alerts} alerts
+                </p>
+              </div>
+              {isDelayedRebalancing && (
+                <p className="text-red-600 text-[12px]">delayed rebalancing</p>
+              )}
             </div>
           </div>
         </CardDescription>
