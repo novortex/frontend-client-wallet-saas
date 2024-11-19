@@ -71,12 +71,14 @@ export default function CardClient({
     })
   }
 
+  const parseDate = (dateStr: string) => {
+    const [day, month, year] = dateStr.split('/').map(Number)
+    return new Date(year, month - 1, day)
+  }
+
   // Check if the current date is after nextRebalancing
   const isDelayedRebalancing =
-    nextRebalancing && new Date() > new Date(nextRebalancing)
-
-  console.log(`nextRebalacing =>`, nextRebalancing)
-  console.log(`today =>`, new Date())
+    nextRebalancing && new Date() > parseDate(nextRebalancing)
 
   return (
     <Card
