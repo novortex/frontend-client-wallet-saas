@@ -48,7 +48,6 @@ export function Clients() {
     setSearchTerm(event.target.value)
   }
 
-  // Função para obter gerentes do cache
   const getCachedManagers = () => {
     const cachedManagers = localStorage.getItem('selectedManagers')
     return cachedManagers ? JSON.parse(cachedManagers) : []
@@ -56,7 +55,6 @@ export function Clients() {
 
   const cachedManagers = getCachedManagers()
 
-  // Filtrar clientes com base no termo de pesquisa e gerentes em cache
   const filteredClients = clients.filter((client) => {
     const nameMatches =
       client.infosClient.name
