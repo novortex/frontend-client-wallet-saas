@@ -12,7 +12,7 @@ export function UnbalancedWalletFilter({
       <div className="h-[20%] w-full font-bold text-[#959CB6]">
         Wallet Status
       </div>
-      <div className="h-[80%] w-full">
+      <div className="h-[80%] w-full mt-2">
         <div className="flex items-center gap-2 text-[#fff]">
           <Checkbox
             checked={filterUnbalanced}

@@ -18,6 +18,12 @@ export function ManagerFilter({
   handleSelectManager: (managerName: string) => void
   handleRemoveManager: (managerName: string) => void
 }) {
+  const handleManagerSelection = (managerName: string) => {
+    if (!selectedManagers.includes(managerName)) {
+      handleSelectManager(managerName)
+    }
+  }
+
   return (
     <div className="w-full">
       <div className="h-[20%] w-full font-bold text-[#959CB6]">
@@ -29,7 +35,7 @@ export function ManagerFilter({
             <img src={responsibleIcon} alt="icon" className="w-12" />
           </div>
           <div className="w-full flex items-center justify-start">
-            <Select onValueChange={handleSelectManager}>
+            <Select onValueChange={handleManagerSelection}>
               <SelectTrigger className="w-full bg-[#131313] border-[#323232] text-[#fff]">
                 <SelectValue placeholder="Select managers" />
               </SelectTrigger>
@@ -47,11 +53,11 @@ export function ManagerFilter({
             </Select>
           </div>
         </div>
-        <div className="flex flex-col justify-center items-center gap-2 w-full">
+        <div className="flex flex-wrap justify-start items-start gap-2 w-full">
           {selectedManagers.map((managerName, index) => (
             <div
               key={index}
-              className="h-8 flex items-center bg-[#959CB6] text-white rounded-md px-2"
+              className="h-8 flex justify-start items-center bg-[#959CB6] text-white rounded-md px-2"
             >
               <div
                 className="cursor-pointer mr-2"
