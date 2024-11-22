@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import { Clients } from '@/pages/wallets'
 import { useUserStore } from '@/store/user'
 import { useSignalStore } from '@/store/signalEffect'
