@@ -26,6 +26,24 @@ export function ClientsFilterModal({ onClose }: { onClose: () => void }) {
 
   const uuidOrganization = useUserStore((state) => state.user.uuidOrganization)
 
+  // Recuperar os filtros salvos no localStorage
+  useEffect(() => {
+    const savedManagers = JSON.parse(
+      localStorage.getItem('selectedManagers') || '[]',
+    )
+    const savedFilterUnbalanced = JSON.parse(
+      localStorage.getItem('filterUnbalanced') || 'false',
+    )
+    const savedFilterDelayed = JSON.parse(
+      localStorage.getItem('filterDelayed') || 'false',
+    )
+
+    setSelectedManagers(savedManagers)
+    setFilterUnbalanced(savedFilterUnbalanced)
+    setFilterDelayed(savedFilterDelayed)
+  }, [])
+
+  // Buscar os gerentes da organização
   useEffect(() => {
     const fetchManagers = async () => {
       const result = await getAllManagersOnOrganization(uuidOrganization)
@@ -51,6 +69,7 @@ export function ClientsFilterModal({ onClose }: { onClose: () => void }) {
 
   const handleApplyFilters = () => {
     localStorage.setItem('filterUnbalanced', JSON.stringify(filterUnbalanced))
+    localStorage.setItem('filterDelayed', JSON.stringify(filterDelayed))
     onClose()
   }
 
@@ -65,7 +84,7 @@ export function ClientsFilterModal({ onClose }: { onClose: () => void }) {
           Filters
         </Button>
       </DialogTrigger>
-      <DialogContent className="h-[90%] bg-[#131313] ">
+      <DialogContent className="bg-[#131313] h-fit ">
         <DialogHeader className="text-[#fff]">
           <DialogTitle className="text-2xl text-center ">
             Filter Customer

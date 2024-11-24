@@ -33,7 +33,7 @@ export function OrderByFilter({
   }, [filters, setFilterDelayed])
 
   return (
-    <div className="w-full mb-4">
+    <div className="w-full ">
       <div className="font-bold text-[#959CB6] mb-2">Order By</div>
       <div className="grid grid-cols-2 gap-4 text-[#fff]">
         <div className="flex items-center gap-2">

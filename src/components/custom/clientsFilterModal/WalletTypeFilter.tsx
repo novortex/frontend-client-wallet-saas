@@ -2,8 +2,10 @@ import { Checkbox } from '@/components/ui/checkbox'
 
 export function WalletTypeFilter() {
   return (
-    <div className="w-full">
-      <div className="h-[20%] w-full font-bold text-[#959CB6]">Wallet type</div>
+    <div className="w-full flex flex-col gap-2 ">
+      <div className="h-[20%] w-full font-bold text-[#959CB6] mb-2">
+        Wallet type
+      </div>
       <div className="h-[80%] w-full">
         <div className="h-1/2 w-full flex flex-row">
           <div className="h-full w-1/3 flex justify-start items-center gap-1.5 text-[#fff]">

@@ -25,7 +25,7 @@ export function ManagerFilter({
   }
 
   return (
-    <div className="w-full">
+    <div className="w-full flex flex-col gap-2">
       <div className="h-[20%] w-full font-bold text-[#959CB6]">
         Filter by manager
       </div>
