@@ -1,5 +1,5 @@
 export type TAsset = {
-  cryptoCurrentAmount: string
+  currentAmount: number
   uuid: string
   name: string
   icon: string

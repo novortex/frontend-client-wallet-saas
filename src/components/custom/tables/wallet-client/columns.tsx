@@ -11,7 +11,7 @@ export type ClientActive = {
     urlImage: string
     name: string
   }
-  cryptoCurrentAmount: string
+  currentAmount: number
   assetQuantity: number
   price: number
   allocation: number
@@ -55,7 +55,7 @@ export const createColumns = (
       </Button>
     ),
     cell: ({ row }) => {
-      const cryptoCurrentAmount = Number(row.original.cryptoCurrentAmount)
+      const cryptoCurrentAmount = Number(row.original.currentAmount)
       return !isNaN(cryptoCurrentAmount)
         ? cryptoCurrentAmount.toFixed(2)
         : 'N/A'
