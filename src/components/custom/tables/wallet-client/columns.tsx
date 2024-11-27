@@ -11,7 +11,7 @@ export type ClientActive = {
     urlImage: string
     name: string
   }
-  investedAmount: number
+  cryptoCurrentAmount: string
   assetQuantity: number
   price: number
   allocation: number
@@ -43,7 +43,7 @@ export const createColumns = (
     },
   },
   {
-    accessorKey: 'investedAmount',
+    accessorKey: 'cryptoCurrentAmount',
     header: ({ column }) => (
       <Button
         variant="ghost"
@@ -55,8 +55,10 @@ export const createColumns = (
       </Button>
     ),
     cell: ({ row }) => {
-      const investedAmount = Number(row.original.investedAmount)
-      return !isNaN(investedAmount) ? investedAmount.toFixed(2) : 'N/A'
+      const cryptoCurrentAmount = Number(row.original.cryptoCurrentAmount)
+      return !isNaN(cryptoCurrentAmount)
+        ? cryptoCurrentAmount.toFixed(2)
+        : 'N/A'
     },
     sortingFn: 'basic',
     sortDescFirst: true,

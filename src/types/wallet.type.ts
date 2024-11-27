@@ -41,7 +41,7 @@ export type TWallet = {
 export type TWalletAssetsInfo = {
   startDate: string | Date | null
   investedAmount: number | null
-  currentAmount: number | null
+  cryptoCurrentAmount: number | null
   performanceFee: number | null
   lastRebalance: string | Date | null
   monthCloseDate: string | Date | null
