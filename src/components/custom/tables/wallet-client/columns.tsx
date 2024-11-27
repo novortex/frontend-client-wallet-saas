@@ -43,7 +43,7 @@ export const createColumns = (
     },
   },
   {
-    accessorKey: 'cryptoCurrentAmount',
+    accessorKey: 'currentAmount',
     header: ({ column }) => (
       <Button
         variant="ghost"
@@ -55,10 +55,8 @@ export const createColumns = (
       </Button>
     ),
     cell: ({ row }) => {
-      const cryptoCurrentAmount = Number(row.original.currentAmount)
-      return !isNaN(cryptoCurrentAmount)
-        ? cryptoCurrentAmount.toFixed(2)
-        : 'N/A'
+      const currentAmount = Number(row.original.currentAmount)
+      return !isNaN(currentAmount) ? currentAmount.toFixed(2) : 'N/A'
     },
     sortingFn: 'basic',
     sortDescFirst: true,
