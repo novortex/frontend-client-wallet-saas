@@ -36,7 +36,7 @@ export function useWallet(walletUuid: string) {
         result.assets.map((item) => ({
           id: item.uuid,
           asset: { urlImage: item.icon, name: item.name },
-          investedAmount: item.investedAmount,
+          currentAmount: item.currentAmount,
           assetQuantity: item.quantityAsset,
           price: item.price,
           allocation: item.currentAllocation,
