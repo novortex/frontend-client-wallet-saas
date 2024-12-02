@@ -1,8 +1,8 @@
 export type TAsset = {
+  currentAmount: number
   uuid: string
   name: string
   icon: string
-  investedAmount: number
   quantityAsset: number
   price: number
   currentAllocation: number

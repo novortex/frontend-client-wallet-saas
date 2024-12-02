@@ -78,7 +78,7 @@ export function Graphs() {
             urlImage: item.icon,
             name: item.name,
           },
-          investedAmount: item.investedAmount,
+          currentAmount: item.currentAmount,
           assetQuantity: item.quantityAsset,
           price: item.price,
           allocation: item.currentAllocation,

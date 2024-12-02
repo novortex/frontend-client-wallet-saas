@@ -1,20 +1,17 @@
 'use client'
 
 import { ColumnDef } from '@tanstack/react-table'
-
 import CellActions from './cell-action'
 import { ArrowUpDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
 export type ClientActive = {
   id: string
   asset: {
     urlImage: string
     name: string
   }
-  investedAmount: number
+  currentAmount: number
   assetQuantity: number
   price: number
   allocation: number
@@ -46,22 +43,20 @@ export const createColumns = (
     },
   },
   {
-    accessorKey: 'investedAmount',
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          className="pl-0"
-        >
-          Invested amount
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
+    accessorKey: 'currentAmount',
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        className="pl-0"
+      >
+        Invested amount
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
     cell: ({ row }) => {
-      const investedAmount = Number(row.original.investedAmount)
-      return !isNaN(investedAmount) ? investedAmount.toFixed(2) : 'N/A'
+      const currentAmount = Number(row.original.currentAmount)
+      return !isNaN(currentAmount) ? currentAmount.toFixed(2) : 'N/A'
     },
     sortingFn: 'basic',
     sortDescFirst: true,
@@ -91,12 +86,30 @@ export const createColumns = (
     },
   },
   {
+    id: 'idealAllocation',
     accessorKey: 'idealAllocation',
-    header: 'Ideal allocation',
+    header: ({ column, table }) => {
+      const idealAllocationSum = table
+        .getRowModel()
+        .rows.reduce((total, row) => total + row.original.idealAllocation, 0)
+
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          className="pl-0"
+        >
+          Ideal allocation ({idealAllocationSum.toFixed(2)}%)
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
     cell: ({ row }) => {
       const idealAllocation = Number(row.original.idealAllocation)
       return !isNaN(idealAllocation) ? idealAllocation.toFixed(2) : 'N/A'
     },
+    sortingFn: 'basic',
+    sortDescFirst: true,
   },
   {
     accessorKey: 'idealAmount',
