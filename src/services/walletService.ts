@@ -60,18 +60,17 @@ async function getWalletHistoric(organizationUuid: string, walletUuid: string) {
 async function calculateRebalanceInWallet(
   walletUuid: string,
   organizationUuid: string,
-  data: { minAmount: number; minPercentage: number },
 ): Promise<RebalanceReturn[]> {
   try {
+    console.log(`x-organization`, organizationUuid)
     const result = await instance.post<RebalanceReturn[]>(
       `wallet/${walletUuid}/rebalanceWallet`,
-      data,
+      {},
       {
         headers: { 'x-organization': organizationUuid },
       },
     )
 
-    console.log(`data =>`, data)
     console.log(`result =>`, result)
     return result.data
   } catch (error) {
