@@ -118,7 +118,6 @@ describe('walletService', () => {
 
   it('Given that the API request to calculate rebalance is successful, When calculateRebalanceInWallet is called with valid wallet UUID and data, Then it should return the expected result data.', async () => {
     // Arrange
-    const mockData = { minAmount: 100, minPercentage: 10 }
     const mockResponse = { data: { rebalance: 'calculated' } }
 
     // Mock 'post' instead of 'get'
@@ -128,14 +127,13 @@ describe('walletService', () => {
     const result = await calculateRebalanceInWallet(
       walletUuid,
       organizationUuid,
-      mockData,
     )
 
     // Assert
     expect(result).toEqual(mockResponse.data)
     expect(instance.post).toHaveBeenCalledWith(
       `wallet/${walletUuid}/rebalanceWallet`,
-      mockData,
+      {},
       { headers: { 'x-organization': organizationUuid } },
     )
   })
