@@ -33,17 +33,19 @@ export function useWallet(walletUuid: string) {
 
       setInfosWallet(result.wallet)
       setData(
-        result.assets.map((item) => ({
-          id: item.uuid,
-          asset: { urlImage: item.icon, name: item.name },
-          currentAmount: item.currentAmount,
-          assetQuantity: item.quantityAsset,
-          price: item.price,
-          allocation: item.currentAllocation,
-          idealAllocation: item.idealAllocation,
-          idealAmount: item.idealAmountInMoney,
-          buyOrSell: item.buyOrSell,
-        })),
+        result.assets
+          .map((item) => ({
+            id: item.uuid,
+            asset: { urlImage: item.icon, name: item.name },
+            currentAmount: item.currentAmount,
+            assetQuantity: item.quantityAsset,
+            price: item.price,
+            allocation: item.currentAllocation,
+            idealAllocation: item.idealAllocation,
+            idealAmount: item.idealAmountInMoney,
+            buyOrSell: item.buyOrSell,
+          }))
+          .sort((a, b) => b.currentAmount - a.currentAmount),
       )
     } catch (error) {
       toast({
