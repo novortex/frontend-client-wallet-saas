@@ -7,8 +7,8 @@ import { useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { HistoricEntry } from '@/types/wallet.type'
 import { FilterModal } from './FilterModal'
-import { BreadCrumbHistoryLinks } from './breadCrumbHistoryLinks'
 import { DateRange } from 'react-day-picker'
+import { BreadCrumbHistoryLinks } from '@/pages/history/BreadCrumbHistoryLinks'
 
 export type Filters = {
   eventTypes: string[]
