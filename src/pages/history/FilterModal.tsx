@@ -34,7 +34,7 @@ export function FilterModal({
           <p>Filters</p>
         </Button>
       </DialogTrigger>
-      <DialogContent className="h-[45%] w-[200%] bg-[#131313] text-[#fff] border-transparent">
+      <DialogContent className="h-fit w-[200%] bg-[#131313] text-[#fff] border-transparent">
         <DialogHeader>
           <DialogTitle className="text-3xl text-[#fff]">
             Event Filter
@@ -46,10 +46,6 @@ export function FilterModal({
         </DialogHeader>
         <div className="flex flex-col gap-4 py-4">
           <div className="flex items-center gap-4">
-            <Label htmlFor="type" className="text-right">
-              Type
-            </Label>
-
             <EventTypeSelect
               selectedTypes={currentFilters.eventTypes}
               onChange={(newTypes) =>
@@ -58,15 +54,27 @@ export function FilterModal({
             />
           </div>
           <div className="flex items-center gap-4">
-            <Label htmlFor="calendar" className="text-right">
-              Calendar
-            </Label>
             <DatePickerWithRange
               selectedRange={currentFilters.dateRange}
               onChange={(newRange) =>
                 onApplyFilters({ ...currentFilters, dateRange: newRange })
               }
             />
+          </div>
+
+          <div className="flex items-center gap-4">
+            <Button
+              variant="outline"
+              onClick={() =>
+                onApplyFilters({
+                  eventTypes: [],
+                  dateRange: undefined,
+                })
+              }
+              className="w-fit justify-center text-center font-normal text-black gap-2"
+            >
+              Clean Filters
+            </Button>
           </div>
         </div>
       </DialogContent>

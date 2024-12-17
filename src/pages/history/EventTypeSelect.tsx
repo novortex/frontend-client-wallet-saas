@@ -1,10 +1,5 @@
-import { Button } from '@/components/ui/button'
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Label } from '@/components/ui/label'
 
 const formatEventType = (eventType: string) => {
   return eventType
@@ -42,30 +37,21 @@ export function EventTypeSelect({
     onChange(updatedTypes)
   }
 
-  const buttonText =
-    selectedTypes.length > 0
-      ? selectedTypes.map(formatEventType).join(', ')
-      : 'Select an event type'
-
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="bg-white text-black w-fit">
-          {buttonText}
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="bg-[#131313] border-2 border-[#323232] cursor-pointer">
+    <div className="w-full">
+      <div className="font-bold text-[#959CB6] mb-2">Event Types</div>
+      <div className="grid grid-cols-2 gap-4 text-[#fff]">
         {eventTypes.map((type) => (
-          <DropdownMenuCheckboxItem
-            key={type}
-            checked={selectedTypes.includes(type)}
-            onCheckedChange={() => handleCheckedChange(type)}
-            className="text-white cursor-pointer hover:bg-gray-700"
-          >
-            {formatEventType(type)}
-          </DropdownMenuCheckboxItem>
+          <div key={type} className="flex items-center gap-2">
+            <Checkbox
+              checked={selectedTypes.includes(type)}
+              onCheckedChange={() => handleCheckedChange(type)}
+              className="border-[#fff]"
+            />
+            <Label className="cursor-pointer">{formatEventType(type)}</Label>
+          </div>
         ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
+      </div>
+    </div>
   )
 }
