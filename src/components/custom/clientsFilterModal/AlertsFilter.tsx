@@ -2,20 +2,16 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { useState, useEffect } from 'react'
 
 interface FilterProps {
-  filterDelayed: boolean
   setFilterDelayed: (value: boolean) => void
 }
 
-export function AlertsFilter({ filterDelayed, setFilterDelayed }: FilterProps) {
+export function AlertsFilter({ setFilterDelayed }: FilterProps) {
   const [filters, setFilters] = useState({
     alerts1to2: false,
     alerts2to5: false,
     alerts6to8: false,
     alerts9plus: false,
   })
-
-  // to-do: implement this filter after
-  console.log(`delayed =>`, filterDelayed)
 
   const handleFilterChange = (filterName: string, checked: boolean) => {
     setFilters((prevFilters) => ({

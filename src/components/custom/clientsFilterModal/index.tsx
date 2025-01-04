@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import {
@@ -18,93 +17,86 @@ import { useUserStore } from '@/store/user'
 import { getAllManagersOnOrganization } from '@/services/request'
 import { AlertsFilter } from './AlertsFilter'
 
-export function ClientsFilterModal({ onClose }: { onClose: () => void }) {
+export function ClientsFilterModal({
+  onApplyFilters,
+}: {
+  onApplyFilters: (filters: {
+    selectedManagers: string[]
+    selectedWalletTypes: string[]
+    filterDelayed: boolean
+    filterUnbalanced: boolean
+  }) => void
+}) {
+  const [isOpen, setIsOpen] = useState(false)
   const [selectedManagers, setSelectedManagers] = useState<string[]>([])
+  const [selectedWalletTypes, setSelectedWalletTypes] = useState<string[]>([])
   const [managers, setManagers] = useState<{ name: string }[]>([])
   const [filterDelayed, setFilterDelayed] = useState(false)
   const [filterUnbalanced, setFilterUnbalanced] = useState(false)
 
   const uuidOrganization = useUserStore((state) => state.user.uuidOrganization)
 
-  // Recuperar os filtros salvos no localStorage
-  useEffect(() => {
-    const savedManagers = JSON.parse(
-      localStorage.getItem('selectedManagers') || '[]',
-    )
-    const savedFilterUnbalanced = JSON.parse(
-      localStorage.getItem('filterUnbalanced') || 'false',
-    )
-    const savedFilterDelayed = JSON.parse(
-      localStorage.getItem('filterDelayed') || 'false',
-    )
-
-    setSelectedManagers(savedManagers)
-    setFilterUnbalanced(savedFilterUnbalanced)
-    setFilterDelayed(savedFilterDelayed)
-  }, [])
-
-  // Buscar os gerentes da organização
   useEffect(() => {
     const fetchManagers = async () => {
       const result = await getAllManagersOnOrganization(uuidOrganization)
-      const managersData = result.map((item: any) => ({ name: item.name }))
-      setManagers(managersData)
+      setManagers(result.map((item) => ({ name: item.name })))
     }
     fetchManagers()
   }, [uuidOrganization])
 
-  const handleSelectManager = (managerName: string) => {
-    const updatedManagers = [...selectedManagers, managerName]
-    setSelectedManagers(updatedManagers)
-    localStorage.setItem('selectedManagers', JSON.stringify(updatedManagers))
-  }
-
-  const handleRemoveManager = (managerName: string) => {
-    const updatedManagers = selectedManagers.filter(
-      (name) => name !== managerName,
-    )
-    setSelectedManagers(updatedManagers)
-    localStorage.setItem('selectedManagers', JSON.stringify(updatedManagers))
-  }
-
   const handleApplyFilters = () => {
-    localStorage.setItem('filterUnbalanced', JSON.stringify(filterUnbalanced))
-    localStorage.setItem('filterDelayed', JSON.stringify(filterDelayed))
-    onClose()
+    const filters = {
+      selectedManagers: selectedManagers.length > 0 ? selectedManagers : [],
+      selectedWalletTypes:
+        selectedWalletTypes.length > 0 ? selectedWalletTypes : [],
+      filterDelayed,
+      filterUnbalanced,
+    }
+    onApplyFilters(filters)
+    setIsOpen(false)
   }
+
+  const handleSelectManager = (name: string) =>
+    setSelectedManagers((prev) => [...prev, name])
+
+  const handleRemoveManager = (name: string) =>
+    setSelectedManagers((prev) => prev.filter((manager) => manager !== name))
+
+  const handleSelectWalletType = (type: string) =>
+    setSelectedWalletTypes((prev) => [...prev, type])
+
+  const handleRemoveWalletType = (type: string) =>
+    setSelectedWalletTypes((prev) => prev.filter((t) => t !== type))
 
   return (
-    <Dialog onOpenChange={(isOpen) => !isOpen && onClose()}>
-      <DialogTrigger>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
         <Button
           type="button"
           variant="outline"
           className="gap-2 hover:bg-gray-700"
+          onClick={() => setIsOpen(true)}
         >
           Filters
         </Button>
       </DialogTrigger>
-      <DialogContent className="bg-[#131313] h-fit ">
+      <DialogContent className="bg-[#131313] h-fit">
         <DialogHeader className="text-[#fff]">
-          <DialogTitle className="text-2xl text-center ">
+          <DialogTitle className="text-2xl text-center">
             Filter Customer
           </DialogTitle>
         </DialogHeader>
-        <WalletTypeFilter />
-
-        <OrderByFilter
-          filterDelayed={filterDelayed}
-          setFilterDelayed={setFilterDelayed}
+        <WalletTypeFilter
+          selectedWalletTypes={selectedWalletTypes}
+          handleSelectWalletType={handleSelectWalletType}
+          handleRemoveWalletType={handleRemoveWalletType}
         />
+        <OrderByFilter setFilterDelayed={setFilterDelayed} />
         <UnbalancedWalletFilter
           filterUnbalanced={filterUnbalanced}
           setFilterUnbalanced={setFilterUnbalanced}
         />
-        <AlertsFilter
-          filterDelayed={filterDelayed}
-          setFilterDelayed={setFilterDelayed}
-        />
-
+        <AlertsFilter setFilterDelayed={setFilterDelayed} />
         <ManagerFilter
           managers={managers}
           selectedManagers={selectedManagers}
@@ -112,13 +104,14 @@ export function ClientsFilterModal({ onClose }: { onClose: () => void }) {
           handleRemoveManager={handleRemoveManager}
         />
         <DialogFooter>
+          <Button
+            className="bg-[#1877f2] text-white"
+            onClick={handleApplyFilters}
+          >
+            Apply
+          </Button>
           <DialogClose asChild>
-            <Button
-              className="bg-[#1877F2] w-1/4 hover:bg-blue-600 p-5"
-              onClick={handleApplyFilters}
-            >
-              Apply
-            </Button>
+            <Button variant="outline">Cancel</Button>
           </DialogClose>
         </DialogFooter>
       </DialogContent>

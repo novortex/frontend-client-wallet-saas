@@ -2,23 +2,16 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { useState, useEffect } from 'react'
 
 interface FilterProps {
-  filterDelayed: boolean
   setFilterDelayed: (value: boolean) => void
 }
 
-export function OrderByFilter({
-  filterDelayed,
-  setFilterDelayed,
-}: FilterProps) {
+export function OrderByFilter({ setFilterDelayed }: FilterProps) {
   const [filters, setFilters] = useState({
     newest: false,
     older: false,
     nearestRebalancing: false,
     furtherRebalancing: false,
   })
-
-  // to-do: implement this filter after
-  console.log(`delayed =>`, filterDelayed)
 
   const handleFilterChange = (filterName: string, checked: boolean) => {
     setFilters((prevFilters) => ({

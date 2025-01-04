@@ -24,6 +24,14 @@ export type TClientInfosResponse = {
     phone?: string
   }
   lastBalance: Date | null
+  riskProfile:
+    | 'STANDARD'
+    | 'SUPER_LOW_RISK'
+    | 'LOW_RISK'
+    | 'HIGH_RISK'
+    | 'SUPER_HIGH_RISK'
+
+  exchange: string
   nextBalance: Date | null
 }
 

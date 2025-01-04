@@ -167,7 +167,9 @@ export async function confirmContactClient(
   }
 }
 
-export async function getAllManagersOnOrganization(organizationUuid: string) {
+export async function getAllManagersOnOrganization(
+  organizationUuid: string,
+): Promise<{ name: string; uuid: string }[]> {
   try {
     const result = await instance.get(
       `management/${organizationUuid}/managers`,
