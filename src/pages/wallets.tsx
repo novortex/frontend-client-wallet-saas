@@ -26,6 +26,7 @@ export function Clients() {
     filterOldest: false,
     filterNearestRebalancing: false,
     filterFurtherRebalancing: false,
+    exchanges: [] as string[], // Aqui já temos exchanges no filtro
   })
 
   const fetchClients = useCallback(async () => {
@@ -61,6 +62,7 @@ export function Clients() {
       filterOldest,
       filterNearestRebalancing,
       filterFurtherRebalancing,
+      exchanges, // Aqui vamos considerar o filtro de exchanges
     } = filters
 
     const filtered = clients
@@ -83,12 +85,16 @@ export function Clients() {
               normalizeRiskProfile(type) ===
               normalizeRiskProfile(client.riskProfile),
           )
+        const exchangeMatches =
+          exchanges.length === 0 ||
+          exchanges.some((exchange) => client.exchange.includes(exchange))
 
         return (
           nameMatches &&
           managerMatches &&
           unbalancedMatches &&
-          walletTypeMatches
+          walletTypeMatches &&
+          exchangeMatches
         )
       })
       .sort((a, b) => {

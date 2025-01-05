@@ -16,6 +16,7 @@ import { UnbalancedWalletFilter } from './UnbalanceWalletFilter'
 import { useUserStore } from '@/store/user'
 import { getAllManagersOnOrganization } from '@/services/request'
 import { AlertsFilter } from './AlertsFilter'
+import { ExchangeFilter } from './ExchangeFilter'
 
 type ApplyFiltersProps = {
   handleApplyFilters: (filters: {
@@ -25,13 +26,14 @@ type ApplyFiltersProps = {
     filterUnbalanced: boolean
     filterNewest: boolean
     filterOldest: boolean
+    selectedExchange: string
   }) => void
 }
-
 export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [selectedManagers, setSelectedManagers] = useState<string[]>([])
   const [selectedWalletTypes, setSelectedWalletTypes] = useState<string[]>([])
+  const [selectedExchange, setSelectedExchange] = useState<string>('')
   const [managers, setManagers] = useState<{ name: string }[]>([])
   const [filters, setFilters] = useState({
     filterDelayed: false,
@@ -55,6 +57,7 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
     handleApplyFilters({
       selectedManagers,
       selectedWalletTypes,
+      selectedExchange,
       ...filters,
     })
     setIsOpen(false)
@@ -72,6 +75,10 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
     setSelectedWalletTypes((prev) => [...prev, type])
   const handleRemoveWalletType = (type: string) =>
     setSelectedWalletTypes((prev) => prev.filter((t) => t !== type))
+
+  const handleExchangeChange = (value: string) => {
+    setSelectedExchange(value)
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -125,6 +132,12 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
           selectedManagers={selectedManagers}
           handleSelectManager={handleSelectManager}
           handleRemoveManager={handleRemoveManager}
+        />
+
+        <ExchangeFilter
+          uuidOrganization={uuidOrganization}
+          selectedExchange={selectedExchange}
+          handleExchangeChange={handleExchangeChange}
         />
 
         <DialogFooter>
