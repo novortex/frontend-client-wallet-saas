@@ -17,23 +17,30 @@ import { useUserStore } from '@/store/user'
 import { getAllManagersOnOrganization } from '@/services/request'
 import { AlertsFilter } from './AlertsFilter'
 
-export function ClientsFilterModal({
-  onApplyFilters,
-}: {
-  onApplyFilters: (filters: {
+type ApplyFiltersProps = {
+  handleApplyFilters: (filters: {
     selectedManagers: string[]
     selectedWalletTypes: string[]
     filterDelayed: boolean
     filterUnbalanced: boolean
+    filterNewest: boolean
+    filterOldest: boolean
   }) => void
-}) {
+}
+
+export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [selectedManagers, setSelectedManagers] = useState<string[]>([])
   const [selectedWalletTypes, setSelectedWalletTypes] = useState<string[]>([])
   const [managers, setManagers] = useState<{ name: string }[]>([])
-  const [filterDelayed, setFilterDelayed] = useState(false)
-  const [filterUnbalanced, setFilterUnbalanced] = useState(false)
-
+  const [filters, setFilters] = useState({
+    filterDelayed: false,
+    filterUnbalanced: false,
+    filterNewest: false,
+    filterOldest: false,
+    filterNearestRebalancing: false,
+    filterFurtherRebalancing: false,
+  })
   const uuidOrganization = useUserStore((state) => state.user.uuidOrganization)
 
   useEffect(() => {
@@ -44,27 +51,25 @@ export function ClientsFilterModal({
     fetchManagers()
   }, [uuidOrganization])
 
-  const handleApplyFilters = () => {
-    const filters = {
-      selectedManagers: selectedManagers.length > 0 ? selectedManagers : [],
-      selectedWalletTypes:
-        selectedWalletTypes.length > 0 ? selectedWalletTypes : [],
-      filterDelayed,
-      filterUnbalanced,
-    }
-    onApplyFilters(filters)
+  const applyFilters = () => {
+    handleApplyFilters({
+      selectedManagers,
+      selectedWalletTypes,
+      ...filters,
+    })
     setIsOpen(false)
+  }
+
+  const updateFilter = (filterName: string, value: boolean) => {
+    setFilters((prev) => ({ ...prev, [filterName]: value }))
   }
 
   const handleSelectManager = (name: string) =>
     setSelectedManagers((prev) => [...prev, name])
-
   const handleRemoveManager = (name: string) =>
     setSelectedManagers((prev) => prev.filter((manager) => manager !== name))
-
   const handleSelectWalletType = (type: string) =>
     setSelectedWalletTypes((prev) => [...prev, type])
-
   const handleRemoveWalletType = (type: string) =>
     setSelectedWalletTypes((prev) => prev.filter((t) => t !== type))
 
@@ -86,28 +91,44 @@ export function ClientsFilterModal({
             Filter Customer
           </DialogTitle>
         </DialogHeader>
+
         <WalletTypeFilter
           selectedWalletTypes={selectedWalletTypes}
           handleSelectWalletType={handleSelectWalletType}
           handleRemoveWalletType={handleRemoveWalletType}
         />
-        <OrderByFilter setFilterDelayed={setFilterDelayed} />
-        <UnbalancedWalletFilter
-          filterUnbalanced={filterUnbalanced}
-          setFilterUnbalanced={setFilterUnbalanced}
+
+        <OrderByFilter
+          setFilterNewest={(value) => updateFilter('filterNewest', value)}
+          setFilterOldest={(value) => updateFilter('filterOldest', value)}
+          setFilterNearestRebalancing={(value) =>
+            updateFilter('filterNearestRebalancing', value)
+          }
+          setFilterFurtherRebalancing={(value) =>
+            updateFilter('filterFurtherRebalancing', value)
+          }
         />
-        <AlertsFilter setFilterDelayed={setFilterDelayed} />
+
+        <UnbalancedWalletFilter
+          filterUnbalanced={filters.filterUnbalanced}
+          setFilterUnbalanced={(value) =>
+            updateFilter('filterUnbalanced', value)
+          }
+        />
+
+        <AlertsFilter
+          setFilterDelayed={(value) => updateFilter('filterDelayed', value)}
+        />
+
         <ManagerFilter
           managers={managers}
           selectedManagers={selectedManagers}
           handleSelectManager={handleSelectManager}
           handleRemoveManager={handleRemoveManager}
         />
+
         <DialogFooter>
-          <Button
-            className="bg-[#1877f2] text-white"
-            onClick={handleApplyFilters}
-          >
+          <Button className="bg-[#1877f2] text-white" onClick={applyFilters}>
             Apply
           </Button>
           <DialogClose asChild>
