@@ -1,36 +1,53 @@
 import { Checkbox } from '@/components/ui/checkbox'
 
-export function WalletTypeFilter() {
+interface WalletTypeFilterProps {
+  selectedWalletTypes: string[]
+  handleSelectWalletType: (walletType: string) => void
+  handleRemoveWalletType: (walletType: string) => void
+}
+
+function normalizeOption(value: string) {
+  return value.trim().toLowerCase().replace(/\s+/g, '-')
+}
+
+export function WalletTypeFilter({
+  selectedWalletTypes,
+  handleSelectWalletType,
+  handleRemoveWalletType,
+}: WalletTypeFilterProps) {
+  const options = [
+    'Standard',
+    'Super Low Risk',
+    'Low Risk',
+    'High Risk',
+    'Super High Risk',
+  ]
+
   return (
-    <div className="w-full flex flex-col gap-2 ">
-      <div className="h-[20%] w-full font-bold text-[#959CB6] mb-2">
-        Wallet type
-      </div>
-      <div className="h-[80%] w-full">
-        <div className="h-1/2 w-full flex flex-row">
-          <div className="h-full w-1/3 flex justify-start items-center gap-1.5 text-[#fff]">
-            <Checkbox className="border-[#fff]" />
-            <label>Standard</label>
+    <div className="w-full flex flex-col gap-2">
+      <div className="font-bold text-[#959CB6] mb-2">Wallet Type</div>
+      <div className="w-full flex flex-wrap gap-4">
+        {options.map((option, index) => (
+          <div
+            key={index}
+            className="flex items-center gap-2 text-[#fff]"
+            style={{ flex: '1 0 30%' }}
+          >
+            <Checkbox
+              className="border-[#fff]"
+              onCheckedChange={() => {
+                const normalizedOption = normalizeOption(option)
+                if (selectedWalletTypes.includes(normalizedOption)) {
+                  handleRemoveWalletType(normalizedOption)
+                } else {
+                  handleSelectWalletType(normalizedOption)
+                }
+              }}
+              checked={selectedWalletTypes.includes(normalizeOption(option))}
+            />
+            <label>{option}</label>
           </div>
-          <div className="h-full w-1/3 flex justify-start items-center gap-1.5 text-[#fff]">
-            <Checkbox className="border-[#fff]" />
-            <label>Super Low Risk</label>
-          </div>
-          <div className="h-full w-1/3 flex justify-center items-center gap-1.5 text-[#fff]">
-            <Checkbox className="border-[#fff]" />
-            <label>Low Risk</label>
-          </div>
-        </div>
-        <div className="h-1/2 w-full flex flex-row">
-          <div className="h-full w-1/3 flex justify-start items-center gap-1.5 text-[#fff]">
-            <Checkbox className="border-[#fff]" />
-            <label>High Risk</label>
-          </div>
-          <div className="h-full w-1/3 flex justify-start items-center gap-1.5 text-[#fff]">
-            <Checkbox className="border-[#fff]" />
-            <label>Super High Risk</label>
-          </div>
-        </div>
+        ))}
       </div>
     </div>
   )

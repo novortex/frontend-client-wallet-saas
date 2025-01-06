@@ -1,11 +1,12 @@
 import { Checkbox } from '@/components/ui/checkbox'
+import { CheckedState } from '@radix-ui/react-checkbox'
 
 export function UnbalancedWalletFilter({
   filterUnbalanced,
   setFilterUnbalanced,
 }: {
   filterUnbalanced: boolean
-  setFilterUnbalanced: React.Dispatch<React.SetStateAction<boolean>>
+  setFilterUnbalanced: (checked: boolean) => void
 }) {
   return (
     <div className="w-full ">
@@ -14,7 +15,9 @@ export function UnbalancedWalletFilter({
         <div className="flex items-center gap-2 text-[#fff]">
           <Checkbox
             checked={filterUnbalanced}
-            onCheckedChange={() => setFilterUnbalanced(!filterUnbalanced)}
+            onCheckedChange={(checked: CheckedState) => {
+              setFilterUnbalanced(checked === true)
+            }}
             className="border-[#fff]"
           />
           <label>Show unbalanced wallets</label>

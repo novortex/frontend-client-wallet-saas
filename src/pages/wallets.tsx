@@ -1,14 +1,12 @@
-// @
+import { useState, useEffect, useCallback } from 'react'
 import CardClient from '@/components/custom/card-client'
 import { SwitchTheme } from '@/components/custom/switch-theme'
 import { Input } from '@/components/ui/input'
 import { ClientsFilterModal } from '@/components/custom/clientsFilterModal/index'
-import { useState, useEffect, useCallback } from 'react'
 import { getWalletOrganization } from '@/services/request'
 import { useUserStore } from '@/store/user'
 import { toast } from '@/components/ui/use-toast'
 import { formatDate } from '@/utils'
-import { useSignalStore } from '@/store/signalEffect'
 import { TClientInfosResponse } from '@/types/customer.type'
 
 export function Clients() {
@@ -16,24 +14,22 @@ export function Clients() {
     state.user.uuidOrganization,
   ])
   const [clients, setClients] = useState<TClientInfosResponse[]>([])
+  const [filteredClients, setFilteredClients] = useState<
+    TClientInfosResponse[]
+  >([])
   const [searchTerm, setSearchTerm] = useState('')
-  const [isFilterModalClosed, setIsFilterModalClosed] = useState(false)
-  const [signal] = useSignalStore((state) => [state.signal])
+  const [filters, setFilters] = useState({
+    selectedManagers: [] as string[],
+    selectedWalletTypes: [] as string[],
+    filterUnbalanced: false,
+    filterNewest: false,
+    filterOldest: false,
+    filterNearestRebalancing: false,
+    filterFurtherRebalancing: false,
+    exchanges: [] as string[], // Aqui já temos exchanges no filtro
+  })
 
-  // Fetch cached filters for managers and unbalanced status
-  const getCachedFilters = () => {
-    const cachedManagers = localStorage.getItem('selectedManagers')
-    const cachedUnbalanced = localStorage.getItem('filterUnbalanced')
-    return {
-      selectedManagers: cachedManagers ? JSON.parse(cachedManagers) : [],
-      filterUnbalanced: cachedUnbalanced === 'true',
-    }
-  }
-
-  const { selectedManagers, filterUnbalanced } = getCachedFilters()
-
-  // Fetch wallets and client data
-  const fetchWalletsAndClients = useCallback(async () => {
+  const fetchClients = useCallback(async () => {
     try {
       const result = await getWalletOrganization(uuidOrganization)
       if (!result) {
@@ -44,43 +40,91 @@ export function Clients() {
         })
       }
       setClients(result)
+      setFilteredClients(result)
     } catch (error) {
-      console.error('Error fetching wallets and clients:', error)
+      console.error('Error fetching clients:', error)
     }
   }, [uuidOrganization])
 
   useEffect(() => {
-    fetchWalletsAndClients()
-  }, [fetchWalletsAndClients, signal])
+    fetchClients()
+  }, [fetchClients])
+
+  const normalizeRiskProfile = (riskProfile: string) =>
+    riskProfile.toLowerCase().replace(/_/g, '-')
+
+  const applyFilters = useCallback(() => {
+    const {
+      selectedManagers,
+      selectedWalletTypes,
+      filterUnbalanced,
+      filterNewest,
+      filterOldest,
+      filterNearestRebalancing,
+      filterFurtherRebalancing,
+      exchanges, // Aqui vamos considerar o filtro de exchanges
+    } = filters
+
+    const filtered = clients
+      .filter((client) => {
+        const nameMatches =
+          client.infosClient.name
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase()) ||
+          client.managerName.toLowerCase().includes(searchTerm.toLowerCase())
+        const managerMatches =
+          selectedManagers.length === 0 ||
+          selectedManagers.includes(client.managerName)
+        const unbalancedMatches =
+          !filterUnbalanced ||
+          (client.nextBalance && new Date(client.nextBalance) < new Date())
+        const walletTypeMatches =
+          selectedWalletTypes.length === 0 ||
+          selectedWalletTypes.some(
+            (type) =>
+              normalizeRiskProfile(type) ===
+              normalizeRiskProfile(client.riskProfile),
+          )
+        const exchangeMatches =
+          exchanges.length === 0 ||
+          exchanges.some((exchange) => client.exchange.includes(exchange))
+
+        return (
+          nameMatches &&
+          managerMatches &&
+          unbalancedMatches &&
+          walletTypeMatches &&
+          exchangeMatches
+        )
+      })
+      .sort((a, b) => {
+        if (filterNewest)
+          return new Date(b.createAt).getTime() - new Date(a.createAt).getTime()
+        if (filterOldest)
+          return new Date(a.createAt).getTime() - new Date(b.createAt).getTime()
+        if (filterNearestRebalancing)
+          return (
+            new Date(a.nextBalance).getTime() -
+            new Date(b.nextBalance).getTime()
+          )
+        if (filterFurtherRebalancing)
+          return (
+            new Date(b.nextBalance).getTime() -
+            new Date(a.nextBalance).getTime()
+          )
+        return 0
+      })
+
+    setFilteredClients(filtered)
+  }, [clients, filters, searchTerm])
 
   useEffect(() => {
-    if (isFilterModalClosed) {
-      fetchWalletsAndClients()
-      setIsFilterModalClosed(false)
-    }
-  }, [isFilterModalClosed, fetchWalletsAndClients])
+    applyFilters()
+  }, [filters, searchTerm, applyFilters])
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value)
+  const handleApplyFilters = (newFilters: Partial<typeof filters>) => {
+    setFilters((prev) => ({ ...prev, ...newFilters }))
   }
-
-  const filteredClients = clients.filter((client) => {
-    const nameMatches =
-      client.infosClient.name
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase()) ||
-      client.managerName.toLowerCase().includes(searchTerm.toLowerCase())
-
-    const managerMatches =
-      selectedManagers.length === 0 ||
-      selectedManagers.includes(client.managerName)
-
-    const unbalancedMatches =
-      !filterUnbalanced ||
-      (client.nextBalance && new Date(client.nextBalance) < new Date())
-
-    return nameMatches && managerMatches && unbalancedMatches
-  })
 
   return (
     <div className="p-10">
@@ -88,18 +132,18 @@ export function Clients() {
         <h1 className="text-2xl text-white font-medium">Wallets</h1>
         <SwitchTheme />
       </div>
+
       <div className="flex items-center justify-between mb-10">
         <Input
           className="bg-[#171717] w-5/6 border-0 text-white focus:ring-0"
           type="text"
           placeholder="Search for ..."
           value={searchTerm}
-          onChange={handleSearchChange}
+          onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <div className="flex gap-5">
-          <ClientsFilterModal onClose={() => setIsFilterModalClosed(true)} />
-        </div>
+        <ClientsFilterModal handleApplyFilters={handleApplyFilters} />
       </div>
+
       <div className="w-full grid grid-cols-3 gap-7">
         {filteredClients.map((client) => (
           <CardClient
@@ -111,12 +155,12 @@ export function Clients() {
             alerts={0}
             responsible={client.managerName}
             lastRebalancing={
-              client.lastBalance !== null
+              client.lastBalance
                 ? formatDate(client.lastBalance.toString())
                 : '-'
             }
             nextRebalancing={
-              client.nextBalance !== null
+              client.nextBalance
                 ? formatDate(client.nextBalance.toString())
                 : '-'
             }

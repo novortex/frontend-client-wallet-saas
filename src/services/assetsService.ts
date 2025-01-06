@@ -49,3 +49,20 @@ export async function getAllAssetsInOrgForAddWalletClient(
     console.log(error)
   }
 }
+
+export async function getExchangesDisposables(organizationUuid: string) {
+  try {
+    const result = await instance.get<{ name: string; uuid: string }[]>(
+      `/management/exchanges`,
+      {
+        headers: {
+          'x-organization': organizationUuid,
+        },
+      },
+    )
+
+    return result.data as { name: string; uuid: string }[]
+  } catch (error) {
+    console.log(error)
+  }
+}

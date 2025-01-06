@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import {
@@ -17,92 +16,115 @@ import { UnbalancedWalletFilter } from './UnbalanceWalletFilter'
 import { useUserStore } from '@/store/user'
 import { getAllManagersOnOrganization } from '@/services/request'
 import { AlertsFilter } from './AlertsFilter'
+import { ExchangeFilter } from './ExchangeFilter'
 
-export function ClientsFilterModal({ onClose }: { onClose: () => void }) {
+type ApplyFiltersProps = {
+  handleApplyFilters: (filters: {
+    selectedManagers: string[]
+    selectedWalletTypes: string[]
+    filterDelayed: boolean
+    filterUnbalanced: boolean
+    filterNewest: boolean
+    filterOldest: boolean
+    selectedExchange: string
+  }) => void
+}
+export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
+  const [isOpen, setIsOpen] = useState(false)
   const [selectedManagers, setSelectedManagers] = useState<string[]>([])
+  const [selectedWalletTypes, setSelectedWalletTypes] = useState<string[]>([])
+  const [selectedExchange, setSelectedExchange] = useState<string>('')
   const [managers, setManagers] = useState<{ name: string }[]>([])
-  const [filterDelayed, setFilterDelayed] = useState(false)
-  const [filterUnbalanced, setFilterUnbalanced] = useState(false)
-
+  const [filters, setFilters] = useState({
+    filterDelayed: false,
+    filterUnbalanced: false,
+    filterNewest: false,
+    filterOldest: false,
+    filterNearestRebalancing: false,
+    filterFurtherRebalancing: false,
+  })
   const uuidOrganization = useUserStore((state) => state.user.uuidOrganization)
 
-  // Recuperar os filtros salvos no localStorage
-  useEffect(() => {
-    const savedManagers = JSON.parse(
-      localStorage.getItem('selectedManagers') || '[]',
-    )
-    const savedFilterUnbalanced = JSON.parse(
-      localStorage.getItem('filterUnbalanced') || 'false',
-    )
-    const savedFilterDelayed = JSON.parse(
-      localStorage.getItem('filterDelayed') || 'false',
-    )
-
-    setSelectedManagers(savedManagers)
-    setFilterUnbalanced(savedFilterUnbalanced)
-    setFilterDelayed(savedFilterDelayed)
-  }, [])
-
-  // Buscar os gerentes da organização
   useEffect(() => {
     const fetchManagers = async () => {
       const result = await getAllManagersOnOrganization(uuidOrganization)
-      const managersData = result.map((item: any) => ({ name: item.name }))
-      setManagers(managersData)
+      setManagers(result.map((item) => ({ name: item.name })))
     }
     fetchManagers()
   }, [uuidOrganization])
 
-  const handleSelectManager = (managerName: string) => {
-    const updatedManagers = [...selectedManagers, managerName]
-    setSelectedManagers(updatedManagers)
-    localStorage.setItem('selectedManagers', JSON.stringify(updatedManagers))
+  const applyFilters = () => {
+    handleApplyFilters({
+      selectedManagers,
+      selectedWalletTypes,
+      selectedExchange,
+      ...filters,
+    })
+    setIsOpen(false)
   }
 
-  const handleRemoveManager = (managerName: string) => {
-    const updatedManagers = selectedManagers.filter(
-      (name) => name !== managerName,
-    )
-    setSelectedManagers(updatedManagers)
-    localStorage.setItem('selectedManagers', JSON.stringify(updatedManagers))
+  const updateFilter = (filterName: string, value: boolean) => {
+    setFilters((prev) => ({ ...prev, [filterName]: value }))
   }
 
-  const handleApplyFilters = () => {
-    localStorage.setItem('filterUnbalanced', JSON.stringify(filterUnbalanced))
-    localStorage.setItem('filterDelayed', JSON.stringify(filterDelayed))
-    onClose()
+  const handleSelectManager = (name: string) =>
+    setSelectedManagers((prev) => [...prev, name])
+  const handleRemoveManager = (name: string) =>
+    setSelectedManagers((prev) => prev.filter((manager) => manager !== name))
+  const handleSelectWalletType = (type: string) =>
+    setSelectedWalletTypes((prev) => [...prev, type])
+  const handleRemoveWalletType = (type: string) =>
+    setSelectedWalletTypes((prev) => prev.filter((t) => t !== type))
+
+  const handleExchangeChange = (value: string) => {
+    setSelectedExchange(value)
   }
 
   return (
-    <Dialog onOpenChange={(isOpen) => !isOpen && onClose()}>
-      <DialogTrigger>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
         <Button
           type="button"
           variant="outline"
           className="gap-2 hover:bg-gray-700"
+          onClick={() => setIsOpen(true)}
         >
           Filters
         </Button>
       </DialogTrigger>
-      <DialogContent className="bg-[#131313] h-fit ">
+      <DialogContent className="bg-[#131313] h-fit">
         <DialogHeader className="text-[#fff]">
-          <DialogTitle className="text-2xl text-center ">
+          <DialogTitle className="text-2xl text-center">
             Filter Customer
           </DialogTitle>
         </DialogHeader>
-        <WalletTypeFilter />
+
+        <WalletTypeFilter
+          selectedWalletTypes={selectedWalletTypes}
+          handleSelectWalletType={handleSelectWalletType}
+          handleRemoveWalletType={handleRemoveWalletType}
+        />
 
         <OrderByFilter
-          filterDelayed={filterDelayed}
-          setFilterDelayed={setFilterDelayed}
+          setFilterNewest={(value) => updateFilter('filterNewest', value)}
+          setFilterOldest={(value) => updateFilter('filterOldest', value)}
+          setFilterNearestRebalancing={(value) =>
+            updateFilter('filterNearestRebalancing', value)
+          }
+          setFilterFurtherRebalancing={(value) =>
+            updateFilter('filterFurtherRebalancing', value)
+          }
         />
+
         <UnbalancedWalletFilter
-          filterUnbalanced={filterUnbalanced}
-          setFilterUnbalanced={setFilterUnbalanced}
+          filterUnbalanced={filters.filterUnbalanced}
+          setFilterUnbalanced={(value) =>
+            updateFilter('filterUnbalanced', value)
+          }
         />
+
         <AlertsFilter
-          filterDelayed={filterDelayed}
-          setFilterDelayed={setFilterDelayed}
+          setFilterDelayed={(value) => updateFilter('filterDelayed', value)}
         />
 
         <ManagerFilter
@@ -111,14 +133,19 @@ export function ClientsFilterModal({ onClose }: { onClose: () => void }) {
           handleSelectManager={handleSelectManager}
           handleRemoveManager={handleRemoveManager}
         />
+
+        <ExchangeFilter
+          uuidOrganization={uuidOrganization}
+          selectedExchange={selectedExchange}
+          handleExchangeChange={handleExchangeChange}
+        />
+
         <DialogFooter>
+          <Button className="bg-[#1877f2] text-white" onClick={applyFilters}>
+            Apply
+          </Button>
           <DialogClose asChild>
-            <Button
-              className="bg-[#1877F2] w-1/4 hover:bg-blue-600 p-5"
-              onClick={handleApplyFilters}
-            >
-              Apply
-            </Button>
+            <Button variant="outline">Cancel</Button>
           </DialogClose>
         </DialogFooter>
       </DialogContent>
