@@ -87,7 +87,7 @@ export default function RegisterCustomerModal({
     }
     if (!/^\d+$/.test(phone.replace(/\D/g, '')) || phone.trim().length < 11) {
       newErrors.phone =
-        'Phone number must contain only numbers and have at least 11 digits.'
+        'The phone number must contain only numbers and include the country code.'
     }
 
     setErrors(newErrors)
