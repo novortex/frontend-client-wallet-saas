@@ -18,11 +18,7 @@ import { registerNewCustomer } from '@/services/request'
 import { Label } from '../ui/label'
 import PhoneInput, { CountryData } from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
-import {
-  CountryCode,
-  parsePhoneNumber,
-  isValidPhoneNumber,
-} from 'libphonenumber-js'
+import { CountryCode, parsePhoneNumber } from 'libphonenumber-js'
 
 interface RegisterCustomerModalProps {
   isOpen: boolean
