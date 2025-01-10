@@ -18,7 +18,11 @@ import { registerNewCustomer } from '@/services/request'
 import { Label } from '../ui/label'
 import PhoneInput, { CountryData } from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
-import { CountryCode, parsePhoneNumber } from 'libphonenumber-js'
+import {
+  CountryCode,
+  parsePhoneNumber,
+  isValidPhoneNumber,
+} from 'libphonenumber-js'
 
 interface RegisterCustomerModalProps {
   isOpen: boolean
@@ -84,6 +88,9 @@ export default function RegisterCustomerModal({
     // Validação do email: obrigatório e deve ter um formato de email válido
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inputValues.email)) {
       newErrors.email = 'Invalid email format.'
+    }
+    if (!isValidPhoneNumber(inputValues.phone)) {
+      newErrors.phone = 'Invalid phone number format.'
     }
 
     setErrors(newErrors)
