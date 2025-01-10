@@ -89,8 +89,9 @@ export default function RegisterCustomerModal({
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inputValues.email)) {
       newErrors.email = 'Invalid email format.'
     }
-    if (!isValidPhoneNumber(inputValues.phone)) {
-      newErrors.phone = 'Invalid phone number format.'
+    if (!/^\d+$/.test(phone.replace(/\D/g, '')) || phone.trim() === '') {
+      newErrors.phone =
+        'Phone number must contain only numbers and cannot be empty.'
     }
 
     setErrors(newErrors)
