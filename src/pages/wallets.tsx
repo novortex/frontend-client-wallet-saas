@@ -26,7 +26,8 @@ export function Clients() {
     filterOldest: false,
     filterNearestRebalancing: false,
     filterFurtherRebalancing: false,
-    exchanges: [] as string[], // Aqui já temos exchanges no filtro
+    exchanges: [] as string[],
+    benchMarks: [] as string[],
   })
 
   const fetchClients = useCallback(async () => {
@@ -52,7 +53,6 @@ export function Clients() {
 
   const normalizeRiskProfile = (riskProfile: string) =>
     riskProfile.toLowerCase().replace(/_/g, '-')
-
   const applyFilters = useCallback(() => {
     const {
       selectedManagers,
@@ -62,7 +62,8 @@ export function Clients() {
       filterOldest,
       filterNearestRebalancing,
       filterFurtherRebalancing,
-      exchanges, // Aqui vamos considerar o filtro de exchanges
+      exchanges,
+      benchMarks,
     } = filters
 
     const filtered = clients
@@ -72,12 +73,18 @@ export function Clients() {
             .toLowerCase()
             .includes(searchTerm.toLowerCase()) ||
           client.managerName.toLowerCase().includes(searchTerm.toLowerCase())
+
+        // Verificação do gerente selecionado
         const managerMatches =
           selectedManagers.length === 0 ||
           selectedManagers.includes(client.managerName)
+
+        // Verificação do estado de balanceamento
         const unbalancedMatches =
           !filterUnbalanced ||
           (client.nextBalance && new Date(client.nextBalance) < new Date())
+
+        // Verificação do tipo de carteira
         const walletTypeMatches =
           selectedWalletTypes.length === 0 ||
           selectedWalletTypes.some(
@@ -85,16 +92,36 @@ export function Clients() {
               normalizeRiskProfile(type) ===
               normalizeRiskProfile(client.riskProfile),
           )
+
+        // Verificação das exchanges
         const exchangeMatches =
           exchanges.length === 0 ||
-          exchanges.some((exchange) => client.exchange.includes(exchange))
+          exchanges.some((exchange) =>
+            client.exchange.toLowerCase().includes(exchange.toLowerCase()),
+          )
 
+        // Verificação do benchmark com logs
+        const benchMarkMatches =
+          benchMarks.length === 0 ||
+          benchMarks.some((benchmark) => {
+            const clientBenchmark = client.benchMark.toLowerCase()
+            const benchmarkLower = benchmark.toLowerCase()
+
+            console.log('Comparing:', clientBenchmark, 'with', benchmarkLower)
+
+            return clientBenchmark.includes(benchmarkLower)
+          })
+
+        console.log('benchMarkMatches:', benchMarkMatches) // Log do resultado do match do benchmark
+
+        // Retornar verdadeiro se todos os filtros passarem
         return (
           nameMatches &&
           managerMatches &&
           unbalancedMatches &&
           walletTypeMatches &&
-          exchangeMatches
+          exchangeMatches &&
+          benchMarkMatches
         )
       })
       .sort((a, b) => {
@@ -126,6 +153,7 @@ export function Clients() {
     setFilters((prev) => ({ ...prev, ...newFilters }))
   }
 
+  console.log('Filtered clients after filters applied:', filteredClients)
   return (
     <div className="p-10">
       <div className="mb-10 flex items-center justify-between">

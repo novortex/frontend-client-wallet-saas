@@ -17,6 +17,7 @@ import { useUserStore } from '@/store/user'
 import { getAllManagersOnOrganization } from '@/services/request'
 import { AlertsFilter } from './AlertsFilter'
 import { ExchangeFilter } from './ExchangeFilter'
+import { BenchmarkFilter } from './BenchmarkFilter'
 
 type ApplyFiltersProps = {
   handleApplyFilters: (filters: {
@@ -27,12 +28,15 @@ type ApplyFiltersProps = {
     filterNewest: boolean
     filterOldest: boolean
     selectedExchange: string
+    selectedBenchmark: string
   }) => void
 }
+
 export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [selectedManagers, setSelectedManagers] = useState<string[]>([])
   const [selectedWalletTypes, setSelectedWalletTypes] = useState<string[]>([])
+  const [selectedBenchmark, setSelectedBenchmark] = useState<string>('')
   const [selectedExchange, setSelectedExchange] = useState<string>('')
   const [managers, setManagers] = useState<{ name: string }[]>([])
   const [filters, setFilters] = useState({
@@ -58,6 +62,7 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
       selectedManagers,
       selectedWalletTypes,
       selectedExchange,
+      selectedBenchmark,
       ...filters,
     })
     setIsOpen(false)
@@ -138,6 +143,12 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
           uuidOrganization={uuidOrganization}
           selectedExchange={selectedExchange}
           handleExchangeChange={handleExchangeChange}
+        />
+
+        <BenchmarkFilter
+          uuidOrganization={uuidOrganization}
+          handleBenchmarkChange={setSelectedBenchmark}
+          selectedBenchmark={selectedBenchmark}
         />
 
         <DialogFooter>

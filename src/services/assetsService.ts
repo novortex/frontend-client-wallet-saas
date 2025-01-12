@@ -66,3 +66,20 @@ export async function getExchangesDisposables(organizationUuid: string) {
     console.log(error)
   }
 }
+
+export async function getBenchmarkOptions(organizationUuid: string) {
+  try {
+    const result = await instance.get<{ name: string; uuid: string }[]>(
+      `/management/benchmark`,
+      {
+        headers: {
+          'x-organization': organizationUuid,
+        },
+      },
+    )
+
+    return result.data as { name: string; uuid: string }[]
+  } catch (error) {
+    console.log(error)
+  }
+}
