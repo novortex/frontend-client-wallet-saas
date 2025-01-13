@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '../ui/input'
 import { Label } from '../ui/label'
@@ -74,6 +74,12 @@ export default function ConfirmCloseWalletModal({
     fetchData()
     onClose()
   }
+
+  useEffect(() => {
+    if (!isOpen) {
+      setDate(new Date())
+    }
+  }, [isOpen])
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
