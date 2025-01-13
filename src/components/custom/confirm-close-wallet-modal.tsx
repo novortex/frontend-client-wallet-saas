@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '../ui/input'
 import { Label } from '../ui/label'
+import { CalendarIcon } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
@@ -10,14 +11,21 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog'
 import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
+import { Calendar } from '@/components/ui/calendar'
+import {
   closeWallet,
   startWallet as requestStartWallet,
 } from '@/services/request'
 import { useParams } from 'react-router-dom'
 import { useUserStore } from '@/store/user'
 import { useSignalStore } from '@/store/signalEffect'
+import { formatDate } from '@/utils/formatDate'
 
-interface confirmCloseWalletModalProps {
+interface ConfirmCloseWalletModalProps {
   isOpen: boolean
   onClose: () => void
   startWallet: boolean
@@ -29,8 +37,9 @@ export default function ConfirmCloseWalletModal({
   onClose,
   startWallet,
   fetchData,
-}: confirmCloseWalletModalProps) {
+}: ConfirmCloseWalletModalProps) {
   const [inputValue, setInputValue] = useState('')
+  const [date, setDate] = useState<Date>(new Date())
   const { walletUuid } = useParams()
   const [uuidOrganization] = useUserStore((state) => [
     state.user.uuidOrganization,
@@ -40,46 +49,76 @@ export default function ConfirmCloseWalletModal({
     state.setSignal,
   ])
 
-  // Define o valor de confirmação esperado com base em startWallet
+  const isToday = (dateToCheck: Date) => {
+    const today = new Date()
+    return (
+      dateToCheck.getDate() === today.getDate() &&
+      dateToCheck.getMonth() === today.getMonth() &&
+      dateToCheck.getFullYear() === today.getFullYear()
+    )
+  }
+
   const expectedValue = startWallet ? 'startwallet' : 'closewallet'
+  const valueOfDate = startWallet ? 'was started' : 'will be closed'
   const isInputValid = inputValue === expectedValue
 
-  // Função que envia a solicitação correta (startWallet ou closeWallet)
   const handleSendWalletAction = async () => {
     if (walletUuid) {
       if (startWallet) {
-        // Chama a função startWallet
-
         await requestStartWallet(uuidOrganization, walletUuid)
       } else {
-        // Chama a função closeWallet
         await closeWallet(uuidOrganization, walletUuid)
       }
     }
-
-    if (!signal) {
-      setSignal(true)
-    } else {
-      setSignal(false)
-    }
-
+    setSignal(!signal)
     fetchData()
-
     onClose()
   }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="h-2/5 w-[50%] bg-[#131313] text-[#fff] max-w-full border-transparent">
+      <DialogContent className="h-[80%] w-[40%] bg-[#131313] text-[#fff] max-w-full border-transparent">
         <DialogHeader className="flex justify-center items-center">
           <DialogTitle className="text-3xl">Confirmation</DialogTitle>
         </DialogHeader>
-        <div className="flex flex-col gap-4">
+
+        <div className="flex flex-col gap-4 h-full justify-center items-center">
+          <p>Choose the date that the wallet {valueOfDate}</p>
+
+          <div className="flex flex-col gap-2 w-1/2">
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="w-full bg-[#131313] border-[#323232] text-[#959CB6] justify-between"
+                >
+                  {formatDate(date.toISOString())}
+                  <CalendarIcon className="h-4 w-4 opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={date}
+                  onSelect={(newDate) => newDate && setDate(newDate)}
+                  className="bg-[#131313] text-white rounded-md"
+                  classNames={{
+                    day_today: isToday(date)
+                      ? 'bg-white text-black hover:bg-white rounded-md'
+                      : 'bg-transparent text-white hover:bg-white rounded-md text-black',
+                    day_selected:
+                      'bg-white text-black hover:bg-white rounded-md',
+                  }}
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
+
           <Label className="flex flex-row gap-3 text-lg">
-            <p className="text-[#959CB6]"> Type to confirm: </p>
-            {/* Exibe o valor de confirmação esperado (startwallet ou closewallet) */}
+            <p className="text-[#959CB6]">Type to confirm:</p>
             <p>{expectedValue}</p>
           </Label>
+
           <Input
             placeholder="Type here"
             value={inputValue}
@@ -87,9 +126,10 @@ export default function ConfirmCloseWalletModal({
             className="w-1/2 bg-[#131313] border-[#323232] text-[#959CB6]"
           />
         </div>
+
         <DialogFooter className="flex justify-end items-end">
           <Button
-            className="bg-[#1877F2] w-[10%] hover:bg-blue-600 p-5"
+            className="bg-[#1877F2] w-[20%] hover:bg-blue-600 p-5"
             disabled={!isInputValid}
             onClick={handleSendWalletAction}
           >
