@@ -23,7 +23,7 @@ function App() {
 
   useEffect(() => {
     const fetchAccessToken = async () => {
-      const domain = 'CHANGE_THIS_TO_YOUR_AUTH0_DOMAIN'
+      const domain = 'dev-xg6cr74dpsnlijfn.us.auth0.com'
 
       console.log('Fetching access token')
 
@@ -44,7 +44,7 @@ function App() {
     }
 
     const getUserMetadata = async () => {
-      const domain = 'dev-us6antzvoqit0k1t.us.auth0.com'
+      const domain = 'dev-xg6cr74dpsnlijfn.us.auth0.com'
 
       if (!accessToken || !user) return
 

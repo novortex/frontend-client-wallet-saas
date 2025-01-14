@@ -1,5 +1,5 @@
 import './index.css'
-import { Route, Routes, useLocation } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { Wallet } from '@/pages/wallet/index'
 import { Graphs } from '@/pages/graphs'
@@ -8,15 +8,15 @@ import { Clients } from '@/pages/wallets'
 import { Infos } from '@/pages/infos'
 import { Customers } from '@/pages/customers'
 import { AssetsOrg } from '@/pages/assets-org'
-import { Login } from '@/pages/login'
 import { ErrorPage } from '@/pages/404'
 import { AdviceToTeam } from './pages/AdviceToTeam'
 import Root from './pages/outlet'
+import { useAuth0 } from '@auth0/auth0-react'
+import { AuthHandler } from './components/custom/AuthHandler'
 
 export function App() {
   const [isMobile, setIsMobile] = useState(false)
-  const location = useLocation()
-  const isLoginRoute = location.pathname === '/'
+  const { isLoading } = useAuth0()
 
   useEffect(() => {
     const handleResize = () => {
@@ -29,27 +29,28 @@ export function App() {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
+
   return (
     <Routes>
       {isMobile ? (
         <Route path="/" element={<AdviceToTeam />} />
       ) : (
-        <>
-          <Route path="/" element={<Login />} />
-
-          {!isLoginRoute && (
-            <Route element={<Root />}>
-              <Route path="/wallet/:walletUuid/assets" element={<Wallet />} />
-              <Route path="/wallets" element={<Clients />} />
-              <Route path="/customers" element={<Customers />} />
-              <Route path="/admin/orgs" element={<AssetsOrg />} />
-              <Route path="/clients/:walletUuid/infos" element={<Infos />} />
-              <Route path="/wallet/:walletUuid/graphs" element={<Graphs />} />
-              <Route path="/wallet/:walletUuid/history" element={<History />} />
-              <Route path="*" element={<ErrorPage />} />
-            </Route>
-          )}
-        </>
+        <Route element={<AuthHandler />}>
+          <Route element={<Root />}>
+            <Route path="/" element={<Navigate to="/wallets" replace />} />
+            <Route path="/wallet/:walletUuid/assets" element={<Wallet />} />
+            <Route path="/wallets" element={<Clients />} />
+            <Route path="/customers" element={<Customers />} />
+            <Route path="/admin/orgs" element={<AssetsOrg />} />
+            <Route path="/clients/:walletUuid/infos" element={<Infos />} />
+            <Route path="/wallet/:walletUuid/graphs" element={<Graphs />} />
+            <Route path="/wallet/:walletUuid/history" element={<History />} />
+            <Route path="*" element={<ErrorPage />} />
+          </Route>
+        </Route>
       )}
     </Routes>
   )
