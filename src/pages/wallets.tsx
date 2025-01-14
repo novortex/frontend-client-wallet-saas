@@ -100,9 +100,6 @@ export function Clients() {
             client.exchange.toLowerCase().includes(exchange.toLowerCase()),
           )
 
-        console.log(`benchmarks:`, selectedBenchmark)
-        console.log(`client.benchmark: ${client.benchmark}`)
-
         const benchMarkMatches =
           selectedBenchmark.length === 0 ||
           selectedBenchmark.includes(client.benchmark)

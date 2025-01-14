@@ -55,13 +55,11 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
   useEffect(() => {
     const fetchBenchmarks = async () => {
       const result = await getBenchmarkOptions(uuidOrganization)
-      console.log(`benchmarks`, result)
       setBenchmarks(result.map((benchmark) => ({ name: benchmark.name })))
     }
 
     const fetchManagers = async () => {
       const result = await getAllManagersOnOrganization(uuidOrganization)
-      console.log(`managers`, result)
       setManagers(result.map((item) => ({ name: item.name })))
     }
 
