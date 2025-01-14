@@ -27,7 +27,7 @@ export function Clients() {
     filterNearestRebalancing: false,
     filterFurtherRebalancing: false,
     exchanges: [] as string[],
-    benchmarks: [] as string[],
+    selectedBenchmark: [] as string[],
   })
 
   const fetchClients = useCallback(async () => {
@@ -63,7 +63,7 @@ export function Clients() {
       filterNearestRebalancing,
       filterFurtherRebalancing,
       exchanges,
-      benchmarks,
+      selectedBenchmark,
     } = filters
 
     const filtered = clients
@@ -100,11 +100,12 @@ export function Clients() {
             client.exchange.toLowerCase().includes(exchange.toLowerCase()),
           )
 
-        console.log(`benchmarks:`, benchmarks)
+        console.log(`benchmarks:`, selectedBenchmark)
         console.log(`client.benchmark: ${client.benchmark}`)
 
         const benchMarkMatches =
-          benchmarks.length === 0 || benchmarks.includes(client.benchmark)
+          selectedBenchmark.length === 0 ||
+          selectedBenchmark.includes(client.benchmark)
 
         return (
           nameMatches &&
