@@ -1,6 +1,9 @@
 import { instance } from '@/config/api'
 import { AddAssetFunctionResponse } from '@/types/addAsset.type'
-import { AssetsOrganizationForSelectedResponse } from '@/types/asset.type'
+import {
+  AssetsOrganizationForSelectedResponse,
+  BenchmarksProps,
+} from '@/types/asset.type'
 
 export async function addCryptoWalletClient(
   organizationUuid: string,
@@ -67,19 +70,19 @@ export async function getExchangesDisposables(organizationUuid: string) {
   }
 }
 
-export async function getBenchmarkOptions(organizationUuid: string) {
+export async function getBenchmarkOptions(
+  organizationUuid: string,
+): Promise<BenchmarksProps[]> {
   try {
-    const result = await instance.get<{ name: string; uuid: string }[]>(
-      `/management/benchmark`,
-      {
-        headers: {
-          'x-organization': organizationUuid,
-        },
+    const result = await instance.get(`/management/benchmark`, {
+      headers: {
+        'x-organization': organizationUuid,
       },
-    )
+    })
 
-    return result.data as { name: string; uuid: string }[]
+    return result.data
   } catch (error) {
     console.log(error)
+    throw error
   }
 }

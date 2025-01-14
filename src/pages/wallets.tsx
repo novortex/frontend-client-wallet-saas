@@ -27,7 +27,7 @@ export function Clients() {
     filterNearestRebalancing: false,
     filterFurtherRebalancing: false,
     exchanges: [] as string[],
-    benchMarks: [] as string[],
+    benchmarks: [] as string[],
   })
 
   const fetchClients = useCallback(async () => {
@@ -63,7 +63,7 @@ export function Clients() {
       filterNearestRebalancing,
       filterFurtherRebalancing,
       exchanges,
-      benchMarks,
+      benchmarks,
     } = filters
 
     const filtered = clients
@@ -100,21 +100,12 @@ export function Clients() {
             client.exchange.toLowerCase().includes(exchange.toLowerCase()),
           )
 
-        // Verificação do benchmark com logs
+        console.log(`benchmarks:`, benchmarks)
+        console.log(`client.benchmark: ${client.benchmark}`)
+
         const benchMarkMatches =
-          benchMarks.length === 0 ||
-          benchMarks.some((benchmark) => {
-            const clientBenchmark = client.benchMark.toLowerCase()
-            const benchmarkLower = benchmark.toLowerCase()
+          benchmarks.length === 0 || benchmarks.includes(client.benchmark)
 
-            console.log('Comparing:', clientBenchmark, 'with', benchmarkLower)
-
-            return clientBenchmark.includes(benchmarkLower)
-          })
-
-        console.log('benchMarkMatches:', benchMarkMatches) // Log do resultado do match do benchmark
-
-        // Retornar verdadeiro se todos os filtros passarem
         return (
           nameMatches &&
           managerMatches &&
@@ -153,7 +144,6 @@ export function Clients() {
     setFilters((prev) => ({ ...prev, ...newFilters }))
   }
 
-  console.log('Filtered clients after filters applied:', filteredClients)
   return (
     <div className="p-10">
       <div className="mb-10 flex items-center justify-between">

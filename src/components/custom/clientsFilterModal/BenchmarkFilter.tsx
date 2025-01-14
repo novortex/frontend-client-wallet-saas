@@ -1,39 +1,28 @@
 import {
   Select,
   SelectContent,
+  SelectItem,
   SelectTrigger,
   SelectValue,
-  SelectItem,
 } from '@/components/ui/select'
-import { getBenchmarkOptions } from '@/services/assetsService'
 import { BadgeCent } from 'lucide-react'
-import { useState, useEffect } from 'react'
 
 export function BenchmarkFilter({
-  uuidOrganization,
-  selectedBenchmark,
-  handleBenchmarkChange,
+  benchmarks,
+  selectedBenchmarks,
+  handleSelectBenchmark,
+  handleRemoveBenchmark,
 }: {
-  uuidOrganization: string
-  selectedBenchmark: string
-  handleBenchmarkChange: (value: string) => void
+  benchmarks: { name: string }[]
+  selectedBenchmarks: string[]
+  handleSelectBenchmark: (benchmarkName: string) => void
+  handleRemoveBenchmark: (benchmarkName: string) => void
 }) {
-  const [benchmarks, setBenchmarks] = useState<string[]>([])
-
-  useEffect(() => {
-    const fetchBenchmarks = async () => {
-      try {
-        const result = await getBenchmarkOptions(uuidOrganization)
-        if (result) {
-          setBenchmarks(result.map((benchmark) => benchmark.name))
-        }
-      } catch (error) {
-        console.error('Erro ao carregar os benchmarks:', error)
-      }
+  const handleBenchmarkSelection = (benchmarkName: string) => {
+    if (!selectedBenchmarks.includes(benchmarkName)) {
+      handleSelectBenchmark(benchmarkName)
     }
-
-    fetchBenchmarks()
-  }, [uuidOrganization])
+  }
 
   return (
     <div className="w-full flex flex-col gap-2">
@@ -43,38 +32,42 @@ export function BenchmarkFilter({
       <div className="h-[80%] w-full flex flex-col items-center justify-center gap-4">
         <div className="h-full w-[100%] flex justify-center gap-2 items-center">
           <div className="h-full w-[10%] flex justify-center items-center">
-            <BadgeCent className="text-[#D1AB00]" size="ls" />
+            <BadgeCent className="text-[#D1AB00]" size="lg" />
           </div>
           <div className="w-full flex items-center justify-start">
-            <Select
-              value={selectedBenchmark}
-              onValueChange={handleBenchmarkChange}
-            >
+            <Select onValueChange={handleBenchmarkSelection}>
               <SelectTrigger className="w-full bg-[#131313] border-[#323232] text-[#fff]">
-                <SelectValue placeholder="Select benchmark" />
+                <SelectValue placeholder="Select benchmarks" />
               </SelectTrigger>
               <SelectContent className="bg-[#131313] border-2 border-[#323232]">
-                {benchmarks.length > 0 ? (
-                  benchmarks.map((benchmark) => (
-                    <SelectItem
-                      key={benchmark}
-                      className="bg-[#131313] border-0 focus:bg-[#252525] focus:text-white text-white"
-                      value={benchmark}
-                    >
-                      {benchmark}
-                    </SelectItem>
-                  ))
-                ) : (
+                {benchmarks.map((benchmark, index) => (
                   <SelectItem
-                    className="bg-[#131313] border-0 text-white"
-                    value="loading"
+                    key={index}
+                    value={benchmark.name}
+                    className="bg-[#131313] border-0 focus:bg-[#252525] focus:text-white text-white"
                   >
-                    Loading benchmarks...
+                    <div>{benchmark.name}</div>
                   </SelectItem>
-                )}
+                ))}
               </SelectContent>
             </Select>
           </div>
+        </div>
+        <div className="flex flex-wrap justify-start items-start gap-2 w-full">
+          {selectedBenchmarks.map((benchmarkName, index) => (
+            <div
+              key={index}
+              className="h-8 flex justify-start items-center bg-[#959CB6] text-white rounded-md px-2"
+            >
+              <div
+                className="cursor-pointer mr-2"
+                onClick={() => handleRemoveBenchmark(benchmarkName)}
+              >
+                X
+              </div>
+              <div>{benchmarkName}</div>
+            </div>
+          ))}
         </div>
       </div>
     </div>

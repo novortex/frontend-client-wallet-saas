@@ -18,6 +18,7 @@ import { getAllManagersOnOrganization } from '@/services/request'
 import { AlertsFilter } from './AlertsFilter'
 import { ExchangeFilter } from './ExchangeFilter'
 import { BenchmarkFilter } from './BenchmarkFilter'
+import { getBenchmarkOptions } from '@/services/assetsService'
 
 type ApplyFiltersProps = {
   handleApplyFilters: (filters: {
@@ -28,7 +29,7 @@ type ApplyFiltersProps = {
     filterNewest: boolean
     filterOldest: boolean
     selectedExchange: string
-    selectedBenchmark: string
+    selectedBenchmark: string[]
   }) => void
 }
 
@@ -36,9 +37,10 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [selectedManagers, setSelectedManagers] = useState<string[]>([])
   const [selectedWalletTypes, setSelectedWalletTypes] = useState<string[]>([])
-  const [selectedBenchmark, setSelectedBenchmark] = useState<string>('')
+  const [selectedBenchmark, setSelectedBenchmark] = useState<string[]>([])
   const [selectedExchange, setSelectedExchange] = useState<string>('')
   const [managers, setManagers] = useState<{ name: string }[]>([])
+  const [benchmarks, setBenchmarks] = useState<{ name: string }[]>([])
   const [filters, setFilters] = useState({
     filterDelayed: false,
     filterUnbalanced: false,
@@ -47,13 +49,23 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
     filterNearestRebalancing: false,
     filterFurtherRebalancing: false,
   })
+
   const uuidOrganization = useUserStore((state) => state.user.uuidOrganization)
 
   useEffect(() => {
+    const fetchBenchmarks = async () => {
+      const result = await getBenchmarkOptions(uuidOrganization)
+      console.log(`benchmarks`, result)
+      setBenchmarks(result.map((benchmark) => ({ name: benchmark.name })))
+    }
+
     const fetchManagers = async () => {
       const result = await getAllManagersOnOrganization(uuidOrganization)
+      console.log(`managers`, result)
       setManagers(result.map((item) => ({ name: item.name })))
     }
+
+    fetchBenchmarks()
     fetchManagers()
   }, [uuidOrganization])
 
@@ -65,6 +77,7 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
       selectedBenchmark,
       ...filters,
     })
+
     setIsOpen(false)
   }
 
@@ -72,10 +85,6 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
     setFilters((prev) => ({ ...prev, [filterName]: value }))
   }
 
-  const handleSelectManager = (name: string) =>
-    setSelectedManagers((prev) => [...prev, name])
-  const handleRemoveManager = (name: string) =>
-    setSelectedManagers((prev) => prev.filter((manager) => manager !== name))
   const handleSelectWalletType = (type: string) =>
     setSelectedWalletTypes((prev) => [...prev, type])
   const handleRemoveWalletType = (type: string) =>
@@ -85,6 +94,21 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
     setSelectedExchange(value)
   }
 
+  const handleSelectManager = (name: string) =>
+    setSelectedManagers((prev) => [...prev, name])
+
+  const handleRemoveManager = (name: string) =>
+    setSelectedManagers((prev) => prev.filter((manager) => manager !== name))
+
+  const handleSelectBenchmark = (name: string) => {
+    setSelectedBenchmark((prev) => [...prev, name])
+  }
+  const handleRemoveBenchmark = (name: string) => {
+    setSelectedBenchmark((prev) =>
+      prev.filter((benchmark) => benchmark !== name),
+    )
+  }
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
@@ -92,7 +116,6 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
           type="button"
           variant="outline"
           className="gap-2 hover:bg-gray-700"
-          onClick={() => setIsOpen(true)}
         >
           Filters
         </Button>
@@ -146,9 +169,10 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
         />
 
         <BenchmarkFilter
-          uuidOrganization={uuidOrganization}
-          handleBenchmarkChange={setSelectedBenchmark}
-          selectedBenchmark={selectedBenchmark}
+          benchmarks={benchmarks}
+          selectedBenchmarks={selectedBenchmark}
+          handleSelectBenchmark={handleSelectBenchmark}
+          handleRemoveBenchmark={handleRemoveBenchmark}
         />
 
         <DialogFooter>
