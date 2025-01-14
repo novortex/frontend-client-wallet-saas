@@ -13,6 +13,7 @@ import { AdviceToTeam } from './pages/AdviceToTeam'
 import Root from './pages/outlet'
 import { useAuth0 } from '@auth0/auth0-react'
 import { AuthHandler } from './components/custom/AuthHandler'
+import { Auth0Callback } from './auth/auth0-callback'
 
 export function App() {
   const [isMobile, setIsMobile] = useState(false)
@@ -39,6 +40,7 @@ export function App() {
         <Route path="/" element={<AdviceToTeam />} />
       ) : (
         <Route element={<AuthHandler />}>
+          <Route path="/callback" element={<Auth0Callback />} />
           <Route element={<Root />}>
             <Route path="/" element={<Navigate to="/wallets" replace />} />
             <Route path="/wallet/:walletUuid/assets" element={<Wallet />} />

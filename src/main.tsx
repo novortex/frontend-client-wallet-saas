@@ -12,8 +12,8 @@ if (rootElement) {
       domain="dev-xg6cr74dpsnlijfn.us.auth0.com"
       clientId="j6YAVNNV2xgoH0SNm1cLQ5rsWDQ6MWhB"
       authorizationParams={{
-        redirect_uri: `${window.location.origin}/callback`,
-        audience: 'https://wealthVaultDeveloper.com/auth/api/v2',
+        redirect_uri: window.location.origin,
+        audience: 'https://wealthVaultDeveloper.com/auth',
         scope:
           'openid profile email offline_access read:current_user read:roles',
       }}
