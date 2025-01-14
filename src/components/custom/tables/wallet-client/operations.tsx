@@ -113,11 +113,8 @@ export default function OperationsModal({
     )
   }
 
-  const formatDateToMMDDYY = (date: Date): Date => {
-    const month = (date.getMonth() + 1).toString().padStart(2, '0')
-    const day = date.getDate().toString().padStart(2, '0')
-    const year = date.getFullYear().toString().slice(-2)
-    return new Date(`${year}-${month}-${day}`)
+  const formatDateToISO = (date: Date): string => {
+    return date.toISOString() // Retorna "YYYY-MM-DDTHH:mm:ss.sssZ"
   }
 
   const sendOperation = async () => {
@@ -154,7 +151,7 @@ export default function OperationsModal({
         description: `Operation: ${operation}, Amount: ${amount}, Currency: ${currency}`,
       })
 
-      const customDateFormatted = formatDateToMMDDYY(date)
+      const customDateFormatted = formatDateToISO(date)
 
       const result = await createDepositWithdrawal(
         uuidOrganization,
@@ -203,7 +200,7 @@ export default function OperationsModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-[#131313] h-[85%] text-[#fff] border-transparent">
+      <DialogContent className="bg-[#131313] h-[95%] text-[#fff] border-transparent">
         <DialogHeader>
           <DialogTitle className="flex flex-row gap-4 text-3xl items-center">
             Withdrawal / Deposit <HandCoins className="text-[#F2BE38]" />

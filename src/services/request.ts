@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { instance } from '@/config/api'
 import {
   TClientInfosResponse,
@@ -315,7 +316,7 @@ export async function createDepositWithdrawal(
   walletUuid: string,
   currency: string,
   isWithdrawal: boolean,
-  date?: Date,
+  date?: string,
 ) {
   try {
     const data = { amount, walletUuid, currency, isWithdrawal, date }
