@@ -12,7 +12,7 @@ import { ErrorPage } from '@/pages/404'
 import { AdviceToTeam } from './pages/AdviceToTeam'
 import Root from './pages/outlet'
 import { useAuth0 } from '@auth0/auth0-react'
-import { AuthHandler } from './components/custom/AuthHandler'
+import { AuthHandler } from './auth/auth-handler'
 import { Auth0Callback } from './auth/auth0-callback'
 
 export function App() {
