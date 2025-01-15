@@ -391,11 +391,12 @@ export async function updateCustomer(
 export async function closeWallet(
   organizationUuid: string,
   walletUuid: string,
+  data: { customDate: string },
 ) {
   try {
     const result = await instance.put(
       `wallet/${walletUuid}/closeWallet`,
-      {},
+      data,
       {
         headers: { 'x-organization': organizationUuid },
       },

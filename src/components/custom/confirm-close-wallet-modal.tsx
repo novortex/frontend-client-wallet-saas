@@ -23,7 +23,6 @@ import {
 import { useParams } from 'react-router-dom'
 import { useUserStore } from '@/store/user'
 import { useSignalStore } from '@/store/signalEffect'
-import { formatDate } from '@/utils/formatDate'
 
 interface ConfirmCloseWalletModalProps {
   isOpen: boolean
@@ -57,17 +56,17 @@ export default function ConfirmCloseWalletModal({
       dateToCheck.getFullYear() === today.getFullYear()
     )
   }
-
   const expectedValue = startWallet ? 'startwallet' : 'closewallet'
   const valueOfDate = startWallet ? 'was started' : 'will be closed'
   const isInputValid = inputValue === expectedValue
 
   const handleSendWalletAction = async () => {
+    const customDate = date.toISOString()
     if (walletUuid) {
       if (startWallet) {
         await requestStartWallet(uuidOrganization, walletUuid)
       } else {
-        await closeWallet(uuidOrganization, walletUuid)
+        await closeWallet(uuidOrganization, walletUuid, { customDate })
       }
     }
     setSignal(!signal)
@@ -98,7 +97,7 @@ export default function ConfirmCloseWalletModal({
                   variant="outline"
                   className="w-full bg-[#131313] border-[#323232] text-[#959CB6] justify-between"
                 >
-                  {formatDate(date.toISOString())}
+                  {date.toLocaleDateString()}
                   <CalendarIcon className="h-4 w-4 opacity-50" />
                 </Button>
               </PopoverTrigger>
