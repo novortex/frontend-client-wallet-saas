@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogFooter,
   DialogHeader,
@@ -107,6 +106,23 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
     )
   }
 
+  const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1)
+
+  const resetFilters = () => {
+    setSelectedManagers([])
+    setSelectedWalletTypes([])
+    setSelectedBenchmark([])
+    setSelectedExchange('')
+    setFilters({
+      filterDelayed: false,
+      filterUnbalanced: false,
+      filterNewest: false,
+      filterOldest: false,
+      filterNearestRebalancing: false,
+      filterFurtherRebalancing: false,
+    })
+  }
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
@@ -132,13 +148,14 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
         />
 
         <OrderByFilter
-          setFilterNewest={(value) => updateFilter('filterNewest', value)}
-          setFilterOldest={(value) => updateFilter('filterOldest', value)}
-          setFilterNearestRebalancing={(value) =>
-            updateFilter('filterNearestRebalancing', value)
-          }
-          setFilterFurtherRebalancing={(value) =>
-            updateFilter('filterFurtherRebalancing', value)
+          filters={{
+            newest: filters.filterNewest,
+            older: filters.filterOldest,
+            nearestRebalancing: filters.filterNearestRebalancing,
+            furtherRebalancing: filters.filterFurtherRebalancing,
+          }}
+          onFilterChange={(name, value) =>
+            updateFilter(`filter${capitalize(name)}`, value)
           }
         />
 
@@ -177,9 +194,10 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
           <Button className="bg-[#1877f2] text-white" onClick={applyFilters}>
             Apply
           </Button>
-          <DialogClose asChild>
-            <Button variant="outline">Cancel</Button>
-          </DialogClose>
+
+          <Button variant="outline" onClick={resetFilters}>
+            Clean
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

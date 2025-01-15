@@ -95,10 +95,7 @@ export function Clients() {
 
         // Verificação das exchanges
         const exchangeMatches =
-          exchanges.length === 0 ||
-          exchanges.some((exchange) =>
-            client.exchange.toLowerCase().includes(exchange.toLowerCase()),
-          )
+          exchanges.length === 0 || exchanges.includes(client.exchange)
 
         const benchMarkMatches =
           selectedBenchmark.length === 0 ||
@@ -141,6 +138,8 @@ export function Clients() {
   const handleApplyFilters = (newFilters: Partial<typeof filters>) => {
     setFilters((prev) => ({ ...prev, ...newFilters }))
   }
+
+  console.log(`filteredClients`, filteredClients)
 
   return (
     <div className="p-10">

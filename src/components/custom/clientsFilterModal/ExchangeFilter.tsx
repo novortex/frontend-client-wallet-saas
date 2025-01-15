@@ -35,6 +35,16 @@ export function ExchangeFilter({
     fetchExchanges()
   }, [uuidOrganization])
 
+  const handleExchangeSelection = (exchange: string) => {
+    if (selectedExchange !== exchange) {
+      handleExchangeChange(exchange)
+    }
+  }
+
+  const handleRemoveExchange = () => {
+    handleExchangeChange('')
+  }
+
   return (
     <div className="w-full flex flex-col gap-2">
       <div className="h-[20%] w-full font-bold text-[#959CB6]">
@@ -48,34 +58,48 @@ export function ExchangeFilter({
           <div className="w-full flex items-center justify-start">
             <Select
               value={selectedExchange}
-              onValueChange={handleExchangeChange}
+              onValueChange={handleExchangeSelection}
             >
               <SelectTrigger className="w-full bg-[#131313] border-[#323232] text-[#fff]">
                 <SelectValue placeholder="Select exchange" />
               </SelectTrigger>
               <SelectContent className="bg-[#131313] border-2 border-[#323232]">
                 {exchanges.length > 0 ? (
-                  exchanges.map((exchange) => (
+                  exchanges.map((exchange, index) => (
                     <SelectItem
-                      key={exchange}
-                      className="bg-[#131313] border-0 focus:bg-[#252525] focus:text-white text-white"
+                      key={index}
                       value={exchange}
+                      className="bg-[#131313] border-0 focus:bg-[#252525] focus:text-white text-white"
                     >
                       {exchange}
                     </SelectItem>
                   ))
                 ) : (
                   <SelectItem
-                    className="bg-[#131313] border-0 text-white"
-                    value="loading"
+                    disabled
+                    className="text-gray-500"
+                    value="not_value"
                   >
-                    Loading exchanges...
+                    No exchanges available
                   </SelectItem>
                 )}
               </SelectContent>
             </Select>
           </div>
         </div>
+        {selectedExchange && (
+          <div className="flex flex-wrap justify-start items-start gap-2 w-full">
+            <div className="h-8 flex justify-start items-center bg-[#959CB6] text-white rounded-md px-2">
+              <div
+                className="cursor-pointer mr-2"
+                onClick={handleRemoveExchange}
+              >
+                X
+              </div>
+              <div>{selectedExchange}</div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )
