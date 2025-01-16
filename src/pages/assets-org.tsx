@@ -6,16 +6,12 @@ import {
   columnsAssetOrg,
 } from '@/components/custom/tables/assets-org/columns'
 import { getAllAssetsOrg } from '@/services/request'
-import { useUserStore } from '@/store/user'
 import { useSignalStore } from '@/store/signalEffect'
 import { useToast } from '@/components/ui/use-toast'
 
 export function AssetsOrg() {
   const [data, setData] = useState<AssetOrgs[]>([])
   const [loading, setLoading] = useState(true)
-  const [uuidOrganization] = useUserStore((state) => [
-    state.user.uuidOrganization,
-  ])
   const [signal] = useSignalStore((state) => [state.signal])
 
   const { toast } = useToast()
@@ -23,11 +19,10 @@ export function AssetsOrg() {
   useEffect(() => {
     // TODO: separe this script this file :)
     async function getData(
-      uuidOrganization: string,
       setDate: React.Dispatch<React.SetStateAction<AssetOrgs[]>>,
     ) {
       try {
-        const result = await getAllAssetsOrg(uuidOrganization)
+        const result = await getAllAssetsOrg()
 
         if (!result) {
           return toast({
@@ -61,8 +56,8 @@ export function AssetsOrg() {
         })
       }
     }
-    getData(uuidOrganization, setData)
-  }, [uuidOrganization, signal, toast])
+    getData(setData)
+  }, [signal, toast])
 
   if (loading) {
     return <div>Loading...</div>

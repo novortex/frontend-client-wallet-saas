@@ -8,7 +8,6 @@ import {
 } from '@/components/ui/card'
 import { Button } from '../ui/button'
 import { downloadPdf } from '@/services/request'
-import { useUserStore } from '@/store/user'
 import { HistoricEntry } from '@/types/wallet.type'
 
 interface HistoryCardStartCloseProps {
@@ -33,8 +32,6 @@ export default function HistoryCardStartClose({
   const walletValue = walletState ? 'Intial Value' : 'Invested Value'
   const { data } = data_
 
-  const [user] = useUserStore((state) => [state.user])
-
   const handleExport = async () => {
     await downloadPdf(
       data.client_name,
@@ -53,7 +50,6 @@ export default function HistoryCardStartClose({
       String(data.close_wallet_value_in_organization_fiat),
       String(data.benchmark_exceeded_value),
       data.assets,
-      user.uuidOrganization,
     )
   }
 

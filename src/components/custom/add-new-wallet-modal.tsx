@@ -19,7 +19,6 @@ import {
 import { useState, useEffect } from 'react'
 
 import { useToast } from '../ui/use-toast'
-import { useUserStore } from '@/store/user'
 import { useSignalStore } from '@/store/signalEffect'
 import { Label } from '../ui/label'
 import { AssetsOrganizationForSelectedResponse } from '@/types/asset.type'
@@ -47,9 +46,6 @@ export function AddNewWalletModal({
   const [assetForSelected, setAssetForSelected] = useState<
     AssetsOrganizationForSelectedResponse[]
   >([])
-  const [uuidOrganization] = useUserStore((state) => [
-    state.user.uuidOrganization,
-  ])
   const [setSignal, signal] = useSignalStore((state) => [
     state.setSignal,
     state.signal,
@@ -75,7 +71,6 @@ export function AddNewWalletModal({
     })
 
     const result = await addCryptoWalletClient(
-      uuidOrganization,
       walletUuid,
       selectedAsset,
       Number(entryValue),
@@ -152,12 +147,11 @@ export function AddNewWalletModal({
 
   useEffect(() => {
     async function getData(
-      uuidOrganization: string,
       setAssetForSelected: React.Dispatch<
         React.SetStateAction<AssetsOrganizationForSelectedResponse[]>
       >,
     ) {
-      const result = await getAllAssetsInOrgForAddWalletClient(uuidOrganization)
+      const result = await getAllAssetsInOrgForAddWalletClient()
 
       if (!result) {
         return null
@@ -166,8 +160,8 @@ export function AddNewWalletModal({
       setAssetForSelected(result)
     }
 
-    getData(uuidOrganization, setAssetForSelected)
-  }, [uuidOrganization])
+    getData(setAssetForSelected)
+  }, [])
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>

@@ -13,7 +13,6 @@ import { OrderByFilter } from './OrderByFilter'
 import { WalletTypeFilter } from './WalletTypeFilter'
 import { ManagerFilter } from './ManagerFilter'
 import { UnbalancedWalletFilter } from './UnbalanceWalletFilter'
-import { useUserStore } from '@/store/user'
 import { getAllManagersOnOrganization } from '@/services/request'
 import { AlertsFilter } from './AlertsFilter'
 import { ExchangeFilter } from './ExchangeFilter'
@@ -43,15 +42,14 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
     filterNearestRebalancing: false,
     filterFurtherRebalancing: false,
   })
-  const uuidOrganization = useUserStore((state) => state.user.uuidOrganization)
 
   useEffect(() => {
     const fetchManagers = async () => {
-      const result = await getAllManagersOnOrganization(uuidOrganization)
+      const result = await getAllManagersOnOrganization()
       setManagers(result.map((item) => ({ name: item.name })))
     }
     fetchManagers()
-  }, [uuidOrganization])
+  }, [])
 
   const applyFilters = () => {
     handleApplyFilters({
@@ -135,7 +133,6 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
         />
 
         <ExchangeFilter
-          uuidOrganization={uuidOrganization}
           selectedExchange={selectedExchange}
           handleExchangeChange={handleExchangeChange}
         />

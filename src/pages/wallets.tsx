@@ -4,15 +4,11 @@ import { SwitchTheme } from '@/components/custom/switch-theme'
 import { Input } from '@/components/ui/input'
 import { ClientsFilterModal } from '@/components/custom/clientsFilterModal/index'
 import { getWalletOrganization } from '@/services/request'
-import { useUserStore } from '@/store/user'
 import { toast } from '@/components/ui/use-toast'
 import { formatDate } from '@/utils'
 import { TClientInfosResponse } from '@/types/customer.type'
 
 export function Clients() {
-  //   const [uuidOrganization] = useUserStore((state) => [
-  //     state.user.uuidOrganization,
-  //   ])
   const [clients, setClients] = useState<TClientInfosResponse[]>([])
   const [filteredClients, setFilteredClients] = useState<
     TClientInfosResponse[]

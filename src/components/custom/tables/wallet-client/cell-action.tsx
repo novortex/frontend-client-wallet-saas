@@ -28,7 +28,6 @@ import {
   deleteAssetWallet,
   updateAssetWalletInformations,
 } from '@/services/request'
-import { useUserStore } from '@/store/user'
 import { useParams } from 'react-router-dom'
 import { useToast } from '@/components/ui/use-toast'
 import { useSignalStore } from '@/store/signalEffect'
@@ -43,9 +42,6 @@ export default function CellActions({
   const newQuantityAssetRef = useRef<HTMLInputElement>(null)
   const newIdealAllocationRef = useRef<HTMLInputElement>(null)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
-  const [uuidOrganization] = useUserStore((state) => [
-    state.user.uuidOrganization,
-  ])
   const [setSignal, signal] = useSignalStore((state) => [
     state.setSignal,
     state.signal,
@@ -105,7 +101,6 @@ export default function CellActions({
     )
 
     const result = await updateAssetWalletInformations(
-      uuidOrganization,
       walletUuid as string,
       rowInfos.id,
       quantity,
@@ -137,11 +132,7 @@ export default function CellActions({
       description: 'Demo Vault !!',
     })
 
-    const result = await deleteAssetWallet(
-      uuidOrganization,
-      walletUuid as string,
-      rowInfos.id,
-    )
+    const result = await deleteAssetWallet(walletUuid as string, rowInfos.id)
 
     if (result.error) {
       return toast({

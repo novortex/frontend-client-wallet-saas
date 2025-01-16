@@ -10,11 +10,9 @@ import { BadgeCent } from 'lucide-react'
 import { useState, useEffect } from 'react'
 
 export function ExchangeFilter({
-  uuidOrganization,
   selectedExchange,
   handleExchangeChange,
 }: {
-  uuidOrganization: string
   selectedExchange: string
   handleExchangeChange: (value: string) => void
 }) {
@@ -23,7 +21,7 @@ export function ExchangeFilter({
   useEffect(() => {
     const fetchExchanges = async () => {
       try {
-        const result = await getExchangesDisposables(uuidOrganization)
+        const result = await getExchangesDisposables()
         if (result) {
           setExchanges(result.map((exchange) => exchange.name))
         }
@@ -33,7 +31,7 @@ export function ExchangeFilter({
     }
 
     fetchExchanges()
-  }, [uuidOrganization])
+  }, [])
 
   return (
     <div className="w-full flex flex-col gap-2">

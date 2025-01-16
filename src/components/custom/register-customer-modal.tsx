@@ -11,7 +11,6 @@ import { StepForwardIcon, User } from 'lucide-react'
 import { buildStyles, CircularProgressbar } from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist/styles.css'
 import { useRef, useState } from 'react'
-import { useUserStore } from '@/store/user'
 import { useSignalStore } from '@/store/signalEffect'
 import { useToast } from '../ui/use-toast'
 import { registerNewCustomer } from '@/services/request'
@@ -47,9 +46,6 @@ export default function RegisterCustomerModal({
     email: '',
     phone: '',
   })
-  const [uuidOrganization] = useUserStore((state) => [
-    state.user.uuidOrganization,
-  ])
   const [setSignal, signal] = useSignalStore((state) => [
     state.setSignal,
     state.signal,
@@ -132,7 +128,6 @@ export default function RegisterCustomerModal({
     const customer = await registerNewCustomer(
       name as string,
       email as string,
-      uuidOrganization,
       formattedPhone,
     )
 

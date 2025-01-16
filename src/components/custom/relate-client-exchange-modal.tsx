@@ -17,7 +17,6 @@ import { useRegisterWallet } from '@/store/registerWallet'
 import { useToast } from '../ui/use-toast'
 import { useSignalStore } from '@/store/signalEffect'
 import { registerWalletForCustomer } from '@/services/request'
-import { useUserStore } from '@/store/user'
 import { CustomersOrganization } from './tables/customers/columns'
 import { useManagerOrganization } from '@/store/managers_benckmark_exchanges'
 import {
@@ -67,10 +66,6 @@ export default function RelateClientExchangeModal({
       riskProfile,
     },
   ] = useRegisterWallet((state) => [state])
-
-  const [uuidOrganization] = useUserStore((state) => [
-    state.user.uuidOrganization,
-  ])
 
   const { toast } = useToast()
 
@@ -133,7 +128,6 @@ export default function RelateClientExchangeModal({
     })
 
     const result = await registerWalletForCustomer(
-      uuidOrganization,
       rowInfos.id,
       currency,
       investedAmount,

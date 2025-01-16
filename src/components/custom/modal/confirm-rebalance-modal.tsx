@@ -9,7 +9,6 @@ import { CircleAlert } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { rebalanceWallet } from '@/services/request'
 import { useParams } from 'react-router-dom'
-import { useUserStore } from '@/store/user'
 import { useSignalStore } from '@/store/signalEffect'
 
 interface ConfirmContactModalProps {
@@ -24,7 +23,6 @@ export default function ConfirmRebalanceModal({
   fetchData,
 }: ConfirmContactModalProps) {
   const { walletUuid } = useParams()
-  const uuidOrganization = useUserStore((state) => state.user.uuidOrganization)
   const [setSignal, signal] = useSignalStore((state) => [
     state.setSignal,
     state.signal,
@@ -32,8 +30,8 @@ export default function ConfirmRebalanceModal({
 
   const handleConfirmContact = async () => {
     try {
-      if (walletUuid && uuidOrganization) {
-        await rebalanceWallet(uuidOrganization, walletUuid)
+      if (walletUuid) {
+        await rebalanceWallet(walletUuid)
 
         if (!signal) {
           setSignal(true)

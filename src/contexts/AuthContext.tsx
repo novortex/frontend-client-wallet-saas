@@ -1,1 +1,0 @@
-// to-do: completar o contexto de autenticação do firebase 

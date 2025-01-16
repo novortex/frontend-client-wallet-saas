@@ -6,7 +6,6 @@ import {
   getAllExchange,
   getAllManagersOnOrganization,
 } from '@/services/request'
-import { useUserStore } from '@/store/user'
 import { useSignalStore } from '@/store/signalEffect'
 import { useToast } from '@/components/ui/use-toast'
 import { DataTableCustomers } from '@/components/custom/tables/customers/data-table'
@@ -19,9 +18,6 @@ import { useManagerOrganization } from '@/store/managers_benckmark_exchanges'
 export function Customers() {
   const [data, setData] = useState<CustomersOrganization[]>([])
   const [loading, setLoading] = useState(true)
-  const [uuidOrganization] = useUserStore((state) => [
-    state.user.uuidOrganization,
-  ])
   const [signal] = useSignalStore((state) => [state.signal])
   const [setManager, setBenchs, setExchanges] = useManagerOrganization(
     (state) => [state.setManagers, state.setBenchs, state.setExchanges],
@@ -32,11 +28,10 @@ export function Customers() {
   useEffect(() => {
     // TODO: separe this script this file :)
     async function getData(
-      uuidOrganization: string,
       setDate: React.Dispatch<React.SetStateAction<CustomersOrganization[]>>,
     ) {
       try {
-        const result = await getAllCustomersOrganization(uuidOrganization)
+        const result = await getAllCustomersOrganization()
 
         if (!result) {
           return toast({
@@ -74,13 +69,13 @@ export function Customers() {
         })
       }
     }
-    getData(uuidOrganization, setData)
+    getData(setData)
 
     const fetchManagersAndBenchmarks = async () => {
       try {
-        const managers = await getAllManagersOnOrganization(uuidOrganization)
-        const benchmarks = await getAllBenchmark(uuidOrganization)
-        const exchanges = await getAllExchange(uuidOrganization)
+        const managers = await getAllManagersOnOrganization()
+        const benchmarks = await getAllBenchmark()
+        const exchanges = await getAllExchange()
 
         setManager(managers)
         setBenchs(benchmarks)
@@ -90,7 +85,7 @@ export function Customers() {
       }
     }
     fetchManagersAndBenchmarks()
-  }, [uuidOrganization, signal, toast, setManager, setBenchs, setExchanges])
+  }, [signal, toast, setManager, setBenchs, setExchanges])
 
   if (loading) {
     return <div>Loading...</div>
