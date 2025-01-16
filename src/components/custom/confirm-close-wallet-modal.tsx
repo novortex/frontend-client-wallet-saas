@@ -64,7 +64,7 @@ export default function ConfirmCloseWalletModal({
     const customDate = date.toISOString()
     if (walletUuid) {
       if (startWallet) {
-        await requestStartWallet(uuidOrganization, walletUuid)
+        await requestStartWallet(uuidOrganization, walletUuid, { customDate })
       } else {
         await closeWallet(uuidOrganization, walletUuid, { customDate })
       }
@@ -128,6 +128,12 @@ export default function ConfirmCloseWalletModal({
             placeholder="Type here"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && isInputValid) {
+                handleSendWalletAction()
+              }
+            }}
+            onPaste={(e) => e.preventDefault()}
             className="w-1/2 bg-[#131313] border-[#323232] text-[#959CB6]"
           />
         </div>

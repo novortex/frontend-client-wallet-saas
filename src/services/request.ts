@@ -436,11 +436,12 @@ export async function updateWallet(
 export async function startWallet(
   organizationUuid: string,
   walletUuid: string,
+  data: { customDate: string },
 ) {
   try {
     const result = await instance.put(
       `wallet/${walletUuid}/startWallet`,
-      {},
+      data,
       {
         headers: { 'x-organization': organizationUuid },
       },
