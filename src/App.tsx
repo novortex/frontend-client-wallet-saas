@@ -14,6 +14,7 @@ import Root from './pages/outlet'
 import { useAuth0 } from '@auth0/auth0-react'
 import { AuthHandler } from './auth/auth-handler'
 import { Auth0Callback } from './auth/auth0-callback'
+import { AuthInitializer } from './auth/authInitializer'
 
 export function App() {
   const [isMobile, setIsMobile] = useState(false)
@@ -35,25 +36,28 @@ export function App() {
   }
 
   return (
-    <Routes>
-      {isMobile ? (
-        <Route path="/" element={<AdviceToTeam />} />
-      ) : (
-        <Route element={<AuthHandler />}>
-          <Route path="/callback" element={<Auth0Callback />} />
-          <Route element={<Root />}>
-            <Route path="/" element={<Navigate to="/wallets" replace />} />
-            <Route path="/wallet/:walletUuid/assets" element={<Wallet />} />
-            <Route path="/wallets" element={<Clients />} />
-            <Route path="/customers" element={<Customers />} />
-            <Route path="/admin/orgs" element={<AssetsOrg />} />
-            <Route path="/clients/:walletUuid/infos" element={<Infos />} />
-            <Route path="/wallet/:walletUuid/graphs" element={<Graphs />} />
-            <Route path="/wallet/:walletUuid/history" element={<History />} />
-            <Route path="*" element={<ErrorPage />} />
+    <>
+      <AuthInitializer />
+      <Routes>
+        {isMobile ? (
+          <Route path="/" element={<AdviceToTeam />} />
+        ) : (
+          <Route element={<AuthHandler />}>
+            <Route path="/callback" element={<Auth0Callback />} />
+            <Route element={<Root />}>
+              <Route path="/" element={<Navigate to="/wallets" replace />} />
+              <Route path="/wallet/:walletUuid/assets" element={<Wallet />} />
+              <Route path="/wallets" element={<Clients />} />
+              <Route path="/customers" element={<Customers />} />
+              <Route path="/admin/orgs" element={<AssetsOrg />} />
+              <Route path="/clients/:walletUuid/infos" element={<Infos />} />
+              <Route path="/wallet/:walletUuid/graphs" element={<Graphs />} />
+              <Route path="/wallet/:walletUuid/history" element={<History />} />
+              <Route path="*" element={<ErrorPage />} />
+            </Route>
           </Route>
-        </Route>
-      )}
-    </Routes>
+        )}
+      </Routes>
+    </>
   )
 }

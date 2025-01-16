@@ -98,16 +98,26 @@ export async function registerNewCustomer(
   }
 }
 
-export async function getWalletOrganization(
-  organizationUuid: string,
-): Promise<TClientInfosResponse[]> {
-  try {
-    const response = await instance.get<TClientInfosResponse[]>(`wallet`, {
-      headers: {
-        'x-organization': organizationUuid,
-      },
-    })
+// export async function getWalletOrganization(
+//   organizationUuid: string,
+// ): Promise<TClientInfosResponse[]> {
+//   try {
+//     const response = await instance.get<TClientInfosResponse[]>(`wallet`, {
+//       headers: {
+//         'x-organization': organizationUuid,
+//       },
+//     })
 
+//     return response.data
+//   } catch (error) {
+//     console.error(error)
+//     throw error
+//   }
+// }
+
+export async function getWalletOrganization(): Promise<TClientInfosResponse[]> {
+  try {
+    const response = await instance.get<TClientInfosResponse[]>('wallet')
     return response.data
   } catch (error) {
     console.error(error)
