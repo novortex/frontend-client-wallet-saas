@@ -17,7 +17,10 @@ import { getAllManagersOnOrganization } from '@/services/request'
 import { AlertsFilter } from './AlertsFilter'
 import { ExchangeFilter } from './ExchangeFilter'
 import { BenchmarkFilter } from './BenchmarkFilter'
-import { getBenchmarkOptions } from '@/services/assetsService'
+import {
+  getBenchmarkOptions,
+  getExchangesDisposables,
+} from '@/services/assetsService'
 
 type ApplyFiltersProps = {
   handleApplyFilters: (filters: {
@@ -27,7 +30,7 @@ type ApplyFiltersProps = {
     filterUnbalanced: boolean
     filterNewest: boolean
     filterOldest: boolean
-    selectedExchange: string
+    selectedExchanges: string[]
     selectedBenchmark: string[]
   }) => void
 }
@@ -37,9 +40,12 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
   const [selectedManagers, setSelectedManagers] = useState<string[]>([])
   const [selectedWalletTypes, setSelectedWalletTypes] = useState<string[]>([])
   const [selectedBenchmark, setSelectedBenchmark] = useState<string[]>([])
-  const [selectedExchange, setSelectedExchange] = useState<string>('')
+  const [selectedExchanges, setSelectedExchanges] = useState<string[]>([])
   const [managers, setManagers] = useState<{ name: string }[]>([])
   const [benchmarks, setBenchmarks] = useState<{ name: string }[]>([])
+  const [availableExchanges, setAvailableExchanges] = useState<
+    { name: string }[]
+  >([])
   const [filters, setFilters] = useState({
     filterDelayed: false,
     filterUnbalanced: false,
@@ -62,15 +68,25 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
       setManagers(result.map((item) => ({ name: item.name })))
     }
 
+    const fetchExchanges = async () => {
+      const result = await getExchangesDisposables(uuidOrganization)
+      setAvailableExchanges(
+        result?.map((exchange) => ({
+          name: exchange.name,
+        })) || [],
+      )
+    }
+
     fetchBenchmarks()
     fetchManagers()
+    fetchExchanges()
   }, [uuidOrganization])
 
   const applyFilters = () => {
     handleApplyFilters({
       selectedManagers,
       selectedWalletTypes,
-      selectedExchange,
+      selectedExchanges,
       selectedBenchmark,
       ...filters,
     })
@@ -82,13 +98,12 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
     setFilters((prev) => ({ ...prev, [filterName]: value }))
   }
 
-  const handleSelectWalletType = (type: string) =>
-    setSelectedWalletTypes((prev) => [...prev, type])
-  const handleRemoveWalletType = (type: string) =>
-    setSelectedWalletTypes((prev) => prev.filter((t) => t !== type))
+  const handleSelectExchange = (exchangeName: string) => {
+    setSelectedExchanges((prev) => [...prev, exchangeName])
+  }
 
-  const handleExchangeChange = (value: string) => {
-    setSelectedExchange(value)
+  const handleRemoveExchange = (exchangeName: string) => {
+    setSelectedExchanges((prev) => prev.filter((name) => name !== exchangeName))
   }
 
   const handleSelectManager = (name: string) =>
@@ -112,7 +127,7 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
     setSelectedManagers([])
     setSelectedWalletTypes([])
     setSelectedBenchmark([])
-    setSelectedExchange('')
+    setSelectedExchanges([])
     setFilters({
       filterDelayed: false,
       filterUnbalanced: false,
@@ -143,8 +158,12 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
 
         <WalletTypeFilter
           selectedWalletTypes={selectedWalletTypes}
-          handleSelectWalletType={handleSelectWalletType}
-          handleRemoveWalletType={handleRemoveWalletType}
+          handleSelectWalletType={(type) =>
+            setSelectedWalletTypes((prev) => [...prev, type])
+          }
+          handleRemoveWalletType={(type) =>
+            setSelectedWalletTypes((prev) => prev.filter((t) => t !== type))
+          }
         />
 
         <OrderByFilter
@@ -178,9 +197,10 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
         />
 
         <ExchangeFilter
-          uuidOrganization={uuidOrganization}
-          selectedExchange={selectedExchange}
-          handleExchangeChange={handleExchangeChange}
+          exchanges={availableExchanges}
+          selectedExchanges={selectedExchanges}
+          handleSelectExchange={handleSelectExchange}
+          handleRemoveExchange={handleRemoveExchange}
         />
 
         <BenchmarkFilter

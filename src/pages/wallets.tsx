@@ -26,7 +26,7 @@ export function Clients() {
     filterOldest: false,
     filterNearestRebalancing: false,
     filterFurtherRebalancing: false,
-    exchanges: [] as string[],
+    selectedExchanges: [] as string[],
     selectedBenchmark: [] as string[],
   })
 
@@ -62,7 +62,7 @@ export function Clients() {
       filterOldest,
       filterNearestRebalancing,
       filterFurtherRebalancing,
-      exchanges,
+      selectedExchanges,
       selectedBenchmark,
     } = filters
 
@@ -95,7 +95,12 @@ export function Clients() {
 
         // Verificação das exchanges
         const exchangeMatches =
-          exchanges.length === 0 || exchanges.includes(client.exchange)
+          selectedExchanges.length === 0 ||
+          selectedExchanges.some(
+            (selectedExchanges) =>
+              selectedExchanges.toLowerCase().trim() ===
+              client.exchange.toLowerCase().trim(),
+          )
 
         const benchMarkMatches =
           selectedBenchmark.length === 0 ||
