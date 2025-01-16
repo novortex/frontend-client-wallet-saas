@@ -106,6 +106,7 @@ export default function ConfirmCloseWalletModal({
                   mode="single"
                   selected={date}
                   onSelect={(newDate) => newDate && setDate(newDate)}
+                  disabled={(date) => date > new Date()}
                   className="bg-[#131313] text-white rounded-md"
                   classNames={{
                     day_today: isToday(date)
