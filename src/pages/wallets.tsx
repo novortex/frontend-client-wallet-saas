@@ -144,8 +144,6 @@ export function Clients() {
     setFilters((prev) => ({ ...prev, ...newFilters }))
   }
 
-  console.log(`filteredClients`, filteredClients)
-
   return (
     <div className="p-10">
       <div className="mb-10 flex items-center justify-between">

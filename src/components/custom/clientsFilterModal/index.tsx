@@ -216,7 +216,7 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
           </Button>
 
           <Button variant="outline" onClick={resetFilters}>
-            Clean
+            Clear
           </Button>
         </DialogFooter>
       </DialogContent>
