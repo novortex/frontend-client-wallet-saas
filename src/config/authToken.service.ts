@@ -1,16 +1,27 @@
-// src/services/authToken.ts
-import { useAuth0 } from '@auth0/auth0-react'
+import { Auth0Client } from '@auth0/auth0-spa-js'
 
-let getToken: () => Promise<string>
+let auth0Client: Auth0Client | null = null
 
-export const initializeAuth = () => {
-  const { getAccessTokenSilently } = useAuth0()
-  getToken = getAccessTokenSilently
+export const initializeAuth = async () => {
+  if (!auth0Client) {
+    auth0Client = new Auth0Client({
+      domain: import.meta.env.VITE_AUTH0_DOMAIN,
+      clientId: import.meta.env.VITE_AUTH0_CLIENT_ID,
+      authorizationParams: {
+        audience: import.meta.env.VITE_AUTH0_AUDIENCE,
+      },
+    })
+  }
 }
 
-export const getAccessToken = () => {
-  if (!getToken) {
-    throw new Error('Auth not initialized')
+export const getAccessToken = async () => {
+  if (!auth0Client) return null
+
+  try {
+    const token = await auth0Client.getTokenSilently()
+    return token
+  } catch (error) {
+    console.error('Error getting access token:', error)
+    return null
   }
-  return getToken()
 }

@@ -9,11 +9,11 @@ const rootElement = document.getElementById('root')
 if (rootElement) {
   ReactDOM.createRoot(rootElement).render(
     <Auth0Provider
-      domain="dev-xg6cr74dpsnlijfn.us.auth0.com"
-      clientId="j6YAVNNV2xgoH0SNm1cLQ5rsWDQ6MWhB"
+      domain={import.meta.env.VITE_AUTH0_DOMAIN}
+      clientId={import.meta.env.VITE_AUTH0_CLIENT_ID}
       authorizationParams={{
         redirect_uri: window.location.origin,
-        audience: 'https://wealthVaultDeveloper.com/auth',
+        audience: import.meta.env.VITE_AUTH0_AUDIENCE,
         scope:
           'openid profile email offline_access read:current_user read:roles',
       }}

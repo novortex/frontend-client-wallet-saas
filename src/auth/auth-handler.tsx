@@ -32,32 +32,3 @@ export const AuthHandler = () => {
 
   return isAuthenticated ? <Outlet /> : null
 }
-
-// Hook para verificar permissões específicas
-export const useAuthGuard = (requiredPermission: string) => {
-  const { user, loginWithRedirect } = useAuth0()
-  const location = useLocation()
-
-  useEffect(() => {
-    const checkPermission = async () => {
-      const permissions =
-        user?.['https://wealthVaultDeveloper.com/permissions'] || []
-      if (!permissions.includes(requiredPermission)) {
-        localStorage.setItem(
-          'auth_app_state',
-          JSON.stringify({
-            returnTo: location.pathname,
-          }),
-        )
-
-        await loginWithRedirect({
-          appState: { returnTo: location.pathname },
-        })
-      }
-    }
-
-    if (user) {
-      checkPermission()
-    }
-  }, [user, requiredPermission, loginWithRedirect, location])
-}
