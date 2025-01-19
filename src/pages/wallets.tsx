@@ -26,7 +26,8 @@ export function Clients() {
     filterOldest: false,
     filterNearestRebalancing: false,
     filterFurtherRebalancing: false,
-    exchanges: [] as string[], // Aqui já temos exchanges no filtro
+    selectedExchanges: [] as string[],
+    selectedBenchmark: [] as string[],
   })
 
   const fetchClients = useCallback(async () => {
@@ -52,7 +53,6 @@ export function Clients() {
 
   const normalizeRiskProfile = (riskProfile: string) =>
     riskProfile.toLowerCase().replace(/_/g, '-')
-
   const applyFilters = useCallback(() => {
     const {
       selectedManagers,
@@ -62,7 +62,8 @@ export function Clients() {
       filterOldest,
       filterNearestRebalancing,
       filterFurtherRebalancing,
-      exchanges, // Aqui vamos considerar o filtro de exchanges
+      selectedExchanges,
+      selectedBenchmark,
     } = filters
 
     const filtered = clients
@@ -72,12 +73,18 @@ export function Clients() {
             .toLowerCase()
             .includes(searchTerm.toLowerCase()) ||
           client.managerName.toLowerCase().includes(searchTerm.toLowerCase())
+
+        // Verificação do gerente selecionado
         const managerMatches =
           selectedManagers.length === 0 ||
           selectedManagers.includes(client.managerName)
+
+        // Verificação do estado de balanceamento
         const unbalancedMatches =
           !filterUnbalanced ||
           (client.nextBalance && new Date(client.nextBalance) < new Date())
+
+        // Verificação do tipo de carteira
         const walletTypeMatches =
           selectedWalletTypes.length === 0 ||
           selectedWalletTypes.some(
@@ -85,16 +92,27 @@ export function Clients() {
               normalizeRiskProfile(type) ===
               normalizeRiskProfile(client.riskProfile),
           )
+
+        // Verificação das exchanges
         const exchangeMatches =
-          exchanges.length === 0 ||
-          exchanges.some((exchange) => client.exchange.includes(exchange))
+          selectedExchanges.length === 0 ||
+          selectedExchanges.some(
+            (selectedExchanges) =>
+              selectedExchanges.toLowerCase().trim() ===
+              client.exchange.toLowerCase().trim(),
+          )
+
+        const benchMarkMatches =
+          selectedBenchmark.length === 0 ||
+          selectedBenchmark.includes(client.benchmark)
 
         return (
           nameMatches &&
           managerMatches &&
           unbalancedMatches &&
           walletTypeMatches &&
-          exchangeMatches
+          exchangeMatches &&
+          benchMarkMatches
         )
       })
       .sort((a, b) => {

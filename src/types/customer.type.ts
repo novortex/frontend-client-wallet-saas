@@ -33,6 +33,7 @@ export type TClientInfosResponse = {
 
   exchange: string
   nextBalance: string
+  benchmark: string
   createAt: string
 }
 

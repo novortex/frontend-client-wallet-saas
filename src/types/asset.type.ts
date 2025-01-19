@@ -16,3 +16,9 @@ export type AssetsOrganizationForSelectedResponse = {
   name: string
   icon: string
 }
+
+export type BenchmarksProps = {
+  benchmarkType: string
+  cuid: string
+  name: string
+}
