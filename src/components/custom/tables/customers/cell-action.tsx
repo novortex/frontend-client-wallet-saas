@@ -37,7 +37,6 @@ import {
 import { useManagerOrganization } from '@/store/managers_benckmark_exchanges'
 import { Checkbox } from '@/components/ui/checkbox'
 import { updateCustomer, updateWallet } from '@/services/request'
-import { useUserStore } from '@/store/user'
 import { useToast } from '@/components/ui/use-toast'
 import { useSignalStore } from '@/store/signalEffect'
 
@@ -77,10 +76,6 @@ export default function CellActions({
     state.exchanges,
   ])
 
-  const [uuidOrganization] = useUserStore((state) => [
-    state.user.uuidOrganization,
-  ])
-
   const [setSignal, signal] = useSignalStore((state) => [
     state.setSignal,
     state.signal,
@@ -112,7 +107,7 @@ export default function CellActions({
         description: 'Demo Vault !!',
       })
 
-      const result = await updateCustomer(uuidOrganization, rowInfos.id, {
+      const result = await updateCustomer(rowInfos.id, {
         name: nameRef.current?.value ?? '',
         email: emailRef.current?.value ?? '',
         phone: phoneRef.current?.value ?? '',
@@ -150,20 +145,16 @@ export default function CellActions({
         description: 'Demo Vault !!',
       })
 
-      const result = await updateWallet(
-        uuidOrganization,
-        rowInfos.walletUuid || '',
-        {
-          accountPassword: accountPasswordRef.current?.value ?? '',
-          contract: contractChecked,
-          emailExchange: emailExchangeRef.current?.value ?? '',
-          emailPassword: emailPasswordRef.current?.value ?? '',
-          exchangeUuid: ExchangeSelected,
-          initialFeeIsPaid: initialFeeIsPaid ?? false,
-          manager,
-          performanceFee: parseFloat(String(performanceFee)),
-        },
-      )
+      const result = await updateWallet(rowInfos.walletUuid || '', {
+        accountPassword: accountPasswordRef.current?.value ?? '',
+        contract: contractChecked,
+        emailExchange: emailExchangeRef.current?.value ?? '',
+        emailPassword: emailPasswordRef.current?.value ?? '',
+        exchangeUuid: ExchangeSelected,
+        initialFeeIsPaid: initialFeeIsPaid ?? false,
+        manager,
+        performanceFee: parseFloat(String(performanceFee)),
+      })
 
       if (result !== true) {
         return toast({

@@ -12,6 +12,7 @@
         "preview": "vite preview"
     },
     "dependencies": {
+        "@auth0/auth0-react": "^2.2.4",
         "@babel/plugin-transform-runtime": "^7.25.9",
         "@heroicons/react": "^2.1.4",
         "@radix-ui/react-alert-dialog": "^1.0.5",
@@ -29,7 +30,7 @@
         "@radix-ui/react-tabs": "^1.1.0",
         "@radix-ui/react-toast": "^1.2.1",
         "@tanstack/react-table": "^8.19.2",
-        "axios": "^1.7.2",
+        "axios": "^1.7.9",
         "class-variance-authority": "^0.7.0",
         "clsx": "^2.1.1",
         "date-fns": "^3.6.0",

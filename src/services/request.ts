@@ -12,55 +12,30 @@ import {
 
 export async function getInfosCustomer(
   walletUuid: string,
-  organizationUuid: string,
 ): Promise<TInfosCustomerResponse | undefined> {
   try {
     const result = await instance.get<TInfosCustomerResponse>(
       `wallet/${walletUuid}/infos`,
-      {
-        headers: {
-          'x-organization': organizationUuid,
-        },
-      },
     )
-
     return result.data
   } catch (error) {
     console.log(error)
   }
 }
 
-export async function getAllAssetsOrg(organizationUuid: string) {
+export async function getAllAssetsOrg() {
   try {
-    const result = await instance.get<TAssetsOrganizationResponse[]>(
-      `management/${organizationUuid}/assets`,
-      {
-        headers: {
-          'x-organization': organizationUuid,
-        },
-      },
-    )
-
+    const result =
+      await instance.get<TAssetsOrganizationResponse[]>('management/assets')
     return result.data
   } catch (error) {
     console.log(error)
   }
 }
 
-export async function addCryptoOrg(organizationUuid: string, idCmc: number[]) {
+export async function addCryptoOrg(idCmc: number[]) {
   try {
-    const result = await instance.post(
-      `management/${organizationUuid}/asset`,
-      {
-        idCmc,
-      },
-      {
-        headers: {
-          'x-organization': organizationUuid,
-        },
-      },
-    )
-
+    const result = await instance.post('management/asset', { idCmc })
     return result.data
   } catch (error) {
     console.log(error)
@@ -71,7 +46,6 @@ export async function addCryptoOrg(organizationUuid: string, idCmc: number[]) {
 export async function registerNewCustomer(
   name: string,
   email: string,
-  organizationUuid: string,
   phone?: string,
 ): Promise<TNewCustomerResponse> {
   try {
@@ -79,19 +53,11 @@ export async function registerNewCustomer(
       name,
       email,
       phone,
-      organizationUuid,
     }
-
     const result = await instance.post<TNewCustomerResponse>(
       'management/costumer',
       data,
-      {
-        headers: {
-          'x-organization': organizationUuid,
-        },
-      },
     )
-
     return result.data
   } catch (error) {
     console.error('Error registering new customer:', error)
@@ -99,16 +65,9 @@ export async function registerNewCustomer(
   }
 }
 
-export async function getWalletOrganization(
-  organizationUuid: string,
-): Promise<TClientInfosResponse[]> {
+export async function getWalletOrganization(): Promise<TClientInfosResponse[]> {
   try {
-    const response = await instance.get<TClientInfosResponse[]>(`wallet`, {
-      headers: {
-        'x-organization': organizationUuid,
-      },
-    })
-
+    const response = await instance.get<TClientInfosResponse[]>('wallet')
     return response.data
   } catch (error) {
     console.error(error)
@@ -117,27 +76,17 @@ export async function getWalletOrganization(
 }
 
 export async function updateAssetWalletInformations(
-  organizationUuid: string,
   walletUuid: string,
   assetUuid: string,
   quantity: number,
   targetAllocation: number,
 ) {
   try {
-    const result = await instance.put(
-      `wallet/${walletUuid}/asset`,
-      {
-        assetUuid,
-        quantity,
-        targetAllocation,
-      },
-      {
-        headers: {
-          'x-organization': organizationUuid,
-        },
-      },
-    )
-
+    const result = await instance.put(`wallet/${walletUuid}/asset`, {
+      assetUuid,
+      quantity,
+      targetAllocation,
+    })
     return result.data
   } catch (error) {
     console.log(error)
@@ -145,22 +94,9 @@ export async function updateAssetWalletInformations(
   }
 }
 
-export async function confirmContactClient(
-  organizationUuid: string,
-  walletUuid: string,
-) {
+export async function confirmContactClient(walletUuid: string) {
   try {
-    const result = await instance.patch(
-      'management/contact',
-      {
-        walletUuid,
-      },
-      {
-        headers: {
-          'x-organization': organizationUuid,
-        },
-      },
-    )
+    const result = await instance.patch('management/contact', { walletUuid })
     return result.data
   } catch (error) {
     console.error(error)
@@ -168,18 +104,11 @@ export async function confirmContactClient(
   }
 }
 
-export async function getAllManagersOnOrganization(
-  organizationUuid: string,
-): Promise<{ name: string; uuid: string }[]> {
+export async function getAllManagersOnOrganization(): Promise<
+  { name: string; uuid: string }[]
+> {
   try {
-    const result = await instance.get(
-      `management/${organizationUuid}/managers`,
-      {
-        headers: {
-          'x-organization': organizationUuid,
-        },
-      },
-    )
+    const result = await instance.get('management/managers')
     return result.data
   } catch (error) {
     console.error(error)
@@ -187,30 +116,19 @@ export async function getAllManagersOnOrganization(
   }
 }
 
-export async function getAllCustomersOrganization(organizationUuid: string) {
+export async function getAllCustomersOrganization() {
   try {
-    const result = await instance.get<TCustomersOrganization[]>(
-      `management/${organizationUuid}/clients`,
-      {
-        headers: {
-          'x-organization': organizationUuid,
-        },
-      },
-    )
-
+    const result =
+      await instance.get<TCustomersOrganization[]>('management/clients')
     return result.data
   } catch (error) {
     console.log(error)
   }
 }
 
-export async function convertedTimeZone(organizationUuid: string) {
+export async function convertedTimeZone() {
   try {
-    const result = await instance.get('management/timezone', {
-      headers: {
-        'x-organization': organizationUuid,
-      },
-    })
+    const result = await instance.get('management/timezone')
     return result.data
   } catch (error) {
     console.error(error)
@@ -219,7 +137,6 @@ export async function convertedTimeZone(organizationUuid: string) {
 }
 
 export async function registerWalletForCustomer(
-  organizationUuid: string,
   customerUuid: string,
   currency: string,
   investedAmount: number,
@@ -253,12 +170,7 @@ export async function registerWalletForCustomer(
       managerUuid,
     }
 
-    const result = await instance.post<TNewCustomerResponse>('wallet', data, {
-      headers: {
-        'x-organization': organizationUuid,
-      },
-    })
-
+    const result = await instance.post<TNewCustomerResponse>('wallet', data)
     return result.data
   } catch (error) {
     console.error('Error registering new customer:', error)
@@ -266,14 +178,9 @@ export async function registerWalletForCustomer(
   }
 }
 
-export async function getAllBenchmark(organizationUuid: string) {
+export async function getAllBenchmark() {
   try {
-    const result = await instance.get('management/benchmark', {
-      headers: {
-        'x-organization': organizationUuid,
-      },
-    })
-
+    const result = await instance.get('management/benchmark')
     return result.data
   } catch (error) {
     console.error(error)
@@ -281,14 +188,9 @@ export async function getAllBenchmark(organizationUuid: string) {
   }
 }
 
-export async function getAllExchange(organizationUuid: string) {
+export async function getAllExchange() {
   try {
-    const result = await instance.get('management/exchanges', {
-      headers: {
-        'x-organization': organizationUuid,
-      },
-    })
-
+    const result = await instance.get('management/exchanges')
     return result.data
   } catch (error) {
     console.error(error)
@@ -296,13 +198,9 @@ export async function getAllExchange(organizationUuid: string) {
   }
 }
 
-export async function getAllFiatCurrencies(organizationUuid: string) {
+export async function getAllFiatCurrencies() {
   try {
-    const result = await instance.get('management/fiat-currencies', {
-      headers: {
-        'x-organization': organizationUuid,
-      },
-    })
+    const result = await instance.get('management/fiat-currencies')
     return result.data
   } catch (error) {
     console.error(error)
@@ -311,7 +209,6 @@ export async function getAllFiatCurrencies(organizationUuid: string) {
 }
 
 export async function createDepositWithdrawal(
-  organizationUuid: string,
   amount: number,
   walletUuid: string,
   currency: string,
@@ -320,9 +217,7 @@ export async function createDepositWithdrawal(
 ) {
   try {
     const data = { amount, walletUuid, currency, isWithdrawal, date }
-    const result = await instance.post('wallet/deposit-withdrawal', data, {
-      headers: { 'x-organization': organizationUuid },
-    })
+    const result = await instance.post('wallet/deposit-withdrawal', data)
     return result.data
   } catch (error) {
     console.error(error)
@@ -330,17 +225,10 @@ export async function createDepositWithdrawal(
   }
 }
 
-export async function deleteAssetWallet(
-  organizationUuid: string,
-  walletUuid: string,
-  assetUuid: string,
-) {
+export async function deleteAssetWallet(walletUuid: string, assetUuid: string) {
   try {
     const result = await instance.delete(
       `wallet/${walletUuid}/assets/${assetUuid}`,
-      {
-        headers: { 'x-organization': organizationUuid },
-      },
     )
     return result.data
   } catch (error) {
@@ -349,14 +237,9 @@ export async function deleteAssetWallet(
   }
 }
 
-export async function getGraphData(
-  organizationUuid: string,
-  walletUuid: string,
-) {
+export async function getGraphData(walletUuid: string) {
   try {
-    const result = await instance.get(`wallet/${walletUuid}/graphData`, {
-      headers: { 'x-organization': organizationUuid },
-    })
+    const result = await instance.get(`wallet/${walletUuid}/graphData`)
     return result.data
   } catch (error) {
     console.error(error)
@@ -365,7 +248,6 @@ export async function getGraphData(
 }
 
 export async function updateCustomer(
-  organizationUuid: string,
   customerUuid: string,
   data: {
     name: string
@@ -377,9 +259,6 @@ export async function updateCustomer(
     const result = await instance.put(
       `management/customer/${customerUuid}`,
       data,
-      {
-        headers: { 'x-organization': organizationUuid },
-      },
     )
     return result.data
   } catch (error) {
@@ -389,18 +268,11 @@ export async function updateCustomer(
 }
 
 export async function closeWallet(
-  organizationUuid: string,
   walletUuid: string,
   data: { customDate: string },
 ) {
   try {
-    const result = await instance.put(
-      `wallet/${walletUuid}/closeWallet`,
-      data,
-      {
-        headers: { 'x-organization': organizationUuid },
-      },
-    )
+    const result = await instance.put(`wallet/${walletUuid}/closeWallet`, data)
     return result.data
   } catch (error) {
     console.error(error)
@@ -409,7 +281,6 @@ export async function closeWallet(
 }
 
 export async function updateWallet(
-  organizationUuid: string,
   walletUuid: string,
   data: {
     initialFeeIsPaid: boolean
@@ -423,9 +294,7 @@ export async function updateWallet(
   },
 ) {
   try {
-    const result = await instance.put(`management/wallet/${walletUuid}`, data, {
-      headers: { 'x-organization': organizationUuid },
-    })
+    const result = await instance.put(`management/wallet/${walletUuid}`, data)
     return result.data
   } catch (error) {
     console.error(error)
@@ -434,18 +303,11 @@ export async function updateWallet(
 }
 
 export async function startWallet(
-  organizationUuid: string,
   walletUuid: string,
   data: { customDate: string },
 ) {
   try {
-    const result = await instance.put(
-      `wallet/${walletUuid}/startWallet`,
-      data,
-      {
-        headers: { 'x-organization': organizationUuid },
-      },
-    )
+    const result = await instance.put(`wallet/${walletUuid}/startWallet`, data)
     return result.data
   } catch (error) {
     console.error(error)
@@ -470,7 +332,6 @@ export async function downloadPdf(
   close_wallet_value_in_organization_fiat: string,
   wallet_benchmark_exceeded_value: string,
   assets: { name: string; allocation: number }[],
-  organizationUuid: string,
 ) {
   const pdfData = {
     client_name,
@@ -493,36 +354,28 @@ export async function downloadPdf(
 
   try {
     const response = await instance.post('management/generate-pdf', pdfData, {
-      responseType: 'blob', // Define o tipo de resposta como blob para arquivos binários (como PDFs)
+      responseType: 'blob',
       headers: {
         'Content-Type': 'application/json',
-        'x-organization': organizationUuid,
       },
     })
 
-    // Cria um link para download
     const url = window.URL.createObjectURL(new Blob([response.data]))
     const link = document.createElement('a')
     link.href = url
-    link.setAttribute('download', 'close_wallet.pdf') // Nome do arquivo que será baixado
+    link.setAttribute('download', 'close_wallet.pdf')
     document.body.appendChild(link)
-    link.click() // Simula o clique no link para iniciar o download
+    link.click()
   } catch (error) {
     console.error('Erro ao fazer download do PDF:', error)
   }
 }
 
-export async function rebalanceWallet(
-  organizationUuid: string,
-  walletUuid: string,
-) {
+export async function rebalanceWallet(walletUuid: string) {
   try {
     const result = await instance.put(
       `wallet/${walletUuid}/rebalanceWallet`,
       {},
-      {
-        headers: { 'x-organization': organizationUuid },
-      },
     )
     return result.data
   } catch (error) {

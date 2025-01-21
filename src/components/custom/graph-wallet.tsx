@@ -17,7 +17,6 @@ import {
 } from '@/components/ui/chart'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { useUserStore } from '@/store/user'
 import { getGraphData } from '@/services/request'
 
 const chartConfig = {
@@ -42,15 +41,12 @@ export default function WalletGraph() {
   const [graphData, setGraphData] = useState<graphDataEntry[]>([])
   const [isMonthlyView, setIsMonthlyView] = useState(false) // Estado para o switch
   const { walletUuid } = useParams()
-  const [uuidOrganization] = useUserStore((state) => [
-    state.user.uuidOrganization,
-  ])
 
   useEffect(() => {
     async function fetchGraphData() {
-      if (uuidOrganization && walletUuid) {
+      if (walletUuid) {
         try {
-          const data = await getGraphData(uuidOrganization, walletUuid)
+          const data = await getGraphData(walletUuid)
 
           const sortedData = data.sort(
             (a: graphDataEntry, b: graphDataEntry) =>
@@ -66,7 +62,7 @@ export default function WalletGraph() {
       }
     }
     fetchGraphData()
-  }, [uuidOrganization, walletUuid])
+  }, [walletUuid])
 
   // Função para filtrar o último valor de cada mês
   const getLastEntryOfEachMonth = (data: graphDataEntry[]) => {

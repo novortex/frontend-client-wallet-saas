@@ -8,7 +8,6 @@ import {
 } from '@/services/walletService'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { useUserStore } from '@/store/user'
 import { ClientActive } from '@/components/custom/tables/wallet-client/columns'
 import { useToast } from '@/components/ui/use-toast'
 import { useSignalStore } from '@/store/signalEffect'
@@ -38,16 +37,12 @@ export function Graphs() {
   const [infosWallet, setInfosWallet] = useState<TWalletAssetsInfo>()
   const [loading, setLoading] = useState(true)
   const [graphData, setGraphData] = useState<graphDataEntry[]>([])
-  const [uuidOrganization] = useUserStore((state) => [
-    state.user.uuidOrganization,
-  ])
   const { walletUuid } = useParams()
   const { toast } = useToast()
   const [signal] = useSignalStore((state) => [state.signal])
 
   useEffect(() => {
     async function getData(
-      uuidOrganization: string,
       walletUuid: string,
       setData: React.Dispatch<React.SetStateAction<ClientActive[]>>,
       setInfosWallet: React.Dispatch<
@@ -55,12 +50,9 @@ export function Graphs() {
       >,
     ) {
       try {
-        await updateCurrentAmount(uuidOrganization, walletUuid)
+        await updateCurrentAmount(walletUuid)
 
-        const result = await getAllAssetsWalletClient(
-          uuidOrganization,
-          walletUuid,
-        )
+        const result = await getAllAssetsWalletClient(walletUuid)
 
         if (!result) {
           return toast({
@@ -108,14 +100,14 @@ export function Graphs() {
       return
     }
 
-    getData(uuidOrganization, walletUuid, setData, setInfosWallet)
-  }, [toast, uuidOrganization, walletUuid, signal])
+    getData(walletUuid, setData, setInfosWallet)
+  }, [toast, walletUuid, signal])
 
   useEffect(() => {
     async function fetchGraphData() {
-      if (uuidOrganization && walletUuid) {
+      if (walletUuid) {
         try {
-          const data = await getGraphData(uuidOrganization, walletUuid)
+          const data = await getGraphData(walletUuid)
 
           // Ordenar os dados por data (createAt) de forma decrescente (mais recente primeiro)
           const sortedData = data.sort(
@@ -132,7 +124,7 @@ export function Graphs() {
       }
     }
     fetchGraphData()
-  }, [uuidOrganization, walletUuid])
+  }, [walletUuid])
 
   console.log(graphData)
 

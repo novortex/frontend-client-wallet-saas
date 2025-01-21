@@ -12,7 +12,6 @@ import { OrderByFilter } from './OrderByFilter'
 import { WalletTypeFilter } from './WalletTypeFilter'
 import { ManagerFilter } from './ManagerFilter'
 import { UnbalancedWalletFilter } from './UnbalanceWalletFilter'
-import { useUserStore } from '@/store/user'
 import { getAllManagersOnOrganization } from '@/services/request'
 import { AlertsFilter } from './AlertsFilter'
 import { ExchangeFilter } from './ExchangeFilter'
@@ -55,21 +54,19 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
     filterFurtherRebalancing: false,
   })
 
-  const uuidOrganization = useUserStore((state) => state.user.uuidOrganization)
-
   useEffect(() => {
     const fetchBenchmarks = async () => {
-      const result = await getBenchmarkOptions(uuidOrganization)
+      const result = await getBenchmarkOptions()
       setBenchmarks(result.map((benchmark) => ({ name: benchmark.name })))
     }
 
     const fetchManagers = async () => {
-      const result = await getAllManagersOnOrganization(uuidOrganization)
+      const result = await getAllManagersOnOrganization()
       setManagers(result.map((item) => ({ name: item.name })))
     }
 
     const fetchExchanges = async () => {
-      const result = await getExchangesDisposables(uuidOrganization)
+      const result = await getExchangesDisposables()
       setAvailableExchanges(
         result?.map((exchange) => ({
           name: exchange.name,
@@ -80,7 +77,7 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
     fetchBenchmarks()
     fetchManagers()
     fetchExchanges()
-  }, [uuidOrganization])
+  }, [])
 
   const applyFilters = () => {
     handleApplyFilters({

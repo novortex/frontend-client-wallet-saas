@@ -6,7 +6,6 @@ import {
 } from '@/types/asset.type'
 
 export async function addCryptoWalletClient(
-  organizationUuid: string,
   walletUuid: string,
   assetUuid: string,
   quantity: number,
@@ -20,13 +19,7 @@ export async function addCryptoWalletClient(
         quantity,
         targetAllocation,
       },
-      {
-        headers: {
-          'x-organization': organizationUuid,
-        },
-      },
     )
-
     return result.data
   } catch (error) {
     console.log(error)
@@ -34,52 +27,32 @@ export async function addCryptoWalletClient(
   }
 }
 
-export async function getAllAssetsInOrgForAddWalletClient(
-  organizationUuid: string,
-) {
+export async function getAllAssetsInOrgForAddWalletClient() {
   try {
-    const result = await instance.get<AssetsOrganizationForSelectedResponse[]>(
-      `wallet/${organizationUuid}/assets`,
-      {
-        headers: {
-          'x-organization': organizationUuid,
-        },
-      },
-    )
-
+    const result =
+      await instance.get<AssetsOrganizationForSelectedResponse[]>(
+        `wallet/assets`,
+      )
     return result.data
   } catch (error) {
     console.log(error)
   }
 }
 
-export async function getExchangesDisposables(organizationUuid: string) {
+export async function getExchangesDisposables() {
   try {
     const result = await instance.get<{ name: string; uuid: string }[]>(
       `/management/exchanges`,
-      {
-        headers: {
-          'x-organization': organizationUuid,
-        },
-      },
     )
-
-    return result.data as { name: string; uuid: string }[]
+    return result.data
   } catch (error) {
     console.log(error)
   }
 }
 
-export async function getBenchmarkOptions(
-  organizationUuid: string,
-): Promise<BenchmarksProps[]> {
+export async function getBenchmarkOptions(): Promise<BenchmarksProps[]> {
   try {
-    const result = await instance.get(`/management/benchmark`, {
-      headers: {
-        'x-organization': organizationUuid,
-      },
-    })
-
+    const result = await instance.get(`/management/benchmark`, {})
     return result.data
   } catch (error) {
     console.log(error)

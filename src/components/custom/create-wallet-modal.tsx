@@ -25,7 +25,6 @@ import { useRegisterWallet } from '@/store/registerWallet'
 import { useManagerOrganization } from '@/store/managers_benckmark_exchanges'
 import { CustomersOrganization } from './tables/customers/columns'
 import { getAllFiatCurrencies } from '@/services/request'
-import { useUserStore } from '@/store/user'
 
 interface CreateWalletModalProps {
   isOpen: boolean
@@ -53,9 +52,6 @@ export default function CreateWalletModal({
   const [managersOrganization, benchs] = useManagerOrganization((state) => [
     state.managers,
     state.benchs,
-  ])
-  const [uuidOrganization] = useUserStore((state) => [
-    state.user.uuidOrganization,
   ])
 
   // Função para validar os inputs
@@ -144,7 +140,7 @@ export default function CreateWalletModal({
   useEffect(() => {
     const fetchFiatCurrencies = async () => {
       try {
-        const result = await getAllFiatCurrencies(uuidOrganization)
+        const result = await getAllFiatCurrencies()
 
         const currencyAbbreviations = Object.keys(result.currencies)
 
@@ -155,7 +151,7 @@ export default function CreateWalletModal({
     }
 
     fetchFiatCurrencies()
-  }, [uuidOrganization])
+  }, [])
 
   const calculateProgress = () => {
     let progress = 0

@@ -2,7 +2,6 @@ import { SwitchTheme } from '@/components/custom/switch-theme'
 import { Input } from '@/components/ui/input'
 import HistoryThread from '@/components/custom/history-thread'
 import { getWalletHistoric } from '@/services/walletService'
-import { useUserStore } from '@/store/user'
 import { useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { HistoricEntry } from '@/types/wallet.type'
@@ -17,9 +16,6 @@ export type Filters = {
 
 export function History() {
   const [historic, setHistoric] = useState<HistoricEntry[]>([])
-  const [organizationUuid] = useUserStore((state) => [
-    state.user.uuidOrganization,
-  ])
   const { walletUuid } = useParams()
   const [filters, setFilters] = useState<Filters>({
     eventTypes: [],
@@ -42,9 +38,9 @@ export function History() {
 
   useEffect(() => {
     async function fetchHistoric() {
-      if (organizationUuid && walletUuid) {
+      if (walletUuid) {
         try {
-          const data = await getWalletHistoric(organizationUuid, walletUuid)
+          const data = await getWalletHistoric(walletUuid)
           setHistoric(data)
         } catch (error) {
           console.error('Failed to fetch historic:', error)
@@ -55,7 +51,7 @@ export function History() {
     }
 
     fetchHistoric()
-  }, [organizationUuid, walletUuid])
+  }, [walletUuid])
 
   return (
     <div className="p-10">

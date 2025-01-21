@@ -17,7 +17,6 @@ import ClientsInfoModal from '@/components/custom/clients-info-modal'
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { getInfosCustomer, convertedTimeZone } from '@/services/request'
-import { useUserStore } from '@/store/user'
 import { formatDate } from '@/utils'
 import ExchangeInfoModal from '@/components/custom/modal/clients-info-modal'
 import {
@@ -79,7 +78,6 @@ export function Infos() {
   const navigate = useNavigate()
   const { walletUuid } = useParams()
 
-  const uuidOrganization = useUserStore((state) => state.user.uuidOrganization)
   const [signal] = useSignalStore((state) => [state.signal])
 
   const openModal = () => {
@@ -112,9 +110,9 @@ export function Infos() {
         return navigate('client')
       }
 
-      await updateCurrentAmount(uuidOrganization, walletUuid)
+      await updateCurrentAmount(walletUuid)
 
-      const result = await getInfosCustomer(walletUuid, uuidOrganization)
+      const result = await getInfosCustomer(walletUuid)
 
       if (!result) {
         return false
@@ -126,12 +124,12 @@ export function Infos() {
     }
 
     getInfo()
-  }, [navigate, uuidOrganization, walletUuid, signal])
+  }, [navigate, walletUuid, signal])
 
   useEffect(() => {
     const fetchTimeZone = async () => {
       try {
-        const result = await convertedTimeZone(uuidOrganization)
+        const result = await convertedTimeZone()
         setTimeZone(result)
       } catch (error) {
         console.error('Error on fetching timezone')
@@ -139,7 +137,7 @@ export function Infos() {
     }
 
     fetchTimeZone()
-  }, [uuidOrganization])
+  }, [])
 
   return (
     <div className="p-10">

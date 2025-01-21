@@ -21,7 +21,6 @@ import {
   startWallet as requestStartWallet,
 } from '@/services/request'
 import { useParams } from 'react-router-dom'
-import { useUserStore } from '@/store/user'
 import { useSignalStore } from '@/store/signalEffect'
 
 interface ConfirmCloseWalletModalProps {
@@ -40,9 +39,6 @@ export default function ConfirmCloseWalletModal({
   const [inputValue, setInputValue] = useState('')
   const [date, setDate] = useState<Date>(new Date())
   const { walletUuid } = useParams()
-  const [uuidOrganization] = useUserStore((state) => [
-    state.user.uuidOrganization,
-  ])
   const [signal, setSignal] = useSignalStore((state) => [
     state.signal,
     state.setSignal,

@@ -23,7 +23,6 @@ import {
   getAllFiatCurrencies,
   createDepositWithdrawal,
 } from '@/services/request'
-import { useUserStore } from '@/store/user'
 import { useParams } from 'react-router-dom'
 import { useSignalStore } from '@/store/signalEffect'
 import {
@@ -53,9 +52,6 @@ export default function OperationsModal({
   const [currencyError, setCurrencyError] = useState('')
 
   const [fiatCurrencies, setFiatCurrencies] = useState<string[]>([])
-  const [uuidOrganization] = useUserStore((state) => [
-    state.user.uuidOrganization,
-  ])
   const [signal, setSignal] = useSignalStore((state) => [
     state.signal,
     state.setSignal,
@@ -71,7 +67,7 @@ export default function OperationsModal({
   useEffect(() => {
     const fetchFiatCurrencies = async () => {
       try {
-        const result = await getAllFiatCurrencies(uuidOrganization)
+        const result = await getAllFiatCurrencies()
 
         const currencyAbbreviations = Object.keys(result.currencies)
 
@@ -82,7 +78,7 @@ export default function OperationsModal({
     }
 
     fetchFiatCurrencies()
-  }, [uuidOrganization])
+  }, [])
 
   const validateAmount = (amount: string) => {
     const numberPattern = /^\d+(\.\d{1,2})?$/
@@ -154,7 +150,6 @@ export default function OperationsModal({
       const customDateFormatted = formatDateToISO(date)
 
       const result = await createDepositWithdrawal(
-        uuidOrganization,
         parseFloat(amount),
         walletUuid,
         currency,
