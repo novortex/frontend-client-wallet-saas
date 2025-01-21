@@ -101,7 +101,7 @@ export default function AddNewClientModal({
           <div className="w-full h-1/2 flex flex-row justify-between gap-4 items-center">
             <Input
               className="w-1/2 h-full bg-[#272727] border-[#323232] text-[#959CB6]"
-              placeholder="Phone (optional)"
+              placeholder="Phone Number"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
             />
