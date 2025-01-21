@@ -60,9 +60,9 @@ export default function ConfirmCloseWalletModal({
     const customDate = date.toISOString()
     if (walletUuid) {
       if (startWallet) {
-        await requestStartWallet(uuidOrganization, walletUuid, { customDate })
+        await requestStartWallet(walletUuid, { customDate })
       } else {
-        await closeWallet(uuidOrganization, walletUuid, { customDate })
+        await closeWallet(walletUuid, { customDate })
       }
     }
     setSignal(!signal)
