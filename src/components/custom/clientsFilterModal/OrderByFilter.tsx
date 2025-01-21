@@ -1,59 +1,39 @@
 import { Checkbox } from '@/components/ui/checkbox'
-import { useState, useEffect } from 'react'
 
-interface FilterProps {
-  setFilterNewest: (value: boolean) => void
-  setFilterOldest: (value: boolean) => void
-  setFilterNearestRebalancing: (value: boolean) => void
-  setFilterFurtherRebalancing: (value: boolean) => void
+type FilterProps = {
+  filters: {
+    newest: boolean
+    older: boolean
+    nearestRebalancing: boolean
+    furtherRebalancing: boolean
+  }
+  onFilterChange: (
+    filterName: keyof FilterProps['filters'],
+    value: boolean,
+  ) => void
 }
 
-type Filters = {
-  [key: string]: boolean
-}
-
-const filterOptions: { name: string; label: string }[] = [
+const filterOptions: { name: keyof FilterProps['filters']; label: string }[] = [
   { name: 'newest', label: 'Newest' },
   { name: 'older', label: 'Older' },
   { name: 'nearestRebalancing', label: 'Nearest rebalancing' },
   { name: 'furtherRebalancing', label: 'Further rebalancing' },
 ]
 
-export function OrderByFilter({
-  setFilterNewest,
-  setFilterOldest,
-  setFilterNearestRebalancing,
-  setFilterFurtherRebalancing,
-}: FilterProps) {
-  const [filters, setFilters] = useState<Filters>({
-    newest: false,
-    older: false,
-    nearestRebalancing: false,
-    furtherRebalancing: false,
-  })
+export function OrderByFilter({ filters, onFilterChange }: FilterProps) {
+  const handleCheckboxChange = (name: keyof FilterProps['filters']) => {
+    const newFilters = {
+      newest: false,
+      older: false,
+      nearestRebalancing: false,
+      furtherRebalancing: false,
+      [name]: true,
+    }
 
-  const handleFilterChange = (filterName: string) => {
-    setFilters((prevFilters) => {
-      const updatedFilters = Object.keys(prevFilters).reduce((acc, key) => {
-        acc[key] = key === filterName ? !prevFilters[key] : false
-        return acc
-      }, {} as Filters)
-      return updatedFilters
-    })
+    for (const [key, value] of Object.entries(newFilters)) {
+      onFilterChange(key as keyof FilterProps['filters'], value as boolean)
+    }
   }
-
-  useEffect(() => {
-    setFilterNewest(filters.newest)
-    setFilterOldest(filters.older)
-    setFilterNearestRebalancing(filters.nearestRebalancing)
-    setFilterFurtherRebalancing(filters.furtherRebalancing)
-  }, [
-    filters,
-    setFilterNewest,
-    setFilterOldest,
-    setFilterNearestRebalancing,
-    setFilterFurtherRebalancing,
-  ])
 
   return (
     <div className="w-full">
@@ -63,7 +43,7 @@ export function OrderByFilter({
           <div key={name} className="flex items-center gap-2">
             <Checkbox
               checked={filters[name]}
-              onCheckedChange={() => handleFilterChange(name)}
+              onCheckedChange={() => handleCheckboxChange(name)}
               className="border-[#fff]"
             />
             <label>{label}</label>

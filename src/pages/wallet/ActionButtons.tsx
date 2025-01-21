@@ -44,7 +44,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
         </Button>
         <Button
           type="button"
-          className="bg-[#F2BE38] text-black"
+          className="bg-[#F2BE38] text-black hover:text-white"
           onClick={openOrCloseModalRebalanced}
         >
           Rebalanced

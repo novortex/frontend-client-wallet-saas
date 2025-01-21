@@ -41,6 +41,8 @@ async function calculateRebalanceInWallet(
       `wallet/${walletUuid}/rebalanceWallet`,
       {},
     )
+
+    console.log(`result =>`, result)
     return result.data
   } catch (error) {
     console.error(error)

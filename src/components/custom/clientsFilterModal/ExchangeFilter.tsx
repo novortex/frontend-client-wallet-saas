@@ -1,37 +1,28 @@
 import {
   Select,
   SelectContent,
+  SelectItem,
   SelectTrigger,
   SelectValue,
-  SelectItem,
 } from '@/components/ui/select'
-import { getExchangesDisposables } from '@/services/assetsService'
 import { BadgeCent } from 'lucide-react'
-import { useState, useEffect } from 'react'
 
 export function ExchangeFilter({
-  selectedExchange,
-  handleExchangeChange,
+  exchanges,
+  selectedExchanges,
+  handleSelectExchange,
+  handleRemoveExchange,
 }: {
-  selectedExchange: string
-  handleExchangeChange: (value: string) => void
+  exchanges: { name: string }[]
+  selectedExchanges: string[]
+  handleSelectExchange: (exchangeName: string) => void
+  handleRemoveExchange: (exchangeName: string) => void
 }) {
-  const [exchanges, setExchanges] = useState<string[]>([])
-
-  useEffect(() => {
-    const fetchExchanges = async () => {
-      try {
-        const result = await getExchangesDisposables()
-        if (result) {
-          setExchanges(result.map((exchange) => exchange.name))
-        }
-      } catch (error) {
-        console.error('Erro ao carregar as exchanges:', error)
-      }
+  const handleExchangeSelection = (exchangeName: string) => {
+    if (!selectedExchanges.includes(exchangeName)) {
+      handleSelectExchange(exchangeName)
     }
-
-    fetchExchanges()
-  }, [])
+  }
 
   return (
     <div className="w-full flex flex-col gap-2">
@@ -45,35 +36,54 @@ export function ExchangeFilter({
           </div>
           <div className="w-full flex items-center justify-start">
             <Select
-              value={selectedExchange}
-              onValueChange={handleExchangeChange}
+              value={selectedExchanges.join(', ')}
+              onValueChange={handleExchangeSelection}
             >
               <SelectTrigger className="w-full bg-[#131313] border-[#323232] text-[#fff]">
                 <SelectValue placeholder="Select exchange" />
               </SelectTrigger>
               <SelectContent className="bg-[#131313] border-2 border-[#323232]">
                 {exchanges.length > 0 ? (
-                  exchanges.map((exchange) => (
+                  exchanges.map((exchange, index) => (
                     <SelectItem
-                      key={exchange}
+                      key={index}
+                      value={exchange.name}
                       className="bg-[#131313] border-0 focus:bg-[#252525] focus:text-white text-white"
-                      value={exchange}
                     >
-                      {exchange}
+                      {exchange.name}
                     </SelectItem>
                   ))
                 ) : (
                   <SelectItem
-                    className="bg-[#131313] border-0 text-white"
-                    value="loading"
+                    disabled
+                    className="text-gray-500"
+                    value="not_value"
                   >
-                    Loading exchanges...
+                    No exchanges available
                   </SelectItem>
                 )}
               </SelectContent>
             </Select>
           </div>
         </div>
+        {selectedExchanges.length > 0 && (
+          <div className="flex flex-wrap justify-start items-start gap-2 w-full">
+            {selectedExchanges.map((exchange) => (
+              <div
+                key={exchange}
+                className="h-8 flex justify-start items-center bg-[#959CB6] text-white rounded-md px-2"
+              >
+                <div
+                  className="cursor-pointer mr-2"
+                  onClick={() => handleRemoveExchange(exchange)}
+                >
+                  X
+                </div>
+                <div>{exchange}</div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   )

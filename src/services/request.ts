@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { instance } from '@/config/api'
 import {
   TClientInfosResponse,
@@ -212,7 +213,7 @@ export async function createDepositWithdrawal(
   walletUuid: string,
   currency: string,
   isWithdrawal: boolean,
-  date?: Date,
+  date?: string,
 ) {
   try {
     const data = { amount, walletUuid, currency, isWithdrawal, date }
@@ -266,9 +267,12 @@ export async function updateCustomer(
   }
 }
 
-export async function closeWallet(walletUuid: string) {
+export async function closeWallet(
+  walletUuid: string,
+  data: { customDate: string },
+) {
   try {
-    const result = await instance.put(`wallet/${walletUuid}/closeWallet`, {})
+    const result = await instance.put(`wallet/${walletUuid}/closeWallet`, data)
     return result.data
   } catch (error) {
     console.error(error)
@@ -298,9 +302,12 @@ export async function updateWallet(
   }
 }
 
-export async function startWallet(walletUuid: string) {
+export async function startWallet(
+  walletUuid: string,
+  data: { customDate: string },
+) {
   try {
-    const result = await instance.put(`wallet/${walletUuid}/startWallet`, {})
+    const result = await instance.put(`wallet/${walletUuid}/startWallet`, data)
     return result.data
   } catch (error) {
     console.error(error)
