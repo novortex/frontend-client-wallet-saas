@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { instance } from '@/config/api'
 import {
   TClientInfosResponse,
@@ -315,7 +316,7 @@ export async function createDepositWithdrawal(
   walletUuid: string,
   currency: string,
   isWithdrawal: boolean,
-  date?: Date,
+  date?: string,
 ) {
   try {
     const data = { amount, walletUuid, currency, isWithdrawal, date }
@@ -390,11 +391,12 @@ export async function updateCustomer(
 export async function closeWallet(
   organizationUuid: string,
   walletUuid: string,
+  data: { customDate: string },
 ) {
   try {
     const result = await instance.put(
       `wallet/${walletUuid}/closeWallet`,
-      {},
+      data,
       {
         headers: { 'x-organization': organizationUuid },
       },
@@ -434,11 +436,12 @@ export async function updateWallet(
 export async function startWallet(
   organizationUuid: string,
   walletUuid: string,
+  data: { customDate: string },
 ) {
   try {
     const result = await instance.put(
       `wallet/${walletUuid}/startWallet`,
-      {},
+      data,
       {
         headers: { 'x-organization': organizationUuid },
       },

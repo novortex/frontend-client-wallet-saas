@@ -92,10 +92,10 @@ export function DataTable<TData, TValue>({
             <img src={exportIcon} alt="" /> Export
           </Button>
           <Button
-            className="bg-[#F2BE38] text-black w-1/2 hover:bg-yellow-600 p-5"
+            className="bg-[#F2BE38] text-black w-1/2 hover:text-white hover:bg-yellow-600 p-5"
             onClick={openModal}
           >
-            + Add new
+            + Add New
           </Button>
         </div>
       </div>

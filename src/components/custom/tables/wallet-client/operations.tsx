@@ -6,7 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { StepForwardIcon, HandCoins, Info } from 'lucide-react'
+import { StepForwardIcon, HandCoins, Info, CalendarIcon } from 'lucide-react'
 import {
   Select,
   SelectContent,
@@ -26,6 +26,12 @@ import {
 import { useUserStore } from '@/store/user'
 import { useParams } from 'react-router-dom'
 import { useSignalStore } from '@/store/signalEffect'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
+import { Calendar } from '@/components/ui/calendar'
 
 interface OperationsModalProps {
   isOpen: boolean
@@ -61,7 +67,6 @@ export default function OperationsModal({
 
   // Estado para controlar o checkbox
   const [isCustomDateEnabled, setIsCustomDateEnabled] = useState(false)
-  const [customDate, setCustomDate] = useState('')
 
   useEffect(() => {
     const fetchFiatCurrencies = async () => {
@@ -97,13 +102,19 @@ export default function OperationsModal({
     return true
   }
 
-  const formatDate = (value: string) => {
-    const cleanedValue = value.replace(/\D/g, '')
+  const [date, setDate] = useState<Date>(new Date())
 
-    if (cleanedValue.length <= 2) return cleanedValue
-    if (cleanedValue.length <= 4)
-      return `${cleanedValue.slice(0, 2)}/${cleanedValue.slice(2, 4)}`
-    return `${cleanedValue.slice(0, 2)}/${cleanedValue.slice(2, 4)}/${cleanedValue.slice(4, 8)}`
+  const isToday = (dateToCheck: Date) => {
+    const today = new Date()
+    return (
+      dateToCheck.getDate() === today.getDate() &&
+      dateToCheck.getMonth() === today.getMonth() &&
+      dateToCheck.getFullYear() === today.getFullYear()
+    )
+  }
+
+  const formatDateToISO = (date: Date): string => {
+    return date.toISOString() // Retorna "YYYY-MM-DDTHH:mm:ss.sssZ"
   }
 
   const sendOperation = async () => {
@@ -140,10 +151,7 @@ export default function OperationsModal({
         description: `Operation: ${operation}, Amount: ${amount}, Currency: ${currency}`,
       })
 
-      const customDateFormatted =
-        isCustomDateEnabled && customDate
-          ? new Date(customDate.split('/').reverse().join('-'))
-          : undefined
+      const customDateFormatted = formatDateToISO(date)
 
       const result = await createDepositWithdrawal(
         uuidOrganization,
@@ -183,9 +191,16 @@ export default function OperationsModal({
     onClose()
   }
 
+  useEffect(() => {
+    if (!isOpen) {
+      setIsCustomDateEnabled(false)
+      setDate(new Date())
+    }
+  }, [isOpen])
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-[#131313] h-[85%] text-[#fff] border-transparent">
+      <DialogContent className="bg-[#131313] h-[95%] text-[#fff] border-transparent">
         <DialogHeader>
           <DialogTitle className="flex flex-row gap-4 text-3xl items-center">
             Withdrawal / Deposit <HandCoins className="text-[#F2BE38]" />
@@ -197,7 +212,7 @@ export default function OperationsModal({
             <SelectTrigger className="bg-[#131313] border-[#323232] text-[#959CB6] w-1/6">
               <SelectValue placeholder="" />
             </SelectTrigger>
-            <SelectContent className="bg-[#131313] border-[#323232] text-[#959CB6]">
+            <SelectContent className="max-h-40% scrollbar-thumb-gray-500 bg-[#131313] border-[#323232] text-[#959CB6]">
               {fiatCurrencies.map((currency) => (
                 <SelectItem key={currency} value={currency}>
                   {currency}
@@ -244,17 +259,35 @@ export default function OperationsModal({
                 setIsCustomDateEnabled(checked === true)
               }
             />
-
             <Label>Set Deposit or Withdrawal on a different date</Label>
           </div>
-          <Input
-            className="w-1/2 bg-[#131313] border-[#323232] text-[#959CB6]"
-            placeholder="DD/MM/YYYY"
-            value={customDate}
-            onChange={(e) => setCustomDate(formatDate(e.target.value))}
-            maxLength={10}
-            disabled={!isCustomDateEnabled}
-          />
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                className="w-[50%] bg-[#131313] border-[#323232] text-[#959CB6] justify-between"
+                disabled={!isCustomDateEnabled}
+              >
+                {date.toLocaleDateString()}
+                <CalendarIcon className="h-4 w-4 opacity-50" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                mode="single"
+                selected={date}
+                onSelect={(newDate) => newDate && setDate(newDate)}
+                className="bg-[#131313] text-white rounded-md"
+                classNames={{
+                  day_today: isToday(date)
+                    ? 'bg-white text-black hover:bg-white rounded-md'
+                    : 'bg-transparent text-white hover:bg-white rounded-md text-black',
+                  day_selected: 'bg-white text-black hover:bg-white rounded-md',
+                }}
+                disabled={!isCustomDateEnabled}
+              />
+            </PopoverContent>
+          </Popover>
         </div>
         <div className="w-full flex items-center">
           <Info className="w-[10%] text-blue-600" />
