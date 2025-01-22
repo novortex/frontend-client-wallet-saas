@@ -193,341 +193,335 @@ export default function CellActions({
         className="bg-white border-0 text-black"
         align="center"
       >
-        <div className="flex flex-col">
-          <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-            <DialogTrigger asChild>
-              <Button
-                className="flex justify-center gap-3 border-b border-[#D4D7E3] hover:bg-black hover:text-white"
-                variant="secondary"
-              >
-                <PencilIcon className="w-5" /> Edit
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="bg-[#1C1C1C] border-0 text-white max-w-fit">
-              <DialogHeader>
-                <DialogTitle className="text-white text-3xl">
-                  Customer edit
-                </DialogTitle>
-              </DialogHeader>
-              <Tabs defaultValue="Profile">
-                <TabsList className="flex justify-between gap-5 bg-[#1C1C1C]">
-                  <TabsTrigger
-                    className="w-1/2 bg-[#171717] text-[#F2BE38] data-[state=active]:bg-yellow-500"
-                    value="Profile"
-                  >
-                    Profile
-                  </TabsTrigger>
-                  <TabsTrigger
-                    className="w-1/2 bg-[#171717] text-[#F2BE38] data-[state=active]:bg-yellow-500"
-                    value="Wallet"
-                  >
-                    Wallet
-                  </TabsTrigger>
-                </TabsList>
+        <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+          <DialogTrigger asChild>
+            <Button
+              className="flex justify-center gap-3 border-b border-[#D4D7E3] hover:bg-black hover:text-white"
+              variant="secondary"
+            >
+              <PencilIcon className="w-5" /> Edit
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="bg-[#1C1C1C] border-0 text-white max-w-fit">
+            <DialogHeader>
+              <DialogTitle className="text-white text-3xl">
+                Customer edit
+              </DialogTitle>
+            </DialogHeader>
+            <Tabs defaultValue="Profile">
+              <TabsList className="flex justify-between gap-5 bg-[#1C1C1C]">
+                <TabsTrigger
+                  className="w-1/2 bg-[#171717] text-[#F2BE38] data-[state=active]:bg-yellow-500"
+                  value="Profile"
+                >
+                  Profile
+                </TabsTrigger>
+                <TabsTrigger
+                  className="w-1/2 bg-[#171717] text-[#F2BE38] data-[state=active]:bg-yellow-500"
+                  value="Wallet"
+                >
+                  Wallet
+                </TabsTrigger>
+              </TabsList>
 
-                {/* Conteúdo da aba Profile */}
-                <TabsContent className="mt-10" value="Profile">
+              {/* Conteúdo da aba Profile */}
+              <TabsContent className="mt-10" value="Profile">
+                <div className="grid justify-items-center grid-cols-2 gap-5">
+                  <div>
+                    <Label className="ml-2" htmlFor="Name">
+                      Name
+                    </Label>
+                    <Input
+                      className="bg-[#131313] border-[#323232] text-white"
+                      type="text"
+                      id="Name"
+                      defaultValue={rowInfos.name}
+                      ref={nameRef}
+                      placeholder="Name"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <Label className="ml-2" htmlFor="email">
+                      Email
+                    </Label>
+                    <Input
+                      className="bg-[#131313] border-[#323232] text-white"
+                      type="email"
+                      id="email"
+                      defaultValue={rowInfos.email}
+                      ref={emailRef}
+                      placeholder="Email"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <Label className="ml-2" htmlFor="Phone">
+                      Phone
+                    </Label>
+                    <Input
+                      className="bg-[#131313] border-[#323232] text-white"
+                      type="tel"
+                      id="Phone"
+                      defaultValue={rowInfos.phone || ''}
+                      ref={phoneRef}
+                      placeholder="Phone"
+                      required
+                    />
+                  </div>
+                </div>
+
+                {/* Botão Save para a aba Profile */}
+                <div className="mt-12 flex justify-end gap-5">
+                  <DialogClose asChild>
+                    <Button
+                      onClick={handleUpdateCustomer} // Função para salvar Profile
+                      className="bg-blue-500 hover:bg-blue-600 text-white"
+                    >
+                      Save Profile
+                    </Button>
+                  </DialogClose>
+
+                  <DialogClose asChild>
+                    <Button className="bg-red-500 hover:bg-red-600 text-white">
+                      Close
+                    </Button>
+                  </DialogClose>
+                </div>
+              </TabsContent>
+
+              {/* Conteúdo da aba Wallet */}
+              <TabsContent className="mt-10" value="Wallet">
+                {rowInfos.isWallet ? (
                   <div className="grid justify-items-center grid-cols-2 gap-5">
-                    <div>
+                    <div className="w-full">
                       <Label className="ml-2" htmlFor="Name">
-                        Name
+                        Exchange
+                      </Label>
+                      <Select
+                        onValueChange={(value) => setExchangeSelected(value)}
+                        defaultValue={ExchangeSelected}
+                      >
+                        <SelectTrigger className="bg-[#131313] border-[#323232] text-[#959CB6]">
+                          <SelectValue>
+                            {ExchangeSelected
+                              ? exchanges.find(
+                                  (mgr) => mgr.uuid === ExchangeSelected,
+                                )?.name
+                              : 'Name'}
+                          </SelectValue>
+                        </SelectTrigger>
+                        <SelectContent className="bg-[#131313] border-[#323232] text-[#959CB6]">
+                          {exchanges.map((bench) => (
+                            <SelectItem key={bench.uuid} value={bench.uuid}>
+                              {bench.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div>
+                      <Label className="ml-2" htmlFor="Email Password">
+                        Email Password
                       </Label>
                       <Input
                         className="bg-[#131313] border-[#323232] text-white"
                         type="text"
-                        id="Name"
-                        defaultValue={rowInfos.name}
-                        ref={nameRef}
-                        placeholder="Name"
+                        id="Email Password"
+                        placeholder="Email Password"
+                        ref={emailPasswordRef}
+                        defaultValue={rowInfos.emailPassword || ''}
                         required
                       />
                     </div>
 
                     <div>
-                      <Label className="ml-2" htmlFor="email">
-                        Email
+                      <Label className="ml-2" htmlFor="EmailExchage">
+                        Email ( Exchange )
                       </Label>
                       <Input
                         className="bg-[#131313] border-[#323232] text-white"
                         type="email"
-                        id="email"
-                        defaultValue={rowInfos.email}
-                        ref={emailRef}
-                        placeholder="Email"
+                        id="Email Exchage"
+                        ref={emailExchangeRef}
+                        placeholder="Email Exchange"
+                        defaultValue={rowInfos.emailExchange || ''}
                         required
                       />
                     </div>
 
                     <div>
-                      <Label className="ml-2" htmlFor="Phone">
-                        Phone
+                      <Label className="ml-2" htmlFor="Exchange Password">
+                        Exchange Password
                       </Label>
                       <Input
                         className="bg-[#131313] border-[#323232] text-white"
-                        type="tel"
-                        id="Phone"
-                        defaultValue={rowInfos.phone || ''}
-                        ref={phoneRef}
-                        placeholder="Phone"
+                        type="text"
+                        id="Exchange Password"
+                        placeholder="Exchange Password"
+                        ref={accountPasswordRef}
+                        defaultValue={rowInfos.exchangePassword || ''}
                         required
                       />
                     </div>
-                  </div>
 
-                  {/* Botão Save para a aba Profile */}
-                  <div className="mt-12 flex justify-end gap-5">
-                    <DialogClose asChild>
-                      <Button
-                        onClick={handleUpdateCustomer} // Função para salvar Profile
-                        className="bg-blue-500 hover:bg-blue-600 text-white"
+                    <div className="w-full">
+                      <Label className="ml-2" htmlFor="Phone">
+                        Manager
+                      </Label>
+                      <Select
+                        onValueChange={(value) => setManager(value)}
+                        defaultValue={manager}
+                        required
                       >
-                        Save Profile
-                      </Button>
-                    </DialogClose>
+                        <SelectTrigger className="bg-[#131313] border-[#323232] text-white">
+                          <SelectValue>
+                            {manager
+                              ? managersOrganization.find(
+                                  (mgr) => mgr.uuid === manager,
+                                )?.name
+                              : 'Name'}
+                          </SelectValue>
+                        </SelectTrigger>
+                        <SelectContent className="bg-[#131313] border-[#323232] text-white">
+                          {managersOrganization.map((manager) => (
+                            <SelectItem key={manager.uuid} value={manager.uuid}>
+                              {manager.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
 
-                    <DialogClose asChild>
-                      <Button className="bg-red-500 hover:bg-red-600 text-white">
-                        Close
-                      </Button>
-                    </DialogClose>
-                  </div>
-                </TabsContent>
+                    <div>
+                      <Label className="ml-2" htmlFor="performanceFee">
+                        Performance Fee
+                      </Label>
+                      <Input
+                        className="bg-[#131313] border-[#323232] text-white"
+                        type="text"
+                        id="performanceFee"
+                        value={String(performanceFee)}
+                        onChange={(e) => setPerformanceFee(e.target.value)}
+                        placeholder="Enter performance fee"
+                        required
+                      />
+                    </div>
 
-                {/* Conteúdo da aba Wallet */}
-                <TabsContent className="mt-10" value="Wallet">
-                  {rowInfos.isWallet ? (
-                    <div className="grid justify-items-center grid-cols-2 gap-5">
-                      <div className="w-full">
-                        <Label className="ml-2" htmlFor="Name">
-                          Exchange
-                        </Label>
-                        <Select
-                          onValueChange={(value) => setExchangeSelected(value)}
-                          defaultValue={ExchangeSelected}
-                        >
-                          <SelectTrigger className="bg-[#131313] border-[#323232] text-[#959CB6]">
-                            <SelectValue>
-                              {ExchangeSelected
-                                ? exchanges.find(
-                                    (mgr) => mgr.uuid === ExchangeSelected,
-                                  )?.name
-                                : 'Name'}
-                            </SelectValue>
-                          </SelectTrigger>
-                          <SelectContent className="bg-[#131313] border-[#323232] text-[#959CB6]">
-                            {exchanges.map((bench) => (
-                              <SelectItem key={bench.uuid} value={bench.uuid}>
-                                {bench.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-
-                      <div>
-                        <Label className="ml-2" htmlFor="Email Password">
-                          Email Password
-                        </Label>
-                        <Input
-                          className="bg-[#131313] border-[#323232] text-white"
-                          type="text"
-                          id="Email Password"
-                          placeholder="Email Password"
-                          ref={emailPasswordRef}
-                          defaultValue={rowInfos.emailPassword || ''}
-                          required
+                    <div className="w-full mt-4">
+                      <div className="mb-3 flex gap-3">
+                        <Checkbox
+                          className="border-gray-500"
+                          checked={!!contractChecked}
+                          onCheckedChange={() =>
+                            setContractChecked(!contractChecked)
+                          }
                         />
+                        <Label>Initial Fee is paid?</Label>
                       </div>
 
-                      <div>
-                        <Label className="ml-2" htmlFor="EmailExchage">
-                          Email ( Exchange )
-                        </Label>
-                        <Input
-                          className="bg-[#131313] border-[#323232] text-white"
-                          type="email"
-                          id="Email Exchage"
-                          ref={emailExchangeRef}
-                          placeholder="Email Exchange"
-                          defaultValue={rowInfos.emailExchange || ''}
-                          required
+                      <div className="flex gap-3">
+                        <Checkbox
+                          className="border-gray-500"
+                          checked={initialFeeIsPaid ?? false}
+                          onCheckedChange={() =>
+                            setInitialFeeIsPaid(!initialFeeIsPaid)
+                          }
                         />
-                      </div>
-
-                      <div>
-                        <Label className="ml-2" htmlFor="Exchange Password">
-                          Exchange Password
-                        </Label>
-                        <Input
-                          className="bg-[#131313] border-[#323232] text-white"
-                          type="text"
-                          id="Exchange Password"
-                          placeholder="Exchange Password"
-                          ref={accountPasswordRef}
-                          defaultValue={rowInfos.exchangePassword || ''}
-                          required
-                        />
-                      </div>
-
-                      <div className="w-full">
-                        <Label className="ml-2" htmlFor="Phone">
-                          Manager
-                        </Label>
-                        <Select
-                          onValueChange={(value) => setManager(value)}
-                          defaultValue={manager}
-                          required
-                        >
-                          <SelectTrigger className="bg-[#131313] border-[#323232] text-white">
-                            <SelectValue>
-                              {manager
-                                ? managersOrganization.find(
-                                    (mgr) => mgr.uuid === manager,
-                                  )?.name
-                                : 'Name'}
-                            </SelectValue>
-                          </SelectTrigger>
-                          <SelectContent className="bg-[#131313] border-[#323232] text-white">
-                            {managersOrganization.map((manager) => (
-                              <SelectItem
-                                key={manager.uuid}
-                                value={manager.uuid}
-                              >
-                                {manager.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-
-                      <div>
-                        <Label className="ml-2" htmlFor="performanceFee">
-                          Performance Fee
-                        </Label>
-                        <Input
-                          className="bg-[#131313] border-[#323232] text-white"
-                          type="text"
-                          id="performanceFee"
-                          value={String(performanceFee)}
-                          onChange={(e) => setPerformanceFee(e.target.value)}
-                          placeholder="Enter performance fee"
-                          required
-                        />
-                      </div>
-
-                      <div className="w-full mt-4">
-                        <div className="mb-3 flex gap-3">
-                          <Checkbox
-                            className="border-gray-500"
-                            checked={!!contractChecked}
-                            onCheckedChange={() =>
-                              setContractChecked(!contractChecked)
-                            }
-                          />
-                          <Label>Initial Fee is paid?</Label>
-                        </div>
-
-                        <div className="flex gap-3">
-                          <Checkbox
-                            className="border-gray-500"
-                            checked={initialFeeIsPaid ?? false}
-                            onCheckedChange={() =>
-                              setInitialFeeIsPaid(!initialFeeIsPaid)
-                            }
-                          />
-                          <Label>Contract</Label>
-                        </div>
+                        <Label>Contract</Label>
                       </div>
                     </div>
-                  ) : (
-                    <p className="text-yellow-500">
-                      Please create a wallet first before filling these details.
-                    </p>
-                  )}
-
-                  {/* Botão Save para a aba Wallet */}
-                  <div className="mt-12 flex justify-end gap-5">
-                    <DialogClose asChild>
-                      <Button
-                        onClick={handleUpdateWallet} // Função para salvar Wallet
-                        className="bg-blue-500 hover:bg-blue-600 text-white"
-                      >
-                        Save Wallet
-                      </Button>
-                    </DialogClose>
-
-                    <DialogClose asChild>
-                      <Button className="bg-red-500 hover:bg-red-600 text-white">
-                        Close
-                      </Button>
-                    </DialogClose>
                   </div>
-                </TabsContent>
-              </Tabs>
+                ) : (
+                  <p className="text-yellow-500">
+                    Please create a wallet first before filling these details.
+                  </p>
+                )}
 
-              <DialogFooter className="mt-5">
-                <DialogClose asChild></DialogClose>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+                {/* Botão Save para a aba Wallet */}
+                <div className="mt-12 flex justify-end gap-5">
+                  <DialogClose asChild>
+                    <Button
+                      onClick={handleUpdateWallet} // Função para salvar Wallet
+                      className="bg-blue-500 hover:bg-blue-600 text-white"
+                    >
+                      Save Wallet
+                    </Button>
+                  </DialogClose>
 
-          {/* botão para cadastrar wallet */}
-          {rowInfos.isWallet === false ? (
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button
-                  className="flex justify-center gap-3 hover:bg-black hover:text-white"
-                  variant="secondary"
-                  onClick={openModal}
-                >
-                  <StepForward className="w-5" /> Continue
-                </Button>
-              </DialogTrigger>
-            </Dialog>
-          ) : null}
+                  <DialogClose asChild>
+                    <Button className="bg-red-500 hover:bg-red-600 text-white">
+                      Close
+                    </Button>
+                  </DialogClose>
+                </div>
+              </TabsContent>
+            </Tabs>
 
-          {/* botão para desabilitar um usuario, deve ser implementad essa função ainda */}
+            <DialogFooter className="mt-5">
+              <DialogClose asChild></DialogClose>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* botão para cadastrar wallet */}
+        {rowInfos.isWallet === false ? (
           <Dialog>
             <DialogTrigger asChild>
               <Button
                 className="flex justify-center gap-3 hover:bg-black hover:text-white"
                 variant="secondary"
+                onClick={openModal}
               >
-                <EyeOffIcon className="w-5" /> Disable
+                <StepForward className="w-5" /> Continue
               </Button>
             </DialogTrigger>
-            <DialogContent className="bg-[#1C1C1C] border-0 text-white">
-              <DialogHeader>
-                <DialogTitle className="flex gap-5 items-center mb-5">
-                  Disabled asset{' '}
-                  <TriangleAlert className="text-yellow-400 w-5" />
-                </DialogTitle>
-                <DialogDescription>
-                  Disabled the for all wallets
-                  <p className="mt-5 font-bold text-yellow-200">
-                    Warning: You are about to disable this crypto asset for all
-                    wallets. This action is irreversible and will affect all
-                    users holding this asset. Please confirm that you want to
-                    proceed with this operation.
-                  </p>
-                </DialogDescription>
-              </DialogHeader>
-              <DialogFooter>
-                <DialogClose asChild>
-                  <Button className="bg-red-500 hover:bg-red-600 text-white">
-                    Close
-                  </Button>
-                </DialogClose>
-                <Button
-                  disabled
-                  className="bg-blue-500 hover:bg-blue-600 text-black"
-                >
-                  Disabled
-                </Button>
-              </DialogFooter>
-            </DialogContent>
           </Dialog>
-        </div>
+        ) : null}
+
+        {/* botão para desabilitar um usuario, deve ser implementad essa função ainda */}
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button
+              className="flex justify-center gap-3 hover:bg-black hover:text-white"
+              variant="secondary"
+            >
+              <EyeOffIcon className="w-5" /> Disable
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="bg-[#1C1C1C] border-0 text-white">
+            <DialogHeader>
+              <DialogTitle className="flex gap-5 items-center mb-5">
+                Disabled asset <TriangleAlert className="text-yellow-400 w-5" />
+              </DialogTitle>
+              <DialogDescription>
+                Disabled the for all wallets
+                <p className="mt-5 font-bold text-yellow-200">
+                  Warning: You are about to disable this crypto asset for all
+                  wallets. This action is irreversible and will affect all users
+                  holding this asset. Please confirm that you want to proceed
+                  with this operation.
+                </p>
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button className="bg-red-500 hover:bg-red-600 text-white">
+                  Close
+                </Button>
+              </DialogClose>
+              <Button
+                disabled
+                className="bg-blue-500 hover:bg-blue-600 text-black"
+              >
+                Disabled
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </DropdownMenuContent>
       <CreateWalletModal
         rowInfos={rowInfos}
