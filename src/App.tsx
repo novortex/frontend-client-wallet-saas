@@ -16,6 +16,7 @@ import { AuthHandler } from './auth/auth-handler'
 import { Auth0Callback } from './auth/auth0-callback'
 import { AuthProvider } from '@/contexts/authContext'
 import { ApiAuthManager } from '@/auth/apiAuthManager'
+import { UserDataHandler } from './auth/userDataHandler'
 
 export function App() {
   const [isMobile, setIsMobile] = useState(false)
@@ -38,6 +39,7 @@ export function App() {
 
   return (
     <AuthProvider>
+      <UserDataHandler />
       <ApiAuthManager />
       <Routes>
         {isMobile ? (
