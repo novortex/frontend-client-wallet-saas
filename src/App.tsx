@@ -1,6 +1,7 @@
 import './index.css'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { useState, useEffect } from 'react'
+import { useAuth0 } from '@auth0/auth0-react'
 import { Wallet } from '@/pages/wallet/index'
 import { Graphs } from '@/pages/graphs'
 import { History } from '@/pages/history/index'
@@ -11,10 +12,10 @@ import { AssetsOrg } from '@/pages/assets-org'
 import { ErrorPage } from '@/pages/404'
 import { AdviceToTeam } from './pages/AdviceToTeam'
 import Root from './pages/outlet'
-import { useAuth0 } from '@auth0/auth0-react'
 import { AuthHandler } from './auth/auth-handler'
 import { Auth0Callback } from './auth/auth0-callback'
-import { AuthInitializer } from './auth/authInitializer'
+import { AuthProvider } from '@/contexts/authContext'
+import { ApiAuthManager } from '@/auth/apiAuthManager'
 
 export function App() {
   const [isMobile, setIsMobile] = useState(false)
@@ -36,8 +37,8 @@ export function App() {
   }
 
   return (
-    <>
-      <AuthInitializer />
+    <AuthProvider>
+      <ApiAuthManager />
       <Routes>
         {isMobile ? (
           <Route path="/" element={<AdviceToTeam />} />
@@ -58,6 +59,6 @@ export function App() {
           </Route>
         )}
       </Routes>
-    </>
+    </AuthProvider>
   )
 }
