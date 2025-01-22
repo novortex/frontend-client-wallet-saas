@@ -7,6 +7,7 @@ import { getWalletOrganization } from '@/services/request'
 import { toast } from '@/components/ui/use-toast'
 import { formatDate } from '@/utils'
 import { TClientInfosResponse } from '@/types/customer.type'
+import { useAuth } from '@/contexts/authContext'
 
 export function Clients() {
   const [clients, setClients] = useState<TClientInfosResponse[]>([])
@@ -14,6 +15,8 @@ export function Clients() {
     TClientInfosResponse[]
   >([])
   const [searchTerm, setSearchTerm] = useState('')
+  const [isLoading, setIsLoading] = useState(true)
+  const { token } = useAuth()
   const [filters, setFilters] = useState({
     selectedManagers: [] as string[],
     selectedWalletTypes: [] as string[],
@@ -27,6 +30,9 @@ export function Clients() {
   })
 
   const fetchClients = useCallback(async () => {
+    if (!token) return
+
+    setIsLoading(true)
     try {
       const result = await getWalletOrganization()
       if (!result) {
@@ -40,8 +46,15 @@ export function Clients() {
       setFilteredClients(result)
     } catch (error) {
       console.error('Error fetching clients:', error)
+      toast({
+        className: 'bg-red-500 border-0 text-white',
+        title: 'Error',
+        description: 'Failed to fetch clients. Please try again.',
+      })
+    } finally {
+      setIsLoading(false)
     }
-  }, [])
+  }, [token])
 
   useEffect(() => {
     fetchClients()
@@ -49,6 +62,7 @@ export function Clients() {
 
   const normalizeRiskProfile = (riskProfile: string) =>
     riskProfile.toLowerCase().replace(/_/g, '-')
+
   const applyFilters = useCallback(() => {
     const {
       selectedManagers,
@@ -70,17 +84,14 @@ export function Clients() {
             .includes(searchTerm.toLowerCase()) ||
           client.managerName.toLowerCase().includes(searchTerm.toLowerCase())
 
-        // Verificação do gerente selecionado
         const managerMatches =
           selectedManagers.length === 0 ||
           selectedManagers.includes(client.managerName)
 
-        // Verificação do estado de balanceamento
         const unbalancedMatches =
           !filterUnbalanced ||
           (client.nextBalance && new Date(client.nextBalance) < new Date())
 
-        // Verificação do tipo de carteira
         const walletTypeMatches =
           selectedWalletTypes.length === 0 ||
           selectedWalletTypes.some(
@@ -89,7 +100,6 @@ export function Clients() {
               normalizeRiskProfile(client.riskProfile),
           )
 
-        // Verificação das exchanges
         const exchangeMatches =
           selectedExchanges.length === 0 ||
           selectedExchanges.some(
@@ -140,6 +150,14 @@ export function Clients() {
     setFilters((prev) => ({ ...prev, ...newFilters }))
   }
 
+  if (isLoading) {
+    return (
+      <div className="p-10 flex justify-center items-center min-h-screen">
+        <div className="text-white">Loading wallets...</div>
+      </div>
+    )
+  }
+
   return (
     <div className="p-10">
       <div className="mb-10 flex items-center justify-between">
@@ -158,29 +176,33 @@ export function Clients() {
         <ClientsFilterModal handleApplyFilters={handleApplyFilters} />
       </div>
 
-      <div className="w-full grid grid-cols-3 gap-7">
-        {filteredClients.map((client) => (
-          <CardClient
-            key={client.walletUuid}
-            walletUuid={client.walletUuid}
-            name={client.infosClient.name}
-            email={client.infosClient.email}
-            phone={client.infosClient.phone}
-            alerts={0}
-            responsible={client.managerName}
-            lastRebalancing={
-              client.lastBalance
-                ? formatDate(client.lastBalance.toString())
-                : '-'
-            }
-            nextRebalancing={
-              client.nextBalance
-                ? formatDate(client.nextBalance.toString())
-                : '-'
-            }
-          />
-        ))}
-      </div>
+      {clients.length === 0 ? (
+        <div className="text-white text-center">No wallets found</div>
+      ) : (
+        <div className="w-full grid grid-cols-3 gap-7">
+          {filteredClients.map((client) => (
+            <CardClient
+              key={client.walletUuid}
+              walletUuid={client.walletUuid}
+              name={client.infosClient.name}
+              email={client.infosClient.email}
+              phone={client.infosClient.phone}
+              alerts={0}
+              responsible={client.managerName}
+              lastRebalancing={
+                client.lastBalance
+                  ? formatDate(client.lastBalance.toString())
+                  : '-'
+              }
+              nextRebalancing={
+                client.nextBalance
+                  ? formatDate(client.nextBalance.toString())
+                  : '-'
+              }
+            />
+          ))}
+        </div>
+      )}
     </div>
   )
 }
