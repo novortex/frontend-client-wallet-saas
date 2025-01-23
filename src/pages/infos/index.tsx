@@ -1,8 +1,6 @@
-import { SwitchTheme } from '@/components/custom/switch-theme'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
-import exportIcon from '../assets/icons/export.svg'
 import {
   CircleAlert,
   Check,
@@ -12,13 +10,12 @@ import {
   BarChartBigIcon,
   PhoneCall,
 } from 'lucide-react'
-import responsibleIcon from '../assets/image/responsible-icon.png'
-import ClientsInfoModal from '@/components/custom/clients-info-modal'
+import responsibleIcon from '../../assets/image/responsible-icon.png'
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { getInfosCustomer, convertedTimeZone } from '@/services/request'
 import { formatDate } from '@/utils'
-import ExchangeInfoModal from '@/components/custom/modal/clients-info-modal'
+import exportIcon from '../../assets/icons/export.svg'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -27,10 +24,13 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
-import ConfirmContactModal from '@/components/custom/confirm-contact-modal'
 import { useSignalStore } from '@/store/signalEffect'
 import { TWallet, TWalletCommission, TWalletInfos } from '@/types/wallet.type'
 import { updateCurrentAmount } from '@/services/walletService'
+import { SwitchTheme } from '@/components/custom/switch-theme'
+import { ClientsInfoModal } from './client-info-modal'
+import { ConfirmContactModal } from './confirm-contact-modal'
+import { ExchangeInfoModal } from './exchange-info-modal'
 
 export function Infos() {
   const [isModalOpen, setIsModalOpen] = useState(false)

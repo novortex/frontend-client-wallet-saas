@@ -8,46 +8,46 @@ import {
 interface AddNewAssetModalProps {
   isOpen: boolean
   onClose: () => void
-  name: string
-  email: string
-  phone: string
+  accountEmail: string
+  exchangePassword: string
+  emailPassword: string
 }
 
-export default function ClientsInfoModal({
+export function ExchangeInfoModal({
   isOpen,
   onClose,
-  name,
-  email,
-  phone,
+  accountEmail,
+  emailPassword,
+  exchangePassword,
 }: AddNewAssetModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="h-1/3 w-[200%] bg-[#131313] text-[#fff] m-0">
         <DialogHeader className="flex justify-center">
-          <DialogTitle className="text-3xl">Information</DialogTitle>
+          <DialogTitle className="text-3xl">Information Exchange</DialogTitle>
         </DialogHeader>
         <div className="flex flex-row">
           <div className="h-full w-1/2 flex justify-start items-center">
-            Name
+            Account email
           </div>
           <div className="h-full w-1/2 flex justify-start items-center text-[#959CB6]">
-            {name}
+            {accountEmail}
           </div>
         </div>
         <div className="flex flex-row">
           <div className="h-full w-1/2 flex justify-start items-center">
-            Email
+            Email password
           </div>
           <div className="h-full w-1/2 flex justify-start items-center text-[#959CB6]">
-            {email}
+            {emailPassword}
           </div>
         </div>
         <div className="flex flex-row">
           <div className="h-full w-1/2 flex justify-start items-center">
-            Phone
+            Exchange password
           </div>
           <div className="h-full w-1/2 flex justify-start items-center text-[#959CB6]">
-            {phone}
+            {exchangePassword}
           </div>
         </div>
       </DialogContent>
