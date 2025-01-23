@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from 'react'
-import CardClient from '@/components/custom/card-client'
 import { SwitchTheme } from '@/components/custom/switch-theme'
 import { Input } from '@/components/ui/input'
 import { ClientsFilterModal } from '@/components/custom/clientsFilterModal/index'
@@ -8,6 +7,7 @@ import { toast } from '@/components/ui/use-toast'
 import { formatDate } from '@/utils'
 import { TClientInfosResponse } from '@/types/customer.type'
 import { useAuth } from '@/contexts/authContext'
+import CardClient from './card-client'
 
 export function Clients() {
   const [clients, setClients] = useState<TClientInfosResponse[]>([])
