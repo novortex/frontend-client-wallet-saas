@@ -1,7 +1,4 @@
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from 'recharts'
-import { Checkbox } from '../ui/checkbox'
-import { Label } from '../ui/label'
-import { Switch } from '../ui/switch'
 import {
   Card,
   CardContent,
@@ -18,6 +15,9 @@ import {
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { getGraphData } from '@/services/request'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Label } from '@/components/ui/label'
+import { Switch } from '@/components/ui/switch'
 
 const chartConfig = {
   desktop: {
@@ -35,7 +35,7 @@ interface graphDataEntry {
   createAt: string
 }
 
-export default function WalletGraph() {
+export function WalletGraph() {
   const [showWallet, setShowWallet] = useState(true)
   const [showBenchmark, setShowBenchmark] = useState(true)
   const [graphData, setGraphData] = useState<graphDataEntry[]>([])
