@@ -28,9 +28,9 @@ import { useSignalStore } from '@/store/signalEffect'
 import { TWallet, TWalletCommission, TWalletInfos } from '@/types/wallet.type'
 import { updateCurrentAmount } from '@/services/walletService'
 import { SwitchTheme } from '@/components/custom/switch-theme'
-import ClientsInfoModal from './client-info-modal'
-import ConfirmContactModal from './confirm-contact-modal'
-import ExchangeInfoModal from './exchange-info-modal'
+import { ClientsInfoModal } from './client-info-modal'
+import { ConfirmContactModal } from './confirm-contact-modal'
+import { ExchangeInfoModal } from './exchange-info-modal'
 
 export function Infos() {
   const [isModalOpen, setIsModalOpen] = useState(false)
