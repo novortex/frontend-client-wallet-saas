@@ -6,18 +6,18 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Input } from '../ui/input'
 import { StepForwardIcon, User } from 'lucide-react'
 import { buildStyles, CircularProgressbar } from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist/styles.css'
 import { useRef, useState } from 'react'
 import { useSignalStore } from '@/store/signalEffect'
-import { useToast } from '../ui/use-toast'
 import { registerNewCustomer } from '@/services/request'
-import { Label } from '../ui/label'
 import PhoneInput, { CountryData } from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 import { CountryCode, parsePhoneNumber } from 'libphonenumber-js'
+import { useToast } from '@/components/ui/use-toast'
+import { Input } from '@/components/ui/input'
+import { Label } from 'recharts'
 
 interface RegisterCustomerModalProps {
   isOpen: boolean
