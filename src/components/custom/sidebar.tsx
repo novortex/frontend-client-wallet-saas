@@ -93,16 +93,20 @@ export function SideBar({
         <div className="flex p-3 bg-[#272727]">
           <Avatar>
             <AvatarImage
-              src={userInfo.picture || 'https://github.com/shadcn.png'}
-              alt={userInfo.name}
+              src={userInfo?.picture || 'https://github.com/shadcn.png'}
+              alt={userInfo?.name || 'Guest'}
             />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
           {expanded && (
             <div className="flex justify-between items-center ml-3 w-full">
               <div className="leading-4">
-                <p className="font-normal text-white mb-2">{userInfo.name}</p>
-                <span className="text-sx text-[#959CB6]">{userInfo.role}</span>
+                <p className="font-normal text-white mb-2">
+                  {userInfo?.name || 'Guest'}
+                </p>
+                <span className="text-sx text-[#959CB6]">
+                  {userInfo?.role || 'User'}
+                </span>
               </div>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
