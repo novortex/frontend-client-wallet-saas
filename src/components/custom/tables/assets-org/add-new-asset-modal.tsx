@@ -6,8 +6,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { AssetInfo, AssetInput } from './AssetInput'
 import { useAddAsset } from '@/hooks/useAddAsset'
+import { AssetInfo, AssetInput } from '../../AssetInput'
 
 interface AddNewAssetModalProps {
   isOpen: boolean
