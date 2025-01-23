@@ -1,7 +1,6 @@
 import { SwitchTheme } from '@/components/custom/switch-theme'
 import { Input } from '@/components/ui/input'
 import { CardDashboard } from '@/components/custom/card-dashboard'
-import WalletGraph from '@/components/custom/graph-wallet'
 import {
   getAllAssetsWalletClient,
   updateCurrentAmount,
@@ -22,6 +21,7 @@ import {
 } from '@/components/ui/breadcrumb'
 import { TWalletAssetsInfo } from '@/types/wallet.type'
 import { getGraphData } from '@/services/request'
+import { WalletGraph } from './graph-wallet'
 
 interface graphDataEntry {
   cuid: string
