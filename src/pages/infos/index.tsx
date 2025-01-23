@@ -25,12 +25,12 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
-import ConfirmContactModal from '@/components/custom/confirm-contact-modal'
 import { useSignalStore } from '@/store/signalEffect'
 import { TWallet, TWalletCommission, TWalletInfos } from '@/types/wallet.type'
 import { updateCurrentAmount } from '@/services/walletService'
 import { SwitchTheme } from '@/components/custom/switch-theme'
 import ClientsInfoModal from './client-info-modal'
+import ConfirmContactModal from './confirm-contact-modal'
 
 export function Infos() {
   const [isModalOpen, setIsModalOpen] = useState(false)
