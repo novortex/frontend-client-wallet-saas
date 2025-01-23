@@ -1,11 +1,23 @@
-import { ChevronLeft, ChevronRight, MoreVertical, Bell } from 'lucide-react'
+import {
+  ChevronLeft,
+  ChevronRight,
+  MoreVertical,
+  Bell,
+  LogOut,
+} from 'lucide-react'
 import LogoOrg from '../../assets/image/vault-logo.png'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { ReactNode, useContext, useState, createContext } from 'react'
 import { useUserStore } from '@/store/user'
 import { useNavigate } from 'react-router-dom'
+import { useAuth0 } from '@auth0/auth0-react'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 
-// TODO: Refact this component -> separate files and context
 type SideBarContextProps = {
   expanded: boolean
 }
@@ -23,6 +35,16 @@ export function SideBar({
 }) {
   const [expanded, setExpanded] = useState(true)
   const userInfo = useUserStore((state) => state.user)
+  const { logout } = useAuth0()
+
+  const handleLogout = () => {
+    logout({
+      logoutParams: {
+        returnTo: window.location.origin,
+      },
+    })
+    localStorage.removeItem('auth_app_state')
+  }
 
   return (
     <aside className={`h-screen ${expanded ? 'w-1/6' : 'w-20'} z-10`}>
@@ -32,7 +54,7 @@ export function SideBar({
         <div className="flex gap-5 items-center relative mt-5 mb-5">
           <img src={LogoOrg} className="w-16" alt="" />
           <div
-            className={`overflow-hidden transition-all  ${expanded ? 'w-20' : 'w-0'}`}
+            className={`overflow-hidden transition-all ${expanded ? 'w-20' : 'w-0'}`}
           >
             <h2 className="text-white font-semibold">Vault</h2>
             <p className="text-[#959CB6] text-sm">Dashboard</p>
@@ -52,13 +74,13 @@ export function SideBar({
             >
               <Bell size={20} />
               <p
-                className={`ml-3 font-normal overflow-hidden transition-all  ${expanded ? 'w-52 ' : 'w-0'}`}
+                className={`ml-3 font-normal overflow-hidden transition-all ${expanded ? 'w-52 ' : 'w-0'}`}
               >
                 Notifications
               </p>
 
               <div
-                className={`bg-[#F2BE38] text-black h-5 text-center overflow-hidden transition-all  ${expanded ? 'w-5' : 'w-0'}`}
+                className={`bg-[#F2BE38] text-black h-5 text-center overflow-hidden transition-all ${expanded ? 'w-5' : 'w-0'}`}
               >
                 {alerts}
               </div>
@@ -70,16 +92,44 @@ export function SideBar({
 
         <div className="flex p-3 bg-[#272727]">
           <Avatar>
-            <AvatarImage src="https://github.com/shadcn.png" />
+            <AvatarImage
+              src={userInfo?.picture || 'https://github.com/shadcn.png'}
+              alt={userInfo?.name || 'Guest'}
+            />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
           {expanded && (
             <div className="flex justify-between items-center ml-3 w-full">
               <div className="leading-4">
-                <p className="font-normal text-white mb-2">{userInfo.name}</p>
-                <span className="text-sx text-[#959CB6]">{userInfo.role}</span>
+                <p className="font-normal text-white mb-2">
+                  {userInfo?.name || 'Guest'}
+                </p>
+                <span className="text-sx text-[#959CB6]">
+                  {userInfo?.role || 'User'}
+                </span>
               </div>
-              <MoreVertical color="white" />
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="focus:outline-none">
+                    <MoreVertical
+                      color="white"
+                      className="cursor-pointer hover:text-yellow-300 transition-colors"
+                    />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  align="end"
+                  className="w-40 bg-[#272727] border-[#171717]"
+                >
+                  <DropdownMenuItem
+                    onClick={handleLogout}
+                    className="text-[#959CB6] focus:text-black focus:bg-yellow-300 cursor-pointer flex items-center"
+                  >
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Logout</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           )}
         </div>
@@ -88,7 +138,6 @@ export function SideBar({
   )
 }
 
-// TODO create a type for props
 export function SideBarItem({
   icon,
   text,
