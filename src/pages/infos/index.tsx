@@ -15,7 +15,6 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { getInfosCustomer, convertedTimeZone } from '@/services/request'
 import { formatDate } from '@/utils'
-import ExchangeInfoModal from '@/components/custom/modal/clients-info-modal'
 import exportIcon from '../../assets/icons/export.svg'
 import {
   Breadcrumb,
@@ -31,6 +30,7 @@ import { updateCurrentAmount } from '@/services/walletService'
 import { SwitchTheme } from '@/components/custom/switch-theme'
 import ClientsInfoModal from './client-info-modal'
 import ConfirmContactModal from './confirm-contact-modal'
+import ExchangeInfoModal from './exchange-info-modal'
 
 export function Infos() {
   const [isModalOpen, setIsModalOpen] = useState(false)
