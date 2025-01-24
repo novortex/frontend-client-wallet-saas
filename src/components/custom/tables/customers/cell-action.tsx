@@ -101,7 +101,7 @@ export default function CellActions({
 
     const normalizedName = name.replace(/\s+/g, ' ').trim()
 
-    // Validações dos campos
+
     if (
       !/^[A-ZÀ-ÖØ-Ý][a-zà-öø-ÿ]{1,}(?:\s[A-ZÀ-ÖØ-Ý][a-zà-öø-ÿ]{1,})+$/.test(
         normalizedName,
@@ -469,7 +469,7 @@ export default function CellActions({
               <div className="mt-12 flex justify-end gap-5">
                 <DialogClose asChild>
                   <Button
-                    onClick={handleUpdateWallet} // Função para salvar Wallet
+                    onClick={handleUpdateWallet}
                     className="bg-blue-500 hover:bg-blue-600 text-white"
                   >
                     Save Wallet
