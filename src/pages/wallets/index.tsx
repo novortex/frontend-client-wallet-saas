@@ -7,6 +7,7 @@ import { formatDate } from '@/utils'
 import { TClientInfosResponse } from '@/types/customer.type'
 import CardClient from './card-client'
 import { getWalletOrganization } from '@/services/wallet/walleInfoService'
+import { Loading } from '@/components/custom/loading'
 
 export function Clients() {
   const [clients, setClients] = useState<TClientInfosResponse[]>([])
@@ -145,11 +146,7 @@ export function Clients() {
   }
 
   if (isLoading) {
-    return (
-      <div className="p-10 flex justify-center items-center min-h-screen">
-        <div className="text-white">Loading wallets...</div>
-      </div>
-    )
+    return <Loading />
   }
 
   return (
