@@ -7,9 +7,9 @@ import {
 } from '@/components/ui/dialog'
 import { CircleAlert } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { rebalanceWallet } from '@/services/request'
 import { useParams } from 'react-router-dom'
 import { useSignalStore } from '@/store/signalEffect'
+import { rebalanceWallet } from '@/services/wallet/walletAssetService'
 
 interface ConfirmContactModalProps {
   isOpen: boolean

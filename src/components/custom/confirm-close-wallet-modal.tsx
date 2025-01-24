@@ -16,12 +16,9 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { Calendar } from '@/components/ui/calendar'
-import {
-  closeWallet,
-  startWallet as requestStartWallet,
-} from '@/services/request'
 import { useParams } from 'react-router-dom'
 import { useSignalStore } from '@/store/signalEffect'
+import { requestCloseWallet, requestStartWallet } from '@/services/wallet/walleInfoService'
 
 interface ConfirmCloseWalletModalProps {
   isOpen: boolean
@@ -62,7 +59,7 @@ export default function ConfirmCloseWalletModal({
       if (startWallet) {
         await requestStartWallet(walletUuid, { customDate })
       } else {
-        await closeWallet(walletUuid, { customDate })
+        await requestCloseWallet(walletUuid, { customDate })
       }
     }
     setSignal(!signal)

@@ -24,13 +24,10 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { ClientActive } from './columns'
-import {
-  deleteAssetWallet,
-  updateAssetWalletInformations,
-} from '@/services/request'
 import { useParams } from 'react-router-dom'
 import { useToast } from '@/components/ui/use-toast'
 import { useSignalStore } from '@/store/signalEffect'
+import { deleteAssetWallet, updateAssetWalletInformations } from '@/services/wallet/walletAssetService'
 
 export default function CellActions({
   rowInfos,

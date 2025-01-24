@@ -14,10 +14,10 @@ import {
 } from '@/components/ui/chart'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { getGraphData } from '@/services/request'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
+import { getGraphData } from '@/services/wallet/walleInfoService'
 
 const chartConfig = {
   desktop: {

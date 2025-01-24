@@ -1,13 +1,13 @@
 import { SwitchTheme } from '@/components/custom/switch-theme'
 import { Input } from '@/components/ui/input'
 import HistoryThread from '@/components/custom/history-thread'
-import { getWalletHistoric } from '@/services/walletService'
 import { useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { HistoricEntry } from '@/types/wallet.type'
 import { FilterModal } from './FilterModal'
 import { DateRange } from 'react-day-picker'
 import { BreadCrumbHistoryLinks } from '@/pages/history/BreadCrumbHistoryLinks'
+import { getWalletHistoric } from '@/services/historicService'
 
 export type Filters = {
   eventTypes: string[]

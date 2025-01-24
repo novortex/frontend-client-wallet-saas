@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { addCryptoOrg } from '@/services/request'
 import { useToast } from '@/components/ui/use-toast'
 import { useSignalStore } from '@/store/signalEffect'
+import { addCryptoOrg } from '@/services/managementService'
 
 export const useAddAsset = (onClose: () => void) => {
   const [assetId, setAssetId] = useState('')
