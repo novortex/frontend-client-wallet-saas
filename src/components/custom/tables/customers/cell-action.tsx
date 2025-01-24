@@ -101,7 +101,6 @@ export default function CellActions({
 
     const normalizedName = name.replace(/\s+/g, ' ').trim()
 
-
     if (
       !/^[A-ZÀ-ÖØ-Ý][a-zà-öø-ÿ]{1,}(?:\s[A-ZÀ-ÖØ-Ý][a-zà-öø-ÿ]{1,})+$/.test(
         normalizedName,
