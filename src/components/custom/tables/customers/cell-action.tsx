@@ -85,20 +85,60 @@ export default function CellActions({
     setIsModalOpen(true)
   }
 
-  const handleUpdateCustomer = async () => {
-    try {
-      if (!name || !email || !phone) {
-        return toast({
-          className: 'bg-red-500 border-0',
-          title: 'Validation Error',
-          description: 'Please fill all fields',
-        })
-      }
+  const validateEditInputs = () => {
+    const newErrors = {
+      name: '',
+      email: '',
+      phone: '',
+    }
 
+    const normalizedName = name.replace(/\s+/g, ' ').trim()
+
+    if (
+      !/^[A-ZÀ-ÖØ-Ý][a-zà-öø-ÿ]{1,}(?:\s[A-ZÀ-ÖØ-Ý][a-zà-öø-ÿ]{1,})+$/.test(
+        normalizedName,
+      ) ||
+      /\s$/.test(name)
+    ) {
+      newErrors.name =
+        'Name must include both first and last names, each starting with a capital letter and containing at least two letters.'
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      newErrors.email = 'Invalid email format.'
+    }
+
+    if (!/^\d+$/.test(phone.replace(/\D/g, '')) || phone.trim().length < 11) {
+      newErrors.phone =
+        'The phone number must contain only numbers and include the country code.'
+    }
+
+    if (Object.values(newErrors).some((error) => error)) {
+      Object.entries(newErrors).forEach(([field, errorMessage]) => {
+        if (errorMessage) {
+          toast({
+            className: 'bg-red-500 border-0',
+            title: `Validation Error: ${field}`,
+            description: errorMessage,
+          })
+        }
+      })
+      return false
+    }
+
+    return true
+  }
+
+  const handleUpdateCustomer = async () => {
+    if (!validateEditInputs()) {
+      return
+    }
+
+    try {
       toast({
         className: 'bg-yellow-500 border-0',
-        title: 'Processing add Asset in organization',
-        description: 'Demo Vault !!',
+        title: 'Processing update...',
+        description: 'Updating customer information...',
       })
 
       const result = await updateCustomer(rowInfos.id, {
@@ -110,8 +150,8 @@ export default function CellActions({
       if (result !== true) {
         return toast({
           className: 'bg-red-500 border-0',
-          title: 'Failed add Asset in organization',
-          description: 'Demo Vault !!',
+          title: 'Failed to update customer',
+          description: 'An error occurred while updating the customer.',
         })
       }
 
@@ -119,14 +159,14 @@ export default function CellActions({
 
       return toast({
         className: 'bg-green-500 border-0',
-        title: 'Success update !!',
-        description: 'Demo Vault !!',
+        title: 'Customer updated successfully!',
+        description: 'The customer information has been updated.',
       })
     } catch (error) {
       return toast({
         className: 'bg-red-500 border-0',
-        title: 'Failed add Asset in organization',
-        description: 'Demo Vault !!',
+        title: 'Error updating customer',
+        description: 'An unexpected error occurred.',
       })
     }
   }
