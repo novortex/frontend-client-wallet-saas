@@ -84,16 +84,24 @@ export default function CellActions({
   const openModal = () => {
     setIsModalOpen(true)
   }
+  const [errors, setErrors] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    general: '',
+  })
 
-  const validateEditInputs = () => {
+  const handleUpdateCustomer = async () => {
     const newErrors = {
       name: '',
       email: '',
       phone: '',
+      general: '',
     }
 
     const normalizedName = name.replace(/\s+/g, ' ').trim()
 
+    // Validações dos campos
     if (
       !/^[A-ZÀ-ÖØ-Ý][a-zà-öø-ÿ]{1,}(?:\s[A-ZÀ-ÖØ-Ý][a-zà-öø-ÿ]{1,})+$/.test(
         normalizedName,
@@ -114,33 +122,11 @@ export default function CellActions({
     }
 
     if (Object.values(newErrors).some((error) => error)) {
-      Object.entries(newErrors).forEach(([field, errorMessage]) => {
-        if (errorMessage) {
-          toast({
-            className: 'bg-red-500 border-0',
-            title: `Validation Error: ${field}`,
-            description: errorMessage,
-          })
-        }
-      })
-      return false
-    }
-
-    return true
-  }
-
-  const handleUpdateCustomer = async () => {
-    if (!validateEditInputs()) {
+      setErrors(newErrors)
       return
     }
 
     try {
-      toast({
-        className: 'bg-yellow-500 border-0',
-        title: 'Processing update...',
-        description: 'Updating customer information...',
-      })
-
       const result = await updateCustomer(rowInfos.id, {
         name,
         email,
@@ -148,25 +134,20 @@ export default function CellActions({
       })
 
       if (result !== true) {
-        return toast({
-          className: 'bg-red-500 border-0',
-          title: 'Failed to update customer',
-          description: 'An error occurred while updating the customer.',
+        setErrors({
+          ...newErrors,
+          general: 'Failed to update customer. Try again.',
         })
+        return
       }
 
       setSignal(!signal)
 
-      return toast({
-        className: 'bg-green-500 border-0',
-        title: 'Customer updated successfully!',
-        description: 'The customer information has been updated.',
-      })
+      setIsEditDialogOpen(false)
     } catch (error) {
-      return toast({
-        className: 'bg-red-500 border-0',
-        title: 'Error updating customer',
-        description: 'An unexpected error occurred.',
+      setErrors({
+        ...newErrors,
+        general: 'An unexpected error occurred. Please try again.',
       })
     }
   }
@@ -264,6 +245,9 @@ export default function CellActions({
                     placeholder="Name"
                     required
                   />
+                  {errors.name && (
+                    <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+                  )}
                 </div>
 
                 <div>
@@ -279,6 +263,9 @@ export default function CellActions({
                     placeholder="Email"
                     required
                   />
+                  {errors.email && (
+                    <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+                  )}
                 </div>
 
                 <div>
@@ -294,19 +281,20 @@ export default function CellActions({
                     placeholder="Phone"
                     required
                   />
+                  {errors.phone && (
+                    <p className="text-red-500 text-sm mt-1">{errors.phone}</p>
+                  )}
                 </div>
               </div>
 
               {/* Botão Save para a aba Profile */}
               <div className="mt-12 flex justify-end gap-5">
-                <DialogClose asChild>
-                  <Button
-                    onClick={handleUpdateCustomer} // Função para salvar Profile
-                    className="bg-blue-500 hover:bg-blue-600 text-white"
-                  >
-                    Save Profile
-                  </Button>
-                </DialogClose>
+                <Button
+                  onClick={handleUpdateCustomer}
+                  className="bg-blue-500 hover:bg-blue-600 text-white"
+                >
+                  Save Profile
+                </Button>
 
                 <DialogClose asChild>
                   <Button className="bg-red-500 hover:bg-red-600 text-white">
