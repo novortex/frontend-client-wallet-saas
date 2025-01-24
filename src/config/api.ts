@@ -1,21 +1,21 @@
 import axios from 'axios'
 import { toast } from '@/components/ui/use-toast'
+import { handleUnauthorized } from '@/services/auth'
 
 export const instance = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000',
   withCredentials: true,
 })
 
-// Adiciona o interceptor de resposta para tratar erros globalmente
 instance.interceptors.response.use(
   (response) => response,
   (error) => {
-    // Se for erro de autenticação
     if (error.response?.status === 401) {
+      handleUnauthorized()
       toast({
-        className: 'bg-red-500 border-0 text-white',
-        title: 'Authentication Error',
-        description: 'Please try logging in again.',
+        variant: 'destructive',
+        title: 'Access Denied',
+        description: "You don't have access to this application.",
       })
     }
     return Promise.reject(error)
