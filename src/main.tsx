@@ -19,6 +19,7 @@ if (rootElement) {
       }}
       useRefreshTokens={true}
       cacheLocation="localstorage"
+      useRefreshTokensFallback={true}
     >
       <BrowserRouter>
         <App />
