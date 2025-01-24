@@ -78,7 +78,7 @@ export async function updateCurrentAmount(walletUuid: string): Promise<void> {
   }
 }
 
-export async function closeWallet(
+export async function requestCloseWallet(
     walletUuid: string,
     data: { customDate: string },
   ) {
@@ -101,7 +101,7 @@ export async function getGraphData(walletUuid: string) {
     }
   }
 
-  export async function startWallet(
+  export async function requestStartWallet(
     walletUuid: string,
     data: { customDate: string },
   ) {
