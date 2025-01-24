@@ -6,7 +6,6 @@ import { getWalletOrganization } from '@/services/request'
 import { toast } from '@/components/ui/use-toast'
 import { formatDate } from '@/utils'
 import { TClientInfosResponse } from '@/types/customer.type'
-import { useAuth } from '@/contexts/authContext'
 import CardClient from './card-client'
 
 export function Clients() {
@@ -16,7 +15,6 @@ export function Clients() {
   >([])
   const [searchTerm, setSearchTerm] = useState('')
   const [isLoading, setIsLoading] = useState(true)
-  const { token } = useAuth()
   const [filters, setFilters] = useState({
     selectedManagers: [] as string[],
     selectedWalletTypes: [] as string[],
@@ -30,8 +28,6 @@ export function Clients() {
   })
 
   const fetchClients = useCallback(async () => {
-    if (!token) return
-
     setIsLoading(true)
     try {
       const result = await getWalletOrganization()
@@ -54,7 +50,7 @@ export function Clients() {
     } finally {
       setIsLoading(false)
     }
-  }, [token])
+  }, [])
 
   useEffect(() => {
     fetchClients()
