@@ -196,9 +196,21 @@ export default function CellActions({
     }
   }
 
+  const resetModalState = () => {
+    setName(rowInfos.name || '')
+    setEmail(rowInfos.email || '')
+    setPhone(rowInfos.phone || '')
+    setErrors({ name: '', email: '', phone: '', general: '' })
+  }
   return (
     <>
-      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+      <Dialog
+        open={isEditDialogOpen}
+        onOpenChange={(isOpen) => {
+          setIsEditDialogOpen(isOpen)
+          if (!isOpen) resetModalState()
+        }}
+      >
         <DialogTrigger asChild>
           <Button
             className="flex justify-center gap-3 border-b border-[#D4D7E3] hover:bg-black hover:text-white"
