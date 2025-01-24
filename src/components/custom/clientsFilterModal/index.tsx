@@ -12,14 +12,14 @@ import { OrderByFilter } from './OrderByFilter'
 import { WalletTypeFilter } from './WalletTypeFilter'
 import { ManagerFilter } from './ManagerFilter'
 import { UnbalancedWalletFilter } from './UnbalanceWalletFilter'
-import { getAllManagersOnOrganization } from '@/services/request'
 import { AlertsFilter } from './AlertsFilter'
 import { ExchangeFilter } from './ExchangeFilter'
 import { BenchmarkFilter } from './BenchmarkFilter'
 import {
   getBenchmarkOptions,
   getExchangesDisposables,
-} from '@/services/assetsService'
+} from '@/services/managementService'
+import { getAllManagersOnOrganization } from '@/services/managementService'
 
 type ApplyFiltersProps = {
   handleApplyFilters: (filters: {

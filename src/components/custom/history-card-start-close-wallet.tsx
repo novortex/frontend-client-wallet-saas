@@ -7,8 +7,8 @@ import {
   CardFooter,
 } from '@/components/ui/card'
 import { Button } from '../ui/button'
-import { downloadPdf } from '@/services/request'
 import { HistoricEntry } from '@/types/wallet.type'
+import { downloadPdf } from '@/services/managementService'
 
 interface HistoryCardStartCloseProps {
   walletState: boolean

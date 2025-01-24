@@ -5,9 +5,9 @@ import {
   AssetOrgs,
   columnsAssetOrg,
 } from '@/components/custom/tables/assets-org/columns'
-import { getAllAssetsOrg } from '@/services/request'
 import { useSignalStore } from '@/store/signalEffect'
 import { useToast } from '@/components/ui/use-toast'
+import { getAllAssetsOrg } from '@/services/managementService'
 
 export function AssetsOrg() {
   const [data, setData] = useState<AssetOrgs[]>([])
