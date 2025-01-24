@@ -74,11 +74,9 @@ export function Clients() {
 
     const filtered = clients
       .filter((client) => {
-        const nameMatches =
-          client.infosClient.name
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase()) ||
-          client.managerName.toLowerCase().includes(searchTerm.toLowerCase())
+        const nameMatches = client.infosClient.name
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase())
 
         const managerMatches =
           selectedManagers.length === 0 ||
