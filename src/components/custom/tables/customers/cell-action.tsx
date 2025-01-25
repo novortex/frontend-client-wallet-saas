@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import {
   Dialog,
   DialogClose,
@@ -174,6 +174,14 @@ export default function CellActions({
       })
     }
   }
+
+  useEffect(() => {
+    if (isEditDialogOpen && rowInfos) {
+      setName(rowInfos.name || '')
+      setEmail(rowInfos.email || '')
+      setPhone(rowInfos.phone || '')
+    }
+  }, [isEditDialogOpen, rowInfos])
 
   return (
     <>
