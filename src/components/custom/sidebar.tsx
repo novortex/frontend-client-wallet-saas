@@ -100,11 +100,32 @@ export function SideBar({
           </Avatar>
           {expanded && (
             <div className="flex justify-between items-center ml-3 w-full">
-              <div className="leading-4">
-                <p className="font-normal text-white mb-2">
-                  {userInfo?.name || 'Guest'}
+              <div
+                className="leading-4 w-full max-w-[calc(100%-40px)] overflow-hidden"
+                style={{
+                  display: 'inline-block', // Para garantir comportamento de bloco
+                }}
+              >
+                <p
+                  className="font-normal text-white mb-2 truncate"
+                  style={{
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    maxWidth: '100%',
+                  }}
+                >
+                  {userInfo?.name?.split('@')[0] || 'Guest'}
                 </p>
-                <span className="text-sx text-[#959CB6]">
+                <span
+                  className="text-xs text-[#959CB6] truncate"
+                  style={{
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    maxWidth: '100%',
+                  }}
+                >
                   {userInfo?.role || 'User'}
                 </span>
               </div>
