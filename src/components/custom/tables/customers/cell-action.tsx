@@ -115,7 +115,7 @@ export default function CellActions({
       newErrors.email = 'Invalid email format.'
     }
 
-    if (!/^\d+$/.test(phone.replace(/\D/g, '')) || phone.trim().length < 11) {
+    if (!/^\d+$/.test(phone.replace(/\D/g, '')) || phone.trim().length < 13) {
       newErrors.phone =
         'The phone number must contain only numbers and include the country code.'
     }
