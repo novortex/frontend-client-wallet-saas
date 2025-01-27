@@ -1,9 +1,5 @@
 import { useRef, useState } from 'react'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+import { DropdownMenu } from '@/components/ui/dropdown-menu'
 import {
   Dialog,
   DialogClose,
@@ -14,20 +10,18 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import {
-  EyeOffIcon,
-  MoreHorizontal,
-  PencilIcon,
-  TriangleAlert,
-} from 'lucide-react'
+import { EyeOffIcon, PencilIcon, TriangleAlert } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { ClientActive } from './columns'
+import {
+  deleteAssetWallet,
+  updateAssetWalletInformations,
+} from '@/services/wallet/walletAssetService'
 import { useParams } from 'react-router-dom'
 import { useToast } from '@/components/ui/use-toast'
 import { useSignalStore } from '@/store/signalEffect'
-import { deleteAssetWallet, updateAssetWalletInformations } from '@/services/wallet/walletAssetService'
 
 export default function CellActions({
   rowInfos,
@@ -148,150 +142,141 @@ export default function CellActions({
     })
   }
 
+  const handleEditClick = () => {
+    setIsEditDialogOpen(true)
+  }
+
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-8 w-8 p-0">
-          <span className="sr-only">Open menu</span>
-          <MoreHorizontal className="h-4 w-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent
-        className="bg-white border-0 text-black"
-        align="center"
+      <Button
+        className="flex justify-center gap-3 border-b border-[#D4D7E3] hover:bg-black hover:text-white"
+        variant="secondary"
+        onClick={handleEditClick}
       >
-        <div className="flex flex-col">
-          <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-            <DialogTrigger asChild>
-              <Button
-                className="flex justify-center gap-3 border-b border-[#D4D7E3] hover:bg-black hover:text-white"
-                variant="secondary"
-              >
-                <PencilIcon className="w-5" /> Edit
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="bg-[#1C1C1C] border-0 text-white">
-              <DialogHeader>
-                <DialogTitle className="text-white">
-                  Editing information asset in wallet
-                </DialogTitle>
-                <DialogDescription>
-                  <div className="flex mt-3">
-                    <p>Now you are editing information about</p>
-                    <div className="ml-2 animate-bounce">
-                      <img
-                        src={rowInfos.asset.urlImage}
-                        alt={rowInfos.asset.name}
-                        className="w-6 h-6 mr-2"
-                      />
-                    </div>
-                    <p>{rowInfos.asset.name} in this wallet</p>
-                  </div>
+        <PencilIcon className="w-5" /> Edit
+      </Button>
 
-                  <div className="flex mt-5 gap-5 w-full">
-                    <Label className="w-1/2">Asset Quantity (Ex: 100)</Label>
-                    <Label className="w-1/2">Ideal Allocation (%)</Label>
-                  </div>
-                  <div className="flex mt-5 gap-5 w-full">
-                    <Input
-                      className="w-1/2 h-full bg-[#131313] border-[#323232] text-[#959CB6]"
-                      placeholder="Quantity"
-                      type="number"
-                      defaultValue={rowInfos.assetQuantity}
-                      ref={newQuantityAssetRef}
-                    />
-                    <Input
-                      className="w-1/2 h-full bg-[#131313] border-[#323232] text-[#959CB6]"
-                      placeholder="Ideal allocation"
-                      type="number"
-                      defaultValue={rowInfos.idealAllocation}
-                      ref={newIdealAllocationRef}
+      <div className="flex flex-col">
+        <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+          <DialogContent className="bg-[#1C1C1C] border-0 text-white">
+            <DialogHeader>
+              <DialogTitle className="text-white">
+                Editing information asset in wallet
+              </DialogTitle>
+              <DialogDescription>
+                <div className="flex mt-3">
+                  <p>Now you are editing information about</p>
+                  <div className="ml-2 animate-bounce">
+                    <img
+                      src={rowInfos.asset.urlImage}
+                      alt={rowInfos.asset.name}
+                      className="w-6 h-6 mr-2"
                     />
                   </div>
-                </DialogDescription>
-              </DialogHeader>
-              <DialogFooter>
-                <DialogClose asChild>
-                  <Button className="bg-red-500 hover:bg-red-600 text-white">
-                    Close
-                  </Button>
-                </DialogClose>
-                <Button
-                  onClick={handleUpdateInformationAssetWallet}
-                  className="bg-green-500 hover:bg-green-600 text-black"
-                >
-                  Save
+                  <p>{rowInfos.asset.name} in this wallet</p>
+                </div>
+
+                <div className="flex mt-5 gap-5 w-full">
+                  <Label className="w-1/2">Asset Quantity (Ex: 100)</Label>
+                  <Label className="w-1/2">Ideal Allocation (%)</Label>
+                </div>
+                <div className="flex mt-5 gap-5 w-full">
+                  <Input
+                    className="w-1/2 h-full bg-[#131313] border-[#323232] text-[#959CB6]"
+                    placeholder="Quantity"
+                    type="number"
+                    defaultValue={rowInfos.assetQuantity}
+                    ref={newQuantityAssetRef}
+                  />
+                  <Input
+                    className="w-1/2 h-full bg-[#131313] border-[#323232] text-[#959CB6]"
+                    placeholder="Ideal allocation"
+                    type="number"
+                    defaultValue={rowInfos.idealAllocation}
+                    ref={newIdealAllocationRef}
+                  />
+                </div>
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button className="bg-red-500 hover:bg-red-600 text-white">
+                  Close
                 </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-
-          <Dialog>
-            <DialogTrigger asChild>
+              </DialogClose>
               <Button
-                className="flex justify-center gap-3 hover:bg-black hover:text-white"
-                variant="secondary"
+                onClick={handleUpdateInformationAssetWallet}
+                className="bg-green-500 hover:bg-green-600 text-black"
               >
-                <EyeOffIcon className="w-5" /> Disable
+                Save
               </Button>
-            </DialogTrigger>
-            <DialogContent className="bg-[#1C1C1C] border-0 text-white">
-              <DialogHeader>
-                <DialogTitle className="flex gap-5 items-center mb-5">
-                  Disabled asset{' '}
-                  <TriangleAlert className="text-yellow-400 w-5" />
-                </DialogTitle>
-                <DialogDescription>
-                  <p className="flex">
-                    Disabled the
-                    <span className="font-bold text-white ml-2">
-                      {rowInfos.asset.name}
-                    </span>
-                    <div className="ml-2 animate-bounce">
-                      <img
-                        src={rowInfos.asset.urlImage}
-                        alt={rowInfos.asset.name}
-                        className="w-6 h-6 mr-2"
-                      />
-                    </div>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button
+              className="flex justify-center gap-3 hover:bg-black hover:text-white"
+              variant="secondary"
+            >
+              <EyeOffIcon className="w-5" /> Disable
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="bg-[#1C1C1C] border-0 text-white">
+            <DialogHeader>
+              <DialogTitle className="flex gap-5 items-center mb-5">
+                Disabled asset <TriangleAlert className="text-yellow-400 w-5" />
+              </DialogTitle>
+              <DialogDescription>
+                <p className="flex">
+                  Disabled the
+                  <span className="font-bold text-white ml-2">
+                    {rowInfos.asset.name}
+                  </span>
+                  <div className="ml-2 animate-bounce">
+                    <img
+                      src={rowInfos.asset.urlImage}
+                      alt={rowInfos.asset.name}
+                      className="w-6 h-6 mr-2"
+                    />
+                  </div>
+                </p>
+                {!(
+                  rowInfos.assetQuantity === 0 && rowInfos.idealAllocation === 0
+                ) ? (
+                  <p className="mt-5 font-bold text-yellow-200">
+                    {' '}
+                    Warning: It is not possible to disable this crypto asset
+                    because it still has allocated values and remaining
+                    quantities. Please check the allocations and ensure there is
+                    no balance before attempting again.
                   </p>
-                  {!(
+                ) : null}
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button className="bg-red-500 hover:bg-red-600 text-white">
+                  Close
+                </Button>
+              </DialogClose>
+              <Button
+                disabled={
+                  !(
                     rowInfos.assetQuantity === 0 &&
                     rowInfos.idealAllocation === 0
-                  ) ? (
-                    <p className="mt-5 font-bold text-yellow-200">
-                      {' '}
-                      Warning: It is not possible to disable this crypto asset
-                      because it still has allocated values and remaining
-                      quantities. Please check the allocations and ensure there
-                      is no balance before attempting again.
-                    </p>
-                  ) : null}
-                </DialogDescription>
-              </DialogHeader>
-              <DialogFooter>
-                <DialogClose asChild>
-                  <Button className="bg-red-500 hover:bg-red-600 text-white">
-                    Close
-                  </Button>
-                </DialogClose>
-                <Button
-                  disabled={
-                    !(
-                      rowInfos.assetQuantity === 0 &&
-                      rowInfos.idealAllocation === 0
-                    )
-                  }
-                  onClick={handleDeleteAssetWallet}
-                  className="bg-blue-500 hover:bg-blue-600 text-black"
-                >
-                  Disabled
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-        </div>
-      </DropdownMenuContent>
+                  )
+                }
+                onClick={handleDeleteAssetWallet}
+                className="bg-blue-500 hover:bg-blue-600 text-black"
+              >
+                Disabled
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </div>
     </DropdownMenu>
   )
 }
