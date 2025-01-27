@@ -2,11 +2,12 @@ import { useState, useEffect, useCallback } from 'react'
 import { SwitchTheme } from '@/components/custom/switch-theme'
 import { Input } from '@/components/ui/input'
 import { ClientsFilterModal } from '@/components/custom/clientsFilterModal/index'
-import { getWalletOrganization } from '@/services/request'
 import { toast } from '@/components/ui/use-toast'
 import { formatDate } from '@/utils'
 import { TClientInfosResponse } from '@/types/customer.type'
 import CardClient from './card-client'
+import { getWalletOrganization } from '@/services/wallet/walleInfoService'
+import { Loading } from '@/components/custom/loading'
 
 export function Clients() {
   const [clients, setClients] = useState<TClientInfosResponse[]>([])
@@ -74,11 +75,9 @@ export function Clients() {
 
     const filtered = clients
       .filter((client) => {
-        const nameMatches =
-          client.infosClient.name
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase()) ||
-          client.managerName.toLowerCase().includes(searchTerm.toLowerCase())
+        const nameMatches = client.infosClient.name
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase())
 
         const managerMatches =
           selectedManagers.length === 0 ||
@@ -147,11 +146,7 @@ export function Clients() {
   }
 
   if (isLoading) {
-    return (
-      <div className="p-10 flex justify-center items-center min-h-screen">
-        <div className="text-white">Loading wallets...</div>
-      </div>
-    )
+    return <Loading />
   }
 
   return (

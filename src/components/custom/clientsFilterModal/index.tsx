@@ -12,14 +12,14 @@ import { OrderByFilter } from './OrderByFilter'
 import { WalletTypeFilter } from './WalletTypeFilter'
 import { ManagerFilter } from './ManagerFilter'
 import { UnbalancedWalletFilter } from './UnbalanceWalletFilter'
-import { getAllManagersOnOrganization } from '@/services/request'
 import { AlertsFilter } from './AlertsFilter'
 import { ExchangeFilter } from './ExchangeFilter'
 import { BenchmarkFilter } from './BenchmarkFilter'
 import {
   getBenchmarkOptions,
   getExchangesDisposables,
-} from '@/services/assetsService'
+} from '@/services/managementService'
+import { getAllManagersOnOrganization } from '@/services/managementService'
 
 type ApplyFiltersProps = {
   handleApplyFilters: (filters: {
@@ -146,7 +146,9 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
           Filters
         </Button>
       </DialogTrigger>
-      <DialogContent className="bg-[#131313] h-fit">
+      <DialogContent
+        className="bg-[#131313] h-[90vh] max-h-[90vh] overflow-y-auto"
+      >
         <DialogHeader className="text-[#fff]">
           <DialogTitle className="text-2xl text-center">
             Filter Customer

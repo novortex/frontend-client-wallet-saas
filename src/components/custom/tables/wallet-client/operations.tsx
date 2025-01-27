@@ -19,10 +19,6 @@ import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
 import { useEffect, useState } from 'react'
 import { useToast } from '@/components/ui/use-toast'
-import {
-  getAllFiatCurrencies,
-  createDepositWithdrawal,
-} from '@/services/request'
 import { useParams } from 'react-router-dom'
 import { useSignalStore } from '@/store/signalEffect'
 import {
@@ -31,6 +27,8 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { Calendar } from '@/components/ui/calendar'
+import { getAllFiatCurrencies } from '@/services/managementService'
+import { createDepositWithdrawal } from '@/services/wallet/walletAssetService'
 
 interface OperationsModalProps {
   isOpen: boolean

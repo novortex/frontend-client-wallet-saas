@@ -16,7 +16,6 @@ import { useState } from 'react'
 import { useRegisterWallet } from '@/store/registerWallet'
 import { useToast } from '../ui/use-toast'
 import { useSignalStore } from '@/store/signalEffect'
-import { registerWalletForCustomer } from '@/services/request'
 import { CustomersOrganization } from './tables/customers/columns'
 import { useManagerOrganization } from '@/store/managers_benckmark_exchanges'
 import {
@@ -26,6 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { registerWalletForCustomer } from '@/services/wallet/walleInfoService'
 
 interface RelateClientExchangeModalProps {
   isOpen: boolean

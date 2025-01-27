@@ -1,12 +1,9 @@
 import { useEffect, useState, useCallback } from 'react'
-import {
-  calculateRebalanceInWallet,
-  getAllAssetsWalletClient,
-  updateCurrentAmount,
-} from '@/services/walletService'
 import { useToast } from '@/components/ui/use-toast'
 import { ClientActive } from '@/components/custom/tables/wallet-client/columns'
 import { TWalletAssetsInfo } from '@/types/wallet.type'
+import { calculateRebalanceInWallet, updateCurrentAmount } from '@/services/wallet/walleInfoService'
+import { getAllAssetsWalletClient } from '@/services/wallet/walletAssetService'
 
 export function useWallet(walletUuid: string) {
   const [data, setData] = useState<ClientActive[]>([])

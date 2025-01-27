@@ -22,10 +22,7 @@ import { useToast } from '../ui/use-toast'
 import { useSignalStore } from '@/store/signalEffect'
 import { Label } from '../ui/label'
 import { AssetsOrganizationForSelectedResponse } from '@/types/asset.type'
-import {
-  addCryptoWalletClient,
-  getAllAssetsInOrgForAddWalletClient,
-} from '@/services/assetsService'
+import { addCryptoWalletClient, getAllAssetsInOrgForAddWalletClient } from '@/services/wallet/walletAssetService'
 
 interface AddNewWalletModalProps {
   isOpen: boolean

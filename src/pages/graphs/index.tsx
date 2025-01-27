@@ -1,10 +1,6 @@
 import { SwitchTheme } from '@/components/custom/switch-theme'
 import { Input } from '@/components/ui/input'
 import { CardDashboard } from '@/components/custom/card-dashboard'
-import {
-  getAllAssetsWalletClient,
-  updateCurrentAmount,
-} from '@/services/walletService'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { ClientActive } from '@/components/custom/tables/wallet-client/columns'
@@ -20,8 +16,9 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
 import { TWalletAssetsInfo } from '@/types/wallet.type'
-import { getGraphData } from '@/services/request'
 import { WalletGraph } from './graph-wallet'
+import { getGraphData, updateCurrentAmount } from '@/services/wallet/walleInfoService'
+import { getAllAssetsWalletClient } from '@/services/wallet/walletAssetService'
 
 interface graphDataEntry {
   cuid: string

@@ -5,7 +5,7 @@ import {
   getAllCustomersOrganization,
   getAllExchange,
   getAllManagersOnOrganization,
-} from '@/services/request'
+} from '@/services/managementService'
 import { useSignalStore } from '@/store/signalEffect'
 import { useToast } from '@/components/ui/use-toast'
 import { DataTableCustomers } from '@/components/custom/tables/customers/data-table'

@@ -13,7 +13,6 @@ import {
 import responsibleIcon from '../../assets/image/responsible-icon.png'
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { getInfosCustomer, convertedTimeZone } from '@/services/request'
 import { formatDate } from '@/utils'
 import exportIcon from '../../assets/icons/export.svg'
 import {
@@ -26,11 +25,12 @@ import {
 } from '@/components/ui/breadcrumb'
 import { useSignalStore } from '@/store/signalEffect'
 import { TWallet, TWalletCommission, TWalletInfos } from '@/types/wallet.type'
-import { updateCurrentAmount } from '@/services/walletService'
 import { SwitchTheme } from '@/components/custom/switch-theme'
 import { ClientsInfoModal } from './client-info-modal'
 import { ConfirmContactModal } from './confirm-contact-modal'
 import { ExchangeInfoModal } from './exchange-info-modal'
+import { convertedTimeZone } from '@/services/managementService'
+import { getInfosCustomer, updateCurrentAmount } from '@/services/wallet/walleInfoService'
 
 export function Infos() {
   const [isModalOpen, setIsModalOpen] = useState(false)
