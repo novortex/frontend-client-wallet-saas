@@ -1,54 +1,33 @@
-// import { render, screen } from '@testing-library/react'
-// import { Clients } from '@/pages/wallets'
-// import { useUserStore } from '@/store/user'
-// import { useSignalStore } from '@/store/signalEffect'
-// import {
-//   getAllManagersOnOrganization,
-//   getWalletOrganization,
-// } from '@/services/request'
+import { render, screen } from '@testing-library/react'
+import '@testing-library/jest-dom'
+import { MemoryRouter } from 'react-router-dom'
+import { ActionButtons } from '../../../pages/wallet'
 
-// jest.mock('@/store/user', () => ({
-//   useUserStore: jest.fn(),
-// }))
+// Test for ActionButtons Component
+describe('ActionButtons Component', () => {
+  it('renders without crashing', () => {
+    render(
+      <MemoryRouter>
+        <ActionButtons
+          walletUuid="test-wallet-uuid"
+          openOperationModal={() => {}}
+          openCloseWalletModal={() => {}}
+          openOrCloseModalRebalanced={() => {}}
+          infosWallet={undefined}
+        />
+      </MemoryRouter>,
+    )
 
-// jest.mock('@/store/signalEffect', () => ({
-//   useSignalStore: jest.fn(),
-// }))
-
-// jest.mock('@/services/request', () => ({
-//   getWalletOrganization: jest.fn(),
-//   getAllManagersOnOrganization: jest.fn(),
-// }))
-
-// jest.mock('@/components/custom/card-client', () => ({
-//   CardClient: ({ name }: { name: string }) => <div>{name}</div>,
-// }))
-
-// describe('Clients Component', () => {
-//   beforeEach(() => {
-//     jest.clearAllMocks()
-//     ;(useUserStore as unknown as jest.Mock).mockReturnValue([
-//       { uuidOrganization: 'org-123' },
-//     ])
-//     ;(useSignalStore as unknown as jest.Mock).mockReturnValue([{ signal: 1 }])
-//     ;(getAllManagersOnOrganization as jest.Mock).mockResolvedValue([
-//       { name: 'Manager A' },
-//     ])
-//   })
-
-//   it('renders correctly', async () => {
-//     ;(getWalletOrganization as jest.Mock).mockResolvedValue([
-//       {
-//         walletUuid: 'uuid-1',
-//         infosClient: { name: 'Client A', email: '', phone: '' },
-//         managerName: 'Manager A',
-//         lastBalance: '2024-01-01',
-//         nextBalance: '2024-02-01',
-//       },
-//     ])
-
-//     render(<Clients />)
-
-//     expect(screen.getByText('Wallets')).toBeInTheDocument()
-//   })
-// })
+    // Assert buttons are rendered
+    expect(
+      screen.getByRole('button', { name: 'Rebalanced' }),
+    ).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Historic' })).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: 'Withdrawal / Deposit' }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /Start Wallet|Close Wallet/ }),
+    ).toBeInTheDocument()
+  })
+})

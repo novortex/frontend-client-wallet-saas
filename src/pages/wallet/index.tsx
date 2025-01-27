@@ -78,3 +78,5 @@ export function Wallet() {
     </div>
   )
 }
+
+export { ActionButtons }
