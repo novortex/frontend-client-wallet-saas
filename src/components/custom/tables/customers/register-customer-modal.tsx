@@ -63,25 +63,21 @@ export default function RegisterCustomerModal({
       phone: '',
     }
 
-    // Normaliza a string removendo espaços extras entre os nomes e trim no começo e final
     const normalizedName = inputValues.name.replace(/\s+/g, ' ').trim()
 
-    // Validação do nome: obrigatório, deve conter nome e sobrenome, apenas letras (incluindo acentos),
-    // e cada nome deve começar com uma letra maiúscula e ter pelo menos duas letras
     if (
       !/^[A-ZÀ-ÖØ-Ý][a-zà-öø-ÿ]{1,}(?:\s[A-ZÀ-ÖØ-Ý][a-zà-öø-ÿ]{1,})+$/.test(
         normalizedName,
       ) ||
-      /\s$/.test(inputValues.name) // Verifica se havia espaço no final antes da normalização
+      /\s$/.test(inputValues.name)
     ) {
       newErrors.name =
         'Name must include both first and last names, each starting with a capital letter and containing at least two letters.'
     }
-    // Validação do email: obrigatório e deve ter um formato de email válido
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inputValues.email)) {
       newErrors.email = 'Invalid email format.'
     }
-    if (!/^\d+$/.test(phone.replace(/\D/g, '')) || phone.trim().length < 11) {
+    if (!/^\d+$/.test(phone.replace(/\D/g, '')) || phone.trim().length < 13) {
       newErrors.phone =
         'The phone number must contain only numbers and include the country code.'
     }
@@ -97,11 +93,10 @@ export default function RegisterCustomerModal({
         phoneCountry.countryCode.toUpperCase() as CountryCode,
       )
 
-      // Formata o número internacional com o formato adequado
       return phoneNumber.formatInternational()
     } catch (error) {
       console.error('Invalid phone number:', error)
-      return phone // Retorna o número original em caso de erro
+      return phone
     }
   }
 

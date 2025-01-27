@@ -84,23 +84,48 @@ export default function CellActions({
   const openModal = () => {
     setIsModalOpen(true)
   }
+  const [errors, setErrors] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    general: '',
+  })
 
   const handleUpdateCustomer = async () => {
+    const newErrors = {
+      name: '',
+      email: '',
+      phone: '',
+      general: '',
+    }
+
+    const normalizedName = name.replace(/\s+/g, ' ').trim()
+
+    if (
+      !/^[A-ZÀ-ÖØ-Ý][a-zà-öø-ÿ]{1,}(?:\s[A-ZÀ-ÖØ-Ý][a-zà-öø-ÿ]{1,})+$/.test(
+        normalizedName,
+      ) ||
+      /\s$/.test(name)
+    ) {
+      newErrors.name =
+        'Name must include both first and last names, each starting with a capital letter and containing at least two letters.'
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      newErrors.email = 'Invalid email format.'
+    }
+
+    if (!/^\d+$/.test(phone.replace(/\D/g, '')) || phone.trim().length < 13) {
+      newErrors.phone =
+        'The phone number must contain only numbers and include the country code.'
+    }
+
+    if (Object.values(newErrors).some((error) => error)) {
+      setErrors(newErrors)
+      return
+    }
+
     try {
-      if (!name || !email || !phone) {
-        return toast({
-          className: 'bg-red-500 border-0',
-          title: 'Validation Error',
-          description: 'Please fill all fields',
-        })
-      }
-
-      toast({
-        className: 'bg-yellow-500 border-0',
-        title: 'Processing add Asset in organization',
-        description: 'Demo Vault !!',
-      })
-
       const result = await updateCustomer(rowInfos.id, {
         name,
         email,
@@ -108,25 +133,20 @@ export default function CellActions({
       })
 
       if (result !== true) {
-        return toast({
-          className: 'bg-red-500 border-0',
-          title: 'Failed add Asset in organization',
-          description: 'Demo Vault !!',
+        setErrors({
+          ...newErrors,
+          general: 'Failed to update customer. Try again.',
         })
+        return
       }
 
       setSignal(!signal)
 
-      return toast({
-        className: 'bg-green-500 border-0',
-        title: 'Success update !!',
-        description: 'Demo Vault !!',
-      })
+      setIsEditDialogOpen(false)
     } catch (error) {
-      return toast({
-        className: 'bg-red-500 border-0',
-        title: 'Failed add Asset in organization',
-        description: 'Demo Vault !!',
+      setErrors({
+        ...newErrors,
+        general: 'An unexpected error occurred. Please try again.',
       })
     }
   }
@@ -175,17 +195,22 @@ export default function CellActions({
     }
   }
 
-  useEffect(() => {
-    if (isEditDialogOpen && rowInfos) {
-      setName(rowInfos.name || '')
-      setEmail(rowInfos.email || '')
-      setPhone(rowInfos.phone || '')
-    }
-  }, [isEditDialogOpen, rowInfos])
+  const resetModalState = () => {
+    setName(rowInfos.name || '')
+    setEmail(rowInfos.email || '')
+    setPhone(rowInfos.phone || '')
+    setErrors({ name: '', email: '', phone: '', general: '' })
+  }
 
   return (
     <>
-      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+      <Dialog
+        open={isEditDialogOpen}
+        onOpenChange={(isOpen) => {
+          setIsEditDialogOpen(isOpen)
+          if (!isOpen) resetModalState()
+        }}
+      >
         <DialogTrigger asChild>
           <Button
             className="flex justify-center gap-3 border-b border-[#D4D7E3] hover:bg-black hover:text-white"
@@ -232,6 +257,9 @@ export default function CellActions({
                     placeholder="Name"
                     required
                   />
+                  {errors.name && (
+                    <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+                  )}
                 </div>
 
                 <div>
@@ -247,6 +275,9 @@ export default function CellActions({
                     placeholder="Email"
                     required
                   />
+                  {errors.email && (
+                    <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+                  )}
                 </div>
 
                 <div>
@@ -262,19 +293,20 @@ export default function CellActions({
                     placeholder="Phone"
                     required
                   />
+                  {errors.phone && (
+                    <p className="text-red-500 text-sm mt-1">{errors.phone}</p>
+                  )}
                 </div>
               </div>
 
               {/* Botão Save para a aba Profile */}
               <div className="mt-12 flex justify-end gap-5">
-                <DialogClose asChild>
-                  <Button
-                    onClick={handleUpdateCustomer} // Função para salvar Profile
-                    className="bg-blue-500 hover:bg-blue-600 text-white"
-                  >
-                    Save Profile
-                  </Button>
-                </DialogClose>
+                <Button
+                  onClick={handleUpdateCustomer}
+                  className="bg-blue-500 hover:bg-blue-600 text-white"
+                >
+                  Save Profile
+                </Button>
 
                 <DialogClose asChild>
                   <Button className="bg-red-500 hover:bg-red-600 text-white">
@@ -437,7 +469,7 @@ export default function CellActions({
               <div className="mt-12 flex justify-end gap-5">
                 <DialogClose asChild>
                   <Button
-                    onClick={handleUpdateWallet} // Função para salvar Wallet
+                    onClick={handleUpdateWallet}
                     className="bg-blue-500 hover:bg-blue-600 text-white"
                   >
                     Save Wallet
