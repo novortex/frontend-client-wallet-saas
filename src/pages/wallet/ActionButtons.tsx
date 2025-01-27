@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+// import { Input } from '@/components/ui/input'
 import { HandCoins } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { TWalletAssetsInfo } from '@/types/wallet.type'
@@ -21,13 +21,16 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
 }) => {
   const navigate = useNavigate()
 
+  console.log(infosWallet?.ownerName)
+
   return (
     <div className="flex items-center justify-between mb-10">
-      <Input
+      {/* <Input
         className="bg-[#171717] w-3/4 border-0 text-white focus:ring-0"
         type="text"
         placeholder="Search for ..."
-      />
+      /> */}
+      <p>{infosWallet?.ownerName}</p>
       <div className="flex gap-5">
         <Button
           className="bg-[#1877F2] w-[45%] hover:bg-blue-600 p-5 gap-2 ml-4"
