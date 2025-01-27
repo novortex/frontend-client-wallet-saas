@@ -39,6 +39,7 @@ export type TWallet = {
 }
 
 export type TWalletAssetsInfo = {
+  ownerName: string
   startDate: string | Date | null
   investedAmount: number | null
   currentAmount: number | null
@@ -51,16 +52,16 @@ export type TWalletAssetsInfo = {
 export type HistoricEntry = {
   cuid: string
   historyType:
-    | 'SELL_ASSET'
-    | 'BUY_ASSET'
-    | 'INCREASE_ALLOCATION'
-    | 'DECREASE_ALLOCATION'
-    | 'ADD_ASSET'
-    | 'DELETE_ASSET'
-    | 'WITHDRAWAL'
-    | 'DEPOSIT'
-    | 'START_WALLET'
-    | 'CLOSE_WALLET'
+  | 'SELL_ASSET'
+  | 'BUY_ASSET'
+  | 'INCREASE_ALLOCATION'
+  | 'DECREASE_ALLOCATION'
+  | 'ADD_ASSET'
+  | 'DELETE_ASSET'
+  | 'WITHDRAWAL'
+  | 'DEPOSIT'
+  | 'START_WALLET'
+  | 'CLOSE_WALLET'
   createAt: string
   data: {
     client_name: string
