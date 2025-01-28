@@ -6,7 +6,6 @@ import { Header } from '../../../pages/wallet/Header'
 import { TriggerSection } from '../../../pages/wallet/TriggerSection'
 import { WalletInfo } from '../../../pages/wallet/WalletInfo'
 
-// Test for ActionButtons Component
 describe('ActionButtons Component', () => {
   it('should render buttons without crashing', () => {
     render(
@@ -64,5 +63,27 @@ describe('Header Component', () => {
   it('renders the header title', () => {
     render(<Header walletUuid={undefined} />)
     expect(screen.getByText('Client wallet')).toBeInTheDocument()
+  })
+})
+
+describe('TriggerSection Component', () => {
+  const defaultProps = {
+    isOperationModalOpen: false,
+    closeOperationModal: jest.fn(),
+    isCloseWalletModalOpen: false,
+    closeCloseWalletModal: jest.fn(),
+    closeModalState: false,
+    isModalRebalance: false,
+    openOrCloseModalRebalanced: jest.fn(),
+    fetchData: jest.fn(),
+  }
+
+  it('should render basic elements correctly', () => {
+    render(<TriggerSection {...defaultProps} />)
+
+    expect(screen.getByText('My Triggers')).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: 'Trigger Action' }),
+    ).toBeInTheDocument()
   })
 })
