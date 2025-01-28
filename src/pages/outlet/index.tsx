@@ -16,7 +16,7 @@ export default function Root() {
             <h3 className="text-white font-medium">Admin</h3>
             <SideBarItem
               icon={<Wallet2Icon size={20} />}
-              text="wallets"
+              text="Wallets"
               href="/wallets"
             ></SideBarItem>
             <SideBarItem
