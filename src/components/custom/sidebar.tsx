@@ -1,13 +1,7 @@
-import {
-  ChevronLeft,
-  ChevronRight,
-  MoreVertical,
-  Bell,
-  LogOut,
-} from 'lucide-react'
+import { MoreVertical, Bell, LogOut } from 'lucide-react'
 import LogoOrg from '../../assets/image/vault-logo.png'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { ReactNode, useContext, useState, createContext } from 'react'
+import { ReactNode, useContext, useState, createContext, useRef } from 'react'
 import { useUserStore } from '@/store/user'
 import { useNavigate } from 'react-router-dom'
 import { useAuth0 } from '@auth0/auth0-react'
@@ -45,13 +39,24 @@ export function SideBar({
     })
     localStorage.removeItem('auth_app_state')
   }
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const dropdownRef = useRef(false)
+
+  const handleDropdownOpenChange = (open: boolean) => {
+    setIsDropdownOpen(open)
+    dropdownRef.current = open
+  }
 
   return (
     <aside className={`h-screen ${expanded ? 'w-1/6' : 'w-20'} z-10`}>
       <nav
         className={`h-full fixed flex flex-col bg-[#171717] shadow-sm transition-all ${expanded ? 'w-1/6' : 'w-20'}`}
         onMouseEnter={() => setExpanded(true)}
-        onMouseLeave={() => setExpanded(false)}
+        onMouseLeave={() => {
+          if (!dropdownRef.current) {
+            setExpanded(false)
+          }
+        }}
       >
         <div className="flex gap-5 items-center relative mt-5 mb-5">
           <img src={LogoOrg} className="w-16" alt="" />
@@ -95,7 +100,7 @@ export function SideBar({
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
           {expanded && (
-            <div className="flex justify-between items-center ml-3 w-full">
+            <div className="flex justify-between items-center ml-3 w-[80%]">
               <div
                 className="leading-4 w-full max-w-[calc(100%-40px)] overflow-hidden"
                 style={{
@@ -125,7 +130,10 @@ export function SideBar({
                   {userInfo?.role || 'User'}
                 </span>
               </div>
-              <DropdownMenu>
+              <DropdownMenu
+                onOpenChange={handleDropdownOpenChange}
+                open={isDropdownOpen}
+              >
                 <DropdownMenuTrigger asChild>
                   <button className="focus:outline-none">
                     <MoreVertical
