@@ -22,9 +22,9 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
-import exportIcon from '../../../../assets/icons/export.svg'
+import exportIcon from '@/assets/icons/export.svg'
 import { useState } from 'react'
-import RegisterCustomerModal from './register-customer-modal'
+import RegisterCustomerModal from '@/pages/customers/register-customer-modal'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
