@@ -56,6 +56,8 @@ describe('WalletInfo Component', () => {
     expect(screen.getByText('02/01/2023')).toBeInTheDocument()
     expect(screen.getByText('Month closing date')).toBeInTheDocument()
     expect(screen.getByText('01/02/2023')).toBeInTheDocument()
+    expect(screen.getByText('Performance fee')).toBeInTheDocument()
+    expect(screen.getByText('0.50')).toBeInTheDocument()
   })
 })
 
