@@ -22,8 +22,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import filterIcon from '../../../../assets/icons/filter.svg'
 import exportIcon from '../../../../assets/icons/export.svg'
-import { AddNewWalletModal } from '../../add-new-wallet-modal'
-import { RebalanceModal } from '../../rebalanceModal'
+import { AddNewWalletModal } from '../add-new-wallet-modal'
+import { RebalanceModal } from '../rebalanceModal'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]

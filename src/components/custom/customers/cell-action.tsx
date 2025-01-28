@@ -12,8 +12,8 @@ import {
   PencilIcon,
   StepForward,
 } from 'lucide-react'
-import { CustomersOrganization } from './columns'
-import CreateWalletModal from '../../create-wallet-modal'
+import { CustomersOrganization } from '../tables/customers/columns'
+import CreateWalletModal from '../create-wallet-modal'
 import { DisableCustomerModal } from '@/pages/customers/disable-customer-modal'
 import { EditCustomerModal } from '@/pages/customers/edit-customer-modal'
 
