@@ -394,7 +394,7 @@ export function Infos() {
               <div className="flex gap-5">
                 <Button
                   onClick={() => navigate(`/wallet/${walletUuid}/assets`)}
-                  className="bg-[#1877F2] hover:bg-blue-600 flex gap-3 pt-5 pb-5"
+                  className="bg-yellow-600 flex gap-3 pt-5 pb-5"
                 >
                   <Wallet />
                   <p>Wallet</p>
@@ -402,7 +402,7 @@ export function Infos() {
 
                 <Button
                   onClick={() => navigate(`/wallet/${walletUuid}/graphs`)}
-                  className="bg-[#1877F2] hover:bg-blue-600 flex gap-3 pt-5 pb-5"
+                  className="bg-yellow-600 flex gap-3 pt-5 pb-5"
                 >
                   <BarChartBigIcon />
                   <p>Graphics</p>
