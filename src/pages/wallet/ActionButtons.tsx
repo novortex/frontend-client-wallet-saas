@@ -23,7 +23,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
 
   return (
     <div className="flex items-center justify-between mb-10">
-      <Label className='text-2xl text-white'>{infosWallet?.ownerName}</Label>
+      <Label className="text-2xl text-white">{infosWallet?.ownerName}</Label>
       <div className="flex gap-5">
         <Button
           className="bg-[#1877F2] w-[45%] hover:bg-blue-600 p-5 gap-2 ml-4"
@@ -35,6 +35,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
           type="button"
           variant="outline"
           onClick={() => navigate(`/wallet/${walletUuid}/history`)}
+          className=" hover:bg-gray-400"
         >
           Historic
         </Button>
