@@ -113,7 +113,7 @@ export function SideBar({
               </p>
 
               <div
-                className={`bg-[#F2BE38] text-black h-5 text-center overflow-hidden transition-all ${expanded ? 'w-5' : 'w-0'}`}
+                className={`text-[#F2BE38] h-5 text-center overflow-hidden transition-all ${expanded ? 'w-5' : 'w-0'}`}
               >
                 {alerts}
               </div>
