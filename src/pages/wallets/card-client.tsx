@@ -5,7 +5,7 @@ import {
   CardTitle,
   CardDescription,
 } from '@/components/ui/card'
-import { CircleAlert} from 'lucide-react'
+import { CircleAlert } from 'lucide-react'
 import responsibleIcon from '../../assets/image/responsible-icon.png'
 import dateIcon from '../../assets/image/date-icon.png'
 import { useNavigate } from 'react-router-dom'
