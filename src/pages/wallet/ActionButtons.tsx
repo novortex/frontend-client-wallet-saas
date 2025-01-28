@@ -35,6 +35,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
           type="button"
           variant="outline"
           onClick={() => navigate(`/wallet/${walletUuid}/history`)}
+          className=" hover:bg-gray-400"
         >
           Historic
         </Button>
