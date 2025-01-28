@@ -166,7 +166,10 @@ export function SideBar({
                 onOpenChange={handleDropdownOpenChange}
                 open={isDropdownOpen}
               >
-                <DropdownMenuTrigger asChild>
+                <DropdownMenuTrigger
+                  asChild
+                  className="flex justify-center items-center w-[25%] h-[100%]"
+                >
                   <button className="focus:outline-none">
                     <MoreVertical
                       color="white"
