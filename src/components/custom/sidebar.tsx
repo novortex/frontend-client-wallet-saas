@@ -33,7 +33,7 @@ export function SideBar({
   children: ReactNode
   alerts: number
 }) {
-  const [expanded, setExpanded] = useState(true)
+  const [expanded, setExpanded] = useState(false)
   const userInfo = useUserStore((state) => state.user)
   const { logout } = useAuth0()
 
@@ -50,6 +50,8 @@ export function SideBar({
     <aside className={`h-screen ${expanded ? 'w-1/6' : 'w-20'} z-10`}>
       <nav
         className={`h-full fixed flex flex-col bg-[#171717] shadow-sm transition-all ${expanded ? 'w-1/6' : 'w-20'}`}
+        onMouseEnter={() => setExpanded(true)}
+        onMouseLeave={() => setExpanded(false)}
       >
         <div className="flex gap-5 items-center relative mt-5 mb-5">
           <img src={LogoOrg} className="w-16" alt="" />
@@ -59,12 +61,6 @@ export function SideBar({
             <h2 className="text-white font-semibold">Vault</h2>
             <p className="text-[#959CB6] text-sm">Dashboard</p>
           </div>
-          <button
-            onClick={() => setExpanded((state) => !state)}
-            className="p-1.5 rounded-lg bg-[#131313] text-[#959CB6] absolute border -right-5"
-          >
-            {expanded ? <ChevronLeft /> : <ChevronRight />}
-          </button>
         </div>
 
         <SideBarContext.Provider value={{ expanded }}>
