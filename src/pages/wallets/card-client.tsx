@@ -5,9 +5,8 @@ import {
   CardTitle,
   CardDescription,
 } from '@/components/ui/card'
-import { CircleAlert } from 'lucide-react'
+import { CircleAlert, Calendar } from 'lucide-react'
 import responsibleIcon from '../../assets/image/responsible-icon.png'
-import dateIcon from '../../assets/image/date-icon.png'
 import { useNavigate } from 'react-router-dom'
 
 interface CardClientProps {
@@ -127,7 +126,7 @@ export default function CardClient({
       <CardContent className="w-full h-1/2">
         <div className="flex flex-row h-1/2 w-full">
           <div className="flex h-full w-1/2 justify-start items-center text-base gap-2 text-[#fff]">
-            <img src={dateIcon} alt="" />
+            <Calendar className="text-[#F2BE38]" />
             <p>Next rebalancing:</p>
           </div>
           <div className="flex h-full w-1/2 justify-end items-center text-base text-[#fff]">
@@ -136,7 +135,7 @@ export default function CardClient({
         </div>
         <div className="flex flex-row h-1/2 w-full">
           <div className="flex h-full w-1/2 justify-start items-center text-base gap-2 text-[#fff]">
-            <img src={dateIcon} alt="" />
+            <Calendar className="text-[#F2BE38]" />
             <p>Last rebalancing:</p>
           </div>
           <div className="flex h-full w-1/2 justify-end items-center text-base text-[#fff]">
