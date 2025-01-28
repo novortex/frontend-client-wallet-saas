@@ -27,7 +27,16 @@ describe('ActionButtons Component', () => {
           openOperationModal={() => {}}
           openCloseWalletModal={() => {}}
           openOrCloseModalRebalanced={() => {}}
-          infosWallet={undefined}
+          infosWallet={{
+            ownerName: 'test-owner-name',
+            startDate: '01/01/2023',
+            investedAmount: 1000,
+            currentAmount: 1500,
+            performanceFee: 0.5,
+            lastRebalance: '02/01/2023',
+            monthCloseDate: '01/02/2023',
+            isClosed: false,
+          }}
         />
       </MemoryRouter>,
     )
@@ -44,6 +53,7 @@ describe('ActionButtons Component', () => {
     expect(
       screen.getByRole('button', { name: /start wallet|close wallet/i }),
     ).toBeInTheDocument()
+    expect(getByTextCaseInsensitive('test-owner-name')).toBeInTheDocument()
   })
 })
 
