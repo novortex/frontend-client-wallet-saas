@@ -1,13 +1,14 @@
-import {
-  ChevronLeft,
-  ChevronRight,
-  MoreVertical,
-  Bell,
-  LogOut,
-} from 'lucide-react'
+import { MoreVertical, Bell, LogOut } from 'lucide-react'
 import LogoOrg from '../../assets/image/vault-logo.png'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { ReactNode, useContext, useState, createContext } from 'react'
+import {
+  ReactNode,
+  useContext,
+  useState,
+  createContext,
+  useRef,
+  useEffect,
+} from 'react'
 import { useUserStore } from '@/store/user'
 import { useNavigate } from 'react-router-dom'
 import { useAuth0 } from '@auth0/auth0-react'
@@ -33,7 +34,7 @@ export function SideBar({
   children: ReactNode
   alerts: number
 }) {
-  const [expanded, setExpanded] = useState(true)
+  const [expanded, setExpanded] = useState(false)
   const userInfo = useUserStore((state) => state.user)
   const { logout } = useAuth0()
 
@@ -45,11 +46,49 @@ export function SideBar({
     })
     localStorage.removeItem('auth_app_state')
   }
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const dropdownRef = useRef(false)
+
+  const handleDropdownOpenChange = (open: boolean) => {
+    setIsDropdownOpen(open)
+    dropdownRef.current = open
+  }
+  const navRef = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        navRef.current &&
+        !navRef.current.contains(event.target as Node) &&
+        !dropdownRef.current
+      ) {
+        setExpanded(false)
+      }
+    }
+
+    document.addEventListener('mouseup', handleClickOutside)
+    return () => {
+      document.removeEventListener('mouseup', handleClickOutside)
+    }
+  }, [])
+
+  const handleNavClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setExpanded(true)
+  }
 
   return (
     <aside className={`h-screen ${expanded ? 'w-1/6' : 'w-20'} z-10`}>
       <nav
+        ref={navRef}
         className={`h-full fixed flex flex-col bg-[#171717] shadow-sm transition-all ${expanded ? 'w-1/6' : 'w-20'}`}
+        onMouseEnter={() => setExpanded(true)}
+        onMouseLeave={() => {
+          if (!dropdownRef.current) {
+            setExpanded(false)
+          }
+        }}
+        onClick={handleNavClick}
       >
         <div className="flex gap-5 items-center relative mt-5 mb-5">
           <img src={LogoOrg} className="w-16" alt="" />
@@ -59,12 +98,6 @@ export function SideBar({
             <h2 className="text-white font-semibold">Vault</h2>
             <p className="text-[#959CB6] text-sm">Dashboard</p>
           </div>
-          <button
-            onClick={() => setExpanded((state) => !state)}
-            className="p-1.5 rounded-lg bg-[#131313] text-[#959CB6] absolute border -right-5"
-          >
-            {expanded ? <ChevronLeft /> : <ChevronRight />}
-          </button>
         </div>
 
         <SideBarContext.Provider value={{ expanded }}>
@@ -80,7 +113,7 @@ export function SideBar({
               </p>
 
               <div
-                className={`bg-[#F2BE38] text-black h-5 text-center overflow-hidden transition-all ${expanded ? 'w-5' : 'w-0'}`}
+                className={`text-[#F2BE38] h-5 text-center overflow-hidden transition-all ${expanded ? 'w-5' : 'w-0'}`}
               >
                 {alerts}
               </div>
@@ -99,7 +132,7 @@ export function SideBar({
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
           {expanded && (
-            <div className="flex justify-between items-center ml-3 w-full">
+            <div className="flex justify-between items-center ml-3 w-[80%]">
               <div
                 className="leading-4 w-full max-w-[calc(100%-40px)] overflow-hidden"
                 style={{
@@ -129,8 +162,14 @@ export function SideBar({
                   {userInfo?.role || 'User'}
                 </span>
               </div>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
+              <DropdownMenu
+                onOpenChange={handleDropdownOpenChange}
+                open={isDropdownOpen}
+              >
+                <DropdownMenuTrigger
+                  asChild
+                  className="flex justify-center items-center w-[25%] h-[100%]"
+                >
                   <button className="focus:outline-none">
                     <MoreVertical
                       color="white"

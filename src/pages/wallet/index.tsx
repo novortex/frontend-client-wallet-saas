@@ -29,52 +29,58 @@ export function Wallet() {
 
   if (loading) return <Loading />
   if (!infosWallet)
-    return <div>Error: Wallet information is not available.</div>
-
-  return (
-    <div className="p-10">
-      <Header walletUuid={walletUuid} />
-      <ActionButtons
-        walletUuid={walletUuid}
-        openOperationModal={openOperationModal}
-        openCloseWalletModal={openCloseWalletModal}
-        openOrCloseModalRebalanced={openOrCloseModalRebalanced}
-        infosWallet={infosWallet}
-      />
-      {infosWallet && <WalletInfo {...infosWallet} />}
-      <DataTable
-        columns={createColumns(fetchData)}
-        data={data}
-        walletUuid={walletUuid as string}
-        fetchData={fetchData}
-        calculateRebalance={calculateRebalance}
-      />
-      <TriggerSection
-        isOperationModalOpen={isOperationModalOpen}
-        closeOperationModal={closeOperationModal}
-        isCloseWalletModalOpen={isCloseWalletModalOpen}
-        closeCloseWalletModal={closeCloseWalletModal}
-        closeModalState={infosWallet.isClosed}
-        isModalRebalance={isModalRebalance}
-        openOrCloseModalRebalanced={openOrCloseModalRebalanced}
-        fetchData={fetchData}
-      />
-      <OperationsModal
-        isOpen={isOperationModalOpen}
-        onClose={closeOperationModal}
-        fetchData={fetchData}
-      />
-      <ConfirmCloseWalletModal
-        isOpen={isCloseWalletModalOpen}
-        onClose={closeCloseWalletModal}
-        startWallet={infosWallet.isClosed}
-        fetchData={fetchData}
-      />
-      <ConfirmRebalanceModal
-        isOpen={isModalRebalance}
-        onClose={openOrCloseModalRebalanced}
-        fetchData={fetchData}
-      />
-    </div>
-  )
+    return (
+      <div className="text-white flex justify-center items-center h-screen">
+        Error: Wallet information is not available.
+      </div>
+    )
+  else {
+    return (
+      <div className="p-10">
+        <Header walletUuid={walletUuid} />
+        <ActionButtons
+          walletUuid={walletUuid}
+          openOperationModal={openOperationModal}
+          openCloseWalletModal={openCloseWalletModal}
+          openOrCloseModalRebalanced={openOrCloseModalRebalanced}
+          infosWallet={infosWallet}
+        />
+        {infosWallet && <WalletInfo {...infosWallet} />}
+        <DataTable
+          columns={createColumns(fetchData)}
+          data={data}
+          walletUuid={walletUuid as string}
+          fetchData={fetchData}
+          calculateRebalance={calculateRebalance}
+        />
+        <TriggerSection
+          isOperationModalOpen={isOperationModalOpen}
+          closeOperationModal={closeOperationModal}
+          isCloseWalletModalOpen={isCloseWalletModalOpen}
+          closeCloseWalletModal={closeCloseWalletModal}
+          closeModalState={infosWallet.isClosed}
+          isModalRebalance={isModalRebalance}
+          openOrCloseModalRebalanced={openOrCloseModalRebalanced}
+          fetchData={fetchData}
+        />
+        <OperationsModal
+          isOpen={isOperationModalOpen}
+          onClose={closeOperationModal}
+          fetchData={fetchData}
+        />
+        <ConfirmCloseWalletModal
+          isOpen={isCloseWalletModalOpen}
+          onClose={closeCloseWalletModal}
+          startWallet={infosWallet.isClosed}
+          fetchData={fetchData}
+        />
+        <ConfirmRebalanceModal
+          isOpen={isModalRebalance}
+          onClose={openOrCloseModalRebalanced}
+          fetchData={fetchData}
+        />
+      </div>
+    )
+  }
 }
+export { ActionButtons }
