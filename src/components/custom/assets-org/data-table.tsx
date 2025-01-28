@@ -15,8 +15,8 @@ import {
 } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
 
-import filterIcon from '../../../../assets/icons/filter.svg'
-import exportIcon from '../../../../assets/icons/export.svg'
+import filterIcon from '@/assets/icons/filter.svg'
+import exportIcon from '@/assets/icons/export.svg'
 import { useState } from 'react'
 import AddNewAssetModal from './add-new-asset-modal'
 

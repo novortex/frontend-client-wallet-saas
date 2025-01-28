@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Checkbox } from '@/components/ui/checkbox'
-import { CustomersOrganization } from '@/components/custom/tables/customers/columns'
+import { CustomersOrganization } from '@/components/custom/customers/columns'
 
 interface WalletTabProps {
   rowInfos: CustomersOrganization

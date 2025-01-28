@@ -1,9 +1,9 @@
 'use client'
 
 import { ColumnDef } from '@tanstack/react-table'
-import CellActions from '../../customers/cell-action'
 import { ArrowUpDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import CellActions from './cell-action'
 
 // Define the shape of our data
 export type CustomersOrganization = {

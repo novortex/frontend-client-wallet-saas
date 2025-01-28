@@ -7,10 +7,10 @@ import { TriggerSection } from './TriggerSection'
 import OperationsModal from '@/components/custom/wallet/operations'
 import ConfirmCloseWalletModal from '@/components/custom/confirm-close-wallet-modal'
 import ConfirmRebalanceModal from '@/components/custom/modal/confirm-rebalance-modal'
-import { createColumns } from '@/components/custom/tables/wallet-client/columns'
 import { useWallet } from '@/hooks/useWallet'
 import { useWalletModals } from '@/hooks/useWalletModals'
 import { Loading } from '@/components/custom/loading'
+import { createColumns } from '@/components/custom/wallet/columns'
 
 export function Wallet() {
   const { walletUuid } = useParams()

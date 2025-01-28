@@ -5,7 +5,6 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { CustomersOrganization } from '@/components/custom/tables/customers/columns'
 import { useRef, useState } from 'react'
 import { useManagerOrganization } from '@/store/managers_benckmark_exchanges'
 import { useSignalStore } from '@/store/signalEffect'
@@ -13,6 +12,7 @@ import { useToast } from '@/components/ui/use-toast'
 import { updateCustomer, updateWallet } from '@/services/managementService'
 import { ProfileTab } from './profile-tab'
 import { WalletTab } from './wallet-tab'
+import { CustomersOrganization } from '@/components/custom/customers/columns'
 
 interface EditCustomerModalProps {
   isOpen: boolean
