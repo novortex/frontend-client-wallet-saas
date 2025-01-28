@@ -1,7 +1,10 @@
-import { instance } from "@/config/api"
-import { BenchmarksProps } from "@/types/asset.type"
-import { TCustomersOrganization, TNewCustomerResponse } from "@/types/customer.type"
-import { TAssetsOrganizationResponse } from "@/types/response.type"
+import { instance } from '@/config/api'
+import { BenchmarksProps } from '@/types/asset.type'
+import {
+  TCustomersOrganization,
+  TNewCustomerResponse,
+} from '@/types/customer.type'
+import { TAssetsOrganizationResponse } from '@/types/response.type'
 
 export async function getAllAssetsOrg() {
   try {
@@ -78,14 +81,14 @@ export async function getAllCustomersOrganization() {
 }
 
 export async function convertedTimeZone() {
-    try {
-      const result = await instance.get('management/timezone')
-      return result.data
-    } catch (error) {
-      console.error(error)
-      throw error
-    }
+  try {
+    const result = await instance.get('management/timezone')
+    return result.data
+  } catch (error) {
+    console.error(error)
+    throw error
   }
+}
 
 export async function getAllFiatCurrencies() {
   try {
@@ -194,7 +197,6 @@ export async function downloadPdf(
     console.error('Erro ao fazer download do PDF:', error)
   }
 }
-
 
 export async function getAllBenchmark() {
   try {

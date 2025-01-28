@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import OperationsModal from '@/components/custom/tables/wallet-client/operations'
+import OperationsModal from '@/components/custom/wallet/operations'
 import ConfirmCloseWalletModal from '@/components/custom/confirm-close-wallet-modal'
 import ConfirmRebalanceModal from '@/components/custom/modal/confirm-rebalance-modal'
 

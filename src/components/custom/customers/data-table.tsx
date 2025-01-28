@@ -3,6 +3,11 @@ import {
   flexRender,
   getCoreRowModel,
   useReactTable,
+  getPaginationRowModel,
+  SortingState,
+  getSortedRowModel,
+  ColumnFiltersState,
+  getFilteredRowModel,
 } from '@tanstack/react-table'
 
 import {
@@ -13,29 +18,41 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Button } from '@/components/ui/button'
 
-import filterIcon from '../../../../assets/icons/filter.svg'
-import exportIcon from '../../../../assets/icons/export.svg'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+
+import exportIcon from '@/assets/icons/export.svg'
 import { useState } from 'react'
-import AddNewAssetModal from './add-new-asset-modal'
+import RegisterCustomerModal from '@/pages/customers/register-customer-modal'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
 }
 
-export function DataTableAssetOrg<TData, TValue>({
+export function DataTableCustomers<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
+  const [sorting, setSorting] = useState<SortingState>([])
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
+    onColumnFiltersChange: setColumnFilters,
+    getFilteredRowModel: getFilteredRowModel(),
+    state: {
+      sorting,
+      columnFilters,
+    },
   })
-
-  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const openModal = () => {
     setIsModalOpen(true)
@@ -48,24 +65,50 @@ export function DataTableAssetOrg<TData, TValue>({
   return (
     <div className="rounded-md">
       <div className="bg-[#171717] rounded-t-lg p-5 flex items-center justify-between">
-        <h1 className="text-xl text-white">Administrator</h1>
-        <div className="flex gap-5">
+        <h1 className="text-xl text-white">Customers organization</h1>
+        <div className="flex gap-5 items-center">
+          <div className="flex items-center py-4 w-full">
+            <Input
+              placeholder="Filter name customer..."
+              value={
+                (table.getColumn('name')?.getFilterValue() as string) ?? ''
+              }
+              onChange={(event) =>
+                table.getColumn('name')?.setFilterValue(event.target.value)
+              }
+              className="bg-gray-800 text-gray-400 border-transparent h-11"
+            />
+          </div>
           <Button className="bg-white text-black flex gap-2 hover:bg-gray-400 w-1/3 p-5">
-            {' '}
-            <img src={filterIcon} alt="" /> Filters
-          </Button>
-          <Button className="bg-white text-black flex gap-2 hover:bg-gray-400 w-1/3 p-5">
-            {' '}
             <img src={exportIcon} alt="" /> Export
           </Button>
           <Button
-            className="bg-[#1877F2] w-1/2 hover:bg-blue-600 p-5"
             onClick={openModal}
+            className="bg-[#F2BE38] text-black w-1/2 hover:bg-yellow-600 p-5"
           >
             + Add new
           </Button>
+          <div className="border-l-2 border-gray-500 pl-5 flex items-center justify-end space-x-2 py-4">
+            <Button
+              size="sm"
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
+              className="bg-white text-black"
+            >
+              Previous
+            </Button>
+            <Button
+              size="sm"
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+              className="bg-[#F2BE38] text-black"
+            >
+              Next
+            </Button>
+          </div>
         </div>
       </div>
+
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -112,7 +155,8 @@ export function DataTableAssetOrg<TData, TValue>({
           )}
         </TableBody>
       </Table>
-      <AddNewAssetModal isOpen={isModalOpen} onClose={closeModal} />
+
+      <RegisterCustomerModal isOpen={isModalOpen} onClose={closeModal} />
     </div>
   )
 }

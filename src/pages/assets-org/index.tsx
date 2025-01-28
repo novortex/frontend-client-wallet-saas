@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react'
 import { SwitchTheme } from '@/components/custom/switch-theme'
-import { DataTableAssetOrg } from '@/components/custom/tables/assets-org/data-table'
 import {
   AssetOrgs,
   columnsAssetOrg,
-} from '@/components/custom/tables/assets-org/columns'
+} from '@/components/custom/assets-org/columns'
 import { useSignalStore } from '@/store/signalEffect'
 import { useToast } from '@/components/ui/use-toast'
 import { getAllAssetsOrg } from '@/services/managementService'
+import { DataTableAssetOrg } from '@/components/custom/assets-org/data-table'
 
 export function AssetsOrg() {
   const [data, setData] = useState<AssetOrgs[]>([])

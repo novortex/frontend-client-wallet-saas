@@ -8,12 +8,13 @@ import {
 } from '@/services/managementService'
 import { useSignalStore } from '@/store/signalEffect'
 import { useToast } from '@/components/ui/use-toast'
-import { DataTableCustomers } from '@/components/custom/tables/customers/data-table'
+import { DataTableCustomers } from '@/components/custom/customers/data-table'
+
+import { useManagerOrganization } from '@/store/managers_benckmark_exchanges'
 import {
   columnsCustomerOrg,
   CustomersOrganization,
-} from '@/components/custom/tables/customers/columns'
-import { useManagerOrganization } from '@/store/managers_benckmark_exchanges'
+} from '@/components/custom/customers/columns'
 
 export function Customers() {
   const [data, setData] = useState<CustomersOrganization[]>([])
