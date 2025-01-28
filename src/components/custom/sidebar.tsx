@@ -1,7 +1,14 @@
 import { MoreVertical, Bell, LogOut } from 'lucide-react'
 import LogoOrg from '../../assets/image/vault-logo.png'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { ReactNode, useContext, useState, createContext, useRef } from 'react'
+import {
+  ReactNode,
+  useContext,
+  useState,
+  createContext,
+  useRef,
+  useEffect,
+} from 'react'
 import { useUserStore } from '@/store/user'
 import { useNavigate } from 'react-router-dom'
 import { useAuth0 } from '@auth0/auth0-react'
@@ -46,10 +53,34 @@ export function SideBar({
     setIsDropdownOpen(open)
     dropdownRef.current = open
   }
+  const navRef = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        navRef.current &&
+        !navRef.current.contains(event.target as Node) &&
+        !dropdownRef.current
+      ) {
+        setExpanded(false)
+      }
+    }
+
+    document.addEventListener('mouseup', handleClickOutside)
+    return () => {
+      document.removeEventListener('mouseup', handleClickOutside)
+    }
+  }, [])
+
+  const handleNavClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setExpanded(true)
+  }
 
   return (
     <aside className={`h-screen ${expanded ? 'w-1/6' : 'w-20'} z-10`}>
       <nav
+        ref={navRef}
         className={`h-full fixed flex flex-col bg-[#171717] shadow-sm transition-all ${expanded ? 'w-1/6' : 'w-20'}`}
         onMouseEnter={() => setExpanded(true)}
         onMouseLeave={() => {
@@ -57,6 +88,7 @@ export function SideBar({
             setExpanded(false)
           }
         }}
+        onClick={handleNavClick}
       >
         <div className="flex gap-5 items-center relative mt-5 mb-5">
           <img src={LogoOrg} className="w-16" alt="" />
