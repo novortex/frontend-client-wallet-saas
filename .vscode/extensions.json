@@ -1,7 +1,7 @@
 {
-    "recommendations": [
-        "pkief.material-icon-theme",
-        "dbaeumer.vscode-eslint",
-        "editorconfig.editorconfig"
-    ]
+  "recommendations": [
+    "pkief.material-icon-theme",
+    "dbaeumer.vscode-eslint",
+    "editorconfig.editorconfig"
+  ]
 }

@@ -6,7 +6,8 @@ const WelcomeMessage = () => (
       Welcome back!
     </div>
     <div className="w-full h-1/2 text-gray-400 text-2xl flex items-center">
-      A Vault makes the difficult thing easier when investing in crypto
+      A Vault makes the difficult thing easier
+      when investing in crypto
     </div>
   </div>
 )

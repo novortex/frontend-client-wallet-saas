@@ -45,7 +45,9 @@ export default function CardCloseWallet({
       break
   }
 
-  const tagBgColor2 = tagColor2 ? 'bg-[#F28E13]' : 'hidden'
+  const tagBgColor2 = tagColor2
+    ? 'bg-[#F28E13]'
+    : 'hidden'
 
   return (
     <Card className="w-[32%] bg-[#1c1c1c] border-[#323232]">
@@ -55,7 +57,9 @@ export default function CardCloseWallet({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <CardTitle className="text-[#fff]">U$ {value}</CardTitle>
+        <CardTitle className="text-[#fff]">
+          U$ {value}
+        </CardTitle>
       </CardContent>
       <CardFooter className="flex flex-col gap-4 items-start">
         <div
@@ -69,7 +73,9 @@ export default function CardCloseWallet({
           <div
             className={`w-[95%] ${tagBgColor2} text-start p-1 rounded-2xl text-[#fff]`}
           >
-            <p className="ml-2">{value2}% OF COMMISSION VALUE</p>
+            <p className="ml-2">
+              {value2}% OF COMMISSION VALUE
+            </p>
           </div>
         )}
       </CardFooter>

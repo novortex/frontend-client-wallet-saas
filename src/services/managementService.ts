@@ -8,17 +8,23 @@ import { TAssetsOrganizationResponse } from '@/types/response.type'
 
 export async function getAllAssetsOrg() {
   try {
-    const result =
-      await instance.get<TAssetsOrganizationResponse[]>('management/assets')
+    const result = await instance.get<
+      TAssetsOrganizationResponse[]
+    >('management/assets')
     return result.data
   } catch (error) {
     console.log(error)
   }
 }
 
-export async function addCryptoOrg(idCmc: number[]) {
+export async function addCryptoOrg(
+  idCmc: number[]
+) {
   try {
-    const result = await instance.post('management/asset', { idCmc })
+    const result = await instance.post(
+      'management/asset',
+      { idCmc }
+    )
     return result.data
   } catch (error) {
     console.log(error)
@@ -29,7 +35,7 @@ export async function addCryptoOrg(idCmc: number[]) {
 export async function registerNewCustomer(
   name: string,
   email: string,
-  phone?: string,
+  phone?: string
 ): Promise<TNewCustomerResponse> {
   try {
     const data = {
@@ -37,20 +43,29 @@ export async function registerNewCustomer(
       email,
       phone,
     }
-    const result = await instance.post<TNewCustomerResponse>(
-      'management/costumer',
-      data,
-    )
+    const result =
+      await instance.post<TNewCustomerResponse>(
+        'management/costumer',
+        data
+      )
     return result.data
   } catch (error) {
-    console.error('Error registering new customer:', error)
+    console.error(
+      'Error registering new customer:',
+      error
+    )
     throw error
   }
 }
 
-export async function confirmContactClient(walletUuid: string) {
+export async function confirmContactClient(
+  walletUuid: string
+) {
   try {
-    const result = await instance.patch('management/contact', { walletUuid })
+    const result = await instance.patch(
+      'management/contact',
+      { walletUuid }
+    )
     return result.data
   } catch (error) {
     console.error(error)
@@ -62,7 +77,9 @@ export async function getAllManagersOnOrganization(): Promise<
   { name: string; uuid: string }[]
 > {
   try {
-    const result = await instance.get('management/managers')
+    const result = await instance.get(
+      'management/managers'
+    )
     return result.data
   } catch (error) {
     console.error(error)
@@ -72,8 +89,9 @@ export async function getAllManagersOnOrganization(): Promise<
 
 export async function getAllCustomersOrganization() {
   try {
-    const result =
-      await instance.get<TCustomersOrganization[]>('management/clients')
+    const result = await instance.get<
+      TCustomersOrganization[]
+    >('management/clients')
     return result.data
   } catch (error) {
     console.log(error)
@@ -82,7 +100,9 @@ export async function getAllCustomersOrganization() {
 
 export async function convertedTimeZone() {
   try {
-    const result = await instance.get('management/timezone')
+    const result = await instance.get(
+      'management/timezone'
+    )
     return result.data
   } catch (error) {
     console.error(error)
@@ -92,7 +112,9 @@ export async function convertedTimeZone() {
 
 export async function getAllFiatCurrencies() {
   try {
-    const result = await instance.get('management/fiat-currencies')
+    const result = await instance.get(
+      'management/fiat-currencies'
+    )
     return result.data
   } catch (error) {
     console.error(error)
@@ -106,12 +128,12 @@ export async function updateCustomer(
     name: string
     email: string
     phone: string | null
-  },
+  }
 ) {
   try {
     const result = await instance.put(
       `management/customer/${customerUuid}`,
-      data,
+      data
     )
     return result.data
   } catch (error) {
@@ -131,10 +153,13 @@ export async function updateWallet(
     emailPassword: string
     accountPassword: string
     performanceFee: number
-  },
+  }
 ) {
   try {
-    const result = await instance.put(`management/wallet/${walletUuid}`, data)
+    const result = await instance.put(
+      `management/wallet/${walletUuid}`,
+      data
+    )
     return result.data
   } catch (error) {
     console.error(error)
@@ -158,7 +183,7 @@ export async function downloadPdf(
   wallet_benchmark_value: string,
   close_wallet_value_in_organization_fiat: string,
   wallet_benchmark_exceeded_value: string,
-  assets: { name: string; allocation: number }[],
+  assets: { name: string; allocation: number }[]
 ) {
   const pdfData = {
     client_name,
@@ -180,27 +205,41 @@ export async function downloadPdf(
   }
 
   try {
-    const response = await instance.post('management/generate-pdf', pdfData, {
-      responseType: 'blob',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
+    const response = await instance.post(
+      'management/generate-pdf',
+      pdfData,
+      {
+        responseType: 'blob',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    )
 
-    const url = window.URL.createObjectURL(new Blob([response.data]))
+    const url = window.URL.createObjectURL(
+      new Blob([response.data])
+    )
     const link = document.createElement('a')
     link.href = url
-    link.setAttribute('download', 'close_wallet.pdf')
+    link.setAttribute(
+      'download',
+      'close_wallet.pdf'
+    )
     document.body.appendChild(link)
     link.click()
   } catch (error) {
-    console.error('Erro ao fazer download do PDF:', error)
+    console.error(
+      'Erro ao fazer download do PDF:',
+      error
+    )
   }
 }
 
 export async function getAllBenchmark() {
   try {
-    const result = await instance.get('management/benchmark')
+    const result = await instance.get(
+      'management/benchmark'
+    )
     return result.data
   } catch (error) {
     console.error(error)
@@ -210,7 +249,9 @@ export async function getAllBenchmark() {
 
 export async function getAllExchange() {
   try {
-    const result = await instance.get('management/exchanges')
+    const result = await instance.get(
+      'management/exchanges'
+    )
     return result.data
   } catch (error) {
     console.error(error)
@@ -220,18 +261,23 @@ export async function getAllExchange() {
 
 export async function getExchangesDisposables() {
   try {
-    const result = await instance.get<{ name: string; uuid: string }[]>(
-      `/management/exchanges`,
-    )
+    const result = await instance.get<
+      { name: string; uuid: string }[]
+    >(`/management/exchanges`)
     return result.data
   } catch (error) {
     console.log(error)
   }
 }
 
-export async function getBenchmarkOptions(): Promise<BenchmarksProps[]> {
+export async function getBenchmarkOptions(): Promise<
+  BenchmarksProps[]
+> {
   try {
-    const result = await instance.get(`/management/benchmark`, {})
+    const result = await instance.get(
+      `/management/benchmark`,
+      {}
+    )
     return result.data
   } catch (error) {
     console.log(error)

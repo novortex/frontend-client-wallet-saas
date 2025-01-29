@@ -12,7 +12,9 @@ interface HeaderProps {
   walletUuid: string | undefined
 }
 
-const Header: React.FC<HeaderProps> = ({ walletUuid }) => (
+const Header: React.FC<HeaderProps> = ({
+  walletUuid,
+}) => (
   <div className="mb-10 flex items-center justify-between">
     <Breadcrumb>
       <BreadcrumbList>

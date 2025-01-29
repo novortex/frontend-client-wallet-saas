@@ -12,7 +12,9 @@ interface ActionButtonsProps {
   infosWallet: TWalletAssetsInfo | undefined
 }
 
-const ActionButtons: React.FC<ActionButtonsProps> = ({
+const ActionButtons: React.FC<
+  ActionButtonsProps
+> = ({
   walletUuid,
   openOperationModal,
   openCloseWalletModal,
@@ -23,7 +25,9 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
 
   return (
     <div className="flex items-center justify-between mb-10">
-      <Label className="text-2xl text-white">{infosWallet?.ownerName}</Label>
+      <Label className="text-2xl text-white">
+        {infosWallet?.ownerName}
+      </Label>
       <div className="flex gap-5">
         <Button
           className="bg-[#F2BE38] text-black hover:text-white hover:bg-yellow-600"
@@ -34,7 +38,11 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
         <Button
           type="button"
           variant="outline"
-          onClick={() => navigate(`/wallet/${walletUuid}/history`)}
+          onClick={() =>
+            navigate(
+              `/wallet/${walletUuid}/history`
+            )
+          }
           className=" hover:bg-gray-400"
         >
           Historic
@@ -51,7 +59,9 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
           type="button"
           onClick={openCloseWalletModal}
         >
-          {infosWallet?.isClosed ? 'Start Wallet' : 'Close Wallet'}
+          {infosWallet?.isClosed
+            ? 'Start Wallet'
+            : 'Close Wallet'}
         </Button>
       </div>
     </div>

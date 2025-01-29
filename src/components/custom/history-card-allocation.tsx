@@ -39,8 +39,14 @@ export default function HistoryCardAllocation({
         </div>
       </CardHeader>
       <CardContent className="flex justify-center items-center text-[#fff] gap-3">
-        <img src={assetIcon} alt="" className="h-2/3" />
-        <CardTitle className="text-4xl">{allocation}%</CardTitle>
+        <img
+          src={assetIcon}
+          alt=""
+          className="h-2/3"
+        />
+        <CardTitle className="text-4xl">
+          {allocation}%
+        </CardTitle>
       </CardContent>
     </Card>
   )

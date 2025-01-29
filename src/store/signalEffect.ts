@@ -5,11 +5,12 @@ type SignalStore = {
   setSignal: (value: boolean) => void
 }
 
-export const useSignalStore = create<SignalStore>()((set) => ({
-  signal: false,
-  setSignal(value) {
-    set({
-      signal: value,
-    })
-  },
-}))
+export const useSignalStore =
+  create<SignalStore>()((set) => ({
+    signal: false,
+    setSignal(value) {
+      set({
+        signal: value,
+      })
+    },
+  }))

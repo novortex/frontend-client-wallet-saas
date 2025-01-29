@@ -1,19 +1,34 @@
-import { SideBar, SideBarItem } from '@/components/custom/sidebar'
-import { UsersIcon, Coins, Wallet2Icon } from 'lucide-react'
-import { Outlet, useLocation } from 'react-router-dom'
+import {
+  SideBar,
+  SideBarItem,
+} from '@/components/custom/sidebar'
+import {
+  UsersIcon,
+  Coins,
+  Wallet2Icon,
+} from 'lucide-react'
+import {
+  Outlet,
+  useLocation,
+} from 'react-router-dom'
 
 // TODO: colocar a verificação da pagina para não aparecer a navegação no login
 export default function Root() {
   const location = useLocation()
   const hideNavigationRoutes = ['/']
 
-  const shouldHideNavigation = hideNavigationRoutes.includes(location.pathname)
+  const shouldHideNavigation =
+    hideNavigationRoutes.includes(
+      location.pathname
+    )
   return (
     <div className="flex gap-10">
       {!shouldHideNavigation && (
         <SideBar alerts={0}>
           <div className="mb-5">
-            <h3 className="text-white font-medium">Admin</h3>
+            <h3 className="text-white font-medium">
+              Admin
+            </h3>
             <SideBarItem
               icon={<Wallet2Icon size={20} />}
               text="Wallets"

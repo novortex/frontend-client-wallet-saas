@@ -17,27 +17,41 @@ import {
 } from '@/components/custom/customers/columns'
 
 export function Customers() {
-  const [data, setData] = useState<CustomersOrganization[]>([])
+  const [data, setData] = useState<
+    CustomersOrganization[]
+  >([])
   const [loading, setLoading] = useState(true)
-  const [signal] = useSignalStore((state) => [state.signal])
-  const [setManager, setBenchs, setExchanges] = useManagerOrganization(
-    (state) => [state.setManagers, state.setBenchs, state.setExchanges],
-  )
+  const [signal] = useSignalStore((state) => [
+    state.signal,
+  ])
+  const [setManager, setBenchs, setExchanges] =
+    useManagerOrganization((state) => [
+      state.setManagers,
+      state.setBenchs,
+      state.setExchanges,
+    ])
 
   const { toast } = useToast()
 
   useEffect(() => {
     // TODO: separe this script this file :)
     async function getData(
-      setDate: React.Dispatch<React.SetStateAction<CustomersOrganization[]>>,
+      setDate: React.Dispatch<
+        React.SetStateAction<
+          CustomersOrganization[]
+        >
+      >
     ) {
       try {
-        const result = await getAllCustomersOrganization()
+        const result =
+          await getAllCustomersOrganization()
 
         if (!result) {
           return toast({
-            className: 'bg-red-500 border-0 text-white',
-            title: 'Failed get assets organization :(',
+            className:
+              'bg-red-500 border-0 text-white',
+            title:
+              'Failed get assets organization :(',
             description: 'Demo Vault !!',
           })
         }
@@ -64,29 +78,43 @@ export function Customers() {
         setLoading(false)
       } catch (error) {
         toast({
-          className: 'bg-red-500 border-0 text-white',
-          title: 'Failed get assets organization :(',
+          className:
+            'bg-red-500 border-0 text-white',
+          title:
+            'Failed get assets organization :(',
           description: 'Demo Vault !!',
         })
       }
     }
     getData(setData)
 
-    const fetchManagersAndBenchmarks = async () => {
-      try {
-        const managers = await getAllManagersOnOrganization()
-        const benchmarks = await getAllBenchmark()
-        const exchanges = await getAllExchange()
+    const fetchManagersAndBenchmarks =
+      async () => {
+        try {
+          const managers =
+            await getAllManagersOnOrganization()
+          const benchmarks =
+            await getAllBenchmark()
+          const exchanges = await getAllExchange()
 
-        setManager(managers)
-        setBenchs(benchmarks)
-        setExchanges(exchanges)
-      } catch (error) {
-        console.error('Erro ao buscar gerentes:', error)
+          setManager(managers)
+          setBenchs(benchmarks)
+          setExchanges(exchanges)
+        } catch (error) {
+          console.error(
+            'Erro ao buscar gerentes:',
+            error
+          )
+        }
       }
-    }
     fetchManagersAndBenchmarks()
-  }, [signal, toast, setManager, setBenchs, setExchanges])
+  }, [
+    signal,
+    toast,
+    setManager,
+    setBenchs,
+    setExchanges,
+  ])
 
   if (loading) {
     return <div>Loading...</div>
@@ -95,12 +123,17 @@ export function Customers() {
   return (
     <div className="p-10">
       <div className="mb-10 flex items-center justify-between">
-        <h1 className="text-2xl text-white font-medium">Customers</h1>
+        <h1 className="text-2xl text-white font-medium">
+          Customers
+        </h1>
         <SwitchTheme />
       </div>
 
       <div className="mb-10">
-        <DataTableCustomers columns={columnsCustomerOrg} data={data} />
+        <DataTableCustomers
+          columns={columnsCustomerOrg}
+          data={data}
+        />
       </div>
     </div>
   )

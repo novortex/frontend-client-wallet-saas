@@ -8,7 +8,10 @@ export const useAuthToken = () => {
     try {
       return await getAccessTokenSilently()
     } catch (error) {
-      console.error('Error getting access token:', error)
+      console.error(
+        'Error getting access token:',
+        error
+      )
       return null
     }
   }, [getAccessTokenSilently])

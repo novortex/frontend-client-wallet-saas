@@ -21,7 +21,7 @@ export type ClientActive = {
 }
 
 export const createColumns = (
-  fetchData: () => void,
+  fetchData: () => void
 ): ColumnDef<ClientActive>[] => [
   {
     accessorKey: 'asset',
@@ -47,7 +47,11 @@ export const createColumns = (
     header: ({ column }) => (
       <Button
         variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        onClick={() =>
+          column.toggleSorting(
+            column.getIsSorted() === 'asc'
+          )
+        }
         className="pl-0"
       >
         Invested amount
@@ -55,8 +59,12 @@ export const createColumns = (
       </Button>
     ),
     cell: ({ row }) => {
-      const currentAmount = Number(row.original.currentAmount)
-      return !isNaN(currentAmount) ? currentAmount.toFixed(2) : 'N/A'
+      const currentAmount = Number(
+        row.original.currentAmount
+      )
+      return !isNaN(currentAmount)
+        ? currentAmount.toFixed(2)
+        : 'N/A'
     },
     sortingFn: 'basic',
     sortDescFirst: true,
@@ -65,8 +73,12 @@ export const createColumns = (
     accessorKey: 'assetQuantity',
     header: 'Asset quantity',
     cell: ({ row }) => {
-      const assetQuantity = Number(row.original.assetQuantity)
-      return !isNaN(assetQuantity) ? assetQuantity.toFixed(6) : 'N/A'
+      const assetQuantity = Number(
+        row.original.assetQuantity
+      )
+      return !isNaN(assetQuantity)
+        ? assetQuantity.toFixed(6)
+        : 'N/A'
     },
   },
   {
@@ -74,15 +86,21 @@ export const createColumns = (
     header: 'Price',
     cell: ({ row }) => {
       const price = Number(row.original.price)
-      return !isNaN(price) ? price.toFixed(2) : 'N/A'
+      return !isNaN(price)
+        ? price.toFixed(2)
+        : 'N/A'
     },
   },
   {
     accessorKey: 'allocation',
     header: 'Allocation',
     cell: ({ row }) => {
-      const allocation = Number(row.original.allocation)
-      return !isNaN(allocation) ? allocation.toFixed(2) : 'N/A'
+      const allocation = Number(
+        row.original.allocation
+      )
+      return !isNaN(allocation)
+        ? allocation.toFixed(2)
+        : 'N/A'
     },
   },
   {
@@ -91,22 +109,35 @@ export const createColumns = (
     header: ({ column, table }) => {
       const idealAllocationSum = table
         .getRowModel()
-        .rows.reduce((total, row) => total + row.original.idealAllocation, 0)
+        .rows.reduce(
+          (total, row) =>
+            total + row.original.idealAllocation,
+          0
+        )
 
       return (
         <Button
           variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          onClick={() =>
+            column.toggleSorting(
+              column.getIsSorted() === 'asc'
+            )
+          }
           className="pl-0"
         >
-          Ideal allocation ({idealAllocationSum.toFixed(2)}%)
+          Ideal allocation (
+          {idealAllocationSum.toFixed(2)}%)
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
     },
     cell: ({ row }) => {
-      const idealAllocation = Number(row.original.idealAllocation)
-      return !isNaN(idealAllocation) ? idealAllocation.toFixed(2) : 'N/A'
+      const idealAllocation = Number(
+        row.original.idealAllocation
+      )
+      return !isNaN(idealAllocation)
+        ? idealAllocation.toFixed(2)
+        : 'N/A'
     },
     sortingFn: 'basic',
     sortDescFirst: true,
@@ -115,22 +146,33 @@ export const createColumns = (
     accessorKey: 'idealAmount',
     header: 'Ideal amount',
     cell: ({ row }) => {
-      const idealAmount = Number(row.original.idealAmount)
-      return !isNaN(idealAmount) ? idealAmount.toFixed(2) : 'N/A'
+      const idealAmount = Number(
+        row.original.idealAmount
+      )
+      return !isNaN(idealAmount)
+        ? idealAmount.toFixed(2)
+        : 'N/A'
     },
   },
   {
     accessorKey: 'buyOrSell',
     header: 'Buy/Sell',
     cell: ({ row }) => {
-      const buyOrSell = Number(row.original.buyOrSell)
-      return !isNaN(buyOrSell) ? buyOrSell.toFixed(2) : 'N/A'
+      const buyOrSell = Number(
+        row.original.buyOrSell
+      )
+      return !isNaN(buyOrSell)
+        ? buyOrSell.toFixed(2)
+        : 'N/A'
     },
   },
   {
     id: 'actions',
     cell: ({ row }) => (
-      <CellActions rowInfos={row.original} fetchData={fetchData} />
+      <CellActions
+        rowInfos={row.original}
+        fetchData={fetchData}
+      />
     ),
   },
 ]

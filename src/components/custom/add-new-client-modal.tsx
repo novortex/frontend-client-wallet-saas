@@ -26,10 +26,9 @@ export default function AddNewClientModal({
   const [name, setName] = React.useState('')
   const [email, setEmail] = React.useState('')
   const [phone, setPhone] = React.useState('')
-  const [signal, setSignal] = useSignalStore((state) => [
-    state.signal,
-    state.setSignal,
-  ])
+  const [signal, setSignal] = useSignalStore(
+    (state) => [state.signal, state.setSignal]
+  )
   const { toast } = useToast()
 
   const handleAddClient = async () => {
@@ -38,16 +37,22 @@ export default function AddNewClientModal({
 
       toast({
         className: 'bg-yellow-500 border-0',
-        title: 'Processing add client in organization',
+        title:
+          'Processing add client in organization',
         description: 'Demo Vault !!',
       })
 
-      const response = await registerNewCustomer(name, email, phone)
+      const response = await registerNewCustomer(
+        name,
+        email,
+        phone
+      )
 
       if (!response) {
         return toast({
           className: 'bg-red-500 border-0',
-          title: 'Failed add client in organization',
+          title:
+            'Failed add client in organization',
           description: 'Demo Vault !!',
         })
       }
@@ -70,7 +75,10 @@ export default function AddNewClientModal({
         description: 'Demo Vault !!',
       })
     } catch (error) {
-      console.error('Erro ao cadastrar novo cliente:', error)
+      console.error(
+        'Erro ao cadastrar novo cliente:',
+        error
+      )
       // Tratar o erro conforme necessário
     }
   }
@@ -89,13 +97,17 @@ export default function AddNewClientModal({
               className="w-1/2 h-full bg-[#272727] border-[#323232] text-[#959CB6]"
               placeholder="Name"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) =>
+                setName(e.target.value)
+              }
             />
             <Input
               className="w-1/2 h-full bg-[#272727] border-[#323232] text-[#959CB6]"
               placeholder="Email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) =>
+                setEmail(e.target.value)
+              }
             />
           </div>
           <div className="w-full h-1/2 flex flex-row justify-between gap-4 items-center">
@@ -103,14 +115,19 @@ export default function AddNewClientModal({
               className="w-1/2 h-full bg-[#272727] border-[#323232] text-[#959CB6]"
               placeholder="Phone Number"
               value={phone}
-              onChange={(e) => setPhone(e.target.value)}
+              onChange={(e) =>
+                setPhone(e.target.value)
+              }
             />
           </div>
         </div>
         <DialogFooter className="items-center">
           <div className="font-bold text-yellow-200 flex gap-2 mr-5">
             <AlertCircle />
-            <span>This customer will be assigned to you</span>
+            <span>
+              This customer will be assigned to
+              you
+            </span>
           </div>
           <Button
             className="bg-[#1877F2] w-1/4 hover:bg-blue-600 p-5"

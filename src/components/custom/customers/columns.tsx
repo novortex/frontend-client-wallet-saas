@@ -30,73 +30,86 @@ export type CustomersOrganization = {
   contract: string | null
 }
 
-export const columnsCustomerOrg: ColumnDef<CustomersOrganization>[] = [
-  {
-    accessorKey: 'name',
-    header: 'Name',
-  },
-  {
-    accessorKey: 'email',
-    header: 'Email',
-  },
-  {
-    accessorKey: 'phone',
-    header: 'Phone',
-    cell: ({ getValue }) => {
-      const phone = getValue<string | null>()
-      return phone ?? ' - '
+export const columnsCustomerOrg: ColumnDef<CustomersOrganization>[] =
+  [
+    {
+      accessorKey: 'name',
+      header: 'Name',
     },
-  },
-  {
-    accessorKey: 'active',
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Status
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
+    {
+      accessorKey: 'email',
+      header: 'Email',
     },
-    cell: ({ getValue }) => {
-      const active = getValue<boolean>()
-      return (
-        <span
-          className={`px-2 py-1 rounded-full text-white ${active ? 'bg-green-500' : 'bg-red-500'}`}
-        >
-          {active ? 'Active' : 'Inactive'}
-        </span>
-      )
+    {
+      accessorKey: 'phone',
+      header: 'Phone',
+      cell: ({ getValue }) => {
+        const phone = getValue<string | null>()
+        return phone ?? ' - '
+      },
     },
-  },
-  {
-    accessorKey: 'isWallet',
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Stage
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
+    {
+      accessorKey: 'active',
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() =>
+              column.toggleSorting(
+                column.getIsSorted() === 'asc'
+              )
+            }
+          >
+            Status
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        )
+      },
+      cell: ({ getValue }) => {
+        const active = getValue<boolean>()
+        return (
+          <span
+            className={`px-2 py-1 rounded-full text-white ${active ? 'bg-green-500' : 'bg-red-500'}`}
+          >
+            {active ? 'Active' : 'Inactive'}
+          </span>
+        )
+      },
     },
-    cell: ({ getValue }) => {
-      const isWallet = getValue<boolean>()
-      return (
-        <span
-          className={`px-2 py-1 rounded-full text-white ${isWallet ? 'bg-green-500' : 'bg-red-500'}`}
-        >
-          {isWallet ? 'Completed' : 'Need Wallet'}
-        </span>
-      )
+    {
+      accessorKey: 'isWallet',
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() =>
+              column.toggleSorting(
+                column.getIsSorted() === 'asc'
+              )
+            }
+          >
+            Stage
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        )
+      },
+      cell: ({ getValue }) => {
+        const isWallet = getValue<boolean>()
+        return (
+          <span
+            className={`px-2 py-1 rounded-full text-white ${isWallet ? 'bg-green-500' : 'bg-red-500'}`}
+          >
+            {isWallet
+              ? 'Completed'
+              : 'Need Wallet'}
+          </span>
+        )
+      },
     },
-  },
-  {
-    id: 'actions',
-    cell: ({ row }) => <CellActions rowInfos={row.original} />,
-  },
-]
+    {
+      id: 'actions',
+      cell: ({ row }) => (
+        <CellActions rowInfos={row.original} />
+      ),
+    },
+  ]

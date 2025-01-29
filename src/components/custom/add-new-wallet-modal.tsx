@@ -22,7 +22,10 @@ import { useToast } from '../ui/use-toast'
 import { useSignalStore } from '@/store/signalEffect'
 import { Label } from '../ui/label'
 import { AssetsOrganizationForSelectedResponse } from '@/types/asset.type'
-import { addCryptoWalletClient, getAllAssetsInOrgForAddWalletClient } from '@/services/wallet/walletAssetService'
+import {
+  addCryptoWalletClient,
+  getAllAssetsInOrgForAddWalletClient,
+} from '@/services/wallet/walletAssetService'
 
 interface AddNewWalletModalProps {
   isOpen: boolean
@@ -37,16 +40,17 @@ export function AddNewWalletModal({
   walletUuid,
   fetchData,
 }: AddNewWalletModalProps) {
-  const [selectedAsset, setSelectedAsset] = useState('')
+  const [selectedAsset, setSelectedAsset] =
+    useState('')
   const [entryValue, setEntryValue] = useState('')
   const [allocation, setAllocation] = useState('')
-  const [assetForSelected, setAssetForSelected] = useState<
-    AssetsOrganizationForSelectedResponse[]
-  >([])
-  const [setSignal, signal] = useSignalStore((state) => [
-    state.setSignal,
-    state.signal,
-  ])
+  const [assetForSelected, setAssetForSelected] =
+    useState<
+      AssetsOrganizationForSelectedResponse[]
+    >([])
+  const [setSignal, signal] = useSignalStore(
+    (state) => [state.setSignal, state.signal]
+  )
 
   const [errors, setErrors] = useState({
     asset: '',
@@ -63,7 +67,8 @@ export function AddNewWalletModal({
 
     toast({
       className: 'bg-yellow-500 border-0',
-      title: 'Processing add Asset in organization',
+      title:
+        'Processing add Asset in organization',
       description: 'Demo Vault !!',
     })
 
@@ -71,7 +76,7 @@ export function AddNewWalletModal({
       walletUuid,
       selectedAsset,
       Number(entryValue),
-      Number(allocation),
+      Number(allocation)
     )
 
     if (result === false) {
@@ -99,7 +104,8 @@ export function AddNewWalletModal({
 
     return toast({
       className: 'bg-green-500 border-0',
-      title: 'Success !! new Asset in organization',
+      title:
+        'Success !! new Asset in organization',
       description: 'Demo Vault !!',
     })
   }
@@ -117,8 +123,12 @@ export function AddNewWalletModal({
     }
 
     // Validate Entry Value
-    if (!/^\d+(\.\d{0,30})?$/.test(entryValue) || parseFloat(entryValue) < 0) {
-      errorsCopy.entryValue = 'Asset value must be a positive number.'
+    if (
+      !/^\d+(\.\d{0,30})?$/.test(entryValue) ||
+      parseFloat(entryValue) < 0
+    ) {
+      errorsCopy.entryValue =
+        'Asset value must be a positive number.'
       isValid = false
     } else {
       errorsCopy.entryValue = ''
@@ -145,10 +155,13 @@ export function AddNewWalletModal({
   useEffect(() => {
     async function getData(
       setAssetForSelected: React.Dispatch<
-        React.SetStateAction<AssetsOrganizationForSelectedResponse[]>
-      >,
+        React.SetStateAction<
+          AssetsOrganizationForSelectedResponse[]
+        >
+      >
     ) {
-      const result = await getAllAssetsInOrgForAddWalletClient()
+      const result =
+        await getAllAssetsInOrgForAddWalletClient()
 
       if (!result) {
         return null
@@ -164,37 +177,47 @@ export function AddNewWalletModal({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="h-[45%] w-[200%] bg-[#131313] text-[#fff] border-transparent">
         <DialogHeader>
-          <DialogTitle className="text-3xl text-[#fff]">New Asset</DialogTitle>
+          <DialogTitle className="text-3xl text-[#fff]">
+            New Asset
+          </DialogTitle>
         </DialogHeader>
         <div className="w-full flex flex-col gap-4">
           <div className="w-full h-1/2 flex flex-row justify-between gap-4 items-start">
             <div className="flex flex-col w-1/2 gap-3">
-              <Select onValueChange={(item) => setSelectedAsset(item)}>
+              <Select
+                onValueChange={(item) =>
+                  setSelectedAsset(item)
+                }
+              >
                 <SelectTrigger className="w-full h-full bg-[#131313] border-[#323232]">
                   <SelectValue placeholder="Asset" />
                 </SelectTrigger>
                 <SelectContent className="bg-[#131313] border-2 border-[#323232]">
                   {assetForSelected &&
-                    assetForSelected.map((item) => (
-                      <SelectItem
-                        className=" bg-[#131313] border-0  focus:bg-[#252525] focus:text-white text-white"
-                        key={item.uuid}
-                        value={item.uuid}
-                      >
-                        <div className="flex gap-5">
-                          <img
-                            src={item.icon}
-                            alt={item.name}
-                            className="w-6 h-6 mr-2"
-                          />
-                          {item.name}
-                        </div>
-                      </SelectItem>
-                    ))}
+                    assetForSelected.map(
+                      (item) => (
+                        <SelectItem
+                          className=" bg-[#131313] border-0  focus:bg-[#252525] focus:text-white text-white"
+                          key={item.uuid}
+                          value={item.uuid}
+                        >
+                          <div className="flex gap-5">
+                            <img
+                              src={item.icon}
+                              alt={item.name}
+                              className="w-6 h-6 mr-2"
+                            />
+                            {item.name}
+                          </div>
+                        </SelectItem>
+                      )
+                    )}
                 </SelectContent>
               </Select>
               {errors.asset && (
-                <Label className="text-red-500">{errors.asset}</Label>
+                <Label className="text-red-500">
+                  {errors.asset}
+                </Label>
               )}
             </div>
             <div className="flex flex-col w-1/2 gap-3">
@@ -202,10 +225,14 @@ export function AddNewWalletModal({
                 className="w-full h-full bg-[#131313] border-[#323232] text-[#959CB6]"
                 placeholder="Asset Quantity (Ex: 10)"
                 value={entryValue}
-                onChange={(e) => setEntryValue(e.target.value)}
+                onChange={(e) =>
+                  setEntryValue(e.target.value)
+                }
               />
               {errors.entryValue && (
-                <Label className="text-red-500">{errors.entryValue}</Label>
+                <Label className="text-red-500">
+                  {errors.entryValue}
+                </Label>
               )}
             </div>
           </div>
@@ -215,10 +242,14 @@ export function AddNewWalletModal({
                 className="w-full h-full bg-[#131313] border-[#323232] text-[#959CB6]"
                 placeholder="Ideal Allocation (%)"
                 value={allocation}
-                onChange={(e) => setAllocation(e.target.value)}
+                onChange={(e) =>
+                  setAllocation(e.target.value)
+                }
               />
               {errors.allocation && (
-                <Label className="text-red-500">{errors.allocation}</Label>
+                <Label className="text-red-500">
+                  {errors.allocation}
+                </Label>
               )}
             </div>
           </div>

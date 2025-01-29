@@ -1,9 +1,16 @@
 import { useAuth0 } from '@auth0/auth0-react'
 import { useEffect } from 'react'
-import { Outlet, useLocation } from 'react-router-dom'
+import {
+  Outlet,
+  useLocation,
+} from 'react-router-dom'
 
 export const AuthHandler = () => {
-  const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0()
+  const {
+    isAuthenticated,
+    isLoading,
+    loginWithRedirect,
+  } = useAuth0()
   const location = useLocation()
 
   useEffect(() => {
@@ -14,17 +21,24 @@ export const AuthHandler = () => {
           'auth_app_state',
           JSON.stringify({
             returnTo: location.pathname,
-          }),
+          })
         )
 
         await loginWithRedirect({
-          appState: { returnTo: location.pathname },
+          appState: {
+            returnTo: location.pathname,
+          },
         })
       }
     }
 
     handleAuth()
-  }, [isLoading, isAuthenticated, loginWithRedirect, location])
+  }, [
+    isLoading,
+    isAuthenticated,
+    loginWithRedirect,
+    location,
+  ])
 
   if (isLoading) {
     return <div>Loading...</div>

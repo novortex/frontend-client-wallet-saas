@@ -4,7 +4,9 @@ import { useEffect } from 'react'
 
 export const UserDataHandler = () => {
   const { user, isAuthenticated } = useAuth0()
-  const setUser = useUserStore((state) => state.setUser)
+  const setUser = useUserStore(
+    (state) => state.setUser
+  )
 
   useEffect(() => {
     if (isAuthenticated && user) {

@@ -6,9 +6,14 @@ import {
 import { TInfosCustomerResponse } from '@/types/response.type'
 import { RebalanceReturn } from '@/types/wallet.type'
 
-export async function getWalletOrganization(): Promise<TClientInfosResponse[]> {
+export async function getWalletOrganization(): Promise<
+  TClientInfosResponse[]
+> {
   try {
-    const response = await instance.get<TClientInfosResponse[]>('wallet')
+    const response =
+      await instance.get<TClientInfosResponse[]>(
+        'wallet'
+      )
     return response.data
   } catch (error) {
     console.error(error)
@@ -17,12 +22,13 @@ export async function getWalletOrganization(): Promise<TClientInfosResponse[]> {
 }
 
 export async function getInfosCustomer(
-  walletUuid: string,
+  walletUuid: string
 ): Promise<TInfosCustomerResponse | undefined> {
   try {
-    const result = await instance.get<TInfosCustomerResponse>(
-      `wallet/${walletUuid}/infos`,
-    )
+    const result =
+      await instance.get<TInfosCustomerResponse>(
+        `wallet/${walletUuid}/infos`
+      )
     return result.data
   } catch (error) {
     console.log(error)
@@ -43,7 +49,7 @@ export async function registerWalletForCustomer(
   managerUuid: string,
   accountEmail?: string,
   emailPassword?: string,
-  exchangePassword?: string,
+  exchangePassword?: string
 ) {
   try {
     const data = {
@@ -63,17 +69,29 @@ export async function registerWalletForCustomer(
       managerUuid,
     }
 
-    const result = await instance.post<TNewCustomerResponse>('wallet', data)
+    const result =
+      await instance.post<TNewCustomerResponse>(
+        'wallet',
+        data
+      )
     return result.data
   } catch (error) {
-    console.error('Error registering new customer:', error)
+    console.error(
+      'Error registering new customer:',
+      error
+    )
     throw error
   }
 }
 
-export async function updateCurrentAmount(walletUuid: string): Promise<void> {
+export async function updateCurrentAmount(
+  walletUuid: string
+): Promise<void> {
   try {
-    const result = await instance.put(`wallet/${walletUuid}/currentAmount`, {})
+    const result = await instance.put(
+      `wallet/${walletUuid}/currentAmount`,
+      {}
+    )
     return result.data
   } catch (error) {
     console.error(error)
@@ -83,10 +101,13 @@ export async function updateCurrentAmount(walletUuid: string): Promise<void> {
 
 export async function requestCloseWallet(
   walletUuid: string,
-  data: { customDate: string },
+  data: { customDate: string }
 ) {
   try {
-    const result = await instance.put(`wallet/${walletUuid}/closeWallet`, data)
+    const result = await instance.put(
+      `wallet/${walletUuid}/closeWallet`,
+      data
+    )
     return result.data
   } catch (error) {
     console.error(error)
@@ -94,9 +115,13 @@ export async function requestCloseWallet(
   }
 }
 
-export async function getGraphData(walletUuid: string) {
+export async function getGraphData(
+  walletUuid: string
+) {
   try {
-    const result = await instance.get(`wallet/${walletUuid}/graphData`)
+    const result = await instance.get(
+      `wallet/${walletUuid}/graphData`
+    )
     return result.data
   } catch (error) {
     console.error(error)
@@ -106,10 +131,13 @@ export async function getGraphData(walletUuid: string) {
 
 export async function requestStartWallet(
   walletUuid: string,
-  data: { customDate: string },
+  data: { customDate: string }
 ) {
   try {
-    const result = await instance.put(`wallet/${walletUuid}/startWallet`, data)
+    const result = await instance.put(
+      `wallet/${walletUuid}/startWallet`,
+      data
+    )
     return result.data
   } catch (error) {
     console.error(error)
@@ -118,13 +146,12 @@ export async function requestStartWallet(
 }
 
 export async function calculateRebalanceInWallet(
-  walletUuid: string,
+  walletUuid: string
 ): Promise<RebalanceReturn[]> {
   try {
-    const result = await instance.post<RebalanceReturn[]>(
-      `wallet/${walletUuid}/rebalanceWallet`,
-      {},
-    )
+    const result = await instance.post<
+      RebalanceReturn[]
+    >(`wallet/${walletUuid}/rebalanceWallet`, {})
 
     console.log(`result =>`, result)
     return result.data

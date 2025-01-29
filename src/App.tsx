@@ -1,5 +1,9 @@
 import './index.css'
-import { Navigate, Route, Routes } from 'react-router-dom'
+import {
+  Navigate,
+  Route,
+  Routes,
+} from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { useAuth0 } from '@auth0/auth0-react'
 import { Wallet } from '@/pages/wallet/index'
@@ -35,9 +39,16 @@ export function App() {
     }
 
     handleResize()
-    window.addEventListener('resize', handleResize)
+    window.addEventListener(
+      'resize',
+      handleResize
+    )
 
-    return () => window.removeEventListener('resize', handleResize)
+    return () =>
+      window.removeEventListener(
+        'resize',
+        handleResize
+      )
   }, [])
 
   if (isLoading) {
@@ -50,24 +61,61 @@ export function App() {
       <ApiAuthManager />
       <Routes>
         {isMobile ? (
-          <Route path="/" element={<AdviceToTeam />} />
+          <Route
+            path="/"
+            element={<AdviceToTeam />}
+          />
         ) : (
           <Route element={<AuthHandler />}>
-            <Route path="/callback" element={<Auth0Callback />} />
-            <Route element={<ProtectedRouteWrapper />}>
+            <Route
+              path="/callback"
+              element={<Auth0Callback />}
+            />
+            <Route
+              element={<ProtectedRouteWrapper />}
+            >
               <Route element={<Root />}>
-                <Route path="/" element={<Navigate to="/wallets" replace />} />
-                <Route path="/wallet/:walletUuid/assets" element={<Wallet />} />
-                <Route path="/wallets" element={<Clients />} />
-                <Route path="/customers" element={<Customers />} />
-                <Route path="/admin/orgs" element={<AssetsOrg />} />
-                <Route path="/clients/:walletUuid/infos" element={<Infos />} />
-                <Route path="/wallet/:walletUuid/graphs" element={<Graphs />} />
+                <Route
+                  path="/"
+                  element={
+                    <Navigate
+                      to="/wallets"
+                      replace
+                    />
+                  }
+                />
+                <Route
+                  path="/wallet/:walletUuid/assets"
+                  element={<Wallet />}
+                />
+                <Route
+                  path="/wallets"
+                  element={<Clients />}
+                />
+                <Route
+                  path="/customers"
+                  element={<Customers />}
+                />
+                <Route
+                  path="/admin/orgs"
+                  element={<AssetsOrg />}
+                />
+                <Route
+                  path="/clients/:walletUuid/infos"
+                  element={<Infos />}
+                />
+                <Route
+                  path="/wallet/:walletUuid/graphs"
+                  element={<Graphs />}
+                />
                 <Route
                   path="/wallet/:walletUuid/history"
                   element={<History />}
                 />
-                <Route path="*" element={<ErrorPage />} />
+                <Route
+                  path="*"
+                  element={<ErrorPage />}
+                />
               </Route>
             </Route>
           </Route>

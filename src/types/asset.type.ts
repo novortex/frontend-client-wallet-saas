@@ -11,11 +11,12 @@ export type TAsset = {
   buyOrSell: number
 }
 
-export type AssetsOrganizationForSelectedResponse = {
-  uuid: string
-  name: string
-  icon: string
-}
+export type AssetsOrganizationForSelectedResponse =
+  {
+    uuid: string
+    name: string
+    icon: string
+  }
 
 export type BenchmarksProps = {
   benchmarkType: string

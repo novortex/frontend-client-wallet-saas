@@ -41,12 +41,16 @@ export function ProfileTab({
             type="text"
             id="Name"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) =>
+              setName(e.target.value)
+            }
             placeholder="Name"
             required
           />
           {errors.name && (
-            <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+            <p className="text-red-500 text-sm mt-1">
+              {errors.name}
+            </p>
           )}
         </div>
 
@@ -59,12 +63,16 @@ export function ProfileTab({
             type="email"
             id="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) =>
+              setEmail(e.target.value)
+            }
             placeholder="Email"
             required
           />
           {errors.email && (
-            <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+            <p className="text-red-500 text-sm mt-1">
+              {errors.email}
+            </p>
           )}
         </div>
 
@@ -77,12 +85,16 @@ export function ProfileTab({
             type="tel"
             id="Phone"
             value={phone}
-            onChange={(e) => setPhone(e.target.value)}
+            onChange={(e) =>
+              setPhone(e.target.value)
+            }
             placeholder="Phone"
             required
           />
           {errors.phone && (
-            <p className="text-red-500 text-sm mt-1">{errors.phone}</p>
+            <p className="text-red-500 text-sm mt-1">
+              {errors.phone}
+            </p>
           )}
         </div>
       </div>

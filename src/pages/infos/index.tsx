@@ -12,7 +12,10 @@ import {
 } from 'lucide-react'
 import responsibleIcon from '../../assets/image/responsible-icon.png'
 import { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import {
+  useNavigate,
+  useParams,
+} from 'react-router-dom'
 import { formatDate } from '@/utils'
 import exportIcon from '../../assets/icons/export.svg'
 import {
@@ -24,61 +27,79 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
 import { useSignalStore } from '@/store/signalEffect'
-import { TWallet, TWalletCommission, TWalletInfos } from '@/types/wallet.type'
+import {
+  TWallet,
+  TWalletCommission,
+  TWalletInfos,
+} from '@/types/wallet.type'
 import { SwitchTheme } from '@/components/custom/switch-theme'
 import { ClientsInfoModal } from './client-info-modal'
 import { ConfirmContactModal } from './confirm-contact-modal'
 import { ExchangeInfoModal } from './exchange-info-modal'
 import { convertedTimeZone } from '@/services/managementService'
-import { getInfosCustomer, updateCurrentAmount } from '@/services/wallet/walleInfoService'
+import {
+  getInfosCustomer,
+  updateCurrentAmount,
+} from '@/services/wallet/walleInfoService'
 
 export function Infos() {
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [isModalExchangeOpen, setIsModalExchangeOpen] = useState(false)
-  const [isModalContactOpen, setisModalContactOpen] = useState(false)
+  const [isModalOpen, setIsModalOpen] =
+    useState(false)
+  const [
+    isModalExchangeOpen,
+    setIsModalExchangeOpen,
+  ] = useState(false)
+  const [
+    isModalContactOpen,
+    setisModalContactOpen,
+  ] = useState(false)
 
   const [timeZone, setTimeZone] = useState(null)
 
-  const [walletCommission, setWalletCommission] = useState<TWalletCommission[]>(
-    [],
-  )
-  const [walletInfos, setWalletInfos] = useState<TWalletInfos>({
-    manager: '',
-    lastContactAt: '',
-  })
+  const [walletCommission, setWalletCommission] =
+    useState<TWalletCommission[]>([])
+  const [walletInfos, setWalletInfos] =
+    useState<TWalletInfos>({
+      manager: '',
+      lastContactAt: '',
+    })
 
-  const [walletI, setWalletI] = useState<TWallet>({
-    startDate: '',
-    investedAmount: 0,
-    currentAmount: 0,
-    closeDate: '',
-    initialFee: null,
-    initialFeePaid: false,
-    riskProfile: '',
-    monthCloseDate: '',
-    contract: false,
-    performanceFee: 0,
-    benchmark: { name: '' },
-    currentValueBenchmark: 0,
-    lastRebalance: null,
-    nextBalance: null,
-    user: {
-      name: '',
-      email: '',
-      phone: '',
-    },
-    exchange: {
-      name: '',
-    },
-    accountEmail: '',
-    emailPassword: '',
-    exchangePassword: '',
-  })
+  const [walletI, setWalletI] = useState<TWallet>(
+    {
+      startDate: '',
+      investedAmount: 0,
+      currentAmount: 0,
+      closeDate: '',
+      initialFee: null,
+      initialFeePaid: false,
+      riskProfile: '',
+      monthCloseDate: '',
+      contract: false,
+      performanceFee: 0,
+      benchmark: { name: '' },
+      currentValueBenchmark: 0,
+      lastRebalance: null,
+      nextBalance: null,
+      user: {
+        name: '',
+        email: '',
+        phone: '',
+      },
+      exchange: {
+        name: '',
+      },
+      accountEmail: '',
+      emailPassword: '',
+      exchangePassword: '',
+    }
+  )
 
   const navigate = useNavigate()
   const { walletUuid } = useParams()
 
-  const [signal] = useSignalStore((state) => [state.signal])
+  const [signal] = useSignalStore((state) => [
+    state.signal,
+  ])
 
   const openModal = () => {
     setIsModalOpen(true)
@@ -112,7 +133,8 @@ export function Infos() {
 
       await updateCurrentAmount(walletUuid)
 
-      const result = await getInfosCustomer(walletUuid)
+      const result =
+        await getInfosCustomer(walletUuid)
 
       if (!result) {
         return false
@@ -132,7 +154,9 @@ export function Infos() {
         const result = await convertedTimeZone()
         setTimeZone(result)
       } catch (error) {
-        console.error('Error on fetching timezone')
+        console.error(
+          'Error on fetching timezone'
+        )
       }
     }
 
@@ -184,16 +208,22 @@ export function Infos() {
               <h1 className="text-3xl text-white">
                 {walletI.user.name || '-'}
               </h1>
-              {walletInfos.lastContactAt == null ||
+              {walletInfos.lastContactAt ==
+                null ||
               (timeZone &&
                 walletI.monthCloseDate &&
-                new Date(timeZone) > new Date(walletI.monthCloseDate)) ? (
+                new Date(timeZone) >
+                  new Date(
+                    walletI.monthCloseDate
+                  )) ? (
                 <Badge className="bg-red-500 h-10 text-white flex gap-2 hover:bg-red-800 hover:text-white">
-                  <Check className="w-5" /> Not registered
+                  <Check className="w-5" /> Not
+                  registered
                 </Badge>
               ) : (
                 <Badge className="bg-[#10A45C] text-white flex gap-2 hover:bg-[#10A45C] hover:text-white">
-                  <Check className="w-5" /> Confirm contact
+                  <Check className="w-5" />{' '}
+                  Confirm contact
                 </Badge>
               )}
             </div>
@@ -204,7 +234,8 @@ export function Infos() {
                 onClick={openModal}
               >
                 {' '}
-                <CircleAlert className="w-5" /> Information
+                <CircleAlert className="w-5" />{' '}
+                Information
               </Button>
               <Button
                 className="bg-[#131313] text-[#F2BE38] flex gap-3 hover:bg-yellow-500 hover:text-black"
@@ -219,12 +250,17 @@ export function Infos() {
 
           <div className="mb-14">
             <div className="h-full w-1/2 flex items-center justify-start gap-2 text-[#959CB6] text-xl">
-              <img className="w-6" src={responsibleIcon} alt="" />
+              <img
+                className="w-6"
+                src={responsibleIcon}
+                alt=""
+              />
               <p>{walletInfos.manager || '-'}</p>
             </div>
             <div className="flex text-xl">
               <DollarSign className="text-[#F2BE38]" />
-              {walletCommission && walletCommission.length > 0 ? (
+              {walletCommission &&
+              walletCommission.length > 0 ? (
                 walletCommission.map((item) => (
                   <div key={item.name}>
                     <p className="text-[#959CB6] mr-5">
@@ -236,7 +272,9 @@ export function Infos() {
                   </div>
                 ))
               ) : (
-                <p className="text-[#959CB6]">No commission</p>
+                <p className="text-[#959CB6]">
+                  No commission
+                </p>
               )}
             </div>
           </div>
@@ -245,15 +283,22 @@ export function Infos() {
             <div className="flex justify-between gap-2 text-[#959CB6] text-xl mb-5">
               <div className="flex items-center gap-5">
                 <div className="bg-[#131313] border border-[#221D11] rounded-full p-2">
-                  <img className="w-6" src={responsibleIcon} alt="" />
+                  <img
+                    className="w-6"
+                    src={responsibleIcon}
+                    alt=""
+                  />
                 </div>
 
-                <p className="text-white">Wallet informations</p>
+                <p className="text-white">
+                  Wallet informations
+                </p>
               </div>
 
               <Badge className="bg-[#F2BE38] text-black flex gap-2 hover:bg-[#F2BE38] hover:text-black p-2 pl-5 pr-5">
                 {' '}
-                <CircleAlert className="" /> {walletI.riskProfile}
+                <CircleAlert className="" />{' '}
+                {walletI.riskProfile}
               </Badge>
             </div>
 
@@ -262,17 +307,24 @@ export function Infos() {
                 <Calendar className="text-[#F2BE38]" />
                 <p className="text-white">
                   Initial amount invested:{' '}
-                  {walletI.investedAmount !== undefined
-                    ? Number(walletI.investedAmount).toFixed(2)
+                  {walletI.investedAmount !==
+                  undefined
+                    ? Number(
+                        walletI.investedAmount
+                      ).toFixed(2)
                     : '-'}
                 </p>
               </div>
               <div className="flex gap-3">
                 <Calendar className="text-[#F2BE38]" />
                 <p className="text-white">
-                  Current value referring to the benchmark:{' '}
-                  {walletI.currentValueBenchmark !== undefined
-                    ? Number(walletI.currentValueBenchmark).toFixed(2)
+                  Current value referring to the
+                  benchmark:{' '}
+                  {walletI.currentValueBenchmark !==
+                  undefined
+                    ? Number(
+                        walletI.currentValueBenchmark
+                      ).toFixed(2)
                     : '-'}
                 </p>
               </div>
@@ -280,8 +332,11 @@ export function Infos() {
                 <Calendar className="text-[#F2BE38]" />
                 <p className="text-white">
                   Current value:{' '}
-                  {walletI.currentAmount !== undefined
-                    ? Number(walletI.currentAmount).toFixed(2)
+                  {walletI.currentAmount !==
+                  undefined
+                    ? Number(
+                        walletI.currentAmount
+                      ).toFixed(2)
                     : '-'}
                 </p>
               </div>
@@ -290,7 +345,9 @@ export function Infos() {
                 <p className="text-white">
                   Next rebalancing date:{' '}
                   {walletI.nextBalance !== null
-                    ? formatDate(walletI.nextBalance?.toString())
+                    ? formatDate(
+                        walletI.nextBalance?.toString()
+                      )
                     : '-'}
                 </p>
               </div>
@@ -298,8 +355,11 @@ export function Infos() {
                 <Calendar className="text-[#F2BE38]" />
                 <p className="text-white">
                   Performance fee:{' '}
-                  {walletI.performanceFee !== undefined
-                    ? Number(walletI.performanceFee).toFixed(2)
+                  {walletI.performanceFee !==
+                  undefined
+                    ? Number(
+                        walletI.performanceFee
+                      ).toFixed(2)
                     : '-'}
                 </p>
               </div>
@@ -308,14 +368,17 @@ export function Infos() {
                 <p className="text-white">
                   Last rebalance date:{' '}
                   {walletI.lastRebalance !== null
-                    ? formatDate(walletI.lastRebalance?.toString())
+                    ? formatDate(
+                        walletI.lastRebalance?.toString()
+                      )
                     : '-'}
                 </p>
               </div>
               <div className="flex gap-3">
                 <Calendar className="text-[#F2BE38]" />
                 <p className="text-white">
-                  Benchmark: {walletI.benchmark.name || '-'}
+                  Benchmark:{' '}
+                  {walletI.benchmark.name || '-'}
                 </p>
               </div>
               <div className="flex gap-3">
@@ -323,7 +386,9 @@ export function Infos() {
                 <p className="text-white">
                   Next monthly closing date:{' '}
                   {walletI.monthCloseDate !== null
-                    ? formatDate(walletI.monthCloseDate?.toString())
+                    ? formatDate(
+                        walletI.monthCloseDate?.toString()
+                      )
                     : '-'}
                 </p>
               </div>
@@ -335,15 +400,19 @@ export function Infos() {
               <div className="flex gap-3">
                 <Calendar className="text-[#F2BE38]" />
                 <p className="text-white">
-                  Exchange: {walletI.exchange.name || '-'}
+                  Exchange:{' '}
+                  {walletI.exchange.name || '-'}
                 </p>
               </div>
               <div className="flex gap-3">
                 <Calendar className="text-[#F2BE38]" />
                 <p className="text-white">
                   Initial fee:{' '}
-                  {walletI.initialFee !== undefined
-                    ? Number(walletI.initialFee).toFixed(2)
+                  {walletI.initialFee !==
+                  undefined
+                    ? Number(
+                        walletI.initialFee
+                      ).toFixed(2)
                     : '-'}
                 </p>
               </div>
@@ -358,8 +427,11 @@ export function Infos() {
               <div className="flex gap-3">
                 <Calendar className="text-[#F2BE38]" />
                 <p className="text-white">
-                  Initial fee was paid or not (checker):{' '}
-                  {walletI.initialFeePaid ? '✅' : '❌'}
+                  Initial fee was paid or not
+                  (checker):{' '}
+                  {walletI.initialFeePaid
+                    ? '✅'
+                    : '❌'}
                 </p>
               </div>
             </div>
@@ -370,19 +442,27 @@ export function Infos() {
           <div className="flex justify-end gap-7 mb-5">
             <div className="bg-[#171717] flex flex-col items-center p-10 rounded-lg">
               <Calendar className="text-[#F2BE38]" />
-              <p className="text-white">Start Date</p>
+              <p className="text-white">
+                Start Date
+              </p>
               <p className="text-[#959CB6]">
                 {walletI.startDate !== null
-                  ? formatDate(walletI.startDate?.toString())
+                  ? formatDate(
+                      walletI.startDate?.toString()
+                    )
                   : '-'}
               </p>
             </div>
             <div className="bg-[#171717] flex flex-col items-center p-10 rounded-lg">
               <Calendar className="text-[#F2BE38]" />
-              <p className="text-white">Close Date</p>
+              <p className="text-white">
+                Close Date
+              </p>
               <p className="text-[#959CB6]">
                 {walletI.closeDate !== null
-                  ? formatDate(walletI.closeDate?.toString())
+                  ? formatDate(
+                      walletI.closeDate?.toString()
+                    )
                   : '-'}
               </p>
             </div>
@@ -390,10 +470,16 @@ export function Infos() {
 
           <div className="w-full bg-[#171717] p-10 rounded-xl border border-[#272727] h-full">
             <div className="flex items-center justify-between mb-16">
-              <h1 className="text-white text-xl">Alerts</h1>
+              <h1 className="text-white text-xl">
+                Alerts
+              </h1>
               <div className="flex gap-5">
                 <Button
-                  onClick={() => navigate(`/wallet/${walletUuid}/assets`)}
+                  onClick={() =>
+                    navigate(
+                      `/wallet/${walletUuid}/assets`
+                    )
+                  }
                   className="bg-yellow-600 flex gap-3 pt-5 pb-5"
                 >
                   <Wallet />
@@ -401,7 +487,11 @@ export function Infos() {
                 </Button>
 
                 <Button
-                  onClick={() => navigate(`/wallet/${walletUuid}/graphs`)}
+                  onClick={() =>
+                    navigate(
+                      `/wallet/${walletUuid}/graphs`
+                    )
+                  }
                   className="bg-yellow-600 flex gap-3 pt-5 pb-5"
                 >
                   <BarChartBigIcon />
@@ -435,7 +525,9 @@ export function Infos() {
         onClose={closeModalopenModalExchange}
         accountEmail={walletI.accountEmail}
         emailPassword={walletI.emailPassword}
-        exchangePassword={walletI.exchangePassword}
+        exchangePassword={
+          walletI.exchangePassword
+        }
       />
       <ConfirmContactModal
         isOpen={isModalContactOpen}

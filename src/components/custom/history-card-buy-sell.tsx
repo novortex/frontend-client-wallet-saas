@@ -1,4 +1,9 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 
 interface HistoryCardBuySellProps {
   assetIcon: string
@@ -27,8 +32,14 @@ export default function HistoryCardBuySell({
         </p>
       </CardHeader>
       <CardContent className="flex justify-center items-center text-[#fff] gap-3">
-        <img src={assetIcon} alt="" className="h-2/3" />
-        <CardTitle className="text-4xl">{quantity}</CardTitle>
+        <img
+          src={assetIcon}
+          alt=""
+          className="h-2/3"
+        />
+        <CardTitle className="text-4xl">
+          {quantity}
+        </CardTitle>
       </CardContent>
     </Card>
   )

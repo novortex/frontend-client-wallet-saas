@@ -10,7 +10,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { EyeOffIcon, PencilIcon, TriangleAlert } from 'lucide-react'
+import {
+  EyeOffIcon,
+  PencilIcon,
+  TriangleAlert,
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -30,37 +34,46 @@ export function CellActions({
   rowInfos: ClientActive
   fetchData: () => void
 }) {
-  const newQuantityAssetRef = useRef<HTMLInputElement>(null)
-  const newIdealAllocationRef = useRef<HTMLInputElement>(null)
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
-  const [setSignal, signal] = useSignalStore((state) => [
-    state.setSignal,
-    state.signal,
-  ])
+  const newQuantityAssetRef =
+    useRef<HTMLInputElement>(null)
+  const newIdealAllocationRef =
+    useRef<HTMLInputElement>(null)
+  const [isEditDialogOpen, setIsEditDialogOpen] =
+    useState(false)
+  const [setSignal, signal] = useSignalStore(
+    (state) => [state.setSignal, state.signal]
+  )
   const { walletUuid } = useParams()
   const { toast } = useToast()
 
   const validateInputs = () => {
     let isValid = true
 
-    const entryValue = newQuantityAssetRef.current?.value ?? '0'
-    const allocation = newIdealAllocationRef.current?.value ?? '0'
+    const entryValue =
+      newQuantityAssetRef.current?.value ?? '0'
+    const allocation =
+      newIdealAllocationRef.current?.value ?? '0'
 
     if (Number(entryValue) < 0) {
       toast({
         className: 'bg-red-500 border-0',
         title: 'Validation Error',
-        description: 'Entry value cannot be negative',
+        description:
+          'Entry value cannot be negative',
       })
       isValid = false
     }
 
     const allocationValue = Number(allocation)
-    if (allocationValue < 0 || allocationValue > 100) {
+    if (
+      allocationValue < 0 ||
+      allocationValue > 100
+    ) {
       toast({
         className: 'bg-red-500 border-0',
         title: 'Validation Error',
-        description: 'Allocation must be between 0 and 100',
+        description:
+          'Allocation must be between 0 and 100',
       })
       isValid = false
     }
@@ -68,53 +81,64 @@ export function CellActions({
     return isValid
   }
 
-  const handleUpdateInformationAssetWallet = async () => {
-    if (!validateInputs()) return
+  const handleUpdateInformationAssetWallet =
+    async () => {
+      if (!validateInputs()) return
 
-    if (!newQuantityAssetRef.current && !newIdealAllocationRef.current) {
+      if (
+        !newQuantityAssetRef.current &&
+        !newIdealAllocationRef.current
+      ) {
+        return toast({
+          className: 'bg-red-500 border-0',
+          title:
+            'Failed add Asset in organization',
+          description: 'Demo Vault !!',
+        })
+      }
+      setIsEditDialogOpen(false)
+
+      toast({
+        className: 'bg-yellow-500 border-0',
+        title:
+          'Processing add Asset in organization',
+        description: 'Demo Vault !!',
+      })
+
+      const quantity = parseFloat(
+        newQuantityAssetRef.current?.value ?? '0'
+      )
+      const idealAllocation = parseFloat(
+        newIdealAllocationRef.current?.value ??
+          '0'
+      )
+
+      const result =
+        await updateAssetWalletInformations(
+          walletUuid as string,
+          rowInfos.id,
+          quantity,
+          idealAllocation
+        )
+
+      if (result === false) {
+        return toast({
+          className: 'bg-red-500 border-0',
+          title:
+            'Failed add Asset in organization',
+          description: 'Demo Vault !!',
+        })
+      }
+
+      setSignal(!signal)
+
+      fetchData()
       return toast({
-        className: 'bg-red-500 border-0',
-        title: 'Failed add Asset in organization',
+        className: 'bg-green-500 border-0',
+        title: 'Success update !!',
         description: 'Demo Vault !!',
       })
     }
-    setIsEditDialogOpen(false)
-
-    toast({
-      className: 'bg-yellow-500 border-0',
-      title: 'Processing add Asset in organization',
-      description: 'Demo Vault !!',
-    })
-
-    const quantity = parseFloat(newQuantityAssetRef.current?.value ?? '0')
-    const idealAllocation = parseFloat(
-      newIdealAllocationRef.current?.value ?? '0',
-    )
-
-    const result = await updateAssetWalletInformations(
-      walletUuid as string,
-      rowInfos.id,
-      quantity,
-      idealAllocation,
-    )
-
-    if (result === false) {
-      return toast({
-        className: 'bg-red-500 border-0',
-        title: 'Failed add Asset in organization',
-        description: 'Demo Vault !!',
-      })
-    }
-
-    setSignal(!signal)
-
-    fetchData()
-    return toast({
-      className: 'bg-green-500 border-0',
-      title: 'Success update !!',
-      description: 'Demo Vault !!',
-    })
-  }
 
   const handleDeleteAssetWallet = async () => {
     toast({
@@ -123,7 +147,10 @@ export function CellActions({
       description: 'Demo Vault !!',
     })
 
-    const result = await deleteAssetWallet(walletUuid as string, rowInfos.id)
+    const result = await deleteAssetWallet(
+      walletUuid as string,
+      rowInfos.id
+    )
 
     if (result.error) {
       return toast({
@@ -157,42 +184,62 @@ export function CellActions({
       </Button>
 
       <div className="flex flex-col">
-        <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <Dialog
+          open={isEditDialogOpen}
+          onOpenChange={setIsEditDialogOpen}
+        >
           <DialogContent className="bg-[#1C1C1C] border-0 text-white">
             <DialogHeader>
               <DialogTitle className="text-white">
-                Editing information asset in wallet
+                Editing information asset in
+                wallet
               </DialogTitle>
               <DialogDescription>
                 <div className="flex mt-3">
-                  <p>Now you are editing information about</p>
+                  <p>
+                    Now you are editing
+                    information about
+                  </p>
                   <div className="ml-2 animate-bounce">
                     <img
-                      src={rowInfos.asset.urlImage}
+                      src={
+                        rowInfos.asset.urlImage
+                      }
                       alt={rowInfos.asset.name}
                       className="w-6 h-6 mr-2"
                     />
                   </div>
-                  <p>{rowInfos.asset.name} in this wallet</p>
+                  <p>
+                    {rowInfos.asset.name} in this
+                    wallet
+                  </p>
                 </div>
 
                 <div className="flex mt-5 gap-5 w-full">
-                  <Label className="w-1/2">Asset Quantity (Ex: 100)</Label>
-                  <Label className="w-1/2">Ideal Allocation (%)</Label>
+                  <Label className="w-1/2">
+                    Asset Quantity (Ex: 100)
+                  </Label>
+                  <Label className="w-1/2">
+                    Ideal Allocation (%)
+                  </Label>
                 </div>
                 <div className="flex mt-5 gap-5 w-full">
                   <Input
                     className="w-1/2 h-full bg-[#131313] border-[#323232] text-[#959CB6]"
                     placeholder="Quantity"
                     type="number"
-                    defaultValue={rowInfos.assetQuantity}
+                    defaultValue={
+                      rowInfos.assetQuantity
+                    }
                     ref={newQuantityAssetRef}
                   />
                   <Input
                     className="w-1/2 h-full bg-[#131313] border-[#323232] text-[#959CB6]"
                     placeholder="Ideal allocation"
                     type="number"
-                    defaultValue={rowInfos.idealAllocation}
+                    defaultValue={
+                      rowInfos.idealAllocation
+                    }
                     ref={newIdealAllocationRef}
                   />
                 </div>
@@ -205,7 +252,9 @@ export function CellActions({
                 </Button>
               </DialogClose>
               <Button
-                onClick={handleUpdateInformationAssetWallet}
+                onClick={
+                  handleUpdateInformationAssetWallet
+                }
                 className="bg-green-500 hover:bg-green-600 text-black"
               >
                 Save
@@ -220,13 +269,15 @@ export function CellActions({
               className="flex justify-center gap-3 hover:bg-black hover:text-white"
               variant="secondary"
             >
-              <EyeOffIcon className="w-5" /> Disable
+              <EyeOffIcon className="w-5" />{' '}
+              Disable
             </Button>
           </DialogTrigger>
           <DialogContent className="bg-[#1C1C1C] border-0 text-white">
             <DialogHeader>
               <DialogTitle className="flex gap-5 items-center mb-5">
-                Disabled asset <TriangleAlert className="text-yellow-400 w-5" />
+                Disabled asset{' '}
+                <TriangleAlert className="text-yellow-400 w-5" />
               </DialogTitle>
               <DialogDescription>
                 <p className="flex">
@@ -236,21 +287,28 @@ export function CellActions({
                   </span>
                   <div className="ml-2 animate-bounce">
                     <img
-                      src={rowInfos.asset.urlImage}
+                      src={
+                        rowInfos.asset.urlImage
+                      }
                       alt={rowInfos.asset.name}
                       className="w-6 h-6 mr-2"
                     />
                   </div>
                 </p>
                 {!(
-                  rowInfos.assetQuantity === 0 && rowInfos.idealAllocation === 0
+                  rowInfos.assetQuantity === 0 &&
+                  rowInfos.idealAllocation === 0
                 ) ? (
                   <p className="mt-5 font-bold text-yellow-200">
                     {' '}
-                    Warning: It is not possible to disable this crypto asset
-                    because it still has allocated values and remaining
-                    quantities. Please check the allocations and ensure there is
-                    no balance before attempting again.
+                    Warning: It is not possible to
+                    disable this crypto asset
+                    because it still has allocated
+                    values and remaining
+                    quantities. Please check the
+                    allocations and ensure there
+                    is no balance before
+                    attempting again.
                   </p>
                 ) : null}
               </DialogDescription>
@@ -264,7 +322,8 @@ export function CellActions({
               <Button
                 disabled={
                   !(
-                    rowInfos.assetQuantity === 0 &&
+                    rowInfos.assetQuantity ===
+                      0 &&
                     rowInfos.idealAllocation === 0
                   )
                 }

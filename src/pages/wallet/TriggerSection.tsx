@@ -14,7 +14,9 @@ interface TriggerSectionInterface {
   fetchData: () => Promise<void>
 }
 
-const TriggerSection: React.FC<TriggerSectionInterface> = ({
+const TriggerSection: React.FC<
+  TriggerSectionInterface
+> = ({
   isOperationModalOpen,
   closeOperationModal,
   isCloseWalletModalOpen,
@@ -27,7 +29,9 @@ const TriggerSection: React.FC<TriggerSectionInterface> = ({
   return (
     <div className="mt-5">
       <div className="bg-[#171717] rounded-t-lg p-5 flex items-center justify-between ">
-        <h1 className="text-white">My Triggers</h1>
+        <h1 className="text-white">
+          My Triggers
+        </h1>
         <Button className="bg-[#F2BE38] hover:bg-yellow-600">
           Trigger Action
         </Button>
@@ -42,14 +46,18 @@ const TriggerSection: React.FC<TriggerSectionInterface> = ({
         onClose={closeCloseWalletModal}
         startWallet={closeModalState}
         fetchData={function (): Promise<void> {
-          throw new Error('Function not implemented.')
+          throw new Error(
+            'Function not implemented.'
+          )
         }}
       />
       <ConfirmRebalanceModal
         isOpen={isModalRebalance}
         onClose={openOrCloseModalRebalanced}
         fetchData={function (): Promise<void> {
-          throw new Error('Function not implemented.')
+          throw new Error(
+            'Function not implemented.'
+          )
         }}
       />
     </div>

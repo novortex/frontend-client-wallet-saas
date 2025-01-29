@@ -22,14 +22,17 @@ export function ResultRebalanceModal({
   rebalanceResults,
 }: ResultRebalanceModalProps) {
   const buyResults = rebalanceResults.filter(
-    (result) => result.action === 'buy',
+    (result) => result.action === 'buy'
   )
   const sellResults = rebalanceResults.filter(
-    (result) => result.action === 'sell',
+    (result) => result.action === 'sell'
   )
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog
+      open={open}
+      onOpenChange={onOpenChange}
+    >
       <DialogContent className="bg-[#1C1C1C] border-none p-6 flex flex-col items-center justify-center">
         <DialogHeader>
           <DialogTitle className="text-[#F2BE38] text-center text-[24px]">
@@ -40,54 +43,69 @@ export function ResultRebalanceModal({
           <div className="flex flex-row items-start justify-center gap-6 w-full">
             {/* Buy Section */}
             <div className="w-1/2 bg-[#171717] rounded-[8px] p-4">
-              <p className="text-white text-center">Buy</p>
+              <p className="text-white text-center">
+                Buy
+              </p>
               <Separator className="bg-[#F2BE38] my-2" />
               <div className="flex flex-col items-center gap-4 overflow-hidden w-full">
-                {buyResults.map((result, index) => (
-                  <div
-                    key={index}
-                    className="bg-[#1C1C1C] flex items-center justify-center p-2 rounded-[8px] w-full gap-1"
-                  >
-                    <img
-                      src={result.assetIcon}
-                      alt={result.assetName}
-                      className="w-6 h-6"
-                    />
+                {buyResults.map(
+                  (result, index) => (
+                    <div
+                      key={index}
+                      className="bg-[#1C1C1C] flex items-center justify-center p-2 rounded-[8px] w-full gap-1"
+                    >
+                      <img
+                        src={result.assetIcon}
+                        alt={result.assetName}
+                        className="w-6 h-6"
+                      />
 
-                    <p className="text-white text-[14px] w-fit">
-                      {result.assetName}
-                    </p>
-                    <p className="text-[#8BF067] text-[11px] w-fit">
-                      +{Math.round(Number(result.amount))} USD
-                    </p>
-                  </div>
-                ))}
+                      <p className="text-white text-[14px] w-fit">
+                        {result.assetName}
+                      </p>
+                      <p className="text-[#8BF067] text-[11px] w-fit">
+                        +
+                        {Math.round(
+                          Number(result.amount)
+                        )}{' '}
+                        USD
+                      </p>
+                    </div>
+                  )
+                )}
               </div>
             </div>
 
             {/* Sell Section */}
             <div className="w-1/2 bg-[#171717] rounded-[8px] p-4">
-              <p className="text-white text-center">Sell</p>
+              <p className="text-white text-center">
+                Sell
+              </p>
               <Separator className="bg-[#F2BE38] my-2" />
               <div className="flex flex-col items-center gap-4 overflow-hidden w-full">
-                {sellResults.map((result, index) => (
-                  <div
-                    key={index}
-                    className="bg-[#1C1C1C] flex items-center justify-center p-2 rounded-[8px] w-full gap-1"
-                  >
-                    <img
-                      src={result.assetIcon}
-                      alt={result.assetName}
-                      className="w-6 h-6"
-                    />
-                    <p className="text-white text-[14px] w-fit">
-                      {result.assetName}
-                    </p>
-                    <p className="text-[#FF6666] text-[11px] w-fit">
-                      {Math.round(Number(result.amount))} USD
-                    </p>
-                  </div>
-                ))}
+                {sellResults.map(
+                  (result, index) => (
+                    <div
+                      key={index}
+                      className="bg-[#1C1C1C] flex items-center justify-center p-2 rounded-[8px] w-full gap-1"
+                    >
+                      <img
+                        src={result.assetIcon}
+                        alt={result.assetName}
+                        className="w-6 h-6"
+                      />
+                      <p className="text-white text-[14px] w-fit">
+                        {result.assetName}
+                      </p>
+                      <p className="text-[#FF6666] text-[11px] w-fit">
+                        {Math.round(
+                          Number(result.amount)
+                        )}{' '}
+                        USD
+                      </p>
+                    </div>
+                  )
+                )}
               </div>
             </div>
           </div>

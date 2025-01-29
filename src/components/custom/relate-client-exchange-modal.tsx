@@ -9,7 +9,10 @@ import {
 import { Input } from '../ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
-import { StepForwardIcon, Wallet } from 'lucide-react'
+import {
+  StepForwardIcon,
+  Wallet,
+} from 'lucide-react'
 import { CircularProgressbar } from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist/styles.css'
 import { useState } from 'react'
@@ -38,21 +41,28 @@ export default function RelateClientExchangeModal({
   onClose,
   rowInfos,
 }: RelateClientExchangeModalProps) {
-  const [initialFeeIsPaid, setInitialFeeIsPaid] = useState(false)
-  const [exchangeInfo1, setExchangeInfo1] = useState('')
-  const [exchangeInfo2, setExchangeInfo2] = useState('')
-  const [exchangeInfo3, setExchangeInfo3] = useState('')
-  const [ExchangeSelected, setExchangeSelected] = useState('')
+  const [initialFeeIsPaid, setInitialFeeIsPaid] =
+    useState(false)
+  const [exchangeInfo1, setExchangeInfo1] =
+    useState('')
+  const [exchangeInfo2, setExchangeInfo2] =
+    useState('')
+  const [exchangeInfo3, setExchangeInfo3] =
+    useState('')
+  const [ExchangeSelected, setExchangeSelected] =
+    useState('')
 
-  const [exchangeError, setExchangeError] = useState('')
+  const [exchangeError, setExchangeError] =
+    useState('')
   const [emailError, setEmailError] = useState('')
 
-  const [exchanges] = useManagerOrganization((state) => [state.exchanges])
+  const [exchanges] = useManagerOrganization(
+    (state) => [state.exchanges]
+  )
 
-  const [setSignal, signal] = useSignalStore((state) => [
-    state.setSignal,
-    state.signal,
-  ])
+  const [setSignal, signal] = useSignalStore(
+    (state) => [state.setSignal, state.signal]
+  )
 
   const [
     {
@@ -94,7 +104,8 @@ export default function RelateClientExchangeModal({
     }
 
     // Define o padrão de validação para o e-mail
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    const emailPattern =
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     return emailPattern.test(email)
   }
 
@@ -108,7 +119,10 @@ export default function RelateClientExchangeModal({
       setExchangeError('')
     }
 
-    if (exchangeInfo1 && !validateEmail(exchangeInfo1)) {
+    if (
+      exchangeInfo1 &&
+      !validateEmail(exchangeInfo1)
+    ) {
       setEmailError('Invalid email format.')
       valid = false
     } else {
@@ -123,31 +137,34 @@ export default function RelateClientExchangeModal({
 
     toast({
       className: 'bg-yellow-500 border-0',
-      title: 'Processing create wallet for this customer ',
+      title:
+        'Processing create wallet for this customer ',
       description: 'Demo Vault !!',
     })
 
-    const result = await registerWalletForCustomer(
-      rowInfos.id,
-      currency,
-      investedAmount,
-      initialFee,
-      initialFeeIsPaid,
-      riskProfile,
-      contract,
-      performanceFee,
-      benchmark,
-      ExchangeSelected,
-      manager,
-      exchangeInfo1,
-      exchangeInfo2,
-      exchangeInfo3,
-    )
+    const result =
+      await registerWalletForCustomer(
+        rowInfos.id,
+        currency,
+        investedAmount,
+        initialFee,
+        initialFeeIsPaid,
+        riskProfile,
+        contract,
+        performanceFee,
+        benchmark,
+        ExchangeSelected,
+        manager,
+        exchangeInfo1,
+        exchangeInfo2,
+        exchangeInfo3
+      )
 
     if (!result) {
       return toast({
         className: 'bg-red-500 border-0',
-        title: 'Failed create a wallet for this customer ',
+        title:
+          'Failed create a wallet for this customer ',
         description: 'Demo Vault !!',
       })
     }
@@ -162,7 +179,8 @@ export default function RelateClientExchangeModal({
 
     return toast({
       className: 'bg-green-500 border-0',
-      title: 'Success !! wallet created for this customer ',
+      title:
+        'Success !! wallet created for this customer ',
       description: 'Demo Vault !!',
     })
   }
@@ -193,30 +211,46 @@ export default function RelateClientExchangeModal({
             <Checkbox
               className="border-gray-500"
               checked={initialFeeIsPaid}
-              onCheckedChange={() => setInitialFeeIsPaid(!initialFeeIsPaid)}
+              onCheckedChange={() =>
+                setInitialFeeIsPaid(
+                  !initialFeeIsPaid
+                )
+              }
             />
           </div>
           <div className="w-4/6">
             <Label>Exchanges *</Label>
-            <Select onValueChange={(value) => setExchangeSelected(value)}>
+            <Select
+              onValueChange={(value) =>
+                setExchangeSelected(value)
+              }
+            >
               <SelectTrigger className="bg-[#131313] border-[#323232] text-[#959CB6]">
                 <SelectValue>
                   {ExchangeSelected
-                    ? exchanges.find((mgr) => mgr.uuid === ExchangeSelected)
-                        ?.name
+                    ? exchanges.find(
+                        (mgr) =>
+                          mgr.uuid ===
+                          ExchangeSelected
+                      )?.name
                     : 'Name'}
                 </SelectValue>
               </SelectTrigger>
               <SelectContent className="bg-[#131313] border-[#323232] text-[#959CB6]">
                 {exchanges.map((bench) => (
-                  <SelectItem key={bench.name} value={bench.uuid}>
+                  <SelectItem
+                    key={bench.name}
+                    value={bench.uuid}
+                  >
                     {bench.name}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
             {exchangeError && (
-              <Label className="text-red-500 mt-2">{exchangeError}</Label>
+              <Label className="text-red-500 mt-2">
+                {exchangeError}
+              </Label>
             )}
           </div>
 
@@ -224,22 +258,30 @@ export default function RelateClientExchangeModal({
             className="w-2/3 bg-[#131313] border-[#323232] text-[#959CB6]"
             placeholder="Account email"
             value={exchangeInfo1}
-            onChange={(e) => setExchangeInfo1(e.target.value)}
+            onChange={(e) =>
+              setExchangeInfo1(e.target.value)
+            }
           />
           {emailError && (
-            <Label className="text-red-500 mt-2">{emailError}</Label>
+            <Label className="text-red-500 mt-2">
+              {emailError}
+            </Label>
           )}
           <Input
             className="w-2/3 bg-[#131313] border-[#323232] text-[#959CB6]"
             placeholder="Email password"
             value={exchangeInfo2}
-            onChange={(e) => setExchangeInfo2(e.target.value)}
+            onChange={(e) =>
+              setExchangeInfo2(e.target.value)
+            }
           />
           <Input
             className="w-2/3 bg-[#131313] border-[#323232] text-[#959CB6]"
             placeholder="Account password"
             value={exchangeInfo3}
-            onChange={(e) => setExchangeInfo3(e.target.value)}
+            onChange={(e) =>
+              setExchangeInfo3(e.target.value)
+            }
           />
         </div>
 

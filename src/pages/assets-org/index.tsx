@@ -10,24 +10,32 @@ import { getAllAssetsOrg } from '@/services/managementService'
 import { DataTableAssetOrg } from '@/components/custom/assets-org/data-table'
 
 export function AssetsOrg() {
-  const [data, setData] = useState<AssetOrgs[]>([])
+  const [data, setData] = useState<AssetOrgs[]>(
+    []
+  )
   const [loading, setLoading] = useState(true)
-  const [signal] = useSignalStore((state) => [state.signal])
+  const [signal] = useSignalStore((state) => [
+    state.signal,
+  ])
 
   const { toast } = useToast()
 
   useEffect(() => {
     // TODO: separe this script this file :)
     async function getData(
-      setDate: React.Dispatch<React.SetStateAction<AssetOrgs[]>>,
+      setDate: React.Dispatch<
+        React.SetStateAction<AssetOrgs[]>
+      >
     ) {
       try {
         const result = await getAllAssetsOrg()
 
         if (!result) {
           return toast({
-            className: 'bg-red-500 border-0 text-white',
-            title: 'Failed get assets organization :(',
+            className:
+              'bg-red-500 border-0 text-white',
+            title:
+              'Failed get assets organization :(',
             description: 'Demo Vault !!',
           })
         }
@@ -50,8 +58,10 @@ export function AssetsOrg() {
         setLoading(false)
       } catch (error) {
         toast({
-          className: 'bg-red-500 border-0 text-white',
-          title: 'Failed get assets organization :(',
+          className:
+            'bg-red-500 border-0 text-white',
+          title:
+            'Failed get assets organization :(',
           description: 'Demo Vault !!',
         })
       }
@@ -66,12 +76,17 @@ export function AssetsOrg() {
   return (
     <div className="p-10">
       <div className="mb-10 flex items-center justify-between">
-        <h1 className="text-2xl text-white font-medium">Assets</h1>
+        <h1 className="text-2xl text-white font-medium">
+          Assets
+        </h1>
         <SwitchTheme />
       </div>
 
       <div className="mb-10">
-        <DataTableAssetOrg columns={columnsAssetOrg} data={data} />
+        <DataTableAssetOrg
+          columns={columnsAssetOrg}
+          data={data}
+        />
       </div>
     </div>
   )

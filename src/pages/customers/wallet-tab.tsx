@@ -22,7 +22,10 @@ interface WalletTabProps {
   accountPasswordRef: React.RefObject<HTMLInputElement>
   manager: string
   setManager: (value: string) => void
-  managersOrganization: { name: string; uuid: string }[]
+  managersOrganization: {
+    name: string
+    uuid: string
+  }[]
   performanceFee: string
   setPerformanceFee: (value: string) => void
   contractChecked: boolean
@@ -54,7 +57,8 @@ export function WalletTab({
   if (!rowInfos.isWallet) {
     return (
       <p className="text-yellow-500">
-        Please create a wallet first before filling these details.
+        Please create a wallet first before
+        filling these details.
       </p>
     )
   }
@@ -72,13 +76,20 @@ export function WalletTab({
           <SelectTrigger className="bg-[#131313] border-[#323232] text-[#959CB6]">
             <SelectValue>
               {ExchangeSelected
-                ? exchanges.find((mgr) => mgr.uuid === ExchangeSelected)?.name
+                ? exchanges.find(
+                    (mgr) =>
+                      mgr.uuid ===
+                      ExchangeSelected
+                  )?.name
                 : 'Name'}
             </SelectValue>
           </SelectTrigger>
           <SelectContent className="bg-[#131313] border-[#323232] text-[#959CB6]">
             {exchanges.map((bench) => (
-              <SelectItem key={bench.uuid} value={bench.uuid}>
+              <SelectItem
+                key={bench.uuid}
+                value={bench.uuid}
+              >
                 {bench.name}
               </SelectItem>
             ))}
@@ -87,7 +98,10 @@ export function WalletTab({
       </div>
 
       <div>
-        <Label className="ml-2" htmlFor="Email Password">
+        <Label
+          className="ml-2"
+          htmlFor="Email Password"
+        >
           Email Password
         </Label>
         <Input
@@ -96,13 +110,18 @@ export function WalletTab({
           id="Email Password"
           placeholder="Email Password"
           ref={emailPasswordRef}
-          defaultValue={rowInfos.emailPassword || ''}
+          defaultValue={
+            rowInfos.emailPassword || ''
+          }
           required
         />
       </div>
 
       <div>
-        <Label className="ml-2" htmlFor="EmailExchage">
+        <Label
+          className="ml-2"
+          htmlFor="EmailExchage"
+        >
           Email (Exchange)
         </Label>
         <Input
@@ -111,13 +130,18 @@ export function WalletTab({
           id="Email Exchage"
           ref={emailExchangeRef}
           placeholder="Email Exchange"
-          defaultValue={rowInfos.emailExchange || ''}
+          defaultValue={
+            rowInfos.emailExchange || ''
+          }
           required
         />
       </div>
 
       <div>
-        <Label className="ml-2" htmlFor="Exchange Password">
+        <Label
+          className="ml-2"
+          htmlFor="Exchange Password"
+        >
           Exchange Password
         </Label>
         <Input
@@ -126,7 +150,9 @@ export function WalletTab({
           id="Exchange Password"
           placeholder="Exchange Password"
           ref={accountPasswordRef}
-          defaultValue={rowInfos.exchangePassword || ''}
+          defaultValue={
+            rowInfos.exchangePassword || ''
+          }
           required
         />
       </div>
@@ -135,26 +161,40 @@ export function WalletTab({
         <Label className="ml-2" htmlFor="Phone">
           Manager
         </Label>
-        <Select onValueChange={setManager} defaultValue={manager} required>
+        <Select
+          onValueChange={setManager}
+          defaultValue={manager}
+          required
+        >
           <SelectTrigger className="bg-[#131313] border-[#323232] text-white">
             <SelectValue>
               {manager
-                ? managersOrganization.find((mgr) => mgr.uuid === manager)?.name
+                ? managersOrganization.find(
+                    (mgr) => mgr.uuid === manager
+                  )?.name
                 : 'Name'}
             </SelectValue>
           </SelectTrigger>
           <SelectContent className="bg-[#131313] border-[#323232] text-white">
-            {managersOrganization.map((manager) => (
-              <SelectItem key={manager.uuid} value={manager.uuid}>
-                {manager.name}
-              </SelectItem>
-            ))}
+            {managersOrganization.map(
+              (manager) => (
+                <SelectItem
+                  key={manager.uuid}
+                  value={manager.uuid}
+                >
+                  {manager.name}
+                </SelectItem>
+              )
+            )}
           </SelectContent>
         </Select>
       </div>
 
       <div>
-        <Label className="ml-2" htmlFor="performanceFee">
+        <Label
+          className="ml-2"
+          htmlFor="performanceFee"
+        >
           Performance Fee
         </Label>
         <Input
@@ -162,7 +202,9 @@ export function WalletTab({
           type="text"
           id="performanceFee"
           value={String(performanceFee)}
-          onChange={(e) => setPerformanceFee(e.target.value)}
+          onChange={(e) =>
+            setPerformanceFee(e.target.value)
+          }
           placeholder="Enter performance fee"
           required
         />
@@ -173,7 +215,9 @@ export function WalletTab({
           <Checkbox
             className="border-gray-500"
             checked={!!contractChecked}
-            onCheckedChange={() => setContractChecked(!contractChecked)}
+            onCheckedChange={() =>
+              setContractChecked(!contractChecked)
+            }
           />
           <Label>Initial Fee is paid?</Label>
         </div>
@@ -182,7 +226,11 @@ export function WalletTab({
           <Checkbox
             className="border-gray-500"
             checked={initialFeeIsPaid ?? false}
-            onCheckedChange={() => setInitialFeeIsPaid(!initialFeeIsPaid)}
+            onCheckedChange={() =>
+              setInitialFeeIsPaid(
+                !initialFeeIsPaid
+              )
+            }
           />
           <Label>Contract</Label>
         </div>

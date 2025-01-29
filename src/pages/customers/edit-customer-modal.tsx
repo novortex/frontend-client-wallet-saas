@@ -4,12 +4,20 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@/components/ui/tabs'
 import { useRef, useState } from 'react'
 import { useManagerOrganization } from '@/store/managers_benckmark_exchanges'
 import { useSignalStore } from '@/store/signalEffect'
 import { useToast } from '@/components/ui/use-toast'
-import { updateCustomer, updateWallet } from '@/services/managementService'
+import {
+  updateCustomer,
+  updateWallet,
+} from '@/services/managementService'
 import { ProfileTab } from './profile-tab'
 import { WalletTab } from './wallet-tab'
 import { CustomersOrganization } from '@/components/custom/customers/columns'
@@ -25,22 +33,32 @@ export function EditCustomerModal({
   onOpenChange,
   rowInfos,
 }: EditCustomerModalProps) {
-  const [contractChecked, setContractChecked] = useState<boolean>(
-    !!rowInfos.contract,
+  const [contractChecked, setContractChecked] =
+    useState<boolean>(!!rowInfos.contract)
+  const [initialFeeIsPaid, setInitialFeeIsPaid] =
+    useState(rowInfos.initialFeePaid)
+  const [manager, setManager] = useState(
+    rowInfos.manager?.managerUuid || ''
   )
-  const [initialFeeIsPaid, setInitialFeeIsPaid] = useState(
-    rowInfos.initialFeePaid,
+  const [ExchangeSelected, setExchangeSelected] =
+    useState(
+      rowInfos.exchange?.exchangeUuid || ''
+    )
+  const [performanceFee, setPerformanceFee] =
+    useState(
+      rowInfos.performanceFee
+        ? String(rowInfos.performanceFee)
+        : ''
+    )
+  const [name, setName] = useState(
+    rowInfos.name || ''
   )
-  const [manager, setManager] = useState(rowInfos.manager?.managerUuid || '')
-  const [ExchangeSelected, setExchangeSelected] = useState(
-    rowInfos.exchange?.exchangeUuid || '',
+  const [email, setEmail] = useState(
+    rowInfos.email || ''
   )
-  const [performanceFee, setPerformanceFee] = useState(
-    rowInfos.performanceFee ? String(rowInfos.performanceFee) : '',
+  const [phone, setPhone] = useState(
+    rowInfos.phone || ''
   )
-  const [name, setName] = useState(rowInfos.name || '')
-  const [email, setEmail] = useState(rowInfos.email || '')
-  const [phone, setPhone] = useState(rowInfos.phone || '')
   const [errors, setErrors] = useState({
     name: '',
     email: '',
@@ -48,19 +66,22 @@ export function EditCustomerModal({
     general: '',
   })
 
-  const accountPasswordRef = useRef<HTMLInputElement>(null)
-  const emailExchangeRef = useRef<HTMLInputElement>(null)
-  const emailPasswordRef = useRef<HTMLInputElement>(null)
+  const accountPasswordRef =
+    useRef<HTMLInputElement>(null)
+  const emailExchangeRef =
+    useRef<HTMLInputElement>(null)
+  const emailPasswordRef =
+    useRef<HTMLInputElement>(null)
 
-  const [managersOrganization, exchanges] = useManagerOrganization((state) => [
-    state.managers,
-    state.exchanges,
-  ])
+  const [managersOrganization, exchanges] =
+    useManagerOrganization((state) => [
+      state.managers,
+      state.exchanges,
+    ])
 
-  const [setSignal, signal] = useSignalStore((state) => [
-    state.setSignal,
-    state.signal,
-  ])
+  const [setSignal, signal] = useSignalStore(
+    (state) => [state.setSignal, state.signal]
+  )
   const { toast } = useToast()
 
   const handleUpdateCustomer = async () => {
@@ -71,11 +92,13 @@ export function EditCustomerModal({
       general: '',
     }
 
-    const normalizedName = name.replace(/\s+/g, ' ').trim()
+    const normalizedName = name
+      .replace(/\s+/g, ' ')
+      .trim()
 
     if (
       !/^[A-ZÀ-ÖØ-Ý][a-zà-öø-ÿ]{1,}(?:\s[A-ZÀ-ÖØ-Ý][a-zà-öø-ÿ]{1,})+$/.test(
-        normalizedName,
+        normalizedName
       ) ||
       /\s$/.test(name)
     ) {
@@ -83,31 +106,44 @@ export function EditCustomerModal({
         'Name must include both first and last names, each starting with a capital letter and containing at least two letters.'
     }
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+    ) {
       newErrors.email = 'Invalid email format.'
     }
 
-    if (!/^\d+$/.test(phone.replace(/\D/g, '')) || phone.trim().length < 13) {
+    if (
+      !/^\d+$/.test(phone.replace(/\D/g, '')) ||
+      phone.trim().length < 13
+    ) {
       newErrors.phone =
         'The phone number must contain only numbers and include the country code.'
     }
 
-    if (Object.values(newErrors).some((error) => error)) {
+    if (
+      Object.values(newErrors).some(
+        (error) => error
+      )
+    ) {
       setErrors(newErrors)
       return
     }
 
     try {
-      const result = await updateCustomer(rowInfos.id, {
-        name,
-        email,
-        phone,
-      })
+      const result = await updateCustomer(
+        rowInfos.id,
+        {
+          name,
+          email,
+          phone,
+        }
+      )
 
       if (result !== true) {
         setErrors({
           ...newErrors,
-          general: 'Failed to update customer. Try again.',
+          general:
+            'Failed to update customer. Try again.',
         })
         return
       }
@@ -118,63 +154,82 @@ export function EditCustomerModal({
       toast({
         className: 'bg-green-500 border-0',
         title: 'Customer updated successfully',
-        description: 'The customer information has been updated.',
+        description:
+          'The customer information has been updated.',
       })
     } catch (error) {
       setErrors({
         ...newErrors,
-        general: 'An unexpected error occurred. Please try again.',
+        general:
+          'An unexpected error occurred. Please try again.',
       })
     }
   }
 
-  const handleUpdateWallet = async (): Promise<void> => {
-    try {
-      toast({
-        className: 'bg-yellow-500 border-0',
-        title: 'Processing wallet update',
-        description: 'Please wait...',
-      })
+  const handleUpdateWallet =
+    async (): Promise<void> => {
+      try {
+        toast({
+          className: 'bg-yellow-500 border-0',
+          title: 'Processing wallet update',
+          description: 'Please wait...',
+        })
 
-      const result = await updateWallet(rowInfos.walletUuid || '', {
-        accountPassword: accountPasswordRef.current?.value ?? '',
-        contract: contractChecked,
-        emailExchange: emailExchangeRef.current?.value ?? '',
-        emailPassword: emailPasswordRef.current?.value ?? '',
-        exchangeUuid: ExchangeSelected,
-        initialFeeIsPaid: initialFeeIsPaid ?? false,
-        manager,
-        performanceFee: parseFloat(String(performanceFee)),
-      })
+        const result = await updateWallet(
+          rowInfos.walletUuid || '',
+          {
+            accountPassword:
+              accountPasswordRef.current?.value ??
+              '',
+            contract: contractChecked,
+            emailExchange:
+              emailExchangeRef.current?.value ??
+              '',
+            emailPassword:
+              emailPasswordRef.current?.value ??
+              '',
+            exchangeUuid: ExchangeSelected,
+            initialFeeIsPaid:
+              initialFeeIsPaid ?? false,
+            manager,
+            performanceFee: parseFloat(
+              String(performanceFee)
+            ),
+          }
+        )
 
-      if (result !== true) {
+        if (result !== true) {
+          toast({
+            className: 'bg-red-500 border-0',
+            title: 'Failed to update wallet',
+            description: 'Please try again.',
+          })
+          return
+        }
+
+        setSignal(!signal)
+        onOpenChange(false)
+
+        toast({
+          className: 'bg-green-500 border-0',
+          title: 'Wallet updated successfully',
+          description:
+            'The wallet information has been updated.',
+        })
+      } catch (error) {
         toast({
           className: 'bg-red-500 border-0',
-          title: 'Failed to update wallet',
+          title: `${(error as any).response?.data?.message[0] ?? 'Unknown error'}`,
           description: 'Please try again.',
         })
-        return
       }
-
-      setSignal(!signal)
-      onOpenChange(false)
-
-      toast({
-        className: 'bg-green-500 border-0',
-        title: 'Wallet updated successfully',
-        description: 'The wallet information has been updated.',
-      })
-    } catch (error) {
-      toast({
-        className: 'bg-red-500 border-0',
-        title: `${(error as any).response?.data?.message[0] ?? 'Unknown error'}`,
-        description: 'Please try again.',
-      })
     }
-  }
 
   return (
-    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+    <Dialog
+      open={isOpen}
+      onOpenChange={onOpenChange}
+    >
       <DialogContent className="bg-[#1C1C1C] border-0 text-white max-w-fit">
         <DialogHeader>
           <DialogTitle className="text-white text-3xl">
@@ -198,7 +253,10 @@ export function EditCustomerModal({
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent className="mt-10" value="Profile">
+          <TabsContent
+            className="mt-10"
+            value="Profile"
+          >
             <ProfileTab
               name={name}
               email={email}
@@ -207,29 +265,48 @@ export function EditCustomerModal({
               setName={setName}
               setEmail={setEmail}
               setPhone={setPhone}
-              handleUpdateCustomer={handleUpdateCustomer}
+              handleUpdateCustomer={
+                handleUpdateCustomer
+              }
             />
           </TabsContent>
 
-          <TabsContent className="mt-10" value="Wallet">
+          <TabsContent
+            className="mt-10"
+            value="Wallet"
+          >
             <WalletTab
               rowInfos={rowInfos}
               ExchangeSelected={ExchangeSelected}
-              setExchangeSelected={setExchangeSelected}
+              setExchangeSelected={
+                setExchangeSelected
+              }
               exchanges={exchanges}
               emailPasswordRef={emailPasswordRef}
               emailExchangeRef={emailExchangeRef}
-              accountPasswordRef={accountPasswordRef}
+              accountPasswordRef={
+                accountPasswordRef
+              }
               manager={manager}
               setManager={setManager}
-              managersOrganization={managersOrganization}
+              managersOrganization={
+                managersOrganization
+              }
               performanceFee={performanceFee}
-              setPerformanceFee={setPerformanceFee}
+              setPerformanceFee={
+                setPerformanceFee
+              }
               contractChecked={contractChecked}
-              setContractChecked={setContractChecked}
+              setContractChecked={
+                setContractChecked
+              }
               initialFeeIsPaid={initialFeeIsPaid}
-              setInitialFeeIsPaid={setInitialFeeIsPaid}
-              handleUpdateWallet={handleUpdateWallet}
+              setInitialFeeIsPaid={
+                setInitialFeeIsPaid
+              }
+              handleUpdateWallet={
+                handleUpdateWallet
+              }
             />
           </TabsContent>
         </Tabs>

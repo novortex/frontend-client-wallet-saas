@@ -10,14 +10,19 @@ type RebalanceModalProps = {
   walletUuid: string
 }
 
-export function RebalanceModal({ walletUuid }: RebalanceModalProps) {
-  const [isResultModalOpen, setIsResultModalOpen] = useState(false)
+export function RebalanceModal({
+  walletUuid,
+}: RebalanceModalProps) {
+  const [
+    isResultModalOpen,
+    setIsResultModalOpen,
+  ] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [rebalanceResults, setRebalancesResults] = useState<RebalanceReturn[]>(
-    [],
-  )
+  const [rebalanceResults, setRebalancesResults] =
+    useState<RebalanceReturn[]>([])
 
-  const { calculateRebalance } = useWallet(walletUuid)
+  const { calculateRebalance } =
+    useWallet(walletUuid)
 
   const handleRebalanceCalculation = async () => {
     setLoading(true)
@@ -35,8 +40,11 @@ export function RebalanceModal({ walletUuid }: RebalanceModalProps) {
     } catch (error) {
       toast({
         className: 'bg-red-500 border-0',
-        title: 'Error during rebalance calculation',
-        description: (error as Error).message || 'Something went wrong.',
+        title:
+          'Error during rebalance calculation',
+        description:
+          (error as Error).message ||
+          'Something went wrong.',
       })
     } finally {
       setLoading(false)
@@ -51,7 +59,9 @@ export function RebalanceModal({ walletUuid }: RebalanceModalProps) {
         disabled={loading}
       >
         <Calculator />
-        {loading ? 'Calculating...' : 'Calculate Rebalance'}
+        {loading
+          ? 'Calculating...'
+          : 'Calculate Rebalance'}
       </Button>
 
       <ResultRebalanceModal

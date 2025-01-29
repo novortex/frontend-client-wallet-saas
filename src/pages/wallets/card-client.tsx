@@ -5,7 +5,10 @@ import {
   CardTitle,
   CardDescription,
 } from '@/components/ui/card'
-import { CircleAlert, Calendar } from 'lucide-react'
+import {
+  CircleAlert,
+  Calendar,
+} from 'lucide-react'
 import responsibleIcon from '../../assets/image/responsible-icon.png'
 import { useNavigate } from 'react-router-dom'
 
@@ -71,13 +74,16 @@ export default function CardClient({
   }
 
   const parseDate = (dateStr: string) => {
-    const [day, month, year] = dateStr.split('/').map(Number)
+    const [day, month, year] = dateStr
+      .split('/')
+      .map(Number)
     return new Date(year, month - 1, day)
   }
 
   // Check if the current date is after nextRebalancing
   const isDelayedRebalancing =
-    nextRebalancing && new Date() > parseDate(nextRebalancing)
+    nextRebalancing &&
+    new Date() > parseDate(nextRebalancing)
 
   return (
     <Card
@@ -87,7 +93,9 @@ export default function CardClient({
       <CardHeader className="w-full h-1/2 gap-3">
         <CardTitle className="flex flex-row">
           <div className="h-full w-1/2 flex items-center justify-start text-[#fff] text-2xl">
-            <p className="truncate max-w-full">{name}</p>
+            <p className="truncate max-w-full">
+              {name}
+            </p>
           </div>
           <div className="relative h-full w-1/2 flex items-center justify-end">
             <div className="relative group">
@@ -112,12 +120,16 @@ export default function CardClient({
               <div
                 className={`${alertColor} h-full flex flex-col justify-center items-center rounded-[20px] font-bold`}
               >
-                <p className={`${alertTextColor} text-[12px] p-2`}>
+                <p
+                  className={`${alertTextColor} text-[12px] p-2`}
+                >
                   {alerts} alerts
                 </p>
               </div>
               {isDelayedRebalancing && (
-                <p className="text-red-600 text-[12px]">delayed rebalancing</p>
+                <p className="text-red-600 text-[12px]">
+                  delayed rebalancing
+                </p>
               )}
             </div>
           </div>

@@ -23,10 +23,9 @@ export default function ConfirmRebalanceModal({
   fetchData,
 }: ConfirmContactModalProps) {
   const { walletUuid } = useParams()
-  const [setSignal, signal] = useSignalStore((state) => [
-    state.setSignal,
-    state.signal,
-  ])
+  const [setSignal, signal] = useSignalStore(
+    (state) => [state.setSignal, state.signal]
+  )
 
   const handleConfirmContact = async () => {
     try {
@@ -43,7 +42,10 @@ export default function ConfirmRebalanceModal({
         onClose()
       }
     } catch (error) {
-      console.error('Erro ao confirmar rebalance wallet:', error)
+      console.error(
+        'Erro ao confirmar rebalance wallet:',
+        error
+      )
     }
   }
 
@@ -58,7 +60,8 @@ export default function ConfirmRebalanceModal({
         <div className="flex justify-center items-center flex-col gap-6">
           <CircleAlert className="text-[#F2BE38]" />
           <p className="flex w-2/3 text-center">
-            Do you confirm do rebalance in this wallet ?
+            Do you confirm do rebalance in this
+            wallet ?
           </p>
         </div>
         <DialogFooter className="flex justify-end items-end">

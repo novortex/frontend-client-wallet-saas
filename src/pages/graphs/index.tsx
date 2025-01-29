@@ -17,7 +17,10 @@ import {
 } from '@/components/ui/breadcrumb'
 import { TWalletAssetsInfo } from '@/types/wallet.type'
 import { WalletGraph } from './graph-wallet'
-import { getGraphData, updateCurrentAmount } from '@/services/wallet/walleInfoService'
+import {
+  getGraphData,
+  updateCurrentAmount,
+} from '@/services/wallet/walleInfoService'
 import { getAllAssetsWalletClient } from '@/services/wallet/walletAssetService'
 
 interface graphDataEntry {
@@ -31,57 +34,74 @@ interface graphDataEntry {
 
 export function Graphs() {
   const [, setData] = useState<ClientActive[]>([])
-  const [infosWallet, setInfosWallet] = useState<TWalletAssetsInfo>()
+  const [infosWallet, setInfosWallet] =
+    useState<TWalletAssetsInfo>()
   const [loading, setLoading] = useState(true)
-  const [graphData, setGraphData] = useState<graphDataEntry[]>([])
+  const [graphData, setGraphData] = useState<
+    graphDataEntry[]
+  >([])
   const { walletUuid } = useParams()
   const { toast } = useToast()
-  const [signal] = useSignalStore((state) => [state.signal])
+  const [signal] = useSignalStore((state) => [
+    state.signal,
+  ])
 
   useEffect(() => {
     async function getData(
       walletUuid: string,
-      setData: React.Dispatch<React.SetStateAction<ClientActive[]>>,
-      setInfosWallet: React.Dispatch<
-        React.SetStateAction<TWalletAssetsInfo | undefined>
+      setData: React.Dispatch<
+        React.SetStateAction<ClientActive[]>
       >,
+      setInfosWallet: React.Dispatch<
+        React.SetStateAction<
+          TWalletAssetsInfo | undefined
+        >
+      >
     ) {
       try {
         await updateCurrentAmount(walletUuid)
 
-        const result = await getAllAssetsWalletClient(walletUuid)
+        const result =
+          await getAllAssetsWalletClient(
+            walletUuid
+          )
 
         if (!result) {
           return toast({
-            className: 'bg-red-500 border-0 text-white',
-            title: 'Failed get assets organization :(',
+            className:
+              'bg-red-500 border-0 text-white',
+            title:
+              'Failed get assets organization :(',
             description: 'Demo Vault !!',
           })
         }
 
         setInfosWallet(result.wallet)
 
-        const dataTable: ClientActive[] = result.assets.map((item) => ({
-          id: item.uuid,
-          asset: {
-            urlImage: item.icon,
-            name: item.name,
-          },
-          currentAmount: item.currentAmount,
-          assetQuantity: item.quantityAsset,
-          price: item.price,
-          allocation: item.currentAllocation,
-          idealAllocation: item.idealAllocation,
-          idealAmount: item.idealAmountInMoney,
-          buyOrSell: item.buyOrSell,
-        }))
+        const dataTable: ClientActive[] =
+          result.assets.map((item) => ({
+            id: item.uuid,
+            asset: {
+              urlImage: item.icon,
+              name: item.name,
+            },
+            currentAmount: item.currentAmount,
+            assetQuantity: item.quantityAsset,
+            price: item.price,
+            allocation: item.currentAllocation,
+            idealAllocation: item.idealAllocation,
+            idealAmount: item.idealAmountInMoney,
+            buyOrSell: item.buyOrSell,
+          }))
 
         setData(dataTable)
         setLoading(false)
       } catch (error) {
         toast({
-          className: 'bg-red-500 border-0 text-white',
-          title: 'Failed get assets organization :(',
+          className:
+            'bg-red-500 border-0 text-white',
+          title:
+            'Failed get assets organization :(',
           description: 'Demo Vault !!',
         })
       }
@@ -89,8 +109,10 @@ export function Graphs() {
 
     if (!walletUuid) {
       toast({
-        className: 'bg-red-500 border-0 text-white',
-        title: 'Failed get assets organization :(',
+        className:
+          'bg-red-500 border-0 text-white',
+        title:
+          'Failed get assets organization :(',
         description: 'Demo Vault !!',
       })
 
@@ -104,20 +126,30 @@ export function Graphs() {
     async function fetchGraphData() {
       if (walletUuid) {
         try {
-          const data = await getGraphData(walletUuid)
+          const data =
+            await getGraphData(walletUuid)
 
           // Ordenar os dados por data (createAt) de forma decrescente (mais recente primeiro)
           const sortedData = data.sort(
-            (a: graphDataEntry, b: graphDataEntry) =>
-              new Date(b.createAt).getTime() - new Date(a.createAt).getTime(),
+            (
+              a: graphDataEntry,
+              b: graphDataEntry
+            ) =>
+              new Date(b.createAt).getTime() -
+              new Date(a.createAt).getTime()
           )
 
           setGraphData(sortedData)
         } catch (error) {
-          console.error('Failed to fetch historic:', error)
+          console.error(
+            'Failed to fetch historic:',
+            error
+          )
         }
       } else {
-        console.error('organizationUuid or walletUuid is undefined')
+        console.error(
+          'organizationUuid or walletUuid is undefined'
+        )
       }
     }
     fetchGraphData()
@@ -173,7 +205,10 @@ export function Graphs() {
           title="Entry date"
           data={
             infosWallet?.startDate !== null
-              ? formatDate(infosWallet?.startDate?.toString() ?? '-')
+              ? formatDate(
+                  infosWallet?.startDate?.toString() ??
+                    '-'
+                )
               : '-'
           }
         />
@@ -181,23 +216,32 @@ export function Graphs() {
           title="Closing date"
           data={
             infosWallet?.monthCloseDate !== null
-              ? formatDate(infosWallet?.monthCloseDate?.toString() ?? '-')
+              ? formatDate(
+                  infosWallet?.monthCloseDate?.toString() ??
+                    '-'
+                )
               : '-'
           }
         />
         <CardDashboard
           title="Initial value"
           data={
-            infosWallet?.investedAmount !== undefined
-              ? Number(infosWallet.investedAmount).toFixed(2)
+            infosWallet?.investedAmount !==
+            undefined
+              ? Number(
+                  infosWallet.investedAmount
+                ).toFixed(2)
               : '-'
           }
         />
         <CardDashboard
           title="Current value"
           data={
-            infosWallet?.currentAmount !== undefined
-              ? Number(infosWallet.currentAmount).toFixed(2)
+            infosWallet?.currentAmount !==
+            undefined
+              ? Number(
+                  infosWallet.currentAmount
+                ).toFixed(2)
               : '-'
           }
         />
@@ -206,8 +250,11 @@ export function Graphs() {
         <CardDashboard
           title="Performance fee"
           data={
-            infosWallet?.performanceFee !== undefined
-              ? Number(infosWallet.performanceFee).toFixed(2)
+            infosWallet?.performanceFee !==
+            undefined
+              ? Number(
+                  infosWallet.performanceFee
+                ).toFixed(2)
               : '-'
           }
         />
@@ -215,19 +262,27 @@ export function Graphs() {
           title="Last rebalance"
           data={
             infosWallet?.lastRebalance
-              ? formatDate(infosWallet.lastRebalance.toString())
+              ? formatDate(
+                  infosWallet.lastRebalance.toString()
+                )
               : '-'
           }
         />
         <CardDashboard
           title="Current value in benchmark"
           data={
-            graphData[0]?.benchmarkMoney !== undefined
-              ? Number(graphData[0].benchmarkMoney).toFixed(2)
+            graphData[0]?.benchmarkMoney !==
+            undefined
+              ? Number(
+                  graphData[0].benchmarkMoney
+                ).toFixed(2)
               : '-'
           }
         />
-        <CardDashboard title="Current value ideal portfolio" data="-" />
+        <CardDashboard
+          title="Current value ideal portfolio"
+          data="-"
+        />
       </div>
       <div className="w-full h-1/3">
         <WalletGraph />

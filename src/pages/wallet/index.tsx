@@ -14,8 +14,13 @@ import { createColumns } from '@/components/custom/wallet/columns'
 
 export function Wallet() {
   const { walletUuid } = useParams()
-  const { data, infosWallet, loading, fetchData, calculateRebalance } =
-    useWallet(walletUuid as string)
+  const {
+    data,
+    infosWallet,
+    loading,
+    fetchData,
+    calculateRebalance,
+  } = useWallet(walletUuid as string)
   const {
     isOperationModalOpen,
     openOperationModal,
@@ -31,7 +36,8 @@ export function Wallet() {
   if (!infosWallet)
     return (
       <div className="text-white flex justify-center items-center h-screen">
-        Error: Wallet information is not available.
+        Error: Wallet information is not
+        available.
       </div>
     )
   else {
@@ -41,11 +47,17 @@ export function Wallet() {
         <ActionButtons
           walletUuid={walletUuid}
           openOperationModal={openOperationModal}
-          openCloseWalletModal={openCloseWalletModal}
-          openOrCloseModalRebalanced={openOrCloseModalRebalanced}
+          openCloseWalletModal={
+            openCloseWalletModal
+          }
+          openOrCloseModalRebalanced={
+            openOrCloseModalRebalanced
+          }
           infosWallet={infosWallet}
         />
-        {infosWallet && <WalletInfo {...infosWallet} />}
+        {infosWallet && (
+          <WalletInfo {...infosWallet} />
+        )}
         <DataTable
           columns={createColumns(fetchData)}
           data={data}
@@ -54,13 +66,23 @@ export function Wallet() {
           calculateRebalance={calculateRebalance}
         />
         <TriggerSection
-          isOperationModalOpen={isOperationModalOpen}
-          closeOperationModal={closeOperationModal}
-          isCloseWalletModalOpen={isCloseWalletModalOpen}
-          closeCloseWalletModal={closeCloseWalletModal}
+          isOperationModalOpen={
+            isOperationModalOpen
+          }
+          closeOperationModal={
+            closeOperationModal
+          }
+          isCloseWalletModalOpen={
+            isCloseWalletModalOpen
+          }
+          closeCloseWalletModal={
+            closeCloseWalletModal
+          }
           closeModalState={infosWallet.isClosed}
           isModalRebalance={isModalRebalance}
-          openOrCloseModalRebalanced={openOrCloseModalRebalanced}
+          openOrCloseModalRebalanced={
+            openOrCloseModalRebalanced
+          }
           fetchData={fetchData}
         />
         <OperationsModal

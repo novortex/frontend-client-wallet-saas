@@ -31,19 +31,26 @@ interface DataTableProps<TData, TValue> {
   data: TData[]
 }
 
-export function DataTableCustomers<TData, TValue>({
+export function DataTableCustomers<
+  TData,
+  TValue,
+>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [sorting, setSorting] =
+    useState<SortingState>([])
+  const [columnFilters, setColumnFilters] =
+    useState<ColumnFiltersState>([])
+  const [isModalOpen, setIsModalOpen] =
+    useState(false)
 
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    getPaginationRowModel:
+      getPaginationRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
@@ -65,16 +72,25 @@ export function DataTableCustomers<TData, TValue>({
   return (
     <div className="rounded-md">
       <div className="bg-[#171717] rounded-t-lg p-5 flex items-center justify-between">
-        <h1 className="text-xl text-white">Customers organization</h1>
+        <h1 className="text-xl text-white">
+          Customers organization
+        </h1>
         <div className="flex gap-5 items-center">
           <div className="flex items-center py-4 w-full">
             <Input
               placeholder="Filter name customer..."
               value={
-                (table.getColumn('name')?.getFilterValue() as string) ?? ''
+                (table
+                  .getColumn('name')
+                  ?.getFilterValue() as string) ??
+                ''
               }
               onChange={(event) =>
-                table.getColumn('name')?.setFilterValue(event.target.value)
+                table
+                  .getColumn('name')
+                  ?.setFilterValue(
+                    event.target.value
+                  )
               }
               className="bg-gray-800 text-gray-400 border-transparent h-11"
             />
@@ -92,7 +108,9 @@ export function DataTableCustomers<TData, TValue>({
             <Button
               size="sm"
               onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
+              disabled={
+                !table.getCanPreviousPage()
+              }
               className="bg-white text-black"
             >
               Previous
@@ -111,44 +129,66 @@ export function DataTableCustomers<TData, TValue>({
 
       <Table>
         <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow
-              key={headerGroup.id}
-              className="bg-[#131313] hover:bg-[#131313]"
-            >
-              {headerGroup.headers.map((header) => {
-                return (
-                  <TableHead key={header.id} className="text-white">
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                  </TableHead>
-                )
-              })}
-            </TableRow>
-          ))}
+          {table
+            .getHeaderGroups()
+            .map((headerGroup) => (
+              <TableRow
+                key={headerGroup.id}
+                className="bg-[#131313] hover:bg-[#131313]"
+              >
+                {headerGroup.headers.map(
+                  (header) => {
+                    return (
+                      <TableHead
+                        key={header.id}
+                        className="text-white"
+                      >
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column
+                                .columnDef.header,
+                              header.getContext()
+                            )}
+                      </TableHead>
+                    )
+                  }
+                )}
+              </TableRow>
+            ))}
         </TableHeader>
         <TableBody className="text-[#959CB6] bg-[#171717] hover:bg-[#171717]">
           {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow
-                className="hover:bg-[#171717]"
-                key={row.id}
-                data-state={row.getIsSelected() && 'selected'}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))
+            table
+              .getRowModel()
+              .rows.map((row) => (
+                <TableRow
+                  className="hover:bg-[#171717]"
+                  key={row.id}
+                  data-state={
+                    row.getIsSelected() &&
+                    'selected'
+                  }
+                >
+                  {row
+                    .getVisibleCells()
+                    .map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef
+                            .cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    ))}
+                </TableRow>
+              ))
           ) : (
             <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
+              <TableCell
+                colSpan={columns.length}
+                className="h-24 text-center"
+              >
                 No results.
               </TableCell>
             </TableRow>
@@ -156,7 +196,10 @@ export function DataTableCustomers<TData, TValue>({
         </TableBody>
       </Table>
 
-      <RegisterCustomerModal isOpen={isModalOpen} onClose={closeModal} />
+      <RegisterCustomerModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+      />
     </div>
   )
 }

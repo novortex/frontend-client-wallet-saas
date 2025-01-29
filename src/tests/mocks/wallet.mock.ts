@@ -1,7 +1,9 @@
 import { WalletDataResponse } from '@/types/response.type'
 
-const organizationUuid = 'e74e88e2-2185-42a8-8ae2-8013057ba7b8'
-const walletUuid = '4091e88c-bfa5-4608-8514-212502fb2598'
+const organizationUuid =
+  'e74e88e2-2185-42a8-8ae2-8013057ba7b8'
+const walletUuid =
+  '4091e88c-bfa5-4608-8514-212502fb2598'
 
 const mockResponse: WalletDataResponse = {
   wallet: {
@@ -41,4 +43,8 @@ const mockResponse: WalletDataResponse = {
   ],
 }
 
-export { organizationUuid, walletUuid, mockResponse }
+export {
+  organizationUuid,
+  walletUuid,
+  mockResponse,
+}

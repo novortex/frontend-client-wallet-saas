@@ -22,10 +22,16 @@ export default function CellActions({
 }: {
   rowInfos: CustomersOrganization
 }) {
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
-  const [isDisableDialogOpen, setIsDisableDialogOpen] = useState(false)
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const [isEditDialogOpen, setIsEditDialogOpen] =
+    useState(false)
+  const [
+    isDisableDialogOpen,
+    setIsDisableDialogOpen,
+  ] = useState(false)
+  const [isModalOpen, setIsModalOpen] =
+    useState(false)
+  const [isDropdownOpen, setIsDropdownOpen] =
+    useState(false)
 
   const handleClose = () => {
     setIsDropdownOpen(false)
@@ -33,9 +39,15 @@ export default function CellActions({
 
   return (
     <>
-      <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
+      <DropdownMenu
+        open={isDropdownOpen}
+        onOpenChange={setIsDropdownOpen}
+      >
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-8 w-8 p-0">
+          <Button
+            variant="ghost"
+            className="h-8 w-8 p-0"
+          >
             <MoreHorizontal className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>

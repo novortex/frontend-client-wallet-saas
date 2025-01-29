@@ -20,19 +20,25 @@ export function DisableCustomerModal({
   onOpenChange,
 }: DisableCustomerModalProps) {
   return (
-    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+    <Dialog
+      open={isOpen}
+      onOpenChange={onOpenChange}
+    >
       <DialogContent className="bg-[#1C1C1C] border-0 text-white">
         <DialogHeader>
           <DialogTitle className="flex gap-5 items-center mb-5">
-            Disabled asset <TriangleAlert className="text-yellow-400 w-5" />
+            Disabled asset{' '}
+            <TriangleAlert className="text-yellow-400 w-5" />
           </DialogTitle>
           <DialogDescription>
             Disabled the for all wallets
             <p className="mt-5 font-bold text-yellow-200">
-              Warning: You are about to disable this crypto asset for all
-              wallets. This action is irreversible and will affect all users
-              holding this asset. Please confirm that you want to proceed with
-              this operation.
+              Warning: You are about to disable
+              this crypto asset for all wallets.
+              This action is irreversible and will
+              affect all users holding this asset.
+              Please confirm that you want to
+              proceed with this operation.
             </p>
           </DialogDescription>
         </DialogHeader>
@@ -42,7 +48,10 @@ export function DisableCustomerModal({
               Close
             </Button>
           </DialogClose>
-          <Button disabled className="bg-blue-500 hover:bg-blue-600 text-black">
+          <Button
+            disabled
+            className="bg-blue-500 hover:bg-blue-600 text-black"
+          >
             Disabled
           </Button>
         </DialogFooter>

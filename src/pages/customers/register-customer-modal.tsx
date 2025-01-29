@@ -6,15 +6,26 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { StepForwardIcon, User } from 'lucide-react'
-import { buildStyles, CircularProgressbar } from 'react-circular-progressbar'
+import {
+  StepForwardIcon,
+  User,
+} from 'lucide-react'
+import {
+  buildStyles,
+  CircularProgressbar,
+} from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist/styles.css'
 import { useRef, useState } from 'react'
 import { useSignalStore } from '@/store/signalEffect'
 import { registerNewCustomer } from '@/services/managementService'
-import PhoneInput, { CountryData } from 'react-phone-input-2'
+import PhoneInput, {
+  CountryData,
+} from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
-import { CountryCode, parsePhoneNumber } from 'libphonenumber-js'
+import {
+  CountryCode,
+  parsePhoneNumber,
+} from 'libphonenumber-js'
 import { useToast } from '@/components/ui/use-toast'
 import { Input } from '@/components/ui/input'
 import { Label } from 'recharts'
@@ -30,12 +41,13 @@ export default function RegisterCustomerModal({
 }: RegisterCustomerModalProps) {
   const [percentage, setPercentage] = useState(0)
   const [phone, setPhone] = useState('')
-  const [phoneCountry, setPhoneCountry] = useState<CountryData>({
-    name: '',
-    dialCode: '',
-    countryCode: '',
-    format: '',
-  })
+  const [phoneCountry, setPhoneCountry] =
+    useState<CountryData>({
+      name: '',
+      dialCode: '',
+      countryCode: '',
+      format: '',
+    })
   const [inputValues, setInputValues] = useState({
     name: '',
     email: '',
@@ -46,10 +58,9 @@ export default function RegisterCustomerModal({
     email: '',
     phone: '',
   })
-  const [setSignal, signal] = useSignalStore((state) => [
-    state.setSignal,
-    state.signal,
-  ])
+  const [setSignal, signal] = useSignalStore(
+    (state) => [state.setSignal, state.signal]
+  )
 
   const { toast } = useToast()
 
@@ -63,39 +74,53 @@ export default function RegisterCustomerModal({
       phone: '',
     }
 
-    const normalizedName = inputValues.name.replace(/\s+/g, ' ').trim()
+    const normalizedName = inputValues.name
+      .replace(/\s+/g, ' ')
+      .trim()
 
     if (
       !/^[A-ZÀ-ÖØ-Ý][a-zà-öø-ÿ]{1,}(?:\s[A-ZÀ-ÖØ-Ý][a-zà-öø-ÿ]{1,})+$/.test(
-        normalizedName,
+        normalizedName
       ) ||
       /\s$/.test(inputValues.name)
     ) {
       newErrors.name =
         'Name must include both first and last names, each starting with a capital letter and containing at least two letters.'
     }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inputValues.email)) {
+    if (
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+        inputValues.email
+      )
+    ) {
       newErrors.email = 'Invalid email format.'
     }
-    if (!/^\d+$/.test(phone.replace(/\D/g, '')) || phone.trim().length < 13) {
+    if (
+      !/^\d+$/.test(phone.replace(/\D/g, '')) ||
+      phone.trim().length < 13
+    ) {
       newErrors.phone =
         'The phone number must contain only numbers and include the country code.'
     }
 
     setErrors(newErrors)
-    return !Object.values(newErrors).some((error) => error)
+    return !Object.values(newErrors).some(
+      (error) => error
+    )
   }
 
   const formatPhoneNumber = (phone: string) => {
     try {
       const phoneNumber = parsePhoneNumber(
         phone,
-        phoneCountry.countryCode.toUpperCase() as CountryCode,
+        phoneCountry.countryCode.toUpperCase() as CountryCode
       )
 
       return phoneNumber.formatInternational()
     } catch (error) {
-      console.error('Invalid phone number:', error)
+      console.error(
+        'Invalid phone number:',
+        error
+      )
       return phone
     }
   }
@@ -105,7 +130,8 @@ export default function RegisterCustomerModal({
       toast({
         className: 'bg-red-500 border-0',
         title: 'Error validating inputs',
-        description: 'Fix the errors and try again.',
+        description:
+          'Fix the errors and try again.',
       })
       return
     }
@@ -117,17 +143,19 @@ export default function RegisterCustomerModal({
 
     toast({
       className: 'bg-yellow-500 border-0',
-      title: 'Processing add customer in organization',
+      title:
+        'Processing add customer in organization',
       description: 'Demo Vault !!',
     })
 
-    const formattedPhone = formatPhoneNumber(phone)
+    const formattedPhone =
+      formatPhoneNumber(phone)
     console.log(formattedPhone)
 
     const customer = await registerNewCustomer(
       name as string,
       email as string,
-      formattedPhone,
+      formattedPhone
     )
 
     if (!customer) {
@@ -160,14 +188,20 @@ export default function RegisterCustomerModal({
 
     return toast({
       className: 'bg-green-500 border-0',
-      title: 'Success !! new customer in organization',
+      title:
+        'Success !! new customer in organization',
       description: 'Demo Vault !!',
     })
   }
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const { name, value } = e.target
-    const isEmptyBefore = inputValues[name as keyof typeof inputValues] === ''
+    const isEmptyBefore =
+      inputValues[
+        name as keyof typeof inputValues
+      ] === ''
     const isEmptyAfter = value === ''
 
     setInputValues({
@@ -176,9 +210,13 @@ export default function RegisterCustomerModal({
     })
 
     if (isEmptyBefore && !isEmptyAfter) {
-      setPercentage((prev) => Math.min(prev + 25, 100))
+      setPercentage((prev) =>
+        Math.min(prev + 25, 100)
+      )
     } else if (!isEmptyBefore && isEmptyAfter) {
-      setPercentage((prev) => Math.max(prev - 25, 0))
+      setPercentage((prev) =>
+        Math.max(prev - 25, 0)
+      )
     }
   }
 
@@ -187,7 +225,8 @@ export default function RegisterCustomerModal({
       <DialogContent className="h-4/5 w-[60%] bg-[#131313] text-[#fff] max-w-full border-transparent">
         <DialogHeader>
           <DialogTitle className="flex flex-row gap-4 text-3xl items-center">
-            Register new Customer <User className="text-[#F2BE38]" />
+            Register new Customer{' '}
+            <User className="text-[#F2BE38]" />
           </DialogTitle>
         </DialogHeader>
         <div className="flex justify-center items-start">
@@ -216,7 +255,9 @@ export default function RegisterCustomerModal({
                 ref={nameRef}
               />
               {errors.name && (
-                <Label className="w-2/3 text-red-500">{errors.name}</Label>
+                <Label className="w-2/3 text-red-500">
+                  {errors.name}
+                </Label>
               )}
             </div>
 
@@ -230,7 +271,9 @@ export default function RegisterCustomerModal({
                 ref={emailRef}
               />
               {errors.email && (
-                <Label className="w-2/3 text-red-500">{errors.email}</Label>
+                <Label className="w-2/3 text-red-500">
+                  {errors.email}
+                </Label>
               )}
             </div>
 
@@ -257,12 +300,16 @@ export default function RegisterCustomerModal({
                     'countryCode' in country &&
                     'format' in country
                   ) {
-                    setPhoneCountry(country as CountryData)
+                    setPhoneCountry(
+                      country as CountryData
+                    )
                   }
                 }}
               />
               {errors.phone && (
-                <Label className="w-2/3 text-red-500">{errors.phone}</Label>
+                <Label className="w-2/3 text-red-500">
+                  {errors.phone}
+                </Label>
               )}
             </div>
           </div>
