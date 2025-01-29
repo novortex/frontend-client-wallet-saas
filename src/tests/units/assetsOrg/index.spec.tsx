@@ -1,106 +1,82 @@
-// import { render, screen, waitFor } from '@testing-library/react'
-// import { getAllAssetsOrg } from '@/services/request'
-// import { useUserStore } from '@/store/user'
-// import { useSignalStore } from '@/store/signalEffect'
-// import { useToast } from '@/components/ui/use-toast'
-// import { AssetsOrg } from '@/pages/assets-org'
-// import { MemoryRouter } from 'react-router-dom'
+import { render, screen, waitFor } from '@testing-library/react'
+import '@testing-library/jest-dom'
+import AddNewAssetModal from '../../../components/custom/assets-org/add-new-asset-modal'
+import { columnsAssetOrg } from '../../../components/custom/assets-org/columns'
+import { DataTableAssetOrg } from '../../../components/custom/assets-org/data-table'
 
-// // Mock do serviço de requisição
-// jest.mock('@/services/request', () => ({
-//   getAllAssetsOrg: jest.fn(),
-// }))
+// Teste para AddNewAssetModal
+describe('AddNewAssetModal Component', () => {
+  it('renders modal with correct fields', async () => {
+    render(<AddNewAssetModal isOpen={true} onClose={() => {}} />)
 
-// // Mock do store de usuário
-// jest.mock('@/store/user', () => ({
-//   useUserStore: jest.fn(),
-// }))
+    await waitFor(() => screen.findByText(/New Asset/i))
 
-// // Mock do store de sinal
-// jest.mock('@/store/signalEffect', () => ({
-//   useSignalStore: jest.fn(),
-// }))
+    expect(screen.getByText(/New Asset/i)).toBeInTheDocument()
+    expect(screen.getByPlaceholderText('idCMC')).toBeInTheDocument()
+  })
 
-// // Mock do toast
-// jest.mock('@/components/ui/use-toast', () => ({
-//   useToast: jest.fn(),
-// }))
+  it('calls onClose when close button is clicked', async () => {
+    const mockOnClose = jest.fn()
+    render(<AddNewAssetModal isOpen={true} onClose={mockOnClose} />)
 
-// describe('AssetsOrg Component', () => {
-//   const mockUuidOrganization = 'mock-uuid'
+    const closeButton = screen.getByText('Close')
+    closeButton.click()
 
-//   beforeEach(() => {
-//     jest.clearAllMocks()
-//     ;(useUserStore as unknown as jest.Mock).mockReturnValue([
-//       { uuidOrganization: mockUuidOrganization },
-//     ])
-//     ;(useSignalStore as unknown as jest.Mock).mockReturnValue([
-//       { signal: null },
-//     ])
-//     ;(useToast as jest.Mock).mockReturnValue({ toast: jest.fn() })
-//   })
+    await waitFor(() => expect(mockOnClose).toHaveBeenCalledTimes(1))
+  })
+})
 
-//   it('fetches and displays assets data', async () => {
-//     // Arrange
-//     const mockAssets = [
-//       {
-//         uuid: 'asset-1',
-//         icon: 'https://example.com/icon1.png',
-//         name: 'Asset One',
-//         price: 100,
-//         qntInWallet: 5,
-//         presencePercentage: 50,
-//         riskProfileCounts: {
-//           superLowRisk: 1,
-//           lowRisk: 2,
-//           standard: 2,
-//         },
-//       },
-//     ]
+// Testes para a definição das colunas (columns.tsx)
+describe('columnsAssetOrg Definition', () => {
+  it('should define all necessary columns', () => {
+    expect(columnsAssetOrg).toBeDefined()
+    expect(columnsAssetOrg.length).toBeGreaterThan(0)
 
-//     ;(getAllAssetsOrg as jest.Mock).mockResolvedValueOnce(mockAssets)
+    const columnTitles = columnsAssetOrg.map((col) => col.header)
+    expect(columnTitles).toContain('Asset')
+    expect(columnTitles).toContain('Price')
+    expect(columnTitles).toContain('Appearances')
+  })
+})
 
-//     // Act
-//     render(
-//       <MemoryRouter>
-//         <AssetsOrg />
-//       </MemoryRouter>,
-//     )
+// Testes para DataTableAssetOrg
+const mockData = [
+  {
+    id: '1',
+    asset: { urlImage: '/assets/bitcoin.png', name: 'Bitcoin' },
+    price: 40000,
+    appearances: '5 Wallets',
+    porcentOfApp: '50%',
+    quantSLowRisk: '2 Wallets',
+    quantLowRisk: '1 Wallet',
+    quantStandard: '2 Wallets',
+  },
+]
 
-//     // Assert
-//     expect(getAllAssetsOrg).toHaveBeenCalledWith({
-//       uuidOrganization: mockUuidOrganization,
-//     })
+describe('DataTableAssetOrg Component', () => {
+  it('renders table with asset data', async () => {
+    render(<DataTableAssetOrg data={mockData} columns={columnsAssetOrg} />)
 
-//     const assetName = await screen.findByText('Asset One')
-//     expect(assetName).toBeInTheDocument()
-//   })
+    await waitFor(() => screen.findByText(/Bitcoin/i))
+    await waitFor(() => screen.findByText(/40000/i))
+    await waitFor(() => screen.findByText(/5 Wallets/i))
+    await waitFor(() => screen.findByText(/50/i))
 
-//   it('displays a toast message on fetch failure', async () => {
-//     // Arrange
-//     ;(getAllAssetsOrg as jest.Mock).mockRejectedValueOnce(
-//       new Error('Fetch error'),
-//     )
+    expect(screen.getByText(/Bitcoin/i)).toBeInTheDocument()
+    expect(screen.getByText(/40000/i)).toBeInTheDocument()
+    expect(screen.getByText(/5 Wallets/i)).toBeInTheDocument()
+    expect(screen.getByText(/50/i)).toBeInTheDocument()
+  })
 
-//     const toastMock = jest.fn()
+  it('displays column headers', async () => {
+    render(<DataTableAssetOrg data={mockData} columns={columnsAssetOrg} />)
 
-//     ;(useToast as jest.Mock).mockReturnValue({ toast: toastMock }) // Retorna um objeto com a função toast
+    await waitFor(() => screen.findByText(/Asset/i))
+    await waitFor(() => screen.findByText(/Price/i))
+    await waitFor(() => screen.findByText(/Appearances/i))
 
-//     // Act
-//     render(
-//       <MemoryRouter>
-//         <AssetsOrg />
-//       </MemoryRouter>,
-//     )
-
-//     // Assert
-//     await waitFor(() =>
-//       expect(toastMock).toHaveBeenCalledWith(
-//         expect.objectContaining({
-//           title: 'Failed get assets organization :(',
-//           description: 'Demo Vault !!',
-//         }),
-//       ),
-//     )
-//   })
-// })
+    expect(screen.getByText(/Asset/i)).toBeInTheDocument()
+    expect(screen.getByText(/Price/i)).toBeInTheDocument()
+    expect(screen.getByText(/Appearances/i)).toBeInTheDocument()
+  })
+})
