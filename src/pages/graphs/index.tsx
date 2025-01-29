@@ -3,7 +3,6 @@ import { Input } from '@/components/ui/input'
 import { CardDashboard } from '@/components/custom/card-dashboard'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { ClientActive } from '@/components/custom/tables/wallet-client/columns'
 import { useToast } from '@/components/ui/use-toast'
 import { useSignalStore } from '@/store/signalEffect'
 import { formatDate } from '@/utils'
@@ -17,8 +16,12 @@ import {
 } from '@/components/ui/breadcrumb'
 import { TWalletAssetsInfo } from '@/types/wallet.type'
 import { WalletGraph } from './graph-wallet'
-import { getGraphData, updateCurrentAmount } from '@/services/wallet/walleInfoService'
+import {
+  getGraphData,
+  updateCurrentAmount,
+} from '@/services/wallet/walleInfoService'
 import { getAllAssetsWalletClient } from '@/services/wallet/walletAssetService'
+import { ClientActive } from '@/components/custom/wallet/columns'
 
 interface graphDataEntry {
   cuid: string
