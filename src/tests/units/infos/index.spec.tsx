@@ -1,50 +1,70 @@
-// import { render, screen } from '@testing-library/react'
-// import { Infos } from '@/pages/infos'
-// import { useUserStore } from '@/store/user'
-// import { useSignalStore } from '@/store/signalEffect'
-// import { MemoryRouter } from 'react-router-dom'
+import { render, screen, fireEvent } from '@testing-library/react'
+import '@testing-library/jest-dom'
+import { ClientsInfoModal } from '../../../pages/infos/client-info-modal'
+import { ConfirmContactModal } from '../../../pages/infos/confirm-contact-modal'
+import { ExchangeInfoModal } from '../../../pages/infos/exchange-info-modal'
 
-// jest.mock('@/store/user', () => ({
-//   useUserStore: jest.fn(),
-// }))
-// jest.mock('@/store/signalEffect', () => ({
-//   useSignalStore: jest.fn(),
-// }))
+describe('ClientInfoModal Component', () => {
+  it('renders client information correctly', () => {
+    render(
+      <ClientsInfoModal
+        isOpen={true}
+        onClose={() => {}}
+        name="John Doe"
+        email="john@example.com"
+        phone="+123456789"
+      />,
+    )
 
-// jest.mock('@/services/request', () => ({
-//   getInfosCustomer: jest.fn(),
-//   convertedTimeZone: jest.fn(),
-// }))
-// jest.mock('@/services/walletService', () => ({
-//   updateCurrentAmount: jest.fn(),
-// }))
+    expect(screen.getByText(/information/i)).toBeInTheDocument()
+    expect(screen.getByText(/john doe/i)).toBeInTheDocument()
+    expect(screen.getByText(/john@example.com/i)).toBeInTheDocument()
+    expect(screen.getByText(/\+123456789/i)).toBeInTheDocument()
+  })
 
-// describe('Infos Component', () => {
-//   beforeEach(() => {
-//     ;(useUserStore as unknown as jest.Mock).mockReturnValue({
-//       uuidOrganization: 'mock-uuid',
-//     })
-//     ;(useSignalStore as unknown as jest.Mock).mockReturnValue([{}])
-//   })
+  it('closes modal when close button is clicked', () => {
+    const mockOnClose = jest.fn()
+    render(
+      <ClientsInfoModal
+        isOpen={true}
+        onClose={mockOnClose}
+        name="John Doe"
+        email="john@example.com"
+        phone="+123456789"
+      />,
+    )
 
-//   it('should render without crashing', () => {
-//     render(
-//       <MemoryRouter>
-//         <Infos />
-//       </MemoryRouter>,
-//     )
-//     expect(screen.getByText(/Wallets/i)).toBeInTheDocument()
-//     expect(screen.getByText(/Information clients/i)).toBeInTheDocument()
-//   })
+    fireEvent.click(screen.getByText(/close/i))
+    expect(mockOnClose).toHaveBeenCalledTimes(1)
+  })
+})
 
-//   it('should display correct wallet information', async () => {
-//     render(
-//       <MemoryRouter>
-//         <Infos />
-//       </MemoryRouter>,
-//     )
+describe('ConfirmContactModal Component', () => {
+  it('renders and allows closing', () => {
+    const mockOnClose = jest.fn()
+    render(<ConfirmContactModal isOpen={true} onClose={mockOnClose} />)
 
-//     expect(screen.getByText(/Initial amount invested/i)).toBeInTheDocument()
-//     expect(screen.getByText(/Current value:/i)).toBeInTheDocument()
-//   })
-// })
+    expect(screen.getByText(/confirm contact/i)).toBeInTheDocument()
+    fireEvent.click(screen.getByText(/close/i))
+    expect(mockOnClose).toHaveBeenCalledTimes(1)
+  })
+})
+
+describe('ExchangeInfoModal Component', () => {
+  it('renders exchange credentials correctly', () => {
+    render(
+      <ExchangeInfoModal
+        isOpen={true}
+        onClose={() => {}}
+        accountEmail="account@example.com"
+        emailPassword="email-pass"
+        exchangePassword="exchange-pass"
+      />,
+    )
+
+    expect(screen.getByText(/information exchange/i)).toBeInTheDocument()
+    expect(screen.getByText(/account@example.com/i)).toBeInTheDocument()
+    expect(screen.getByText(/email-pass/i)).toBeInTheDocument()
+    expect(screen.getByText(/exchange-pass/i)).toBeInTheDocument()
+  })
+})
