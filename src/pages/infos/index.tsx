@@ -444,3 +444,5 @@ export function Infos() {
     </div>
   )
 }
+
+export default Infos
