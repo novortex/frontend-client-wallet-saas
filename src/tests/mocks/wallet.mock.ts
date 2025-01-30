@@ -13,7 +13,6 @@ const mockResponse: WalletDataResponse = {
     lastRebalance: null,
     monthCloseDate: null,
     isClosed: false,
-    ownerName: '',
   },
   assets: [
     {

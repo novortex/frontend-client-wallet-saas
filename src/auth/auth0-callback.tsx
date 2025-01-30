@@ -14,7 +14,6 @@ export const Auth0Callback = () => {
         // Se autenticado, redireciona para a página salva ou wallets
         const savedPath = localStorage.getItem('auth_return_path')
         const redirectTo = savedPath || '/wallets'
-        console.log('Redirecionando para:', redirectTo)
 
         localStorage.removeItem('auth_return_path')
         navigate(redirectTo, { replace: true })
