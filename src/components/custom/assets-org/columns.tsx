@@ -6,9 +6,9 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from '../../ui/dropdown-menu'
+} from '@/components/ui/dropdown-menu'
 
-import { Skeleton } from '../../ui/skeleton'
+import { Skeleton } from '@/components/ui/skeleton'
 
 import {
   EyeOffIcon,
