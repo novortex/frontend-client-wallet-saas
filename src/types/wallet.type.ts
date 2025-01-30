@@ -111,3 +111,11 @@ export type RebalanceReturn = {
   assetName: string
   targetAllocation: string
 }
+
+
+export type KpiData = {
+  walletPerformance: number
+  bitcoinBenchmark: number
+  hash11Benchmark: number
+  sp500Benchmark: number
+};
