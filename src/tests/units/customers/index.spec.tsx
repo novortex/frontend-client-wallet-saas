@@ -189,7 +189,7 @@ const mockWalletTabProps = {
     email: 'john@example.com',
     phone: '+1234567890888',
     walletUuid: 'wallet-1',
-    contract: 'true', // Change this to a string
+    contract: 'true',
     initialFeePaid: true,
     manager: { managerUuid: 'manager-1', managerName: 'Manager One' },
     exchange: { exchangeUuid: 'exchange-1', exchangeName: 'Exchange One' },
