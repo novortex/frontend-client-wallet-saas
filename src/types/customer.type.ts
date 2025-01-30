@@ -23,8 +23,18 @@ export type TClientInfosResponse = {
     email: string
     phone?: string
   }
-  lastBalance: Date | null
-  nextBalance: Date | null
+  lastBalance: string
+  riskProfile:
+    | 'STANDARD'
+    | 'SUPER_LOW_RISK'
+    | 'LOW_RISK'
+    | 'HIGH_RISK'
+    | 'SUPER_HIGH_RISK'
+
+  exchange: string
+  nextBalance: string
+  benchmark: string
+  createAt: string
 }
 
 export type TCustomersOrganization = {

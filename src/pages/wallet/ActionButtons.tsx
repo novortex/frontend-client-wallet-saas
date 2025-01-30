@@ -1,8 +1,8 @@
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { HandCoins } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { TWalletAssetsInfo } from '@/types/wallet.type'
+import { Label } from '@/components/ui/label'
 
 interface ActionButtonsProps {
   walletUuid: string | undefined
@@ -23,14 +23,10 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
 
   return (
     <div className="flex items-center justify-between mb-10">
-      <Input
-        className="bg-[#171717] w-3/4 border-0 text-white focus:ring-0"
-        type="text"
-        placeholder="Search for ..."
-      />
+      <Label className="text-2xl text-white">{infosWallet?.ownerName}</Label>
       <div className="flex gap-5">
         <Button
-          className="bg-[#1877F2] w-[45%] hover:bg-blue-600 p-5 gap-2 ml-4"
+          className="bg-[#F2BE38] text-black hover:text-white hover:bg-yellow-600"
           onClick={openOperationModal}
         >
           <HandCoins /> Withdrawal / Deposit
@@ -39,18 +35,19 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
           type="button"
           variant="outline"
           onClick={() => navigate(`/wallet/${walletUuid}/history`)}
+          className=" hover:bg-gray-400"
         >
           Historic
         </Button>
         <Button
           type="button"
-          className="bg-[#F2BE38] text-black"
+          className="bg-[#F2BE38] text-black hover:text-white hover:bg-yellow-600"
           onClick={openOrCloseModalRebalanced}
         >
           Rebalanced
         </Button>
         <Button
-          className={`p-5 ${infosWallet?.isClosed ? 'bg-[#10A45C]' : 'bg-[#EF4E3D]'}`}
+          className={`p-5 ${infosWallet?.isClosed ? 'bg-[#10A45C] hover:bg-green-700' : 'bg-[#EF4E3D] hover:bg-red-600'}`}
           type="button"
           onClick={openCloseWalletModal}
         >

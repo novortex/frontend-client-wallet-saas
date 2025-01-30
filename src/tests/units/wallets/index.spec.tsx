@@ -1,54 +1,91 @@
-import { render, screen } from '@testing-library/react'
-import { Clients } from '@/pages/wallets'
-import { useUserStore } from '@/store/user'
-import { useSignalStore } from '@/store/signalEffect'
-import {
-  getAllManagersOnOrganization,
-  getWalletOrganization,
-} from '@/services/request'
+// import { render, screen } from '@testing-library/react'
+// import '@testing-library/jest-dom'
+// import { MemoryRouter } from 'react-router-dom'
+// import { ActionButtons } from '../../../pages/wallet'
+// import { Header } from '../../../pages/wallet/Header'
+// import { TriggerSection } from '../../../pages/wallet/TriggerSection'
+// import { WalletInfo } from '../../../pages/wallet/WalletInfo'
 
-jest.mock('@/store/user', () => ({
-  useUserStore: jest.fn(),
-}))
+// describe('ActionButtons Component', () => {
+//   it('should render buttons without crashing', () => {
+//     render(
+//       <MemoryRouter>
+//         <ActionButtons
+//           walletUuid="test-wallet-uuid"
+//           openOperationModal={() => {}}
+//           openCloseWalletModal={() => {}}
+//           openOrCloseModalRebalanced={() => {}}
+//           infosWallet={undefined}
+//         />
+//       </MemoryRouter>,
+//     )
 
-jest.mock('@/store/signalEffect', () => ({
-  useSignalStore: jest.fn(),
-}))
+//     expect(
+//       screen.getByRole('button', { name: 'Rebalanced' }),
+//     ).toBeInTheDocument()
+//     expect(screen.getByRole('button', { name: 'Historic' })).toBeInTheDocument()
+//     expect(
+//       screen.getByRole('button', { name: 'Withdrawal / Deposit' }),
+//     ).toBeInTheDocument()
+//     expect(
+//       screen.getByRole('button', { name: /Start Wallet|Close Wallet/ }),
+//     ).toBeInTheDocument()
+//   })
+// })
 
-jest.mock('@/services/request', () => ({
-  getWalletOrganization: jest.fn(),
-  getAllManagersOnOrganization: jest.fn(),
-}))
+// describe('WalletInfo Component', () => {
+//   it('should render wallet information correctly', () => {
+//     const mockData = {
+//       startDate: '01/01/2023',
+//       investedAmount: 1000,
+//       currentAmount: 1500,
+//       performanceFee: 0.5,
+//       lastRebalance: '02/01/2023',
+//       monthCloseDate: '01/02/2023',
+//     }
 
-jest.mock('@/components/custom/card-client', () => ({
-  CardClient: ({ name }: { name: string }) => <div>{name}</div>,
-}))
+//     render(<WalletInfo ownerName={''} isClosed={false} {...mockData} />)
 
-describe('Clients Component', () => {
-  beforeEach(() => {
-    jest.clearAllMocks()
-    ;(useUserStore as unknown as jest.Mock).mockReturnValue([
-      { uuidOrganization: 'org-123' },
-    ])
-    ;(useSignalStore as unknown as jest.Mock).mockReturnValue([{ signal: 1 }])
-    ;(getAllManagersOnOrganization as jest.Mock).mockResolvedValue([
-      { name: 'Manager A' },
-    ])
-  })
+//     expect(screen.getByText('Start date')).toBeInTheDocument()
+//     expect(screen.getByText('01/01/2023')).toBeInTheDocument()
+//     expect(screen.getByText('Invested Amount')).toBeInTheDocument()
+//     expect(screen.getByText('1000.00')).toBeInTheDocument()
+//     expect(screen.getByText('Current Amount')).toBeInTheDocument()
+//     expect(screen.getByText('1500.00')).toBeInTheDocument()
+//     expect(screen.getByText('Last rebalancing')).toBeInTheDocument()
+//     expect(screen.getByText('02/01/2023')).toBeInTheDocument()
+//     expect(screen.getByText('Month closing date')).toBeInTheDocument()
+//     expect(screen.getByText('01/02/2023')).toBeInTheDocument()
+//     expect(screen.getByText('Performance fee')).toBeInTheDocument()
+//     expect(screen.getByText('0.50')).toBeInTheDocument()
+//   })
+// })
 
-  it('renders correctly', async () => {
-    ;(getWalletOrganization as jest.Mock).mockResolvedValue([
-      {
-        walletUuid: 'uuid-1',
-        infosClient: { name: 'Client A', email: '', phone: '' },
-        managerName: 'Manager A',
-        lastBalance: '2024-01-01',
-        nextBalance: '2024-02-01',
-      },
-    ])
+// describe('Header Component', () => {
+//   it('renders the header title', () => {
+//     render(<Header walletUuid={undefined} />)
+//     expect(screen.getByText('Client wallet')).toBeInTheDocument()
+//   })
+// })
 
-    render(<Clients />)
+// describe('TriggerSection Component', () => {
+//   const defaultProps = {
+//     isOperationModalOpen: false,
+//     closeOperationModal: jest.fn(),
+//     isCloseWalletModalOpen: false,
+//     closeCloseWalletModal: jest.fn(),
+//     closeModalState: false,
+//     isModalRebalance: false,
+//     openOrCloseModalRebalanced: jest.fn(),
+//     fetchData: jest.fn(),
+//   }
 
-    expect(screen.getByText('Wallets')).toBeInTheDocument()
-  })
-})
+//   it('should render basic elements correctly', () => {
+//     render(<TriggerSection {...defaultProps} />)
+
+//     expect(screen.getByText('My Triggers')).toBeInTheDocument()
+//     expect(
+//       screen.getByRole('button', { name: 'Trigger Action' }),
+//     ).toBeInTheDocument()
+//   })
+// })

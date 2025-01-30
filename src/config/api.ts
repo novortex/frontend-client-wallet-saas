@@ -1,7 +1,31 @@
 import axios from 'axios'
-const url = import.meta.env.VITE_API_URL
+import { toast } from '@/components/ui/use-toast'
+import { handleUnauthorized } from '@/services/auth'
 
 export const instance = axios.create({
-  baseURL: url,
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000',
   withCredentials: true,
 })
+
+instance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      handleUnauthorized()
+      toast({
+        variant: 'destructive',
+        title: 'Access Denied',
+        description: "You don't have access to this application.",
+      })
+    }
+    return Promise.reject(error)
+  },
+)
+
+export const setAuthToken = (token: string | null) => {
+  if (token) {
+    instance.defaults.headers.common.Authorization = `Bearer ${token}`
+  } else {
+    delete instance.defaults.headers.common.Authorization
+  }
+}

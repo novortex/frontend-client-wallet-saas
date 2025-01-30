@@ -39,6 +39,7 @@ export type TWallet = {
 }
 
 export type TWalletAssetsInfo = {
+  ownerName: string | null
   startDate: string | Date | null
   investedAmount: number | null
   currentAmount: number | null

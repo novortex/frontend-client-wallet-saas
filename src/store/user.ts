@@ -1,48 +1,49 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 
-export type TUser = {
+interface User {
   name: string
   email: string
   role: string
-  imageUrl: string
-  uuidOrganization: string
+  picture?: string
 }
 
-export type UserStore = {
-  user: TUser
-  setUser: (user: TUser) => void
-  cleanUser: () => void
+interface UserStore {
+  user: User | null
+  setUser: (user: User | null) => void
+  clearUser: () => void
 }
 
 export const useUserStore = create<UserStore>()(
   persist(
     (set) => ({
-      user: {
-        name: '',
-        email: '',
-        role: '',
-        imageUrl: '',
-        uuidOrganization: '',
+      user: null,
+      setUser: (user) => {
+        try {
+          set({ user })
+        } catch (error) {
+          console.error('Storage error:', error)
+        }
       },
-
-      setUser: (user: TUser) => set({ user }),
-
-      cleanUser: () => {
-        set({
-          user: {
-            name: '',
-            email: '',
-            role: '',
-            imageUrl: '',
-            uuidOrganization: '',
-          },
-        })
-      },
+      clearUser: () => set({ user: null }),
     }),
     {
-      name: 'user-info-vault',
-      storage: createJSONStorage(() => localStorage),
+      name: 'user-storage',
+      storage: createJSONStorage(() => {
+        try {
+          return localStorage
+        } catch {
+          try {
+            return sessionStorage
+          } catch {
+            return {
+              getItem: () => null,
+              setItem: () => null,
+              removeItem: () => null,
+            }
+          }
+        }
+      }),
     },
   ),
 )

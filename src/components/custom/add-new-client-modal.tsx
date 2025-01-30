@@ -9,11 +9,10 @@ import {
 import { Input } from '../ui/input'
 import * as React from 'react'
 // import RelateClientModal from './relate-client-modal'
-import { registerNewCustomer } from '@/services/request'
-import { useUserStore } from '@/store/user'
 import { AlertCircle } from 'lucide-react'
 import { useSignalStore } from '@/store/signalEffect'
 import { useToast } from '../ui/use-toast'
+import { registerNewCustomer } from '@/services/managementService'
 
 interface AddNewClientModalProps {
   isOpen: boolean
@@ -27,19 +26,11 @@ export default function AddNewClientModal({
   const [name, setName] = React.useState('')
   const [email, setEmail] = React.useState('')
   const [phone, setPhone] = React.useState('')
-  //   const [isModalOpen, setIsModalOpen] = React.useState(false)
-  const [uuidOrganization] = useUserStore((state) => [
-    state.user.uuidOrganization,
-  ])
   const [signal, setSignal] = useSignalStore((state) => [
     state.signal,
     state.setSignal,
   ])
   const { toast } = useToast()
-
-  //   const closeModal = () => {
-  //     setIsModalOpen(false)
-  //   }
 
   const handleAddClient = async () => {
     try {
@@ -51,12 +42,7 @@ export default function AddNewClientModal({
         description: 'Demo Vault !!',
       })
 
-      const response = await registerNewCustomer(
-        name,
-        email,
-        uuidOrganization,
-        phone,
-      )
+      const response = await registerNewCustomer(name, email, phone)
 
       if (!response) {
         return toast({
@@ -115,7 +101,7 @@ export default function AddNewClientModal({
           <div className="w-full h-1/2 flex flex-row justify-between gap-4 items-center">
             <Input
               className="w-1/2 h-full bg-[#272727] border-[#323232] text-[#959CB6]"
-              placeholder="Phone (optional)"
+              placeholder="Phone Number"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
             />

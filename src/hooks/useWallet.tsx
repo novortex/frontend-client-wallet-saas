@@ -1,31 +1,24 @@
 import { useEffect, useState, useCallback } from 'react'
+import { useToast } from '@/components/ui/use-toast'
+import { TWalletAssetsInfo } from '@/types/wallet.type'
+import { getAllAssetsWalletClient } from '@/services/wallet/walletAssetService'
+import { ClientActive } from '@/components/custom/wallet/columns'
 import {
   calculateRebalanceInWallet,
-  getAllAssetsWalletClient,
   updateCurrentAmount,
-} from '@/services/walletService'
-import { useToast } from '@/components/ui/use-toast'
-import { useUserStore } from '@/store/user'
-import { ClientActive } from '@/components/custom/tables/wallet-client/columns'
-import { TWalletAssetsInfo } from '@/types/wallet.type'
+} from '@/services/wallet/walleInfoService'
 
 export function useWallet(walletUuid: string) {
   const [data, setData] = useState<ClientActive[]>([])
   const [infosWallet, setInfosWallet] = useState<TWalletAssetsInfo>()
   const [loading, setLoading] = useState(true)
-  const [uuidOrganization] = useUserStore((state) => [
-    state.user.uuidOrganization,
-  ])
   const { toast } = useToast()
 
   const fetchData = useCallback(async () => {
     setLoading(true)
     try {
-      await updateCurrentAmount(uuidOrganization, walletUuid)
-      const result = await getAllAssetsWalletClient(
-        uuidOrganization,
-        walletUuid,
-      )
+      await updateCurrentAmount(walletUuid)
+      const result = await getAllAssetsWalletClient(walletUuid)
 
       if (!result) {
         throw new Error('Failed to fetch assets')
@@ -56,14 +49,11 @@ export function useWallet(walletUuid: string) {
     } finally {
       setLoading(false)
     }
-  }, [toast, uuidOrganization, walletUuid])
+  }, [toast, walletUuid])
 
   const calculateRebalance = useCallback(async () => {
     try {
-      const result = await calculateRebalanceInWallet(
-        walletUuid,
-        uuidOrganization,
-      )
+      const result = await calculateRebalanceInWallet(walletUuid)
 
       toast({
         className: 'bg-green-500 border-0 text-white',

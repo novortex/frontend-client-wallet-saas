@@ -1,14 +1,10 @@
 import { useState } from 'react'
-import { addCryptoOrg } from '@/services/request'
-import { useUserStore } from '@/store/user'
 import { useToast } from '@/components/ui/use-toast'
 import { useSignalStore } from '@/store/signalEffect'
+import { addCryptoOrg } from '@/services/managementService'
 
 export const useAddAsset = (onClose: () => void) => {
   const [assetId, setAssetId] = useState('')
-  const [uuidOrganization] = useUserStore((state) => [
-    state.user.uuidOrganization,
-  ])
   const [setSignal, signal] = useSignalStore((state) => [
     state.setSignal,
     state.signal,
@@ -24,7 +20,7 @@ export const useAddAsset = (onClose: () => void) => {
       description: 'Demo Vault !!',
     })
 
-    const result = await addCryptoOrg(uuidOrganization, [Number(assetId)])
+    const result = await addCryptoOrg([Number(assetId)])
 
     if (result === false) {
       setAssetId('')

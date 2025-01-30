@@ -3,8 +3,6 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import filterIcon from '../assets/image/filter-lines.png'
 import HistoryThread from '@/components/custom/history-thread'
-import { getWalletHistoric } from '@/services/walletService'
-import { useUserStore } from '@/store/user'
 import { useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import {
@@ -16,19 +14,23 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
 import { HistoricEntry } from '@/types/wallet.type'
+import { DateRange } from 'react-day-picker'
+import { getWalletHistoric } from '@/services/historicService'
+
+export type Filters = {
+  eventTypes: string[]
+  dateRange: DateRange | undefined
+}
 
 export function History() {
   const [historic, setHistoric] = useState<HistoricEntry[]>([])
-  const [organizationUuid] = useUserStore((state) => [
-    state.user.uuidOrganization,
-  ])
   const { walletUuid } = useParams()
 
   useEffect(() => {
     async function fetchHistoric() {
-      if (organizationUuid && walletUuid) {
+      if (walletUuid) {
         try {
-          const data = await getWalletHistoric(organizationUuid, walletUuid)
+          const data = await getWalletHistoric(walletUuid)
           setHistoric(data)
         } catch (error) {
           console.error('Failed to fetch historic:', error)
@@ -39,7 +41,7 @@ export function History() {
     }
 
     fetchHistoric()
-  }, [organizationUuid, walletUuid])
+  }, [walletUuid])
 
   return (
     <div className="p-10">
