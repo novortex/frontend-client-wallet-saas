@@ -3,7 +3,7 @@
 import { ColumnDef } from '@tanstack/react-table'
 import { CellActions } from './cellAction/index'
 import { ArrowUpDown } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { Button } from '../../ui/button'
 
 export type ClientActive = {
   id: string

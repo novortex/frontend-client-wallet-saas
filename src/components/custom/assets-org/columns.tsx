@@ -6,9 +6,9 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+} from '../../ui/dropdown-menu'
 
-import { Skeleton } from '@/components/ui/skeleton'
+import { Skeleton } from '../../ui/skeleton'
 
 import {
   EyeOffIcon,
@@ -16,7 +16,7 @@ import {
   PencilIcon,
   TriangleAlert,
 } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { Button } from '../../ui/button'
 import {
   Dialog,
   DialogClose,
