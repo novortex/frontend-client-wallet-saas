@@ -115,8 +115,8 @@ export async function updateCustomer(
     )
     return result.data
   } catch (error) {
-    console.error(error)
-    throw error
+    console.error('Error updating customer:', error)
+    return false
   }
 }
 
