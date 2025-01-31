@@ -1,16 +1,14 @@
 import { instance } from "@/config/api"
 import { TClientInfosResponse, TNewCustomerResponse } from "@/types/customer.type"
 import { TInfosCustomerResponse } from "@/types/response.type"
-import { RebalanceReturn } from "@/types/wallet.type"
+import { KpiData, RebalanceReturn } from "@/types/wallet.type"
 
-export async function getWalletKpis(walletUuid: string, startDate?: string, endDate?: string) {
+
+export async function getWalletKpis(walletUuid: string, period: string): Promise<KpiData> {
   try {
-    console.log('requisição')
     const response = await instance.get(`wallet/${walletUuid}/kpis`, {
-      params: { startDate, endDate },
+      params: { period }, // Pass period as query parameter
     });
-    console.log('resposta: ', response.data)
-
     return response.data;
   } catch (error) {
     console.error("Error fetching KPIs:", error);

@@ -114,8 +114,8 @@ export type RebalanceReturn = {
 
 
 export type KpiData = {
-  walletPerformance: number
-  bitcoinBenchmark: number
-  hash11Benchmark: number
-  sp500Benchmark: number
+  walletPerformance: number | null
+  bitcoinBenchmark: number | null
+  hash11Benchmark: number | null
+  sp500Benchmark: number | null
 };
