@@ -13,6 +13,8 @@ import { updateCustomer, updateWallet } from '@/services/managementService'
 import { ProfileTab } from './profile-tab'
 import { WalletTab } from './wallet-tab'
 import { CustomersOrganization } from '@/components/custom/customers/columns'
+import { CountryData } from 'react-phone-input-2'
+import { CountryCode, parsePhoneNumber } from 'libphonenumber-js'
 
 interface EditCustomerModalProps {
   isOpen: boolean
@@ -41,6 +43,12 @@ export function EditCustomerModal({
   const [name, setName] = useState(rowInfos.name || '')
   const [email, setEmail] = useState(rowInfos.email || '')
   const [phone, setPhone] = useState(rowInfos.phone || '')
+  const [phoneCountry, setPhoneCountry] = useState<CountryData>({
+    name: '',
+    dialCode: '',
+    countryCode: '',
+    format: '',
+  })
   const [errors, setErrors] = useState({
     name: '',
     email: '',
@@ -63,7 +71,7 @@ export function EditCustomerModal({
   ])
   const { toast } = useToast()
 
-  const handleUpdateCustomer = async () => {
+  const validateInputs = () => {
     const newErrors = {
       name: '',
       email: '',
@@ -92,22 +100,54 @@ export function EditCustomerModal({
         'The phone number must contain only numbers and include the country code.'
     }
 
-    if (Object.values(newErrors).some((error) => error)) {
-      setErrors(newErrors)
+    setErrors(newErrors)
+    return !Object.values(newErrors).some((error) => error)
+  }
+
+  const formatPhoneNumber = (phone: string) => {
+    try {
+      const phoneNumber = parsePhoneNumber(
+        phone,
+        phoneCountry.countryCode.toUpperCase() as CountryCode,
+      )
+      return phoneNumber.formatInternational()
+    } catch (error) {
+      console.error('Invalid phone number:', error)
+      return phone
+    }
+  }
+
+  const handleUpdateCustomer = async () => {
+    if (!validateInputs()) {
+      toast({
+        className: 'bg-red-500 border-0',
+        title: 'Erro na validação',
+        description: 'Por favor, corrija os erros nos campos destacados.',
+      })
       return
     }
 
     try {
+      toast({
+        className: 'bg-yellow-500 border-0',
+        title: 'Processando atualização',
+        description: 'Aguarde enquanto atualizamos os dados...',
+      })
+
+      const formattedPhone = formatPhoneNumber(phone)
+
       const result = await updateCustomer(rowInfos.id, {
         name,
         email,
-        phone,
+        phone: formattedPhone,
       })
 
-      if (result !== true) {
-        setErrors({
-          ...newErrors,
-          general: 'Failed to update customer. Try again.',
+      if (result === false) {
+        toast({
+          className: 'bg-red-500 border-0',
+          title: 'Falha na atualização',
+          description:
+            'Não foi possível atualizar os dados do cliente. Tente novamente.',
         })
         return
       }
@@ -117,13 +157,20 @@ export function EditCustomerModal({
 
       toast({
         className: 'bg-green-500 border-0',
-        title: 'Customer updated successfully',
-        description: 'The customer information has been updated.',
+        title: 'Sucesso!',
+        description: 'Dados do cliente atualizados com sucesso.',
       })
-    } catch (error) {
-      setErrors({
-        ...newErrors,
-        general: 'An unexpected error occurred. Please try again.',
+    } catch (err) {
+      // Tipando o erro corretamente
+      const error = err as { response?: { data?: { message?: string } } }
+
+      const errorMessage =
+        error.response?.data?.message || 'Erro ao atualizar dados do cliente.'
+
+      toast({
+        className: 'bg-red-500 border-0',
+        title: 'Erro inesperado',
+        description: errorMessage,
       })
     }
   }
@@ -132,9 +179,27 @@ export function EditCustomerModal({
     try {
       toast({
         className: 'bg-yellow-500 border-0',
-        title: 'Processing wallet update',
-        description: 'Please wait...',
+        title: 'Processando atualização',
+        description: 'Atualizando dados da carteira...',
       })
+
+      if (!ExchangeSelected) {
+        toast({
+          className: 'bg-red-500 border-0',
+          title: 'Campo obrigatório',
+          description: 'Por favor, selecione uma exchange.',
+        })
+        return
+      }
+
+      if (!manager) {
+        toast({
+          className: 'bg-red-500 border-0',
+          title: 'Campo obrigatório',
+          description: 'Por favor, selecione um gerente.',
+        })
+        return
+      }
 
       const result = await updateWallet(rowInfos.walletUuid || '', {
         accountPassword: accountPasswordRef.current?.value ?? '',
@@ -147,11 +212,14 @@ export function EditCustomerModal({
         performanceFee: parseFloat(String(performanceFee)),
       })
 
-      if (result !== true) {
+      console.log('Result from updateWallet:', result)
+
+      if (!result) {
         toast({
           className: 'bg-red-500 border-0',
-          title: 'Failed to update wallet',
-          description: 'Please try again.',
+          title: 'Falha na atualização',
+          description:
+            'Não foi possível atualizar os dados da carteira. Verifique as informações e tente novamente.',
         })
         return
       }
@@ -161,14 +229,18 @@ export function EditCustomerModal({
 
       toast({
         className: 'bg-green-500 border-0',
-        title: 'Wallet updated successfully',
-        description: 'The wallet information has been updated.',
+        title: 'Sucesso!',
+        description: 'Dados da carteira atualizados com sucesso.',
       })
-    } catch (error) {
+    } catch (err) {
+      const error = err as { response?: { data?: { message?: string } } }
+      console.error('Error updating wallet:', error)
       toast({
         className: 'bg-red-500 border-0',
-        title: `${(error as any).response?.data?.message[0] ?? 'Unknown error'}`,
-        description: 'Please try again.',
+        title: 'Erro na atualização',
+        description:
+          error.response?.data?.message ||
+          'Erro ao atualizar dados da carteira.',
       })
     }
   }
@@ -206,7 +278,10 @@ export function EditCustomerModal({
               errors={errors}
               setName={setName}
               setEmail={setEmail}
-              setPhone={setPhone}
+              setPhone={(phone) => {
+                setPhone(phone)
+              }}
+              setPhoneCountry={setPhoneCountry}
               handleUpdateCustomer={handleUpdateCustomer}
             />
           </TabsContent>
