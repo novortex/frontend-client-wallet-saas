@@ -1,140 +1,79 @@
-// import { instance } from '@/config/api'
-// import {
-//   getAllAssetsWalletClient,
-//   updateCurrentAmount,
-//   getWalletHistoric, // Importar a função que queremos testar
-//   calculateRebalanceInWallet,
-// } from '@/services/walletService'
-// import {
-//   mockResponse,
-//   organizationUuid,
-//   walletUuid,
-// } from '../../mocks/wallet.mock'
-// import { mockHistoricEntries } from '@/tests/mocks/walletHistoric.mock'
+import { instance } from '@/config/api';
+import {
+  getWalletOrganization,
+  getInfosCustomer,
+  registerWalletForCustomer,
+  updateCurrentAmount,
+  requestCloseWallet,
+  getGraphData,
+  requestStartWallet,
+  calculateRebalanceInWallet,
+} from '../../../services/wallet/walleInfoService';
 
-// jest.mock('@/config/api', () => ({
-//   instance: {
-//     get: jest.fn(),
-//     put: jest.fn(),
-//     post: jest.fn(),
-//   },
-// }))
+jest.mock('@/config/api', () => ({
+  instance: {
+    get: jest.fn(),
+    post: jest.fn(),
+    put: jest.fn(),
+  },
+}));
 
-// describe('walletService', () => {
-//   afterEach(() => {
-//     jest.clearAllMocks()
-//   })
+describe('walleInfoService', () => {
+  it('should fetch wallet organization', async () => {
+    const mockData = [{ id: 1, name: 'Wallet Test' }];
+    (instance.get as jest.Mock).mockResolvedValue({ data: mockData });
+    const result = await getWalletOrganization();
+    expect(result).toEqual(mockData);
+    expect(instance.get).toHaveBeenCalledWith('wallet');
+  });
 
-//   describe('getAllAssetsWalletClient', () => {
-//     it('Given that the request to retrieve wallet assets is successful, When the getAllAssetsWalletClient function is called with valid organization and wallet UUIDs, Then it should return the wallet assets data as expected.', async () => {
-//       // Arrange
-//       ;(instance.get as jest.Mock).mockResolvedValue({
-//         data: mockResponse,
-//       })
+  it('should fetch customer information', async () => {
+    const mockData = { id: '123', name: 'John Doe' };
+    (instance.get as jest.Mock).mockResolvedValue({ data: mockData });
+    const result = await getInfosCustomer('123');
+    expect(result).toEqual(mockData);
+    expect(instance.get).toHaveBeenCalledWith('wallet/123/infos');
+  });
 
-//       // Act
-//       const data = await getAllAssetsWalletClient(organizationUuid, walletUuid)
+  it('should register a wallet for a customer', async () => {
+    const mockResponse = { success: true };
+    (instance.post as jest.Mock).mockResolvedValue({ data: mockResponse });
+    const result = await registerWalletForCustomer('123', 'USD', 1000, 10, true, 'Low', true, 5, 'cuid1', 'exchange1', 'manager1');
+    expect(result).toEqual(mockResponse);
+    expect(instance.post).toHaveBeenCalledWith('wallet', expect.any(Object));
+  });
 
-//       // Assert
-//       expect(data).toEqual(mockResponse)
-//       expect(instance.get).toHaveBeenCalledWith(
-//         `wallet/${walletUuid}/walletAssets`,
-//         {
-//           headers: { 'x-organization': organizationUuid },
-//         },
-//       )
-//     })
-//   })
+  it('should update current amount', async () => {
+    (instance.put as jest.Mock).mockResolvedValue({ data: {} });
+    await updateCurrentAmount('123');
+    expect(instance.put).toHaveBeenCalledWith('wallet/123/currentAmount', {});
+  });
 
-//   describe('updateCurrentAmount', () => {
-//     it('Given that the request to update the current amount is successful, When the updateCurrentAmount function is called with valid organization and wallet UUIDs, Then it should update the current amount without errors..', async () => {
-//       // Arrange
-//       ;(instance.put as jest.Mock).mockResolvedValue({})
+  it('should request close wallet', async () => {
+    (instance.put as jest.Mock).mockResolvedValue({ data: {} });
+    await requestCloseWallet('123', { customDate: '2023-01-01' });
+    expect(instance.put).toHaveBeenCalledWith('wallet/123/closeWallet', { customDate: '2023-01-01' });
+  });
 
-//       // Act
-//       await updateCurrentAmount(organizationUuid, walletUuid)
+  it('should fetch graph data', async () => {
+    const mockData = { graph: [] };
+    (instance.get as jest.Mock).mockResolvedValue({ data: mockData });
+    const result = await getGraphData('123');
+    expect(result).toEqual(mockData);
+    expect(instance.get).toHaveBeenCalledWith('wallet/123/graphData');
+  });
 
-//       // Assert
-//       expect(instance.put).toHaveBeenCalledWith(
-//         `wallet/${walletUuid}/currentAmount`,
-//         {},
-//         {
-//           headers: { 'x-organization': organizationUuid },
-//         },
-//       )
-//     })
+  it('should request start wallet', async () => {
+    (instance.put as jest.Mock).mockResolvedValue({ data: {} });
+    await requestStartWallet('123', { customDate: '2023-01-01' });
+    expect(instance.put).toHaveBeenCalledWith('wallet/123/startWallet', { customDate: '2023-01-01' });
+  });
 
-//     it('Given that the request to update the current amount fails, When the updateCurrentAmount function is called with valid organization and wallet UUIDs, Then it should throw an error indicating the request failure.', async () => {
-//       // Arrange
-//       const errorMessage = 'Network Error'
-//       ;(instance.put as jest.Mock).mockRejectedValue(new Error(errorMessage))
-
-//       // Act & Assert
-//       await expect(
-//         updateCurrentAmount(organizationUuid, walletUuid),
-//       ).rejects.toThrow(errorMessage)
-//       expect(instance.put).toHaveBeenCalledWith(
-//         `wallet/${walletUuid}/currentAmount`,
-//         {},
-//         {
-//           headers: { 'x-organization': organizationUuid },
-//         },
-//       )
-//     })
-//   })
-
-//   describe('getWalletHistoric', () => {
-//     it('Given that the request to retrieve wallet historic is successful, When the getWalletHistoric function is called with valid organization and wallet UUIDs, Then it should return the wallet historic data as expected.', async () => {
-//       // Arrange
-
-//       ;(instance.get as jest.Mock).mockResolvedValue({
-//         data: mockHistoricEntries,
-//       })
-
-//       // Act
-//       const data = await getWalletHistoric(organizationUuid, walletUuid)
-
-//       // Assert
-//       expect(data).toEqual(mockHistoricEntries)
-//       expect(instance.get).toHaveBeenCalledWith(`historic/${walletUuid}`, {
-//         headers: { 'x-organization': organizationUuid },
-//       })
-//     })
-
-//     it('Given that the request to retrieve wallet historic fails, When the getWalletHistoric function is called with valid organization and wallet UUIDs, Then it should throw an error indicating the request failure.', async () => {
-//       // Arrange
-//       const errorMessage = 'Network Error'
-//       ;(instance.get as jest.Mock).mockRejectedValue(new Error(errorMessage))
-
-//       // Act & Assert
-//       await expect(
-//         getWalletHistoric(organizationUuid, walletUuid),
-//       ).rejects.toThrow(errorMessage)
-//       expect(instance.get).toHaveBeenCalledWith(`historic/${walletUuid}`, {
-//         headers: { 'x-organization': organizationUuid },
-//       })
-//     })
-//   })
-
-//   it('Given that the API request to calculate rebalance is successful, When calculateRebalanceInWallet is called with valid wallet UUID and data, Then it should return the expected result data.', async () => {
-//     // Arrange
-//     const mockResponse = { data: { rebalance: 'calculated' } }
-
-//     // Mock 'post' instead of 'get'
-//     ;(instance.post as jest.Mock).mockResolvedValue(mockResponse)
-
-//     // Act
-//     const result = await calculateRebalanceInWallet(
-//       walletUuid,
-//       organizationUuid,
-//     )
-
-//     // Assert
-//     expect(result).toEqual(mockResponse.data)
-//     expect(instance.post).toHaveBeenCalledWith(
-//       `wallet/${walletUuid}/rebalanceWallet`,
-//       {},
-//       { headers: { 'x-organization': organizationUuid } },
-//     )
-//   })
-// })
+  it('should calculate rebalance in wallet', async () => {
+    const mockData = [{ asset: 'BTC', allocation: 50 }];
+    (instance.post as jest.Mock).mockResolvedValue({ data: mockData });
+    const result = await calculateRebalanceInWallet('123');
+    expect(result).toEqual(mockData);
+    expect(instance.post).toHaveBeenCalledWith('wallet/123/rebalanceWallet', {});
+  });
+});
