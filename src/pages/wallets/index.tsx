@@ -163,6 +163,7 @@ export function Clients() {
           placeholder="Search for ..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
+          data-testid='search-input'
         />
         <ClientsFilterModal handleApplyFilters={handleApplyFilters} />
       </div>
@@ -197,3 +198,4 @@ export function Clients() {
     </div>
   )
 }
+export { Clients as Wallets }
