@@ -1,23 +1,11 @@
 import { MoreVertical, Bell, LogOut } from 'lucide-react'
 import LogoOrg from '../../assets/image/vault-logo.png'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import {
-  ReactNode,
-  useContext,
-  useState,
-  createContext,
-  useRef,
-  useEffect,
-} from 'react'
+import { ReactNode, useContext, useState, createContext, useRef, useEffect } from 'react'
 import { useUserStore } from '@/store/user'
 import { useNavigate } from 'react-router-dom'
 import { useAuth0 } from '@auth0/auth0-react'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 
 type SideBarContextProps = {
   expanded: boolean
@@ -27,13 +15,7 @@ const SideBarContext = createContext<SideBarContextProps | null>({
   expanded: true,
 })
 
-export function SideBar({
-  children,
-  alerts,
-}: {
-  children: ReactNode
-  alerts: number
-}) {
+export function SideBar({ children, alerts }: { children: ReactNode; alerts: number }) {
   const [expanded, setExpanded] = useState(false)
   const userInfo = useUserStore((state) => state.user)
   const { logout } = useAuth0()
@@ -57,11 +39,7 @@ export function SideBar({
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        navRef.current &&
-        !navRef.current.contains(event.target as Node) &&
-        !dropdownRef.current
-      ) {
+      if (navRef.current && !navRef.current.contains(event.target as Node) && !dropdownRef.current) {
         setExpanded(false)
       }
     }
@@ -92,9 +70,7 @@ export function SideBar({
       >
         <div className="flex gap-5 items-center relative mt-5 mb-5">
           <img src={LogoOrg} className="w-16" alt="" />
-          <div
-            className={`overflow-hidden transition-all ${expanded ? 'w-20' : 'w-0'}`}
-          >
+          <div className={`overflow-hidden transition-all ${expanded ? 'w-20' : 'w-0'}`}>
             <h2 className="text-white font-semibold">Vault</h2>
             <p className="text-[#959CB6] text-sm">Dashboard</p>
           </div>
@@ -102,21 +78,11 @@ export function SideBar({
 
         <SideBarContext.Provider value={{ expanded }}>
           <ul className="flex-1 px-3">
-            <li
-              className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer transition-colors text-white mb-10`}
-            >
+            <li className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer transition-colors text-white mb-10`}>
               <Bell size={20} />
-              <p
-                className={`ml-3 font-normal overflow-hidden transition-all ${expanded ? 'w-52 ' : 'w-0'}`}
-              >
-                Notifications
-              </p>
+              <p className={`ml-3 font-normal overflow-hidden transition-all ${expanded ? 'w-52 ' : 'w-0'}`}>Notifications</p>
 
-              <div
-                className={`text-[#F2BE38] h-5 text-center overflow-hidden transition-all ${expanded ? 'w-5' : 'w-0'}`}
-              >
-                {alerts}
-              </div>
+              <div className={`text-[#F2BE38] h-5 text-center overflow-hidden transition-all ${expanded ? 'w-5' : 'w-0'}`}>{alerts}</div>
             </li>
 
             {children}
@@ -125,10 +91,7 @@ export function SideBar({
 
         <div className="flex p-3 bg-[#272727]">
           <Avatar>
-            <AvatarImage
-              src={userInfo?.picture || 'https://github.com/shadcn.png'}
-              alt={userInfo?.name || 'Guest'}
-            />
+            <AvatarImage src={userInfo?.picture || 'https://github.com/shadcn.png'} alt={userInfo?.name || 'Guest'} />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
           {expanded && (
@@ -162,25 +125,13 @@ export function SideBar({
                   {userInfo?.role || 'User'}
                 </span>
               </div>
-              <DropdownMenu
-                onOpenChange={handleDropdownOpenChange}
-                open={isDropdownOpen}
-              >
-                <DropdownMenuTrigger
-                  asChild
-                  className="flex justify-center items-center w-[25%] h-[100%]"
-                >
+              <DropdownMenu onOpenChange={handleDropdownOpenChange} open={isDropdownOpen}>
+                <DropdownMenuTrigger asChild className="flex justify-center items-center w-[25%] h-[100%]">
                   <button className="focus:outline-none">
-                    <MoreVertical
-                      color="white"
-                      className="cursor-pointer hover:text-yellow-300 transition-colors"
-                    />
+                    <MoreVertical color="white" className="cursor-pointer hover:text-yellow-300 transition-colors" />
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  align="end"
-                  className="w-40 bg-[#272727] border-[#171717]"
-                >
+                <DropdownMenuContent align="end" className="w-40 bg-[#272727] border-[#171717]">
                   <DropdownMenuItem
                     onClick={handleLogout}
                     className="text-[#959CB6] focus:text-black focus:bg-yellow-300 cursor-pointer flex items-center"
@@ -198,19 +149,7 @@ export function SideBar({
   )
 }
 
-export function SideBarItem({
-  icon,
-  text,
-  active,
-  alert,
-  href,
-}: {
-  icon: ReactNode
-  text: string
-  active?: boolean
-  alert?: boolean
-  href: string
-}) {
+export function SideBarItem({ icon, text, active, alert, href }: { icon: ReactNode; text: string; active?: boolean; alert?: boolean; href: string }) {
   const navigate = useNavigate()
   const context = useContext(SideBarContext)
 
@@ -226,14 +165,8 @@ export function SideBarItem({
       className={`relative flex items-center py-2 px-3 my-1 font-medium text-[#959CB6] rounded-md cursor-pointer transition-colors group hover:bg-[#F2BE38] hover:text-black ${!expanded ? 'justify-center' : ''} ${active ? 'bg-gradient-to-tr from-indigo-200 to-indigo-100 text-indigo-800' : ''}`}
     >
       {icon}
-      <span
-        className={`overflow-hidden transition-all ${expanded ? 'w-52 ml-3' : 'w-0'}`}
-      >
-        {text}
-      </span>
-      {alert && (
-        <div className={`absolute right-2 w-2 h-2 rounded bg-indigo-400`}></div>
-      )}
+      <span className={`overflow-hidden transition-all ${expanded ? 'w-52 ml-3' : 'w-0'}`}>{text}</span>
+      {alert && <div className={`absolute right-2 w-2 h-2 rounded bg-indigo-400`}></div>}
 
       {!expanded && (
         <div

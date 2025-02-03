@@ -1,27 +1,13 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import {
-  EyeOffIcon,
-  MoreHorizontal,
-  PencilIcon,
-  StepForward,
-} from 'lucide-react'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { EyeOffIcon, MoreHorizontal, PencilIcon, StepForward } from 'lucide-react'
 import CreateWalletModal from '../create-wallet-modal'
 import { DisableCustomerModal } from '@/pages/customers/disable-customer-modal'
 import { EditCustomerModal } from '@/pages/customers/edit-customer-modal'
 import { CustomersOrganization } from './columns'
 
-export default function CellActions({
-  rowInfos,
-}: {
-  rowInfos: CustomersOrganization
-}) {
+export default function CellActions({ rowInfos }: { rowInfos: CustomersOrganization }) {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [isDisableDialogOpen, setIsDisableDialogOpen] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -40,10 +26,7 @@ export default function CellActions({
           </Button>
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent
-          align="end"
-          className="bg-white rounded-lg w-32 p-0 border border-gray-200"
-        >
+        <DropdownMenuContent align="end" className="bg-white rounded-lg w-32 p-0 border border-gray-200">
           <DropdownMenuItem
             onClick={() => {
               setIsEditDialogOpen(true)

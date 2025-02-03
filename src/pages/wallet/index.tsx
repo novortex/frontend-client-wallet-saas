@@ -14,8 +14,7 @@ import { createColumns } from '@/components/custom/wallet/columns'
 
 export function Wallet() {
   const { walletUuid } = useParams()
-  const { data, infosWallet, loading, fetchData, calculateRebalance } =
-    useWallet(walletUuid as string)
+  const { data, infosWallet, loading, fetchData, calculateRebalance } = useWallet(walletUuid as string)
   const {
     isOperationModalOpen,
     openOperationModal,
@@ -28,12 +27,7 @@ export function Wallet() {
   } = useWalletModals()
 
   if (loading) return <Loading />
-  if (!infosWallet)
-    return (
-      <div className="text-white flex justify-center items-center h-screen">
-        Error: Wallet information is not available.
-      </div>
-    )
+  if (!infosWallet) return <div className="text-white flex justify-center items-center h-screen">Error: Wallet information is not available.</div>
   else {
     return (
       <div className="p-10">
@@ -63,22 +57,14 @@ export function Wallet() {
           openOrCloseModalRebalanced={openOrCloseModalRebalanced}
           fetchData={fetchData}
         />
-        <OperationsModal
-          isOpen={isOperationModalOpen}
-          onClose={closeOperationModal}
-          fetchData={fetchData}
-        />
+        <OperationsModal isOpen={isOperationModalOpen} onClose={closeOperationModal} fetchData={fetchData} />
         <ConfirmCloseWalletModal
           isOpen={isCloseWalletModalOpen}
           onClose={closeCloseWalletModal}
           startWallet={infosWallet.isClosed}
           fetchData={fetchData}
         />
-        <ConfirmRebalanceModal
-          isOpen={isModalRebalance}
-          onClose={openOrCloseModalRebalanced}
-          fetchData={fetchData}
-        />
+        <ConfirmRebalanceModal isOpen={isModalRebalance} onClose={openOrCloseModalRebalanced} fetchData={fetchData} />
       </div>
     )
   }

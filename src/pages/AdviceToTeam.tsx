@@ -13,9 +13,7 @@ export function AdviceToTeam() {
       {/* Texto "Trabalhar" abaixo do "ÃO" */}
       <h1 className="text-3xl font-medium mt-2">Trabalhar</h1>
       {/* Descrição abaixo de "VÃO Trabalhar" */}
-      <p className="mt-4 text-lg text-center break-words">
-        O trabalho é pelo computador
-      </p>
+      <p className="mt-4 text-lg text-center break-words">O trabalho é pelo computador</p>
     </div>
   )
 }

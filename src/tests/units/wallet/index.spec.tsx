@@ -8,12 +8,9 @@ import { WalletInfo } from '../../../pages/wallet/WalletInfo'
 
 const getByTextCaseInsensitive = (text: string) => {
   return screen.getByText((_content, element) => {
-    const hasText = (element: Element | null) =>
-      element?.textContent?.toLowerCase() === text.toLowerCase()
+    const hasText = (element: Element | null) => element?.textContent?.toLowerCase() === text.toLowerCase()
     const elementHasText = hasText(element)
-    const childrenDontHaveText = Array.from(element?.children || []).every(
-      (child) => !hasText(child),
-    )
+    const childrenDontHaveText = Array.from(element?.children || []).every((child) => !hasText(child))
     return elementHasText && childrenDontHaveText
   })
 }
@@ -38,21 +35,13 @@ describe('ActionButtons Component', () => {
             isClosed: false,
           }}
         />
-      </MemoryRouter>,
+      </MemoryRouter>
     )
 
-    expect(
-      screen.getByRole('button', { name: /rebalanced/i }),
-    ).toBeInTheDocument()
-    expect(
-      screen.getByRole('button', { name: /historic/i }),
-    ).toBeInTheDocument()
-    expect(
-      screen.getByRole('button', { name: /withdrawal \/ deposit/i }),
-    ).toBeInTheDocument()
-    expect(
-      screen.getByRole('button', { name: /start wallet|close wallet/i }),
-    ).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /rebalanced/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /historic/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /withdrawal \/ deposit/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /start wallet|close wallet/i })).toBeInTheDocument()
     expect(getByTextCaseInsensitive('test-owner-name')).toBeInTheDocument()
   })
 })
@@ -108,8 +97,6 @@ describe('TriggerSection Component', () => {
     render(<TriggerSection {...defaultProps} />)
 
     expect(getByTextCaseInsensitive('my triggers')).toBeInTheDocument()
-    expect(
-      screen.getByRole('button', { name: /trigger action/i }),
-    ).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /trigger action/i })).toBeInTheDocument()
   })
 })

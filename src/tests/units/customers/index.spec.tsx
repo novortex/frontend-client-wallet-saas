@@ -56,7 +56,7 @@
 //     render(<DisableCustomerModal isOpen={true} onOpenChange={() => {}} />)
 
 //     const buttons = screen.getAllByRole('button')
-//     const closeButton = buttons[0] 
+//     const closeButton = buttons[0]
 //     expect(closeButton).toBeInTheDocument()
 //     const disableButton = buttons[1]
 //     expect(disableButton).toBeInTheDocument()
@@ -67,7 +67,7 @@
 //     render(<DisableCustomerModal isOpen={true} onOpenChange={onOpenChange} />)
 
 //     const buttons = screen.getAllByRole('button')
-//     const closeButton = buttons[0] 
+//     const closeButton = buttons[0]
 //     await userEvent.click(closeButton)
 //     expect(onOpenChange).toHaveBeenCalledWith(false)
 //   })
@@ -137,31 +137,31 @@
 //           <ProfileTab {...mockProfileTabProps} />
 //         </Dialog>
 //       )
-  
+
 //       expect(screen.getByText(/name/i)).toBeInTheDocument()
 //       expect(screen.getByText(/email/i)).toBeInTheDocument()
 //       expect(screen.getByText('Phone')).toBeInTheDocument()
 //     })
-  
+
 //     it('calls setName when the name input is changed', async () => {
 //       render(
 //         <Dialog open={true} onOpenChange={() => {}}>
 //           <ProfileTab {...mockProfileTabProps} />
 //         </Dialog>
 //       )
-  
+
 //       const nameInput = screen.getByText(/name/i)
 //       await userEvent.type(nameInput, 'J')
 //       expect(mockProfileTabProps.setName).toHaveBeenCalledWith('John DoeJ') // testa se o input está vindo com o dado correto e se é possível escrever, ao mesmo tempo
 //     })
-  
+
 //     // it('calls handleUpdateCustomer when Save Profile is clicked', async () => {
 //     //   render(
 //     //     <Dialog open={true} onOpenChange={() => {}}>
 //     //       <ProfileTab {...mockProfileTabProps} />
 //     //     </Dialog>
 //     //   )
-  
+
 //     //   await userEvent.click(screen.getByText(/save profile/i))
 //     //   expect(mockProfileTabProps.handleUpdateCustomer).toHaveBeenCalled()
 //     // })
@@ -171,12 +171,12 @@
 // describe('RegisterCustomerModal', () => {
 //     it('renders the name, email, and phone inputs', () => {
 //       render(<RegisterCustomerModal isOpen={true} onClose={() => {}} />)
-  
+
 //       expect(screen.getByPlaceholderText(/name \*/i)).toBeInTheDocument()
 //       expect(screen.getByPlaceholderText(/email \*/i)).toBeInTheDocument()
-  
+
 //       const textboxes = screen.getAllByRole('textbox')
-//       const phoneInput = textboxes[textboxes.length - 1] 
+//       const phoneInput = textboxes[textboxes.length - 1]
 //       expect(phoneInput).toBeInTheDocument()
 //     })
 //   })
@@ -260,7 +260,7 @@
 //       screen.getByText(/please create a wallet first before filling these details\./i)
 //     ).toBeInTheDocument()
 //   })
-  
+
 //   describe('WalletTab Component', () => {
 //     it('checks if the Performance Fee input has the correct initial value', async () => {
 //       render(
@@ -268,23 +268,23 @@
 //           <WalletTab {...mockWalletTabProps} />
 //         </Dialog>
 //       )
-  
+
 //       const performanceFeeInput = screen.getByText(/performance fee/i)
 //         .nextElementSibling as HTMLInputElement
-  
+
 //       expect(performanceFeeInput).toHaveValue('10')
 //     })
-  
+
 //     it('allows clearing and updating the Performance Fee input', async () => {
 //       render(
 //         <Dialog open={true} onOpenChange={() => {}}>
 //           <WalletTab {...mockWalletTabProps} />
 //         </Dialog>
 //       )
-  
+
 //       const performanceFeeInput = screen.getByText(/performance fee/i)
 //         .nextElementSibling as HTMLInputElement
-  
+
 //       await userEvent.clear(performanceFeeInput)
 //       waitFor(() => {
 //       userEvent.type(performanceFeeInput, '20')
@@ -292,7 +292,6 @@
 //       })
 //     })
 //   })
-  
 
 //   it('calls setInitialFeeIsPaid when the "Initial Fee is paid?" checkbox is clicked', async () => {
 //     render(
@@ -303,7 +302,7 @@
 
 //     const checkboxes = screen.getAllByRole('checkbox')
 //     const initialFeeCheckbox = checkboxes[1]
-    
+
 //     await userEvent.click(initialFeeCheckbox)
 
 //     expect(mockWalletTabProps.setInitialFeeIsPaid).toHaveBeenCalledWith(false)
@@ -318,12 +317,9 @@
 
 //     const checkboxes = screen.getAllByRole('checkbox')
 //     const contractCheckbox = checkboxes[0]
-    
+
 //     await userEvent.click(contractCheckbox)
 
 //   expect(mockWalletTabProps.setContractChecked).toHaveBeenCalledWith(false)
 //     })
 // })
-
-
-

@@ -1,11 +1,5 @@
 import { Button } from '@/components/ui/button'
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { StepForwardIcon, User } from 'lucide-react'
 import { buildStyles, CircularProgressbar } from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist/styles.css'
@@ -24,10 +18,7 @@ interface RegisterCustomerModalProps {
   onClose: () => void
 }
 
-export default function RegisterCustomerModal({
-  isOpen,
-  onClose,
-}: RegisterCustomerModalProps) {
+export default function RegisterCustomerModal({ isOpen, onClose }: RegisterCustomerModalProps) {
   const [percentage, setPercentage] = useState(0)
   const [phone, setPhone] = useState('')
   const [phoneCountry, setPhoneCountry] = useState<CountryData>({
@@ -46,10 +37,7 @@ export default function RegisterCustomerModal({
     email: '',
     phone: '',
   })
-  const [setSignal, signal] = useSignalStore((state) => [
-    state.setSignal,
-    state.signal,
-  ])
+  const [setSignal, signal] = useSignalStore((state) => [state.setSignal, state.signal])
 
   const { toast } = useToast()
 
@@ -65,21 +53,14 @@ export default function RegisterCustomerModal({
 
     const normalizedName = inputValues.name.replace(/\s+/g, ' ').trim()
 
-    if (
-      !/^[A-ZÀ-ÖØ-Ý][a-zà-öø-ÿ]{1,}(?:\s[A-ZÀ-ÖØ-Ý][a-zà-öø-ÿ]{1,})+$/.test(
-        normalizedName,
-      ) ||
-      /\s$/.test(inputValues.name)
-    ) {
-      newErrors.name =
-        'Name must include both first and last names, each starting with a capital letter and containing at least two letters.'
+    if (!/^[A-ZÀ-ÖØ-Ý][a-zà-öø-ÿ]{1,}(?:\s[A-ZÀ-ÖØ-Ý][a-zà-öø-ÿ]{1,})+$/.test(normalizedName) || /\s$/.test(inputValues.name)) {
+      newErrors.name = 'Name must include both first and last names, each starting with a capital letter and containing at least two letters.'
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inputValues.email)) {
       newErrors.email = 'Invalid email format.'
     }
     if (!/^\d+$/.test(phone.replace(/\D/g, '')) || phone.trim().length < 13) {
-      newErrors.phone =
-        'The phone number must contain only numbers and include the country code.'
+      newErrors.phone = 'The phone number must contain only numbers and include the country code.'
     }
 
     setErrors(newErrors)
@@ -88,10 +69,7 @@ export default function RegisterCustomerModal({
 
   const formatPhoneNumber = (phone: string) => {
     try {
-      const phoneNumber = parsePhoneNumber(
-        phone,
-        phoneCountry.countryCode.toUpperCase() as CountryCode,
-      )
+      const phoneNumber = parsePhoneNumber(phone, phoneCountry.countryCode.toUpperCase() as CountryCode)
 
       return phoneNumber.formatInternational()
     } catch (error) {
@@ -124,11 +102,7 @@ export default function RegisterCustomerModal({
     const formattedPhone = formatPhoneNumber(phone)
     console.log(formattedPhone)
 
-    const customer = await registerNewCustomer(
-      name as string,
-      email as string,
-      formattedPhone,
-    )
+    const customer = await registerNewCustomer(name as string, email as string, formattedPhone)
 
     if (!customer) {
       setInputValues((item) => ({
@@ -215,9 +189,7 @@ export default function RegisterCustomerModal({
                 onChange={handleInputChange}
                 ref={nameRef}
               />
-              {errors.name && (
-                <Label className="w-2/3 text-red-500">{errors.name}</Label>
-              )}
+              {errors.name && <Label className="w-2/3 text-red-500">{errors.name}</Label>}
             </div>
 
             <div className="h-full w-[45%] flex flex-col items-center justify-center text-center gap-3">
@@ -229,9 +201,7 @@ export default function RegisterCustomerModal({
                 onChange={handleInputChange}
                 ref={emailRef}
               />
-              {errors.email && (
-                <Label className="w-2/3 text-red-500">{errors.email}</Label>
-              )}
+              {errors.email && <Label className="w-2/3 text-red-500">{errors.email}</Label>}
             </div>
 
             <div className="h-full w-[30%] flex flex-col items-center justify-center text-center gap-3">
@@ -250,30 +220,19 @@ export default function RegisterCustomerModal({
                 onChange={(phone, country) => {
                   // eslint-disable-next-line no-unused-expressions
                   setPhone(phone)
-                  if (
-                    country &&
-                    'name' in country &&
-                    'dialCode' in country &&
-                    'countryCode' in country &&
-                    'format' in country
-                  ) {
+                  if (country && 'name' in country && 'dialCode' in country && 'countryCode' in country && 'format' in country) {
                     setPhoneCountry(country as CountryData)
                   }
                 }}
               />
-              {errors.phone && (
-                <Label className="w-2/3 text-red-500">{errors.phone}</Label>
-              )}
+              {errors.phone && <Label className="w-2/3 text-red-500">{errors.phone}</Label>}
             </div>
           </div>
 
           <div className="w-[30%]"></div>
         </div>
         <DialogFooter className="flex justify-end items-end">
-          <Button
-            className="bg-[#1877F2] w-1/6 hover:bg-blue-600 p-5 flex items-center justify-center gap-3"
-            onClick={handleRegisterCustomer}
-          >
+          <Button className="bg-[#1877F2] w-1/6 hover:bg-blue-600 p-5 flex items-center justify-center gap-3" onClick={handleRegisterCustomer}>
             <StepForwardIcon />
             Finish
           </Button>
