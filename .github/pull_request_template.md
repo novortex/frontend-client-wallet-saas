@@ -8,9 +8,6 @@
 - [ ] **Documentation / Refactoring / Dependency Upgrade**  
 *Revisions that do not affect business logic, such as refactoring existing code, improving documentation clarity, or updating dependencies.*
 
-
-<br>
-
 ---
 
 ### **Description**
@@ -18,9 +15,6 @@
 
 <!-- write right below this line -->
 
-
-
-<br>
 
 ---
 
@@ -32,9 +26,6 @@
 - [ ] **Self-Review Conducted**  
   *I have checked my code against the project’s standards and best practices, removing any unused parts or extraneous comments.*  
 
-
-<br>
-
 ---
 
 ### **Code Review Checklist**
@@ -44,9 +35,6 @@
   *No commented-out code or unnecessary debugging statements remain.*  
 - [ ] **Documentation Updates**  
   *Any newly introduced or modified functionality is reflected in the project documentation or README, where applicable.*
-
-
-<br>
 
 ---
 
