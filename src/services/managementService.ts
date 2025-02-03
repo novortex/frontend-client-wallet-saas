@@ -10,9 +10,11 @@ export async function getAllAssetsOrg() {
   try {
     const result =
       await instance.get<TAssetsOrganizationResponse[]>('management/assets')
-    return result.data
+
+    return result.data;
   } catch (error) {
     console.log(error)
+    throw error;
   }
 }
 

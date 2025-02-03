@@ -11,14 +11,14 @@ import { Loading } from '@/components/custom/loading'
 
 export function Clients() {
   const [clients, setClients] = useState<TClientInfosResponse[]>([])
-  const [filteredClients, setFilteredClients] = useState<
-    TClientInfosResponse[]
-  >([])
+  const [filteredClients, setFilteredClients] = useState<TClientInfosResponse[]>([])
   const [searchTerm, setSearchTerm] = useState('')
   const [isLoading, setIsLoading] = useState(true)
   const [filters, setFilters] = useState({
     selectedManagers: [] as string[],
     selectedWalletTypes: [] as string[],
+    selectedAssets: [] as string[],
+    filterDelayed: false,
     filterUnbalanced: false,
     filterNewest: false,
     filterOldest: false,
@@ -64,6 +64,7 @@ export function Clients() {
     const {
       selectedManagers,
       selectedWalletTypes,
+      selectedAssets,
       filterUnbalanced,
       filterNewest,
       filterOldest,
@@ -75,6 +76,7 @@ export function Clients() {
 
     const filtered = clients
       .filter((client) => {
+
         const nameMatches = client.infosClient.name
           .toLowerCase()
           .includes(searchTerm.toLowerCase())
@@ -107,34 +109,28 @@ export function Clients() {
           selectedBenchmark.length === 0 ||
           selectedBenchmark.includes(client.benchmark)
 
-        return (
-          nameMatches &&
-          managerMatches &&
-          unbalancedMatches &&
-          walletTypeMatches &&
-          exchangeMatches &&
-          benchMarkMatches
-        )
+        const assetsMatch =
+          selectedAssets.length === 0 ||
+          selectedAssets.every((assetUuid) => client.assetsUuid.includes(assetUuid));
+
+
+        console.log('assets uuids', client.assetsUuid)
+        console.log('selectedAssets', selectedAssets)
+        console.log('assetsMatch', assetsMatch)
+        return nameMatches && managerMatches && unbalancedMatches && walletTypeMatches && exchangeMatches && benchMarkMatches && assetsMatch
       })
       .sort((a, b) => {
-        if (filterNewest)
-          return new Date(b.createAt).getTime() - new Date(a.createAt).getTime()
-        if (filterOldest)
-          return new Date(a.createAt).getTime() - new Date(b.createAt).getTime()
-        if (filterNearestRebalancing)
-          return (
-            new Date(a.nextBalance).getTime() -
-            new Date(b.nextBalance).getTime()
-          )
-        if (filterFurtherRebalancing)
-          return (
-            new Date(b.nextBalance).getTime() -
-            new Date(a.nextBalance).getTime()
-          )
+        if (filterNewest) return new Date(b.createAt).getTime() - new Date(a.createAt).getTime()
+        if (filterOldest) return new Date(a.createAt).getTime() - new Date(b.createAt).getTime()
+        if (filterNearestRebalancing) return new Date(a.nextBalance).getTime() - new Date(b.nextBalance).getTime()
+        if (filterFurtherRebalancing) return new Date(b.nextBalance).getTime() - new Date(a.nextBalance).getTime()
         return 0
       })
 
     setFilteredClients(filtered)
+    console.log('clientes filtrados', filteredClients)
+    // console.log(filteredClients)
+
   }, [clients, filters, searchTerm])
 
   useEffect(() => {

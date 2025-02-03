@@ -25,16 +25,17 @@ export type TClientInfosResponse = {
   }
   lastBalance: string
   riskProfile:
-    | 'STANDARD'
-    | 'SUPER_LOW_RISK'
-    | 'LOW_RISK'
-    | 'HIGH_RISK'
-    | 'SUPER_HIGH_RISK'
+  | 'STANDARD'
+  | 'SUPER_LOW_RISK'
+  | 'LOW_RISK'
+  | 'HIGH_RISK'
+  | 'SUPER_HIGH_RISK'
 
   exchange: string
   nextBalance: string
   benchmark: string
   createAt: string
+  assetsUuid: string[]
 }
 
 export type TCustomersOrganization = {

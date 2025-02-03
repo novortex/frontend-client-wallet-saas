@@ -19,12 +19,14 @@ import {
   getBenchmarkOptions,
   getExchangesDisposables,
 } from '@/services/managementService'
-import { getAllManagersOnOrganization } from '@/services/managementService'
+import { getAllManagersOnOrganization, getAllAssetsOrg } from '@/services/managementService'
+import { AssetsFilter } from './AssetsFilter'
 
 type ApplyFiltersProps = {
   handleApplyFilters: (filters: {
     selectedManagers: string[]
     selectedWalletTypes: string[]
+    selectedAssets: string[]
     filterDelayed: boolean
     filterUnbalanced: boolean
     filterNewest: boolean
@@ -36,15 +38,15 @@ type ApplyFiltersProps = {
 
 export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
   const [isOpen, setIsOpen] = useState(false)
+  const [assets, setAssets] = useState<{ uuid: string, name: string }[]>([])
+  const [selectedAssets, setSelectedAssets] = useState<{ uuid: string, name: string }[]>([]);
   const [selectedManagers, setSelectedManagers] = useState<string[]>([])
   const [selectedWalletTypes, setSelectedWalletTypes] = useState<string[]>([])
   const [selectedBenchmark, setSelectedBenchmark] = useState<string[]>([])
   const [selectedExchanges, setSelectedExchanges] = useState<string[]>([])
   const [managers, setManagers] = useState<{ name: string }[]>([])
   const [benchmarks, setBenchmarks] = useState<{ name: string }[]>([])
-  const [availableExchanges, setAvailableExchanges] = useState<
-    { name: string }[]
-  >([])
+  const [availableExchanges, setAvailableExchanges] = useState<{ name: string }[]>([])
   const [filters, setFilters] = useState({
     filterDelayed: false,
     filterUnbalanced: false,
@@ -65,29 +67,44 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
       setManagers(result.map((item) => ({ name: item.name })))
     }
 
+    const fetchAssets = async () => {
+      try {
+        const result = await getAllAssetsOrg()
+        console.log('result get available assets: ', result)
+
+        setAssets(result.map((item) => ({ uuid: item.uuid, name: item.name })));
+      } catch (error) {
+        console.error('Error fetching assets:', error)
+      }
+    }
+
     const fetchExchanges = async () => {
       const result = await getExchangesDisposables()
       setAvailableExchanges(
-        result?.map((exchange) => ({
-          name: exchange.name,
-        })) || [],
+        result?.map((exchange) => ({ name: exchange.name })) || [],
       )
     }
 
     fetchBenchmarks()
     fetchManagers()
     fetchExchanges()
+    fetchAssets()
+
   }, [])
+
+  useEffect(() => {
+    console.log("Updated assets:", assets);
+  }, [assets]); // Runs only when `assets` state updates
 
   const applyFilters = () => {
     handleApplyFilters({
+      selectedAssets: selectedAssets.map((asset) => asset.uuid),
       selectedManagers,
       selectedWalletTypes,
       selectedExchanges,
       selectedBenchmark,
       ...filters,
     })
-
     setIsOpen(false)
   }
 
@@ -106,6 +123,14 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
   const handleSelectManager = (name: string) =>
     setSelectedManagers((prev) => [...prev, name])
 
+  const handleSelectAsset = (asset: { uuid: string; name: string }) => {
+    setSelectedAssets((prev) => [...prev, asset]);
+  };
+
+  const handleRemoveAsset = (assetUuid: string) => {
+    setSelectedAssets((prev) => prev.filter((asset) => asset.uuid !== assetUuid));
+  };
+
   const handleRemoveManager = (name: string) =>
     setSelectedManagers((prev) => prev.filter((manager) => manager !== name))
 
@@ -113,9 +138,7 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
     setSelectedBenchmark((prev) => [...prev, name])
   }
   const handleRemoveBenchmark = (name: string) => {
-    setSelectedBenchmark((prev) =>
-      prev.filter((benchmark) => benchmark !== name),
-    )
+    setSelectedBenchmark((prev) => prev.filter((benchmark) => benchmark !== name))
   }
 
   const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1)
@@ -125,6 +148,7 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
     setSelectedWalletTypes([])
     setSelectedBenchmark([])
     setSelectedExchanges([])
+    setSelectedAssets([])
     setFilters({
       filterDelayed: false,
       filterUnbalanced: false,
@@ -138,21 +162,13 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button
-          type="button"
-          variant="outline"
-          className="gap-2 hover:bg-gray-700"
-        >
+        <Button type="button" variant="outline" className="gap-2 hover:bg-gray-700">
           Filters
         </Button>
       </DialogTrigger>
-      <DialogContent
-        className="bg-[#131313] h-[90vh] max-h-[90vh] overflow-y-auto"
-      >
+      <DialogContent className="bg-[#131313] h-[90vh] max-h-[90vh] overflow-y-auto">
         <DialogHeader className="text-[#fff]">
-          <DialogTitle className="text-2xl text-center">
-            Filter Customer
-          </DialogTitle>
+          <DialogTitle className="text-2xl text-center">Filter Customer</DialogTitle>
         </DialogHeader>
 
         <WalletTypeFilter
@@ -184,9 +200,7 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
           }
         />
 
-        <AlertsFilter
-          setFilterDelayed={(value) => updateFilter('filterDelayed', value)}
-        />
+        <AlertsFilter setFilterDelayed={(value) => updateFilter('filterDelayed', value)} />
 
         <ManagerFilter
           managers={managers}
@@ -207,6 +221,13 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
           selectedBenchmarks={selectedBenchmark}
           handleSelectBenchmark={handleSelectBenchmark}
           handleRemoveBenchmark={handleRemoveBenchmark}
+        />
+
+        <AssetsFilter
+          assets={assets}
+          selectedAssets={selectedAssets}
+          handleSelectAsset={handleSelectAsset}
+          handleRemoveAsset={handleRemoveAsset}
         />
 
         <DialogFooter>
