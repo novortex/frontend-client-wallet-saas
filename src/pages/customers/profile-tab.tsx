@@ -1,3 +1,5 @@
+import PhoneInput, { CountryData } from 'react-phone-input-2'
+import 'react-phone-input-2/lib/style.css'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
@@ -16,6 +18,7 @@ interface ProfileTabProps {
   setName: (value: string) => void
   setEmail: (value: string) => void
   setPhone: (value: string) => void
+  setPhoneCountry: (country: CountryData) => void
   handleUpdateCustomer: () => Promise<void>
 }
 
@@ -27,6 +30,7 @@ export function ProfileTab({
   setName,
   setEmail,
   setPhone,
+  setPhoneCountry,
   handleUpdateCustomer,
 }: ProfileTabProps) {
   return (
@@ -37,7 +41,7 @@ export function ProfileTab({
             Name
           </Label>
           <Input
-            className="bg-[#1C1C1C] border-[#323232] text-white focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+            className="bg-[#131313] border-[#323232] text-[#959CB6] w-full"
             type="text"
             id="Name"
             value={name}
@@ -45,9 +49,7 @@ export function ProfileTab({
             placeholder="Name"
             required
           />
-          {errors.name && (
-            <p className="text-red-500 text-sm mt-1">{errors.name}</p>
-          )}
+          {errors.name && <Label className="text-red-500">{errors.name}</Label>}
         </div>
 
         <div>
@@ -55,7 +57,7 @@ export function ProfileTab({
             Email
           </Label>
           <Input
-            className="bg-[#1C1C1C] border-[#323232] text-white focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+            className="bg-[#131313] border-[#323232] text-[#959CB6] w-full"
             type="email"
             id="email"
             value={email}
@@ -64,7 +66,7 @@ export function ProfileTab({
             required
           />
           {errors.email && (
-            <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+            <Label className="text-red-500">{errors.email}</Label>
           )}
         </div>
 
@@ -72,17 +74,34 @@ export function ProfileTab({
           <Label className="ml-2" htmlFor="Phone">
             Phone
           </Label>
-          <Input
-            className="bg-[#1C1C1C] border-[#323232] text-white focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0"
-            type="tel"
-            id="Phone"
+          <PhoneInput
+            country={'br'}
             value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            placeholder="Phone"
-            required
+            onChange={(phone, country) => {
+              setPhone(phone)
+              if (
+                country &&
+                'name' in country &&
+                'dialCode' in country &&
+                'countryCode' in country &&
+                'format' in country
+              ) {
+                setPhoneCountry(country as CountryData)
+              }
+            }}
+            containerClass="flex bg-[#131313] border-[#323232] rounded-md border"
+            inputClass="bg-[#131313] border-none text-[#959CB6]"
+            dropdownClass="text-black"
+            searchClass="bg-[#131313] border-[#323232] text-[#959CB6]"
+            inputStyle={{
+              backgroundColor: '#131313',
+              color: '#959CB6',
+              border: 'none',
+              width: '100%',
+            }}
           />
           {errors.phone && (
-            <p className="text-red-500 text-sm mt-1">{errors.phone}</p>
+            <Label className="text-red-500">{errors.phone}</Label>
           )}
         </div>
       </div>

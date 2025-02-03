@@ -16,7 +16,7 @@ import {
   PencilIcon,
   TriangleAlert,
 } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { Button } from '../../ui/button'
 import {
   Dialog,
   DialogClose,

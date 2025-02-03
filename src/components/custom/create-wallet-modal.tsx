@@ -23,8 +23,8 @@ import { useEffect, useState } from 'react'
 import RelateClientExchangeModal from './relate-client-exchange-modal'
 import { useRegisterWallet } from '@/store/registerWallet'
 import { useManagerOrganization } from '@/store/managers_benckmark_exchanges'
-import { CustomersOrganization } from './tables/customers/columns'
 import { getAllFiatCurrencies } from '@/services/managementService'
+import { CustomersOrganization } from './customers/columns'
 
 interface CreateWalletModalProps {
   isOpen: boolean
