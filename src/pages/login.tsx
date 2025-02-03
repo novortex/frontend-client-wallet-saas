@@ -3,8 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
 
 export function Login() {
-  const { loginWithRedirect, isAuthenticated } =
-    useAuth0()
+  const { loginWithRedirect, isAuthenticated } = useAuth0()
   const navigate = useNavigate()
 
   useEffect(() => {

@@ -15,57 +15,38 @@ export type Filters = {
 }
 
 export function History() {
-  const [historic, setHistoric] = useState<
-    HistoricEntry[]
-  >([])
+  const [historic, setHistoric] = useState<HistoricEntry[]>([])
   const { walletUuid } = useParams()
-  const [filters, setFilters] = useState<Filters>(
-    {
-      eventTypes: [],
-      dateRange: {
-        from: undefined,
-        to: undefined,
-      },
-    }
-  )
+  const [filters, setFilters] = useState<Filters>({
+    eventTypes: [],
+    dateRange: { from: undefined, to: undefined },
+  })
 
-  const filteredHistoric = historic.filter(
-    (entry) => {
-      const matchesEventType =
-        filters.eventTypes.length === 0 ||
-        filters.eventTypes.includes(
-          entry.historyType
-        )
+  const filteredHistoric = historic.filter((entry) => {
+    const matchesEventType =
+      filters.eventTypes.length === 0 ||
+      filters.eventTypes.includes(entry.historyType)
 
-      const matchesDateRange =
-        (!filters.dateRange?.from ||
-          new Date(entry.createAt) >=
-            filters.dateRange.from) &&
-        (!filters.dateRange?.to ||
-          new Date(entry.createAt) <=
-            filters.dateRange.to)
+    const matchesDateRange =
+      (!filters.dateRange?.from ||
+        new Date(entry.createAt) >= filters.dateRange.from) &&
+      (!filters.dateRange?.to ||
+        new Date(entry.createAt) <= filters.dateRange.to)
 
-      return matchesEventType && matchesDateRange
-    }
-  )
+    return matchesEventType && matchesDateRange
+  })
 
   useEffect(() => {
     async function fetchHistoric() {
       if (walletUuid) {
         try {
-          const data =
-            await getWalletHistoric(walletUuid)
+          const data = await getWalletHistoric(walletUuid)
           setHistoric(data)
         } catch (error) {
-          console.error(
-            'Failed to fetch historic:',
-            error
-          )
+          console.error('Failed to fetch historic:', error)
         }
       } else {
-        console.error(
-          'organizationUuid or walletUuid is undefined'
-        )
+        console.error('organizationUuid or walletUuid is undefined')
       }
     }
 
@@ -75,9 +56,7 @@ export function History() {
   return (
     <div className="p-10">
       <div className="mb-10 flex items-center justify-between">
-        <BreadCrumbHistoryLinks
-          walletUuid={walletUuid}
-        />
+        <BreadCrumbHistoryLinks walletUuid={walletUuid} />
         <SwitchTheme />
       </div>
       <div className="flex items-center justify-between mb-10">
@@ -88,9 +67,7 @@ export function History() {
         />
         <div className="flex gap-5">
           <FilterModal
-            onApplyFilters={(
-              newFilters: Filters
-            ) => setFilters(newFilters)}
+            onApplyFilters={(newFilters: Filters) => setFilters(newFilters)}
             currentFilters={filters}
           />
         </div>
@@ -106,37 +83,17 @@ export function History() {
               user={entry.user.name}
               operationType={entry.historyType}
               asset={entry.data.asset}
-              date={new Date(
-                entry.createAt
-              ).toLocaleDateString()}
-              hour={new Date(
-                entry.createAt
-              ).toLocaleTimeString()}
+              date={new Date(entry.createAt).toLocaleDateString()}
+              hour={new Date(entry.createAt).toLocaleTimeString()}
               assetIcon={entry.data.icon}
               oldValue={entry.data.before}
               newValue={entry.data.after}
-              addAssetQuantity={
-                entry.data.quantity
-              }
-              addAssetAllocation={
-                entry.data.target_allocation
-              }
-              depositValue={
-                entry.data
-                  .deposit_amount_in_organization_fiat
-              }
-              withdrawalValue={
-                entry.data
-                  .withdrawal_value_in_organization_fiat
-              }
-              initialValue={
-                entry.data
-                  .invested_amount_in_organization_fiat
-              }
-              closeValue={
-                entry.data
-                  .close_wallet_value_in_organization_fiat
-              }
+              addAssetQuantity={entry.data.quantity}
+              addAssetAllocation={entry.data.target_allocation}
+              depositValue={entry.data.deposit_amount_in_organization_fiat}
+              withdrawalValue={entry.data.withdrawal_value_in_organization_fiat}
+              initialValue={entry.data.invested_amount_in_organization_fiat}
+              closeValue={entry.data.close_wallet_value_in_organization_fiat}
             />
           ))}
       </div>

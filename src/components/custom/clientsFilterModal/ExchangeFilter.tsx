@@ -15,19 +15,11 @@ export function ExchangeFilter({
 }: {
   exchanges: { name: string }[]
   selectedExchanges: string[]
-  handleSelectExchange: (
-    exchangeName: string
-  ) => void
-  handleRemoveExchange: (
-    exchangeName: string
-  ) => void
+  handleSelectExchange: (exchangeName: string) => void
+  handleRemoveExchange: (exchangeName: string) => void
 }) {
-  const handleExchangeSelection = (
-    exchangeName: string
-  ) => {
-    if (
-      !selectedExchanges.includes(exchangeName)
-    ) {
+  const handleExchangeSelection = (exchangeName: string) => {
+    if (!selectedExchanges.includes(exchangeName)) {
       handleSelectExchange(exchangeName)
     }
   }
@@ -40,34 +32,27 @@ export function ExchangeFilter({
       <div className="h-[80%] w-full flex flex-col items-center justify-center gap-4">
         <div className="h-full w-[100%] flex justify-center gap-2 items-center">
           <div className="h-full w-[10%] flex justify-center items-center">
-            <BadgeCent
-              className="text-[#D1AB00]"
-              size="ls"
-            />
+            <BadgeCent className="text-[#D1AB00]" size="ls" />
           </div>
           <div className="w-full flex items-center justify-start">
             <Select
               value={selectedExchanges.join(', ')}
-              onValueChange={
-                handleExchangeSelection
-              }
+              onValueChange={handleExchangeSelection}
             >
               <SelectTrigger className="w-full bg-[#131313] border-[#323232] text-[#fff]">
                 <SelectValue placeholder="Select exchange" />
               </SelectTrigger>
               <SelectContent className="bg-[#131313] border-2 border-[#323232]">
                 {exchanges.length > 0 ? (
-                  exchanges.map(
-                    (exchange, index) => (
-                      <SelectItem
-                        key={index}
-                        value={exchange.name}
-                        className="bg-[#131313] border-0 focus:bg-[#252525] focus:text-white text-white"
-                      >
-                        {exchange.name}
-                      </SelectItem>
-                    )
-                  )
+                  exchanges.map((exchange, index) => (
+                    <SelectItem
+                      key={index}
+                      value={exchange.name}
+                      className="bg-[#131313] border-0 focus:bg-[#252525] focus:text-white text-white"
+                    >
+                      {exchange.name}
+                    </SelectItem>
+                  ))
                 ) : (
                   <SelectItem
                     disabled
@@ -90,9 +75,7 @@ export function ExchangeFilter({
               >
                 <div
                   className="cursor-pointer mr-2"
-                  onClick={() =>
-                    handleRemoveExchange(exchange)
-                  }
+                  onClick={() => handleRemoveExchange(exchange)}
                 >
                   X
                 </div>

@@ -34,34 +34,17 @@ type ApplyFiltersProps = {
   }) => void
 }
 
-export function ClientsFilterModal({
-  handleApplyFilters,
-}: ApplyFiltersProps) {
+export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
   const [isOpen, setIsOpen] = useState(false)
-  const [selectedManagers, setSelectedManagers] =
-    useState<string[]>([])
-  const [
-    selectedWalletTypes,
-    setSelectedWalletTypes,
-  ] = useState<string[]>([])
-  const [
-    selectedBenchmark,
-    setSelectedBenchmark,
-  ] = useState<string[]>([])
-  const [
-    selectedExchanges,
-    setSelectedExchanges,
-  ] = useState<string[]>([])
-  const [managers, setManagers] = useState<
+  const [selectedManagers, setSelectedManagers] = useState<string[]>([])
+  const [selectedWalletTypes, setSelectedWalletTypes] = useState<string[]>([])
+  const [selectedBenchmark, setSelectedBenchmark] = useState<string[]>([])
+  const [selectedExchanges, setSelectedExchanges] = useState<string[]>([])
+  const [managers, setManagers] = useState<{ name: string }[]>([])
+  const [benchmarks, setBenchmarks] = useState<{ name: string }[]>([])
+  const [availableExchanges, setAvailableExchanges] = useState<
     { name: string }[]
   >([])
-  const [benchmarks, setBenchmarks] = useState<
-    { name: string }[]
-  >([])
-  const [
-    availableExchanges,
-    setAvailableExchanges,
-  ] = useState<{ name: string }[]>([])
   const [filters, setFilters] = useState({
     filterDelayed: false,
     filterUnbalanced: false,
@@ -74,30 +57,20 @@ export function ClientsFilterModal({
   useEffect(() => {
     const fetchBenchmarks = async () => {
       const result = await getBenchmarkOptions()
-      setBenchmarks(
-        result.map((benchmark) => ({
-          name: benchmark.name,
-        }))
-      )
+      setBenchmarks(result.map((benchmark) => ({ name: benchmark.name })))
     }
 
     const fetchManagers = async () => {
-      const result =
-        await getAllManagersOnOrganization()
-      setManagers(
-        result.map((item) => ({
-          name: item.name,
-        }))
-      )
+      const result = await getAllManagersOnOrganization()
+      setManagers(result.map((item) => ({ name: item.name })))
     }
 
     const fetchExchanges = async () => {
-      const result =
-        await getExchangesDisposables()
+      const result = await getExchangesDisposables()
       setAvailableExchanges(
         result?.map((exchange) => ({
           name: exchange.name,
-        })) || []
+        })) || [],
       )
     }
 
@@ -118,61 +91,34 @@ export function ClientsFilterModal({
     setIsOpen(false)
   }
 
-  const updateFilter = (
-    filterName: string,
-    value: boolean
-  ) => {
-    setFilters((prev) => ({
-      ...prev,
-      [filterName]: value,
-    }))
+  const updateFilter = (filterName: string, value: boolean) => {
+    setFilters((prev) => ({ ...prev, [filterName]: value }))
   }
 
-  const handleSelectExchange = (
-    exchangeName: string
-  ) => {
-    setSelectedExchanges((prev) => [
-      ...prev,
-      exchangeName,
-    ])
+  const handleSelectExchange = (exchangeName: string) => {
+    setSelectedExchanges((prev) => [...prev, exchangeName])
   }
 
-  const handleRemoveExchange = (
-    exchangeName: string
-  ) => {
-    setSelectedExchanges((prev) =>
-      prev.filter((name) => name !== exchangeName)
-    )
+  const handleRemoveExchange = (exchangeName: string) => {
+    setSelectedExchanges((prev) => prev.filter((name) => name !== exchangeName))
   }
 
   const handleSelectManager = (name: string) =>
     setSelectedManagers((prev) => [...prev, name])
 
   const handleRemoveManager = (name: string) =>
-    setSelectedManagers((prev) =>
-      prev.filter((manager) => manager !== name)
-    )
+    setSelectedManagers((prev) => prev.filter((manager) => manager !== name))
 
-  const handleSelectBenchmark = (
-    name: string
-  ) => {
-    setSelectedBenchmark((prev) => [
-      ...prev,
-      name,
-    ])
+  const handleSelectBenchmark = (name: string) => {
+    setSelectedBenchmark((prev) => [...prev, name])
   }
-  const handleRemoveBenchmark = (
-    name: string
-  ) => {
+  const handleRemoveBenchmark = (name: string) => {
     setSelectedBenchmark((prev) =>
-      prev.filter(
-        (benchmark) => benchmark !== name
-      )
+      prev.filter((benchmark) => benchmark !== name),
     )
   }
 
-  const capitalize = (str: string) =>
-    str.charAt(0).toUpperCase() + str.slice(1)
+  const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1)
 
   const resetFilters = () => {
     setSelectedManagers([])
@@ -190,10 +136,7 @@ export function ClientsFilterModal({
   }
 
   return (
-    <Dialog
-      open={isOpen}
-      onOpenChange={setIsOpen}
-    >
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button
           type="button"
@@ -203,7 +146,9 @@ export function ClientsFilterModal({
           Filters
         </Button>
       </DialogTrigger>
-      <DialogContent className="bg-[#131313] h-[90vh] max-h-[90vh] overflow-y-auto">
+      <DialogContent
+        className="bg-[#131313] h-[90vh] max-h-[90vh] overflow-y-auto"
+      >
         <DialogHeader className="text-[#fff]">
           <DialogTitle className="text-2xl text-center">
             Filter Customer
@@ -211,19 +156,12 @@ export function ClientsFilterModal({
         </DialogHeader>
 
         <WalletTypeFilter
-          selectedWalletTypes={
-            selectedWalletTypes
-          }
+          selectedWalletTypes={selectedWalletTypes}
           handleSelectWalletType={(type) =>
-            setSelectedWalletTypes((prev) => [
-              ...prev,
-              type,
-            ])
+            setSelectedWalletTypes((prev) => [...prev, type])
           }
           handleRemoveWalletType={(type) =>
-            setSelectedWalletTypes((prev) =>
-              prev.filter((t) => t !== type)
-            )
+            setSelectedWalletTypes((prev) => prev.filter((t) => t !== type))
           }
         />
 
@@ -231,82 +169,52 @@ export function ClientsFilterModal({
           filters={{
             newest: filters.filterNewest,
             older: filters.filterOldest,
-            nearestRebalancing:
-              filters.filterNearestRebalancing,
-            furtherRebalancing:
-              filters.filterFurtherRebalancing,
+            nearestRebalancing: filters.filterNearestRebalancing,
+            furtherRebalancing: filters.filterFurtherRebalancing,
           }}
           onFilterChange={(name, value) =>
-            updateFilter(
-              `filter${capitalize(name)}`,
-              value
-            )
+            updateFilter(`filter${capitalize(name)}`, value)
           }
         />
 
         <UnbalancedWalletFilter
-          filterUnbalanced={
-            filters.filterUnbalanced
-          }
+          filterUnbalanced={filters.filterUnbalanced}
           setFilterUnbalanced={(value) =>
-            updateFilter(
-              'filterUnbalanced',
-              value
-            )
+            updateFilter('filterUnbalanced', value)
           }
         />
 
         <AlertsFilter
-          setFilterDelayed={(value) =>
-            updateFilter('filterDelayed', value)
-          }
+          setFilterDelayed={(value) => updateFilter('filterDelayed', value)}
         />
 
         <ManagerFilter
           managers={managers}
           selectedManagers={selectedManagers}
-          handleSelectManager={
-            handleSelectManager
-          }
-          handleRemoveManager={
-            handleRemoveManager
-          }
+          handleSelectManager={handleSelectManager}
+          handleRemoveManager={handleRemoveManager}
         />
 
         <ExchangeFilter
           exchanges={availableExchanges}
           selectedExchanges={selectedExchanges}
-          handleSelectExchange={
-            handleSelectExchange
-          }
-          handleRemoveExchange={
-            handleRemoveExchange
-          }
+          handleSelectExchange={handleSelectExchange}
+          handleRemoveExchange={handleRemoveExchange}
         />
 
         <BenchmarkFilter
           benchmarks={benchmarks}
           selectedBenchmarks={selectedBenchmark}
-          handleSelectBenchmark={
-            handleSelectBenchmark
-          }
-          handleRemoveBenchmark={
-            handleRemoveBenchmark
-          }
+          handleSelectBenchmark={handleSelectBenchmark}
+          handleRemoveBenchmark={handleRemoveBenchmark}
         />
 
         <DialogFooter>
-          <Button
-            className="bg-[#1877f2] text-white"
-            onClick={applyFilters}
-          >
+          <Button className="bg-[#1877f2] text-white" onClick={applyFilters}>
             Apply
           </Button>
 
-          <Button
-            variant="outline"
-            onClick={resetFilters}
-          >
+          <Button variant="outline" onClick={resetFilters}>
             Clear
           </Button>
         </DialogFooter>

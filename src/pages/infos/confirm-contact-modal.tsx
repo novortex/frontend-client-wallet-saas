@@ -21,9 +21,10 @@ export function ConfirmContactModal({
   onClose,
 }: ConfirmContactModalProps) {
   const { walletUuid } = useParams()
-  const [setSignal, signal] = useSignalStore(
-    (state) => [state.setSignal, state.signal]
-  )
+  const [setSignal, signal] = useSignalStore((state) => [
+    state.setSignal,
+    state.signal,
+  ])
 
   const handleConfirmContact = async () => {
     try {
@@ -39,10 +40,7 @@ export function ConfirmContactModal({
         onClose()
       }
     } catch (error) {
-      console.error(
-        'Erro ao confirmar contato do cliente:',
-        error
-      )
+      console.error('Erro ao confirmar contato do cliente:', error)
     }
   }
 
@@ -57,10 +55,9 @@ export function ConfirmContactModal({
         <div className="flex justify-center items-center flex-col gap-6">
           <CircleAlert className="text-[#F2BE38]" />
           <p className="flex w-2/3 text-center">
-            Do you confirm that you have contacted
-            the client? Upon confirmation, the
-            next recommended contact date will be
-            updated and cannot be undone.
+            Do you confirm that you have contacted the client? Upon
+            confirmation, the next recommended contact date will be updated and
+            cannot be undone.
           </p>
         </div>
         <DialogFooter className="flex justify-end items-end">

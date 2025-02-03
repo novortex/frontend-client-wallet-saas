@@ -1,13 +1,9 @@
-import { instance } from '@/config/api'
-import { HistoricEntry } from '@/types/wallet.type'
+import { instance } from "@/config/api"
+import { HistoricEntry } from "@/types/wallet.type"
 
-export async function getWalletHistoric(
-  walletUuid: string
-) {
+export async function getWalletHistoric(walletUuid: string) {
   try {
-    const result = await instance.get<
-      HistoricEntry[]
-    >(`historic/${walletUuid}`)
+    const result = await instance.get<HistoricEntry[]>(`historic/${walletUuid}`)
     return result.data
   } catch (error) {
     console.error(error)

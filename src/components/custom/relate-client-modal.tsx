@@ -22,11 +22,7 @@ interface RelateClientModalProps {
   onClose: () => void
 }
 
-const managers = [
-  { name: 'Arthur' },
-  { name: 'Pedro' },
-  { name: 'Abner' },
-]
+const managers = [{ name: 'Arthur' }, { name: 'Pedro' }, { name: 'Abner' }]
 
 export default function RelateClientModal({
   isOpen,
@@ -36,10 +32,7 @@ export default function RelateClientModal({
     React.useState('Select a manager')
 
   const handleAddManager = () => {
-    console.log(
-      'Selected Manager:',
-      selectedManager
-    )
+    console.log('Selected Manager:', selectedManager)
 
     setSelectedManager('Select a manager')
 
@@ -65,18 +58,12 @@ export default function RelateClientModal({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-full bg-[#272727] border-[#323232] text-[#959CB6]">
-              <DropdownMenuLabel>
-                Managers
-              </DropdownMenuLabel>
+              <DropdownMenuLabel>Managers</DropdownMenuLabel>
               <DropdownMenuSeparator />
               {managers.map((manager, index) => (
                 <DropdownMenuItem
                   key={index}
-                  onClick={() =>
-                    setSelectedManager(
-                      manager.name
-                    )
-                  }
+                  onClick={() => setSelectedManager(manager.name)}
                 >
                   {manager.name}
                 </DropdownMenuItem>
@@ -85,10 +72,7 @@ export default function RelateClientModal({
           </DropdownMenu>
           <div className="w-full flex flex-row gap-3 items-center">
             <Checkbox className="border-[#ffffff]" />
-            <label
-              htmlFor="addMyself"
-              className="text-[#fff]"
-            >
+            <label htmlFor="addMyself" className="text-[#fff]">
               Add myself
             </label>
           </div>

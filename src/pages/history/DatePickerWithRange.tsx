@@ -18,16 +18,11 @@ export function DatePickerWithRange({
   selectedRange,
   onChange,
 }: DatePickerWithRangeProps) {
-  const handleDateSelect = (
-    range: DateRange | undefined
-  ) => {
+  const handleDateSelect = (range: DateRange | undefined) => {
     if (range?.from && range?.to) {
       onChange(range)
     } else if (range?.from) {
-      onChange({
-        from: range.from,
-        to: range.from,
-      })
+      onChange({ from: range.from, to: range.from })
     } else {
       onChange(undefined)
     }
@@ -45,31 +40,18 @@ export function DatePickerWithRange({
           {selectedRange?.from ? (
             selectedRange.to ? (
               <>
-                {format(
-                  selectedRange.from,
-                  'LLL dd, y'
-                )}{' '}
-                -{' '}
-                {format(
-                  selectedRange.to,
-                  'LLL dd, y'
-                )}
+                {format(selectedRange.from, 'LLL dd, y')} -{' '}
+                {format(selectedRange.to, 'LLL dd, y')}
               </>
             ) : (
-              format(
-                selectedRange.from,
-                'LLL dd, y'
-              )
+              format(selectedRange.from, 'LLL dd, y')
             )
           ) : (
             <span>Pick a date</span>
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent
-        className="w-auto p-0 cursor-pointer"
-        align="start"
-      >
+      <PopoverContent className="w-auto p-0 cursor-pointer" align="start">
         <Calendar
           initialFocus
           mode="range"

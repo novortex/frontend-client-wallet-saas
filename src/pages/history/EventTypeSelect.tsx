@@ -5,9 +5,7 @@ const formatEventType = (eventType: string) => {
   return eventType
     .toLowerCase()
     .replace(/_/g, ' ')
-    .replace(/\b\w/g, (char) =>
-      char.toUpperCase()
-    )
+    .replace(/\b\w/g, (char) => char.toUpperCase())
 }
 
 const eventTypes = [
@@ -33,39 +31,24 @@ export function EventTypeSelect({
   onChange,
 }: EventTypeSelectProps) {
   const handleCheckedChange = (type: string) => {
-    const updatedTypes = selectedTypes.includes(
-      type
-    )
-      ? selectedTypes.filter(
-          (item) => item !== type
-        )
+    const updatedTypes = selectedTypes.includes(type)
+      ? selectedTypes.filter((item) => item !== type)
       : [...selectedTypes, type]
     onChange(updatedTypes)
   }
 
   return (
     <div className="w-full">
-      <div className="font-bold text-[#959CB6] mb-2">
-        Event Types
-      </div>
+      <div className="font-bold text-[#959CB6] mb-2">Event Types</div>
       <div className="grid grid-cols-2 gap-4 text-[#fff]">
         {eventTypes.map((type) => (
-          <div
-            key={type}
-            className="flex items-center gap-2"
-          >
+          <div key={type} className="flex items-center gap-2">
             <Checkbox
-              checked={selectedTypes.includes(
-                type
-              )}
-              onCheckedChange={() =>
-                handleCheckedChange(type)
-              }
+              checked={selectedTypes.includes(type)}
+              onCheckedChange={() => handleCheckedChange(type)}
               className="border-[#fff]"
             />
-            <Label className="cursor-pointer">
-              {formatEventType(type)}
-            </Label>
+            <Label className="cursor-pointer">{formatEventType(type)}</Label>
           </div>
         ))}
       </div>

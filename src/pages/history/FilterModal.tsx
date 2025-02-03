@@ -29,10 +29,7 @@ export function FilterModal({
           variant="outline"
           className="gap-2 hover:bg-gray-700"
         >
-          <img
-            src={filterIcon}
-            alt="Filter Icon"
-          />
+          <img src={filterIcon} alt="Filter Icon" />
           <p>Filters</p>
         </Button>
       </DialogTrigger>
@@ -42,34 +39,24 @@ export function FilterModal({
             Event Filter
           </DialogTitle>
           <DialogDescription>
-            Select an event type and/or a time
-            range to filter events based on that.
+            Select an event type and/or a time range to filter events based on
+            that.
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-4 py-4">
           <div className="flex items-center gap-4">
             <EventTypeSelect
-              selectedTypes={
-                currentFilters.eventTypes
-              }
+              selectedTypes={currentFilters.eventTypes}
               onChange={(newTypes) =>
-                onApplyFilters({
-                  ...currentFilters,
-                  eventTypes: newTypes,
-                })
+                onApplyFilters({ ...currentFilters, eventTypes: newTypes })
               }
             />
           </div>
           <div className="flex items-center gap-4">
             <DatePickerWithRange
-              selectedRange={
-                currentFilters.dateRange
-              }
+              selectedRange={currentFilters.dateRange}
               onChange={(newRange) =>
-                onApplyFilters({
-                  ...currentFilters,
-                  dateRange: newRange,
-                })
+                onApplyFilters({ ...currentFilters, dateRange: newRange })
               }
             />
           </div>

@@ -3,8 +3,7 @@ import moonIcon from '../../assets/icons/moon.svg'
 import sunIcon from '../../assets/icons/Union.svg'
 
 export function SwitchTheme() {
-  const [isDarkMode, setIsDarkMode] =
-    useState(true)
+  const [isDarkMode, setIsDarkMode] = useState(true)
 
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode)

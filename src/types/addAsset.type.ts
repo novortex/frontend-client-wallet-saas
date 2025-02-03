@@ -26,36 +26,34 @@ export type SaveHistoryResponse = {
   }
 }
 
-export type UpdateCurrentAmountOfWalletResponse =
-  {
-    updateCurrentAmountOfWallet: {
-      accountEmail: string | null
-      benchmarkCuid: string
-      closeDate: string
-      contract: boolean
-      createAt: string
-      currentAmount: number
-      emailPassword: string | null
-      exchangePassword: string | null
-      exchangeUuid: string
-      initialFee: number
-      initialFeePaid: boolean
-      investedAmount: number
-      isClosed: boolean
-      lastRebalance: string | null
-      monthCloseDate: string
-      organizationUuid: string
-      performanceFee: number
-      rebalanceInterval: string | null
-      riskProfile: string
-      startDate: string
-      updateAt: string
-      userUuid: string
-      uuid: string
-    }
+export type UpdateCurrentAmountOfWalletResponse = {
+  updateCurrentAmountOfWallet: {
+    accountEmail: string | null
+    benchmarkCuid: string
+    closeDate: string
+    contract: boolean
+    createAt: string
+    currentAmount: number
+    emailPassword: string | null
+    exchangePassword: string | null
+    exchangeUuid: string
+    initialFee: number
+    initialFeePaid: boolean
+    investedAmount: number
+    isClosed: boolean
+    lastRebalance: string | null
+    monthCloseDate: string
+    organizationUuid: string
+    performanceFee: number
+    rebalanceInterval: string | null
+    riskProfile: string
+    startDate: string
+    updateAt: string
+    userUuid: string
+    uuid: string
   }
+}
 
-export type AddAssetFunctionResponse =
-  AddAssetResponse &
-    SaveHistoryResponse &
-    UpdateCurrentAmountOfWalletResponse
+export type AddAssetFunctionResponse = AddAssetResponse &
+  SaveHistoryResponse &
+  UpdateCurrentAmountOfWalletResponse

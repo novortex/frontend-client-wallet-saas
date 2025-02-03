@@ -1,8 +1,4 @@
-import {
-  useState,
-  useEffect,
-  useCallback,
-} from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { SwitchTheme } from '@/components/custom/switch-theme'
 import { Input } from '@/components/ui/input'
 import { ClientsFilterModal } from '@/components/custom/clientsFilterModal/index'
@@ -14,11 +10,10 @@ import { getWalletOrganization } from '@/services/wallet/walleInfoService'
 import { Loading } from '@/components/custom/loading'
 
 export function Clients() {
-  const [clients, setClients] = useState<
+  const [clients, setClients] = useState<TClientInfosResponse[]>([])
+  const [filteredClients, setFilteredClients] = useState<
     TClientInfosResponse[]
   >([])
-  const [filteredClients, setFilteredClients] =
-    useState<TClientInfosResponse[]>([])
   const [searchTerm, setSearchTerm] = useState('')
   const [isLoading, setIsLoading] = useState(true)
   const [filters, setFilters] = useState({
@@ -39,8 +34,7 @@ export function Clients() {
       const result = await getWalletOrganization()
       if (!result) {
         return toast({
-          className:
-            'bg-red-500 border-0 text-white',
+          className: 'bg-red-500 border-0 text-white',
           title: 'Failed to get clients :(',
           description: 'Demo Vault !!',
         })
@@ -48,16 +42,11 @@ export function Clients() {
       setClients(result)
       setFilteredClients(result)
     } catch (error) {
-      console.error(
-        'Error fetching clients:',
-        error
-      )
+      console.error('Error fetching clients:', error)
       toast({
-        className:
-          'bg-red-500 border-0 text-white',
+        className: 'bg-red-500 border-0 text-white',
         title: 'Error',
-        description:
-          'Failed to fetch clients. Please try again.',
+        description: 'Failed to fetch clients. Please try again.',
       })
     } finally {
       setIsLoading(false)
@@ -68,9 +57,7 @@ export function Clients() {
     fetchClients()
   }, [fetchClients])
 
-  const normalizeRiskProfile = (
-    riskProfile: string
-  ) =>
+  const normalizeRiskProfile = (riskProfile: string) =>
     riskProfile.toLowerCase().replace(/_/g, '-')
 
   const applyFilters = useCallback(() => {
@@ -88,48 +75,37 @@ export function Clients() {
 
     const filtered = clients
       .filter((client) => {
-        const nameMatches =
-          client.infosClient.name
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase())
+        const nameMatches = client.infosClient.name
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase())
 
         const managerMatches =
           selectedManagers.length === 0 ||
-          selectedManagers.includes(
-            client.managerName
-          )
+          selectedManagers.includes(client.managerName)
 
         const unbalancedMatches =
           !filterUnbalanced ||
-          (client.nextBalance &&
-            new Date(client.nextBalance) <
-              new Date())
+          (client.nextBalance && new Date(client.nextBalance) < new Date())
 
         const walletTypeMatches =
           selectedWalletTypes.length === 0 ||
           selectedWalletTypes.some(
             (type) =>
               normalizeRiskProfile(type) ===
-              normalizeRiskProfile(
-                client.riskProfile
-              )
+              normalizeRiskProfile(client.riskProfile),
           )
 
         const exchangeMatches =
           selectedExchanges.length === 0 ||
           selectedExchanges.some(
             (selectedExchanges) =>
-              selectedExchanges
-                .toLowerCase()
-                .trim() ===
-              client.exchange.toLowerCase().trim()
+              selectedExchanges.toLowerCase().trim() ===
+              client.exchange.toLowerCase().trim(),
           )
 
         const benchMarkMatches =
           selectedBenchmark.length === 0 ||
-          selectedBenchmark.includes(
-            client.benchmark
-          )
+          selectedBenchmark.includes(client.benchmark)
 
         return (
           nameMatches &&
@@ -142,15 +118,9 @@ export function Clients() {
       })
       .sort((a, b) => {
         if (filterNewest)
-          return (
-            new Date(b.createAt).getTime() -
-            new Date(a.createAt).getTime()
-          )
+          return new Date(b.createAt).getTime() - new Date(a.createAt).getTime()
         if (filterOldest)
-          return (
-            new Date(a.createAt).getTime() -
-            new Date(b.createAt).getTime()
-          )
+          return new Date(a.createAt).getTime() - new Date(b.createAt).getTime()
         if (filterNearestRebalancing)
           return (
             new Date(a.nextBalance).getTime() -
@@ -171,13 +141,8 @@ export function Clients() {
     applyFilters()
   }, [filters, searchTerm, applyFilters])
 
-  const handleApplyFilters = (
-    newFilters: Partial<typeof filters>
-  ) => {
-    setFilters((prev) => ({
-      ...prev,
-      ...newFilters,
-    }))
+  const handleApplyFilters = (newFilters: Partial<typeof filters>) => {
+    setFilters((prev) => ({ ...prev, ...newFilters }))
   }
 
   if (isLoading) {
@@ -187,9 +152,7 @@ export function Clients() {
   return (
     <div className="p-10">
       <div className="mb-10 flex items-center justify-between">
-        <h1 className="text-2xl text-white font-medium">
-          Wallets
-        </h1>
+        <h1 className="text-2xl text-white font-medium">Wallets</h1>
         <SwitchTheme />
       </div>
 
@@ -199,19 +162,13 @@ export function Clients() {
           type="text"
           placeholder="Search for ..."
           value={searchTerm}
-          onChange={(e) =>
-            setSearchTerm(e.target.value)
-          }
+          onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <ClientsFilterModal
-          handleApplyFilters={handleApplyFilters}
-        />
+        <ClientsFilterModal handleApplyFilters={handleApplyFilters} />
       </div>
 
       {clients.length === 0 ? (
-        <div className="text-white text-center">
-          No wallets found
-        </div>
+        <div className="text-white text-center">No wallets found</div>
       ) : (
         <div className="w-full grid grid-cols-3 gap-7">
           {filteredClients.map((client) => (
@@ -225,16 +182,12 @@ export function Clients() {
               responsible={client.managerName}
               lastRebalancing={
                 client.lastBalance
-                  ? formatDate(
-                      client.lastBalance.toString()
-                    )
+                  ? formatDate(client.lastBalance.toString())
                   : '-'
               }
               nextRebalancing={
                 client.nextBalance
-                  ? formatDate(
-                      client.nextBalance.toString()
-                    )
+                  ? formatDate(client.nextBalance.toString())
                   : '-'
               }
             />

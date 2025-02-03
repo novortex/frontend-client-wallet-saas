@@ -1,14 +1,6 @@
-import {
-  MoreVertical,
-  Bell,
-  LogOut,
-} from 'lucide-react'
+import { MoreVertical, Bell, LogOut } from 'lucide-react'
 import LogoOrg from '../../assets/image/vault-logo.png'
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from '@/components/ui/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
   ReactNode,
   useContext,
@@ -31,10 +23,9 @@ type SideBarContextProps = {
   expanded: boolean
 }
 
-const SideBarContext =
-  createContext<SideBarContextProps | null>({
-    expanded: true,
-  })
+const SideBarContext = createContext<SideBarContextProps | null>({
+  expanded: true,
+})
 
 export function SideBar({
   children,
@@ -44,9 +35,7 @@ export function SideBar({
   alerts: number
 }) {
   const [expanded, setExpanded] = useState(false)
-  const userInfo = useUserStore(
-    (state) => state.user
-  )
+  const userInfo = useUserStore((state) => state.user)
   const { logout } = useAuth0()
 
   const handleLogout = () => {
@@ -57,56 +46,39 @@ export function SideBar({
     })
     localStorage.removeItem('auth_app_state')
   }
-  const [isDropdownOpen, setIsDropdownOpen] =
-    useState(false)
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const dropdownRef = useRef(false)
 
-  const handleDropdownOpenChange = (
-    open: boolean
-  ) => {
+  const handleDropdownOpenChange = (open: boolean) => {
     setIsDropdownOpen(open)
     dropdownRef.current = open
   }
   const navRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
-    const handleClickOutside = (
-      event: MouseEvent
-    ) => {
+    const handleClickOutside = (event: MouseEvent) => {
       if (
         navRef.current &&
-        !navRef.current.contains(
-          event.target as Node
-        ) &&
+        !navRef.current.contains(event.target as Node) &&
         !dropdownRef.current
       ) {
         setExpanded(false)
       }
     }
 
-    document.addEventListener(
-      'mouseup',
-      handleClickOutside
-    )
+    document.addEventListener('mouseup', handleClickOutside)
     return () => {
-      document.removeEventListener(
-        'mouseup',
-        handleClickOutside
-      )
+      document.removeEventListener('mouseup', handleClickOutside)
     }
   }, [])
 
-  const handleNavClick = (
-    e: React.MouseEvent
-  ) => {
+  const handleNavClick = (e: React.MouseEvent) => {
     e.stopPropagation()
     setExpanded(true)
   }
 
   return (
-    <aside
-      className={`h-screen ${expanded ? 'w-1/6' : 'w-20'} z-10`}
-    >
+    <aside className={`h-screen ${expanded ? 'w-1/6' : 'w-20'} z-10`}>
       <nav
         ref={navRef}
         className={`h-full fixed flex flex-col bg-[#171717] shadow-sm transition-all ${expanded ? 'w-1/6' : 'w-20'}`}
@@ -119,26 +91,16 @@ export function SideBar({
         onClick={handleNavClick}
       >
         <div className="flex gap-5 items-center relative mt-5 mb-5">
-          <img
-            src={LogoOrg}
-            className="w-16"
-            alt=""
-          />
+          <img src={LogoOrg} className="w-16" alt="" />
           <div
             className={`overflow-hidden transition-all ${expanded ? 'w-20' : 'w-0'}`}
           >
-            <h2 className="text-white font-semibold">
-              Vault
-            </h2>
-            <p className="text-[#959CB6] text-sm">
-              Dashboard
-            </p>
+            <h2 className="text-white font-semibold">Vault</h2>
+            <p className="text-[#959CB6] text-sm">Dashboard</p>
           </div>
         </div>
 
-        <SideBarContext.Provider
-          value={{ expanded }}
-        >
+        <SideBarContext.Provider value={{ expanded }}>
           <ul className="flex-1 px-3">
             <li
               className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer transition-colors text-white mb-10`}
@@ -164,10 +126,7 @@ export function SideBar({
         <div className="flex p-3 bg-[#272727]">
           <Avatar>
             <AvatarImage
-              src={
-                userInfo?.picture ||
-                'https://github.com/shadcn.png'
-              }
+              src={userInfo?.picture || 'https://github.com/shadcn.png'}
               alt={userInfo?.name || 'Guest'}
             />
             <AvatarFallback>CN</AvatarFallback>
@@ -189,9 +148,7 @@ export function SideBar({
                     maxWidth: '100%',
                   }}
                 >
-                  {userInfo?.name?.split(
-                    '@'
-                  )[0] || 'Guest'}
+                  {userInfo?.name?.split('@')[0] || 'Guest'}
                 </p>
                 <span
                   className="text-xs text-[#959CB6] truncate"
@@ -206,9 +163,7 @@ export function SideBar({
                 </span>
               </div>
               <DropdownMenu
-                onOpenChange={
-                  handleDropdownOpenChange
-                }
+                onOpenChange={handleDropdownOpenChange}
                 open={isDropdownOpen}
               >
                 <DropdownMenuTrigger
@@ -260,9 +215,7 @@ export function SideBarItem({
   const context = useContext(SideBarContext)
 
   if (!context) {
-    throw new Error(
-      'SideBarItem must be used within a SideBar'
-    )
+    throw new Error('SideBarItem must be used within a SideBar')
   }
 
   const { expanded } = context
@@ -279,9 +232,7 @@ export function SideBarItem({
         {text}
       </span>
       {alert && (
-        <div
-          className={`absolute right-2 w-2 h-2 rounded bg-indigo-400`}
-        ></div>
+        <div className={`absolute right-2 w-2 h-2 rounded bg-indigo-400`}></div>
       )}
 
       {!expanded && (

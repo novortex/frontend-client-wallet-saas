@@ -4,20 +4,16 @@ import { BrowserRouter } from 'react-router-dom'
 import { Toaster } from './components/ui/toaster'
 import { Auth0Provider } from '@auth0/auth0-react'
 
-const rootElement =
-  document.getElementById('root')
+const rootElement = document.getElementById('root')
 
 if (rootElement) {
   ReactDOM.createRoot(rootElement).render(
     <Auth0Provider
       domain={import.meta.env.VITE_AUTH0_DOMAIN}
-      clientId={
-        import.meta.env.VITE_AUTH0_CLIENT_ID
-      }
+      clientId={import.meta.env.VITE_AUTH0_CLIENT_ID}
       authorizationParams={{
         redirect_uri: window.location.origin,
-        audience: import.meta.env
-          .VITE_AUTH0_AUDIENCE,
+        audience: import.meta.env.VITE_AUTH0_AUDIENCE,
         scope:
           'openid profile email offline_access read:current_user read:roles',
       }}
@@ -29,10 +25,8 @@ if (rootElement) {
         <App />
         <Toaster />
       </BrowserRouter>
-    </Auth0Provider>
+    </Auth0Provider>,
   )
 } else {
-  console.error(
-    "Root element with id 'root' not found"
-  )
+  console.error("Root element with id 'root' not found")
 }

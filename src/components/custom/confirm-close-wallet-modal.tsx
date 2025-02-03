@@ -18,10 +18,7 @@ import {
 import { Calendar } from '@/components/ui/calendar'
 import { useParams } from 'react-router-dom'
 import { useSignalStore } from '@/store/signalEffect'
-import {
-  requestCloseWallet,
-  requestStartWallet,
-} from '@/services/wallet/walleInfoService'
+import { requestCloseWallet, requestStartWallet } from '@/services/wallet/walleInfoService'
 
 interface ConfirmCloseWalletModalProps {
   isOpen: boolean
@@ -37,44 +34,32 @@ export default function ConfirmCloseWalletModal({
   fetchData,
 }: ConfirmCloseWalletModalProps) {
   const [inputValue, setInputValue] = useState('')
-  const [date, setDate] = useState<Date>(
-    new Date()
-  )
+  const [date, setDate] = useState<Date>(new Date())
   const { walletUuid } = useParams()
-  const [signal, setSignal] = useSignalStore(
-    (state) => [state.signal, state.setSignal]
-  )
+  const [signal, setSignal] = useSignalStore((state) => [
+    state.signal,
+    state.setSignal,
+  ])
 
   const isToday = (dateToCheck: Date) => {
     const today = new Date()
     return (
       dateToCheck.getDate() === today.getDate() &&
-      dateToCheck.getMonth() ===
-        today.getMonth() &&
-      dateToCheck.getFullYear() ===
-        today.getFullYear()
+      dateToCheck.getMonth() === today.getMonth() &&
+      dateToCheck.getFullYear() === today.getFullYear()
     )
   }
-  const expectedValue = startWallet
-    ? 'startwallet'
-    : 'closewallet'
-  const valueOfDate = startWallet
-    ? 'was started'
-    : 'will be closed'
-  const isInputValid =
-    inputValue === expectedValue
+  const expectedValue = startWallet ? 'startwallet' : 'closewallet'
+  const valueOfDate = startWallet ? 'was started' : 'will be closed'
+  const isInputValid = inputValue === expectedValue
 
   const handleSendWalletAction = async () => {
     const customDate = date.toISOString()
     if (walletUuid) {
       if (startWallet) {
-        await requestStartWallet(walletUuid, {
-          customDate,
-        })
+        await requestStartWallet(walletUuid, { customDate })
       } else {
-        await requestCloseWallet(walletUuid, {
-          customDate,
-        })
+        await requestCloseWallet(walletUuid, { customDate })
       }
     }
     setSignal(!signal)
@@ -92,16 +77,11 @@ export default function ConfirmCloseWalletModal({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="h-[80%] w-[40%] bg-[#131313] text-[#fff] max-w-full border-transparent">
         <DialogHeader className="flex justify-center items-center">
-          <DialogTitle className="text-3xl">
-            Confirmation
-          </DialogTitle>
+          <DialogTitle className="text-3xl">Confirmation</DialogTitle>
         </DialogHeader>
 
         <div className="flex flex-col gap-4 h-full justify-center items-center">
-          <p>
-            Choose the date that the wallet{' '}
-            {valueOfDate}
-          </p>
+          <p>Choose the date that the wallet {valueOfDate}</p>
 
           <div className="flex flex-col gap-2 w-1/2">
             <Popover>
@@ -114,19 +94,12 @@ export default function ConfirmCloseWalletModal({
                   <CalendarIcon className="h-4 w-4 opacity-50" />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent
-                className="w-auto p-0"
-                align="start"
-              >
+              <PopoverContent className="w-auto p-0" align="start">
                 <Calendar
                   mode="single"
                   selected={date}
-                  onSelect={(newDate) =>
-                    newDate && setDate(newDate)
-                  }
-                  disabled={(date) =>
-                    date > new Date()
-                  }
+                  onSelect={(newDate) => newDate && setDate(newDate)}
+                  disabled={(date) => date > new Date()}
                   className="bg-[#131313] text-white rounded-md"
                   classNames={{
                     day_today: isToday(date)
@@ -141,23 +114,16 @@ export default function ConfirmCloseWalletModal({
           </div>
 
           <Label className="flex flex-row gap-3 text-lg">
-            <p className="text-[#959CB6]">
-              Type to confirm:
-            </p>
+            <p className="text-[#959CB6]">Type to confirm:</p>
             <p>{expectedValue}</p>
           </Label>
 
           <Input
             placeholder="Type here"
             value={inputValue}
-            onChange={(e) =>
-              setInputValue(e.target.value)
-            }
+            onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={(e) => {
-              if (
-                e.key === 'Enter' &&
-                isInputValid
-              ) {
+              if (e.key === 'Enter' && isInputValid) {
                 handleSendWalletAction()
               }
             }}

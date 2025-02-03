@@ -1,5 +1,6 @@
 export type TRiskProfileCounts = {
-  superLowRisk: number
-  lowRisk: number
-  standard: number
-}
+    superLowRisk: number;
+    lowRisk: number;
+    standard: number;
+  };
+  

@@ -13,51 +13,27 @@ const WalletInfo: React.FC<TWalletAssetsInfo> = ({
   <div className="flex gap-5 mb-10">
     <CardDashboard
       title="Start date"
-      data={
-        startDate
-          ? formatDate(startDate.toString())
-          : '-'
-      }
+      data={startDate ? formatDate(startDate.toString()) : '-'}
     />
     <CardDashboard
       title="Invested Amount"
-      data={
-        investedAmount
-          ? Number(investedAmount).toFixed(2)
-          : '-'
-      }
+      data={investedAmount ? Number(investedAmount).toFixed(2) : '-'}
     />
     <CardDashboard
       title="Current Amount"
-      data={
-        currentAmount
-          ? Number(currentAmount).toFixed(2)
-          : '-'
-      }
+      data={currentAmount ? Number(currentAmount).toFixed(2) : '-'}
     />
     <CardDashboard
       title="Performance fee"
-      data={
-        performanceFee
-          ? Number(performanceFee).toFixed(2)
-          : '-'
-      }
+      data={performanceFee ? Number(performanceFee).toFixed(2) : '-'}
     />
     <CardDashboard
       title="Last rebalancing"
-      data={
-        lastRebalance
-          ? formatDate(lastRebalance.toString())
-          : '-'
-      }
+      data={lastRebalance ? formatDate(lastRebalance.toString()) : '-'}
     />
     <CardDashboard
       title="Month closing date"
-      data={
-        monthCloseDate
-          ? formatDate(monthCloseDate.toString())
-          : '-'
-      }
+      data={monthCloseDate ? formatDate(monthCloseDate.toString()) : '-'}
     />
   </div>
 )

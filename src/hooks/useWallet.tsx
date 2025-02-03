@@ -1,23 +1,13 @@
-import {
-  useEffect,
-  useState,
-  useCallback,
-} from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useToast } from '@/components/ui/use-toast'
 import { ClientActive } from '@/components/custom/tables/wallet-client/columns'
 import { TWalletAssetsInfo } from '@/types/wallet.type'
-import {
-  calculateRebalanceInWallet,
-  updateCurrentAmount,
-} from '@/services/wallet/walleInfoService'
+import { calculateRebalanceInWallet, updateCurrentAmount } from '@/services/wallet/walleInfoService'
 import { getAllAssetsWalletClient } from '@/services/wallet/walletAssetService'
 
 export function useWallet(walletUuid: string) {
-  const [data, setData] = useState<
-    ClientActive[]
-  >([])
-  const [infosWallet, setInfosWallet] =
-    useState<TWalletAssetsInfo>()
+  const [data, setData] = useState<ClientActive[]>([])
+  const [infosWallet, setInfosWallet] = useState<TWalletAssetsInfo>()
   const [loading, setLoading] = useState(true)
   const { toast } = useToast()
 
@@ -25,8 +15,7 @@ export function useWallet(walletUuid: string) {
     setLoading(true)
     try {
       await updateCurrentAmount(walletUuid)
-      const result =
-        await getAllAssetsWalletClient(walletUuid)
+      const result = await getAllAssetsWalletClient(walletUuid)
 
       if (!result) {
         throw new Error('Failed to fetch assets')
@@ -37,10 +26,7 @@ export function useWallet(walletUuid: string) {
         result.assets
           .map((item) => ({
             id: item.uuid,
-            asset: {
-              urlImage: item.icon,
-              name: item.name,
-            },
+            asset: { urlImage: item.icon, name: item.name },
             currentAmount: item.currentAmount,
             assetQuantity: item.quantityAsset,
             price: item.price,
@@ -49,17 +35,12 @@ export function useWallet(walletUuid: string) {
             idealAmount: item.idealAmountInMoney,
             buyOrSell: item.buyOrSell,
           }))
-          .sort(
-            (a, b) =>
-              b.currentAmount - a.currentAmount
-          )
+          .sort((a, b) => b.currentAmount - a.currentAmount),
       )
     } catch (error) {
       toast({
-        className:
-          'bg-red-500 border-0 text-white',
-        title:
-          'Failed to get assets organization',
+        className: 'bg-red-500 border-0 text-white',
+        title: 'Failed to get assets organization',
         description: 'Demo Vault!',
       })
     } finally {
@@ -67,44 +48,30 @@ export function useWallet(walletUuid: string) {
     }
   }, [toast, walletUuid])
 
-  const calculateRebalance =
-    useCallback(async () => {
-      try {
-        const result =
-          await calculateRebalanceInWallet(
-            walletUuid
-          )
+  const calculateRebalance = useCallback(async () => {
+    try {
+      const result = await calculateRebalanceInWallet(walletUuid)
 
-        toast({
-          className:
-            'bg-green-500 border-0 text-white',
-          title: 'Rebalance Successful',
-          description:
-            'Wallet has been rebalanced successfully!',
-        })
+      toast({
+        className: 'bg-green-500 border-0 text-white',
+        title: 'Rebalance Successful',
+        description: 'Wallet has been rebalanced successfully!',
+      })
 
-        return result
-      } catch (error) {
-        toast({
-          className:
-            'bg-red-500 border-0 text-white',
-          title: 'Failed to rebalance wallet',
-          description:
-            'An error occurred during rebalancing. Please try again.',
-        })
-        throw error
-      }
-    }, [toast, walletUuid])
+      return result
+    } catch (error) {
+      toast({
+        className: 'bg-red-500 border-0 text-white',
+        title: 'Failed to rebalance wallet',
+        description: 'An error occurred during rebalancing. Please try again.',
+      })
+      throw error
+    }
+  }, [toast, walletUuid])
 
   useEffect(() => {
     fetchData()
   }, [fetchData])
 
-  return {
-    data,
-    infosWallet,
-    loading,
-    fetchData,
-    calculateRebalance,
-  }
+  return { data, infosWallet, loading, fetchData, calculateRebalance }
 }
