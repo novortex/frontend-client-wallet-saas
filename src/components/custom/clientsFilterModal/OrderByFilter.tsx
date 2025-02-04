@@ -7,10 +7,7 @@ type FilterProps = {
     nearestRebalancing: boolean
     furtherRebalancing: boolean
   }
-  onFilterChange: (
-    filterName: keyof FilterProps['filters'],
-    value: boolean,
-  ) => void
+  onFilterChange: (filterName: keyof FilterProps['filters'], value: boolean) => void
 }
 
 const filterOptions: { name: keyof FilterProps['filters']; label: string }[] = [
@@ -41,11 +38,7 @@ export function OrderByFilter({ filters, onFilterChange }: FilterProps) {
       <div className="grid grid-cols-2 gap-4 text-[#fff]">
         {filterOptions.map(({ name, label }) => (
           <div key={name} className="flex items-center gap-2">
-            <Checkbox
-              checked={filters[name]}
-              onCheckedChange={() => handleCheckboxChange(name)}
-              className="border-[#fff]"
-            />
+            <Checkbox checked={filters[name]} onCheckedChange={() => handleCheckboxChange(name)} className="border-[#fff]" />
             <label>{label}</label>
           </div>
         ))}

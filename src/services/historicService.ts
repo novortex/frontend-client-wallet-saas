@@ -1,5 +1,5 @@
-import { instance } from "@/config/api"
-import { HistoricEntry } from "@/types/wallet.type"
+import { instance } from '@/config/api'
+import { HistoricEntry } from '@/types/wallet.type'
 
 export async function getWalletHistoric(walletUuid: string) {
   try {

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useAuth0 } from '@auth0/auth0-react'
 import { Wallet } from '@/pages/wallet/index'
 import { Graphs } from '@/pages/graphs'
-import { History } from '@/pages/history/index'
+import { History } from '@/pages/history'
 import { Clients } from '@/pages/wallets'
 import { Infos } from '@/pages/infos'
 import { Customers } from '@/pages/customers'
@@ -63,10 +63,7 @@ export function App() {
                 <Route path="/admin/orgs" element={<AssetsOrg />} />
                 <Route path="/clients/:walletUuid/infos" element={<Infos />} />
                 <Route path="/wallet/:walletUuid/graphs" element={<Graphs />} />
-                <Route
-                  path="/wallet/:walletUuid/history"
-                  element={<History />}
-                />
+                <Route path="/wallet/:walletUuid/history" element={<History />} />
                 <Route path="*" element={<ErrorPage />} />
               </Route>
             </Route>

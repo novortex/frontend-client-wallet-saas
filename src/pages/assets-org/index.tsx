@@ -1,13 +1,10 @@
 import { useEffect, useState } from 'react'
 import { SwitchTheme } from '@/components/custom/switch-theme'
-import { DataTableAssetOrg } from '@/components/custom/tables/assets-org/data-table'
-import {
-  AssetOrgs,
-  columnsAssetOrg,
-} from '@/components/custom/tables/assets-org/columns'
+import { AssetOrgs, columnsAssetOrg } from '@/components/custom/assets-org/columns'
 import { useSignalStore } from '@/store/signalEffect'
 import { useToast } from '@/components/ui/use-toast'
 import { getAllAssetsOrg } from '@/services/managementService'
+import { DataTableAssetOrg } from '@/components/custom/assets-org/data-table'
 
 export function AssetsOrg() {
   const [data, setData] = useState<AssetOrgs[]>([])
@@ -18,9 +15,7 @@ export function AssetsOrg() {
 
   useEffect(() => {
     // TODO: separe this script this file :)
-    async function getData(
-      setDate: React.Dispatch<React.SetStateAction<AssetOrgs[]>>,
-    ) {
+    async function getData(setDate: React.Dispatch<React.SetStateAction<AssetOrgs[]>>) {
       try {
         const result = await getAllAssetsOrg()
 

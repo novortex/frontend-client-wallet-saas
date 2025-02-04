@@ -9,25 +9,23 @@ type ManagerBenchmarkOrganization = {
   setExchanges: (value: { name: string; uuid: string }[]) => void
 }
 
-export const useManagerOrganization = create<ManagerBenchmarkOrganization>()(
-  (set) => ({
-    managers: [],
-    benchs: [],
-    exchanges: [],
-    setManagers(value) {
-      set({
-        managers: value,
-      })
-    },
-    setBenchs(value) {
-      set({
-        benchs: value,
-      })
-    },
-    setExchanges(value) {
-      set({
-        exchanges: value,
-      })
-    },
-  }),
-)
+export const useManagerOrganization = create<ManagerBenchmarkOrganization>()((set) => ({
+  managers: [],
+  benchs: [],
+  exchanges: [],
+  setManagers(value) {
+    set({
+      managers: value,
+    })
+  },
+  setBenchs(value) {
+    set({
+      benchs: value,
+    })
+  },
+  setExchanges(value) {
+    set({
+      exchanges: value,
+    })
+  },
+}))

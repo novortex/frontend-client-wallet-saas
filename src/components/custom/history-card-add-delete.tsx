@@ -1,11 +1,4 @@
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardFooter,
-} from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card'
 
 interface HistoryCardAddDeleteProps {
   asset: string
@@ -15,13 +8,7 @@ interface HistoryCardAddDeleteProps {
   operation: boolean
 }
 
-export default function HistoryCardAddDelete({
-  asset,
-  assetIcon,
-  quantity,
-  targetAllocation,
-  operation,
-}: HistoryCardAddDeleteProps) {
+export default function HistoryCardAddDelete({ asset, assetIcon, quantity, targetAllocation, operation }: HistoryCardAddDeleteProps) {
   const borderStyle = operation ? 'border-[#23CE20]' : 'border-[#C81C1C]'
   return (
     <Card className={`${borderStyle} rounded-[12px] border bg-[#131313] w-1/3`}>

@@ -19,7 +19,7 @@ instance.interceptors.response.use(
       })
     }
     return Promise.reject(error)
-  },
+  }
 )
 
 export const setAuthToken = (token: string | null) => {

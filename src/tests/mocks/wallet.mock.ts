@@ -5,6 +5,7 @@ const walletUuid = '4091e88c-bfa5-4608-8514-212502fb2598'
 
 const mockResponse: WalletDataResponse = {
   wallet: {
+    ownerName: null,
     startDate: null,
     investedAmount: null,
     currentAmount: null,

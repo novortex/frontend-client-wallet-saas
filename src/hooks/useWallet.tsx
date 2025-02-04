@@ -1,9 +1,9 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useToast } from '@/components/ui/use-toast'
-import { ClientActive } from '@/components/custom/tables/wallet-client/columns'
 import { TWalletAssetsInfo } from '@/types/wallet.type'
-import { calculateRebalanceInWallet, updateCurrentAmount } from '@/services/wallet/walleInfoService'
 import { getAllAssetsWalletClient } from '@/services/wallet/walletAssetService'
+import { ClientActive } from '@/components/custom/wallet/columns'
+import { calculateRebalanceInWallet, updateCurrentAmount } from '@/services/wallet/walleInfoService'
 
 export function useWallet(walletUuid: string) {
   const [data, setData] = useState<ClientActive[]>([])
@@ -35,7 +35,7 @@ export function useWallet(walletUuid: string) {
             idealAmount: item.idealAmountInMoney,
             buyOrSell: item.buyOrSell,
           }))
-          .sort((a, b) => b.currentAmount - a.currentAmount),
+          .sort((a, b) => b.currentAmount - a.currentAmount)
       )
     } catch (error) {
       toast({

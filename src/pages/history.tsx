@@ -1,12 +1,13 @@
 import { SwitchTheme } from '@/components/custom/switch-theme'
 import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import filterIcon from '../assets/image/filter-lines.png'
 import HistoryThread from '@/components/custom/history-thread'
 import { useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb'
 import { HistoricEntry } from '@/types/wallet.type'
-import { FilterModal } from './FilterModal'
 import { DateRange } from 'react-day-picker'
-import { BreadCrumbHistoryLinks } from '@/pages/history/BreadCrumbHistoryLinks'
 import { getWalletHistoric } from '@/services/historicService'
 
 export type Filters = {
@@ -17,24 +18,6 @@ export type Filters = {
 export function History() {
   const [historic, setHistoric] = useState<HistoricEntry[]>([])
   const { walletUuid } = useParams()
-  const [filters, setFilters] = useState<Filters>({
-    eventTypes: [],
-    dateRange: { from: undefined, to: undefined },
-  })
-
-  const filteredHistoric = historic.filter((entry) => {
-    const matchesEventType =
-      filters.eventTypes.length === 0 ||
-      filters.eventTypes.includes(entry.historyType)
-
-    const matchesDateRange =
-      (!filters.dateRange?.from ||
-        new Date(entry.createAt) >= filters.dateRange.from) &&
-      (!filters.dateRange?.to ||
-        new Date(entry.createAt) <= filters.dateRange.to)
-
-    return matchesEventType && matchesDateRange
-  })
 
   useEffect(() => {
     async function fetchHistoric() {
@@ -56,24 +39,44 @@ export function History() {
   return (
     <div className="p-10">
       <div className="mb-10 flex items-center justify-between">
-        <BreadCrumbHistoryLinks walletUuid={walletUuid} />
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink className="text-2xl text-white font-medium" href="/wallets">
+                Wallets
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink className="text-2xl text-white font-medium" href={`/clients/${walletUuid}/infos`}>
+                Information clients
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink className="text-2xl text-white font-medium" href={`/wallet/${walletUuid}/assets`}>
+                Client wallet
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage className="text-2xl text-white font-medium">Historic</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
         <SwitchTheme />
       </div>
       <div className="flex items-center justify-between mb-10">
-        <Input
-          className="bg-[#171717] w-3/4 border-0 text-white focus:ring-0"
-          type="text"
-          placeholder="Search for ..."
-        />
+        <Input className="bg-[#171717] w-3/4 border-0 text-white focus:ring-0" type="text" placeholder="Search for ..." />
         <div className="flex gap-5">
-          <FilterModal
-            onApplyFilters={(newFilters: Filters) => setFilters(newFilters)}
-            currentFilters={filters}
-          />
+          <Button type="button" variant="outline" className="gap-2 hover:bg-gray-700">
+            <img src={filterIcon} alt="" />
+            <p>Filters</p>
+          </Button>
         </div>
       </div>
       <div>
-        {filteredHistoric
+        {historic
           .slice()
           .reverse()
           .map((entry) => (

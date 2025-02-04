@@ -1,23 +1,14 @@
 import { Button } from '@/components/ui/button'
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { useAddAsset } from '@/hooks/useAddAsset'
-import { AssetInfo, AssetInput } from '../../AssetInput'
+import { AssetInfo, AssetInput } from '../AssetInput'
 
 interface AddNewAssetModalProps {
   isOpen: boolean
   onClose: () => void
 }
 
-export default function AddNewAssetModal({
-  isOpen,
-  onClose,
-}: AddNewAssetModalProps) {
+export default function AddNewAssetModal({ isOpen, onClose }: AddNewAssetModalProps) {
   const { assetId, handleAddAsset, handleChange } = useAddAsset(onClose)
 
   return (
@@ -31,10 +22,7 @@ export default function AddNewAssetModal({
           <AssetInfo />
         </div>
         <DialogFooter className="flex justify-end items-end">
-          <Button
-            className="bg-[#1877F2] w-1/4 hover:bg-blue-600 p-5"
-            onClick={handleAddAsset}
-          >
+          <Button className="bg-[#1877F2] w-1/4 hover:bg-blue-600 p-5" onClick={handleAddAsset}>
             Add asset
           </Button>
         </DialogFooter>

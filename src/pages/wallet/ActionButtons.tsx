@@ -156,11 +156,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
         >
           Historic
         </Button>
-        <Button
-          type="button"
-          className="bg-[#F2BE38] text-black hover:text-white hover:bg-yellow-600"
-          onClick={openOrCloseModalRebalanced}
-        >
+        <Button type="button" className="bg-[#F2BE38] text-black hover:text-white hover:bg-yellow-600" onClick={openOrCloseModalRebalanced}>
           Rebalanced
         </Button>
         <Button

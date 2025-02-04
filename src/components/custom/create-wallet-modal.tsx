@@ -1,18 +1,6 @@
 import { Button } from '@/components/ui/button'
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Input } from '../ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
@@ -23,8 +11,8 @@ import { useEffect, useState } from 'react'
 import RelateClientExchangeModal from './relate-client-exchange-modal'
 import { useRegisterWallet } from '@/store/registerWallet'
 import { useManagerOrganization } from '@/store/managers_benckmark_exchanges'
-import { CustomersOrganization } from './tables/customers/columns'
 import { getAllFiatCurrencies } from '@/services/managementService'
+import { CustomersOrganization } from './customers/columns'
 
 interface CreateWalletModalProps {
   isOpen: boolean
@@ -32,11 +20,7 @@ interface CreateWalletModalProps {
   rowInfos: CustomersOrganization
 }
 
-export default function CreateWalletModal({
-  isOpen,
-  onClose,
-  rowInfos,
-}: CreateWalletModalProps) {
+export default function CreateWalletModal({ isOpen, onClose, rowInfos }: CreateWalletModalProps) {
   const [currency, setCurrency] = useState('')
   const [performanceFee, setPerformanceFee] = useState('')
   const [benchmark, setBenchmark] = useState('')
@@ -49,10 +33,7 @@ export default function CreateWalletModal({
   const [fiatCurrencies, setFiatCurrencies] = useState<string[]>([])
 
   const [saveFirstModal] = useRegisterWallet((state) => [state.firstModal])
-  const [managersOrganization, benchs] = useManagerOrganization((state) => [
-    state.managers,
-    state.benchs,
-  ])
+  const [managersOrganization, benchs] = useManagerOrganization((state) => [state.managers, state.benchs])
 
   // Função para validar os inputs
   const validateInputs = () => {
@@ -66,13 +47,8 @@ export default function CreateWalletModal({
     }
 
     // Validação da Performance Fee: deve ser um número entre 0 e 100
-    if (
-      !/^\d+(\.\d{0,2})?$/.test(performanceFee) ||
-      +performanceFee < 0 ||
-      +performanceFee > 100
-    ) {
-      newErrors.performanceFee =
-        'Performance Fee must be a number between 0 and 100 with up to two decimal places.'
+    if (!/^\d+(\.\d{0,2})?$/.test(performanceFee) || +performanceFee < 0 || +performanceFee > 100) {
+      newErrors.performanceFee = 'Performance Fee must be a number between 0 and 100 with up to two decimal places.'
     }
 
     // Validação do Benchmark: deve ser selecionado
@@ -87,14 +63,12 @@ export default function CreateWalletModal({
 
     // Validação do Initial Fee: deve ser um número positivo e aceitar ponto como separador decimal
     if (!/^\d+(\.\d{1,2})?$/.test(initialFee)) {
-      newErrors.initialFee =
-        'Initial Fee must include only numbers and a point with up to two decimal places (e.g., 199.99).'
+      newErrors.initialFee = 'Initial Fee must include only numbers and a point with up to two decimal places (e.g., 199.99).'
     }
 
     // Validação do Invested Amount: deve ser um número positivo e aceitar ponto como separador decimal
     if (!/^\d+(\.\d{1,2})?$/.test(investedAmount)) {
-      newErrors.investedAmount =
-        'Invested Amount must include only numbers and a point with up to two decimal places (e.g., 199.99).'
+      newErrors.investedAmount = 'Invested Amount must include only numbers and a point with up to two decimal places (e.g., 199.99).'
     }
     // Validação do Manager: deve ser selecionado
     if (!manager) {
@@ -197,10 +171,7 @@ export default function CreateWalletModal({
           </div>
           <div className="flex h-full w-[26%] justify-center items-center">
             <div style={{ width: 65, height: 65 }}>
-              <CircularProgressbar
-                value={percentage}
-                text={`${Math.round(percentage)}%`}
-              />
+              <CircularProgressbar value={percentage} text={`${Math.round(percentage)}%`} />
             </div>
           </div>
           <div className="flex h-full w-[26%]"></div>
@@ -214,19 +185,13 @@ export default function CreateWalletModal({
               value={performanceFee}
               onChange={(e) => setPerformanceFee(e.target.value)}
             />
-            {errors.performanceFee && (
-              <p className="text-red-500">{errors.performanceFee}</p>
-            )}
+            {errors.performanceFee && <p className="text-red-500">{errors.performanceFee}</p>}
           </div>
           <div className="w-[26%]">
             <Label>Benchmark *</Label>
             <Select onValueChange={(value) => setBenchmark(value)}>
               <SelectTrigger className="bg-[#131313] border-[#323232] text-[#959CB6]">
-                <SelectValue>
-                  {benchmark
-                    ? benchs.find((mgr) => mgr.cuid === benchmark)?.name
-                    : 'Name'}
-                </SelectValue>
+                <SelectValue>{benchmark ? benchs.find((mgr) => mgr.cuid === benchmark)?.name : 'Name'}</SelectValue>
               </SelectTrigger>
               <SelectContent className="bg-[#131313] border-[#323232] text-[#959CB6]">
                 {benchs.map((bench) => (
@@ -236,9 +201,7 @@ export default function CreateWalletModal({
                 ))}
               </SelectContent>
             </Select>
-            {errors.benchmark && (
-              <p className="text-red-500">{errors.benchmark}</p>
-            )}
+            {errors.benchmark && <p className="text-red-500">{errors.benchmark}</p>}
           </div>
           <div className="w-[26%]">
             <Label>Risk Profile *</Label>
@@ -254,9 +217,7 @@ export default function CreateWalletModal({
                 <SelectItem value="SUPER_HIGH_RISK">SUPER HIGH RISK</SelectItem>
               </SelectContent>
             </Select>
-            {errors.riskProfile && (
-              <p className="text-red-500">{errors.riskProfile}</p>
-            )}
+            {errors.riskProfile && <p className="text-red-500">{errors.riskProfile}</p>}
           </div>
         </div>
         <div className="flex flex-row justify-evenly items-center">
@@ -270,9 +231,7 @@ export default function CreateWalletModal({
               min="0"
               step="any"
             />
-            {errors.initialFee && (
-              <p className="text-red-500">{errors.initialFee}</p>
-            )}
+            {errors.initialFee && <p className="text-red-500">{errors.initialFee}</p>}
           </div>
           <div className="w-[26%] h-full">
             <Label>Invested amount *</Label>
@@ -284,17 +243,11 @@ export default function CreateWalletModal({
               min="0"
               step="any"
             />
-            {errors.investedAmount && (
-              <p className="text-red-500">{errors.investedAmount}</p>
-            )}
+            {errors.investedAmount && <p className="text-red-500">{errors.investedAmount}</p>}
           </div>
           <div className="w-[26%] h-full flex flex-row gap-5 items-center">
             <Label>Contract</Label>
-            <Checkbox
-              className="border-gray-500"
-              checked={contractChecked}
-              onCheckedChange={() => setContractChecked(!contractChecked)}
-            />
+            <Checkbox className="border-gray-500" checked={contractChecked} onCheckedChange={() => setContractChecked(!contractChecked)} />
           </div>
         </div>
         <div className="flex flex-row justify-evenly items-center">
@@ -302,12 +255,7 @@ export default function CreateWalletModal({
             <Label>Choose a manager *</Label>
             <Select onValueChange={(value) => setManager(value)}>
               <SelectTrigger className="bg-[#131313] border-[#323232] text-[#959CB6]">
-                <SelectValue>
-                  {manager
-                    ? managersOrganization.find((mgr) => mgr.uuid === manager)
-                        ?.name
-                    : 'Name'}
-                </SelectValue>
+                <SelectValue>{manager ? managersOrganization.find((mgr) => mgr.uuid === manager)?.name : 'Name'}</SelectValue>
               </SelectTrigger>
               <SelectContent className="bg-[#131313] border-[#323232] text-[#959CB6]">
                 {managersOrganization.map((manager) => (
@@ -321,20 +269,13 @@ export default function CreateWalletModal({
           </div>
         </div>
         <DialogFooter className="flex justify-end items-end">
-          <Button
-            className="bg-[#1877F2] w-1/6 hover:bg-blue-600 p-5 flex items-center justify-center gap-3"
-            onClick={openModal}
-          >
+          <Button className="bg-[#1877F2] w-1/6 hover:bg-blue-600 p-5 flex items-center justify-center gap-3" onClick={openModal}>
             <StepForwardIcon />
             Continue
           </Button>
         </DialogFooter>
       </DialogContent>
-      <RelateClientExchangeModal
-        rowInfos={rowInfos}
-        isOpen={isModalOpen}
-        onClose={closeModal}
-      />
+      <RelateClientExchangeModal rowInfos={rowInfos} isOpen={isModalOpen} onClose={closeModal} />
     </Dialog>
   )
 }

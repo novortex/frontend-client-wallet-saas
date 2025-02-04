@@ -26,16 +26,13 @@ export async function getWalletOrganization(): Promise<TClientInfosResponse[]> {
   }
 }
 
-export async function getInfosCustomer(
-  walletUuid: string,
-): Promise<TInfosCustomerResponse | undefined> {
+export async function getInfosCustomer(walletUuid: string): Promise<TInfosCustomerResponse | undefined> {
   try {
-    const result = await instance.get<TInfosCustomerResponse>(
-      `wallet/${walletUuid}/infos`,
-    )
+    const result = await instance.get<TInfosCustomerResponse>(`wallet/${walletUuid}/infos`)
     return result.data
+
   } catch (error) {
-    console.log(error)
+    throw error;
   }
 }
 
@@ -83,11 +80,10 @@ export async function registerWalletForCustomer(
 
 export async function updateCurrentAmount(walletUuid: string): Promise<void> {
   try {
-    const result = await instance.put(`wallet/${walletUuid}/currentAmount`, {})
-    return result.data
+    const result = await instance.put(`wallet/${walletUuid}/currentAmount`, {});
+    return result.data;
   } catch (error) {
-    console.error(error)
-    throw error
+    throw error;
   }
 }
 

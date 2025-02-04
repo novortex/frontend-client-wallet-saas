@@ -1,22 +1,10 @@
-import {
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from '@tanstack/react-table'
+import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
 
-import filterIcon from '../../../../assets/icons/filter.svg'
-import exportIcon from '../../../../assets/icons/export.svg'
+import filterIcon from '@/assets/icons/filter.svg'
+import exportIcon from '@/assets/icons/export.svg'
 import { useState } from 'react'
 import AddNewAssetModal from './add-new-asset-modal'
 
@@ -25,10 +13,7 @@ interface DataTableProps<TData, TValue> {
   data: TData[]
 }
 
-export function DataTableAssetOrg<TData, TValue>({
-  columns,
-  data,
-}: DataTableProps<TData, TValue>) {
+export function DataTableAssetOrg<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
     columns,
@@ -58,10 +43,7 @@ export function DataTableAssetOrg<TData, TValue>({
             {' '}
             <img src={exportIcon} alt="" /> Export
           </Button>
-          <Button
-            className="bg-[#1877F2] w-1/2 hover:bg-blue-600 p-5"
-            onClick={openModal}
-          >
+          <Button className="bg-[#1877F2] w-1/2 hover:bg-blue-600 p-5" onClick={openModal}>
             + Add new
           </Button>
         </div>
@@ -69,19 +51,11 @@ export function DataTableAssetOrg<TData, TValue>({
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow
-              key={headerGroup.id}
-              className="bg-[#131313] hover:bg-[#131313]"
-            >
+            <TableRow key={headerGroup.id} className="bg-[#131313] hover:bg-[#131313]">
               {headerGroup.headers.map((header) => {
                 return (
                   <TableHead key={header.id} className="text-white">
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
+                    {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                   </TableHead>
                 )
               })}
@@ -91,15 +65,9 @@ export function DataTableAssetOrg<TData, TValue>({
         <TableBody className="text-[#959CB6] bg-[#171717] hover:bg-[#171717]">
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
-              <TableRow
-                className="hover:bg-[#171717]"
-                key={row.id}
-                data-state={row.getIsSelected() && 'selected'}
-              >
+              <TableRow className="hover:bg-[#171717]" key={row.id} data-state={row.getIsSelected() && 'selected'}>
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
+                  <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                 ))}
               </TableRow>
             ))

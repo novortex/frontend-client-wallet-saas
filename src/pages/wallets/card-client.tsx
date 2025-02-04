@@ -1,10 +1,4 @@
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { CircleAlert, Calendar } from 'lucide-react'
 import responsibleIcon from '../../assets/image/responsible-icon.png'
 import { useNavigate } from 'react-router-dom'
@@ -50,16 +44,7 @@ const getTextAlertColor = (alerts: number) => {
   }
 }
 
-export default function CardClient({
-  name,
-  responsible,
-  alerts,
-  nextRebalancing,
-  lastRebalancing,
-  email,
-  phone,
-  walletUuid,
-}: CardClientProps) {
+export default function CardClient({ name, responsible, alerts, nextRebalancing, lastRebalancing, email, phone, walletUuid }: CardClientProps) {
   const alertColor = getTagAlertColor(alerts)
   const alertTextColor = getTextAlertColor(alerts)
   const navigate = useNavigate()
@@ -76,8 +61,7 @@ export default function CardClient({
   }
 
   // Check if the current date is after nextRebalancing
-  const isDelayedRebalancing =
-    nextRebalancing && new Date() > parseDate(nextRebalancing)
+  const isDelayedRebalancing = nextRebalancing && new Date() > parseDate(nextRebalancing)
 
   return (
     <Card
@@ -109,16 +93,10 @@ export default function CardClient({
           </div>
           <div className="flex flex-col w-full">
             <div className="h-full flex-col p-4 flex items-center justify-end">
-              <div
-                className={`${alertColor} h-full flex flex-col justify-center items-center rounded-[20px] font-bold`}
-              >
-                <p className={`${alertTextColor} text-[12px] p-2`}>
-                  {alerts} alerts
-                </p>
+              <div className={`${alertColor} h-full flex flex-col justify-center items-center rounded-[20px] font-bold`}>
+                <p className={`${alertTextColor} text-[12px] p-2`}>{alerts} alerts</p>
               </div>
-              {isDelayedRebalancing && (
-                <p className="text-red-600 text-[12px]">delayed rebalancing</p>
-              )}
+              {isDelayedRebalancing && <p className="text-red-600 text-[12px]">delayed rebalancing</p>}
             </div>
           </div>
         </CardDescription>
@@ -129,18 +107,14 @@ export default function CardClient({
             <Calendar className="text-[#F2BE38]" />
             <p>Next rebalancing:</p>
           </div>
-          <div className="flex h-full w-1/2 justify-end items-center text-base text-[#fff]">
-            {nextRebalancing}
-          </div>
+          <div className="flex h-full w-1/2 justify-end items-center text-base text-[#fff]">{nextRebalancing}</div>
         </div>
         <div className="flex flex-row h-1/2 w-full">
           <div className="flex h-full w-1/2 justify-start items-center text-base gap-2 text-[#fff]">
             <Calendar className="text-[#F2BE38]" />
             <p>Last rebalancing:</p>
           </div>
-          <div className="flex h-full w-1/2 justify-end items-center text-base text-[#fff]">
-            {lastRebalancing}
-          </div>
+          <div className="flex h-full w-1/2 justify-end items-center text-base text-[#fff]">{lastRebalancing}</div>
         </div>
       </CardContent>
     </Card>

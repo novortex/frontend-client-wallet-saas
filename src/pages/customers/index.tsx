@@ -1,35 +1,24 @@
 import { useEffect, useState } from 'react'
 import { SwitchTheme } from '@/components/custom/switch-theme'
-import {
-  getAllBenchmark,
-  getAllCustomersOrganization,
-  getAllExchange,
-  getAllManagersOnOrganization,
-} from '@/services/managementService'
+import { getAllBenchmark, getAllCustomersOrganization, getAllExchange, getAllManagersOnOrganization } from '@/services/managementService'
 import { useSignalStore } from '@/store/signalEffect'
 import { useToast } from '@/components/ui/use-toast'
-import { DataTableCustomers } from '@/components/custom/tables/customers/data-table'
-import {
-  columnsCustomerOrg,
-  CustomersOrganization,
-} from '@/components/custom/tables/customers/columns'
+import { DataTableCustomers } from '@/components/custom/customers/data-table'
+
 import { useManagerOrganization } from '@/store/managers_benckmark_exchanges'
+import { columnsCustomerOrg, CustomersOrganization } from '@/components/custom/customers/columns'
 
 export function Customers() {
   const [data, setData] = useState<CustomersOrganization[]>([])
   const [loading, setLoading] = useState(true)
   const [signal] = useSignalStore((state) => [state.signal])
-  const [setManager, setBenchs, setExchanges] = useManagerOrganization(
-    (state) => [state.setManagers, state.setBenchs, state.setExchanges],
-  )
+  const [setManager, setBenchs, setExchanges] = useManagerOrganization((state) => [state.setManagers, state.setBenchs, state.setExchanges])
 
   const { toast } = useToast()
 
   useEffect(() => {
     // TODO: separe this script this file :)
-    async function getData(
-      setDate: React.Dispatch<React.SetStateAction<CustomersOrganization[]>>,
-    ) {
+    async function getData(setDate: React.Dispatch<React.SetStateAction<CustomersOrganization[]>>) {
       try {
         const result = await getAllCustomersOrganization()
 

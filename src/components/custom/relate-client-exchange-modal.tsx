@@ -1,11 +1,5 @@
 import { Button } from '@/components/ui/button'
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '../ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
@@ -16,16 +10,10 @@ import { useState } from 'react'
 import { useRegisterWallet } from '@/store/registerWallet'
 import { useToast } from '../ui/use-toast'
 import { useSignalStore } from '@/store/signalEffect'
-import { CustomersOrganization } from './tables/customers/columns'
 import { useManagerOrganization } from '@/store/managers_benckmark_exchanges'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { registerWalletForCustomer } from '@/services/wallet/walleInfoService'
+import { CustomersOrganization } from './customers/columns'
 
 interface RelateClientExchangeModalProps {
   isOpen: boolean
@@ -33,11 +21,7 @@ interface RelateClientExchangeModalProps {
   rowInfos: CustomersOrganization
 }
 
-export default function RelateClientExchangeModal({
-  isOpen,
-  onClose,
-  rowInfos,
-}: RelateClientExchangeModalProps) {
+export default function RelateClientExchangeModal({ isOpen, onClose, rowInfos }: RelateClientExchangeModalProps) {
   const [initialFeeIsPaid, setInitialFeeIsPaid] = useState(false)
   const [exchangeInfo1, setExchangeInfo1] = useState('')
   const [exchangeInfo2, setExchangeInfo2] = useState('')
@@ -49,23 +33,9 @@ export default function RelateClientExchangeModal({
 
   const [exchanges] = useManagerOrganization((state) => [state.exchanges])
 
-  const [setSignal, signal] = useSignalStore((state) => [
-    state.setSignal,
-    state.signal,
-  ])
+  const [setSignal, signal] = useSignalStore((state) => [state.setSignal, state.signal])
 
-  const [
-    {
-      currency,
-      benchmark,
-      contract,
-      initialFee,
-      investedAmount,
-      manager,
-      performanceFee,
-      riskProfile,
-    },
-  ] = useRegisterWallet((state) => [state])
+  const [{ currency, benchmark, contract, initialFee, investedAmount, manager, performanceFee, riskProfile }] = useRegisterWallet((state) => [state])
 
   const { toast } = useToast()
 
@@ -141,7 +111,7 @@ export default function RelateClientExchangeModal({
       manager,
       exchangeInfo1,
       exchangeInfo2,
-      exchangeInfo3,
+      exchangeInfo3
     )
 
     if (!result) {
@@ -174,38 +144,25 @@ export default function RelateClientExchangeModal({
       <DialogContent className="h-4/5 w-[60%] bg-[#131313] text-[#fff] max-w-full border-transparent">
         <DialogHeader>
           <DialogTitle className="flex flex-row gap-4 text-3xl items-center">
-            Register new Wallet - (Exchange){' '}
-            <Wallet className="text-[#F2BE38]" />
+            Register new Wallet - (Exchange) <Wallet className="text-[#F2BE38]" />
           </DialogTitle>
         </DialogHeader>
         <div className="flex justify-center items-start">
           <div style={{ width: 65, height: 65 }}>
-            <CircularProgressbar
-              value={percentage}
-              text={`${Math.round(percentage)}%`}
-            />
+            <CircularProgressbar value={percentage} text={`${Math.round(percentage)}%`} />
           </div>
         </div>
 
         <div className="flex flex-col justify-evenly items-center gap-5">
           <div className="w-2/3 flex flex-row gap-4">
             <Label>Initial Fee is paid?</Label>
-            <Checkbox
-              className="border-gray-500"
-              checked={initialFeeIsPaid}
-              onCheckedChange={() => setInitialFeeIsPaid(!initialFeeIsPaid)}
-            />
+            <Checkbox className="border-gray-500" checked={initialFeeIsPaid} onCheckedChange={() => setInitialFeeIsPaid(!initialFeeIsPaid)} />
           </div>
           <div className="w-4/6">
             <Label>Exchanges *</Label>
             <Select onValueChange={(value) => setExchangeSelected(value)}>
               <SelectTrigger className="bg-[#131313] border-[#323232] text-[#959CB6]">
-                <SelectValue>
-                  {ExchangeSelected
-                    ? exchanges.find((mgr) => mgr.uuid === ExchangeSelected)
-                        ?.name
-                    : 'Name'}
-                </SelectValue>
+                <SelectValue>{ExchangeSelected ? exchanges.find((mgr) => mgr.uuid === ExchangeSelected)?.name : 'Name'}</SelectValue>
               </SelectTrigger>
               <SelectContent className="bg-[#131313] border-[#323232] text-[#959CB6]">
                 {exchanges.map((bench) => (
@@ -215,9 +172,7 @@ export default function RelateClientExchangeModal({
                 ))}
               </SelectContent>
             </Select>
-            {exchangeError && (
-              <Label className="text-red-500 mt-2">{exchangeError}</Label>
-            )}
+            {exchangeError && <Label className="text-red-500 mt-2">{exchangeError}</Label>}
           </div>
 
           <Input
@@ -226,9 +181,7 @@ export default function RelateClientExchangeModal({
             value={exchangeInfo1}
             onChange={(e) => setExchangeInfo1(e.target.value)}
           />
-          {emailError && (
-            <Label className="text-red-500 mt-2">{emailError}</Label>
-          )}
+          {emailError && <Label className="text-red-500 mt-2">{emailError}</Label>}
           <Input
             className="w-2/3 bg-[#131313] border-[#323232] text-[#959CB6]"
             placeholder="Email password"
@@ -244,10 +197,7 @@ export default function RelateClientExchangeModal({
         </div>
 
         <DialogFooter className="flex justify-end items-end">
-          <Button
-            className="bg-[#1877F2] w-1/6 hover:bg-blue-600 p-5 flex items-center justify-center gap-3"
-            onClick={closeModal}
-          >
+          <Button className="bg-[#1877F2] w-1/6 hover:bg-blue-600 p-5 flex items-center justify-center gap-3" onClick={closeModal}>
             <StepForwardIcon />
             Finish
           </Button>
