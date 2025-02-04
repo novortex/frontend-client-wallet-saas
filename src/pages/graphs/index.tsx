@@ -171,3 +171,5 @@ export function Graphs() {
     </div>
   )
 }
+export default Graphs
+
