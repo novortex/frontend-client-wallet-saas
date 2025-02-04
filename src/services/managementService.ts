@@ -13,6 +13,7 @@ export async function getAllAssetsOrg() {
     return result.data
   } catch (error) {
     console.log(error)
+    throw error
   }
 }
 
@@ -22,7 +23,7 @@ export async function addCryptoOrg(idCmc: number[]) {
     return result.data
   } catch (error) {
     console.log(error)
-    return false
+    throw error
   }
 }
 
@@ -116,7 +117,7 @@ export async function updateCustomer(
     return result.data
   } catch (error) {
     console.error('Error updating customer:', error)
-    return false
+    throw error
   }
 }
 
