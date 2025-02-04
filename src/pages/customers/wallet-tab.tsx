@@ -2,13 +2,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { DialogClose } from '@/components/ui/dialog'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Checkbox } from '@/components/ui/checkbox'
 import { CustomersOrganization } from '@/components/custom/customers/columns'
 
@@ -52,11 +46,7 @@ export function WalletTab({
   handleUpdateWallet,
 }: WalletTabProps) {
   if (!rowInfos.isWallet) {
-    return (
-      <p className="text-yellow-500">
-        Please create a wallet first before filling these details.
-      </p>
-    )
+    return <p className="text-yellow-500">Please create a wallet first before filling these details.</p>
   }
 
   return (
@@ -65,16 +55,9 @@ export function WalletTab({
         <Label className="ml-2" htmlFor="Name">
           Exchange
         </Label>
-        <Select
-          onValueChange={setExchangeSelected}
-          defaultValue={ExchangeSelected}
-        >
+        <Select onValueChange={setExchangeSelected} defaultValue={ExchangeSelected}>
           <SelectTrigger className="bg-[#131313] border-[#323232] text-[#959CB6]">
-            <SelectValue>
-              {ExchangeSelected
-                ? exchanges.find((mgr) => mgr.uuid === ExchangeSelected)?.name
-                : 'Name'}
-            </SelectValue>
+            <SelectValue>{ExchangeSelected ? exchanges.find((mgr) => mgr.uuid === ExchangeSelected)?.name : 'Name'}</SelectValue>
           </SelectTrigger>
           <SelectContent className="bg-[#131313] border-[#323232] text-[#959CB6]">
             {exchanges.map((bench) => (
@@ -137,11 +120,7 @@ export function WalletTab({
         </Label>
         <Select onValueChange={setManager} defaultValue={manager} required>
           <SelectTrigger className="bg-[#131313] border-[#323232] text-white">
-            <SelectValue>
-              {manager
-                ? managersOrganization.find((mgr) => mgr.uuid === manager)?.name
-                : 'Name'}
-            </SelectValue>
+            <SelectValue>{manager ? managersOrganization.find((mgr) => mgr.uuid === manager)?.name : 'Name'}</SelectValue>
           </SelectTrigger>
           <SelectContent className="bg-[#131313] border-[#323232] text-white">
             {managersOrganization.map((manager) => (
@@ -170,38 +149,25 @@ export function WalletTab({
 
       <div className="w-full mt-4">
         <div className="mb-3 flex gap-3">
-          <Checkbox
-            className="border-gray-500"
-            checked={!!contractChecked}
-            onCheckedChange={() => setContractChecked(!contractChecked)}
-          />
+          <Checkbox className="border-gray-500" checked={!!contractChecked} onCheckedChange={() => setContractChecked(!contractChecked)} />
           <Label>Initial Fee is paid?</Label>
         </div>
 
         <div className="flex gap-3">
-          <Checkbox
-            className="border-gray-500"
-            checked={initialFeeIsPaid ?? false}
-            onCheckedChange={() => setInitialFeeIsPaid(!initialFeeIsPaid)}
-          />
+          <Checkbox className="border-gray-500" checked={initialFeeIsPaid ?? false} onCheckedChange={() => setInitialFeeIsPaid(!initialFeeIsPaid)} />
           <Label>Contract</Label>
         </div>
       </div>
 
       <div className="mt-12 flex justify-end gap-5">
         <DialogClose asChild>
-          <Button
-            onClick={handleUpdateWallet}
-            className="bg-blue-500 hover:bg-blue-600 text-white"
-          >
+          <Button onClick={handleUpdateWallet} className="bg-blue-500 hover:bg-blue-600 text-white">
             Save Wallet
           </Button>
         </DialogClose>
 
         <DialogClose asChild>
-          <Button className="bg-red-500 hover:bg-red-600 text-white">
-            Close
-          </Button>
+          <Button className="bg-red-500 hover:bg-red-600 text-white">Close</Button>
         </DialogClose>
       </div>
     </div>

@@ -1,11 +1,6 @@
 import { TAsset } from './asset.type'
 import { TRiskProfileCounts } from './riskProfile.type'
-import {
-  TWallet,
-  TWalletAssetsInfo,
-  TWalletCommission,
-  TWalletInfos,
-} from './wallet.type'
+import { TWallet, TWalletAssetsInfo, TWalletCommission, TWalletInfos } from './wallet.type'
 
 export type TInfosCustomerResponse = {
   walletCommission: TWalletCommission[]

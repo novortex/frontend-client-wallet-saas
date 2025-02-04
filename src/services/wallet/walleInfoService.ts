@@ -1,10 +1,8 @@
-import { instance } from '@/config/api';
-import {
-  TClientInfosResponse,
-  TNewCustomerResponse,
-} from '@/types/customer.type';
-import { TInfosCustomerResponse } from '@/types/response.type';
-import { RebalanceReturn } from '@/types/wallet.type';
+import { instance } from '@/config/api'
+import { TClientInfosResponse, TNewCustomerResponse } from '@/types/customer.type'
+import { TInfosCustomerResponse } from '@/types/response.type'
+import { RebalanceReturn } from '@/types/wallet.type'
+
 
 export async function getWalletOrganization(): Promise<TClientInfosResponse[]> {
   try {
@@ -15,14 +13,11 @@ export async function getWalletOrganization(): Promise<TClientInfosResponse[]> {
   }
 }
 
-export async function getInfosCustomer(
-  walletUuid: string,
-): Promise<TInfosCustomerResponse | undefined> {
+export async function getInfosCustomer(walletUuid: string): Promise<TInfosCustomerResponse | undefined> {
   try {
-    const result = await instance.get<TInfosCustomerResponse>(
-      `wallet/${walletUuid}/infos`,
-    );
-    return result.data;
+    const result = await instance.get<TInfosCustomerResponse>(`wallet/${walletUuid}/infos`)
+    return result.data
+
   } catch (error) {
     throw error;
   }
@@ -42,7 +37,7 @@ export async function registerWalletForCustomer(
   managerUuid: string,
   accountEmail?: string,
   emailPassword?: string,
-  exchangePassword?: string,
+  exchangePassword?: string
 ) {
   try {
     const data = {
@@ -78,10 +73,7 @@ export async function updateCurrentAmount(walletUuid: string): Promise<void> {
   }
 }
 
-export async function requestCloseWallet(
-  walletUuid: string,
-  data: { customDate: string },
-) {
+export async function requestCloseWallet(walletUuid: string, data: { customDate: string }) {
   try {
     const result = await instance.put(`wallet/${walletUuid}/closeWallet`, data);
     return result.data;
@@ -99,10 +91,7 @@ export async function getGraphData(walletUuid: string) {
   }
 }
 
-export async function requestStartWallet(
-  walletUuid: string,
-  data: { customDate: string },
-) {
+export async function requestStartWallet(walletUuid: string, data: { customDate: string }) {
   try {
     const result = await instance.put(`wallet/${walletUuid}/startWallet`, data);
     return result.data;
@@ -111,15 +100,13 @@ export async function requestStartWallet(
   }
 }
 
-export async function calculateRebalanceInWallet(
-  walletUuid: string,
-): Promise<RebalanceReturn[]> {
+export async function calculateRebalanceInWallet(walletUuid: string): Promise<RebalanceReturn[]> {
   try {
-    const result = await instance.post<RebalanceReturn[]>(
-      `wallet/${walletUuid}/rebalanceWallet`,
-      {},
-    );
-    return result.data;
+    const result = await instance.post<RebalanceReturn[]>(`wallet/${walletUuid}/rebalanceWallet`, {})
+
+    console.log(`result =>`, result)
+    return result.data
+
   } catch (error) {
     throw error;
   }

@@ -1,11 +1,5 @@
 import { Button } from '@/components/ui/button'
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '../ui/input'
 import * as React from 'react'
 // import RelateClientModal from './relate-client-modal'
@@ -19,17 +13,11 @@ interface AddNewClientModalProps {
   onClose: () => void
 }
 
-export default function AddNewClientModal({
-  isOpen,
-  onClose,
-}: AddNewClientModalProps) {
+export default function AddNewClientModal({ isOpen, onClose }: AddNewClientModalProps) {
   const [name, setName] = React.useState('')
   const [email, setEmail] = React.useState('')
   const [phone, setPhone] = React.useState('')
-  const [signal, setSignal] = useSignalStore((state) => [
-    state.signal,
-    state.setSignal,
-  ])
+  const [signal, setSignal] = useSignalStore((state) => [state.signal, state.setSignal])
   const { toast } = useToast()
 
   const handleAddClient = async () => {
@@ -79,9 +67,7 @@ export default function AddNewClientModal({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="h-1/3 w-[200%] bg-[#131313] text-[#fff]">
         <DialogHeader>
-          <DialogTitle className="text-3xl text-[#fff]">
-            Register new customer
-          </DialogTitle>
+          <DialogTitle className="text-3xl text-[#fff]">Register new customer</DialogTitle>
         </DialogHeader>
         <div className="w-full flex flex-col gap-4">
           <div className="w-full h-1/2 flex flex-row justify-between gap-4 items-center">
