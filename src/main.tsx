@@ -14,8 +14,7 @@ if (rootElement) {
       authorizationParams={{
         redirect_uri: window.location.origin,
         audience: import.meta.env.VITE_AUTH0_AUDIENCE,
-        scope:
-          'openid profile email offline_access read:current_user read:roles',
+        scope: 'openid profile email offline_access read:current_user read:roles',
       }}
       useRefreshTokens={true}
       cacheLocation="localstorage"
@@ -25,7 +24,7 @@ if (rootElement) {
         <App />
         <Toaster />
       </BrowserRouter>
-    </Auth0Provider>,
+    </Auth0Provider>
   )
 } else {
   console.error("Root element with id 'root' not found")

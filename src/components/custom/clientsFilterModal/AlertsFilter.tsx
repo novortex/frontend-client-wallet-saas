@@ -32,9 +32,7 @@ export function AlertsFilter({ setFilterDelayed }: FilterProps) {
         <div className="flex items-center gap-2">
           <Checkbox
             checked={filters.alerts1to2}
-            onCheckedChange={() =>
-              handleFilterChange('alerts1to2', !filters.alerts1to2)
-            }
+            onCheckedChange={() => handleFilterChange('alerts1to2', !filters.alerts1to2)}
             className="border-[#fff]"
           />
           <label>1-2 alerts</label>
@@ -42,9 +40,7 @@ export function AlertsFilter({ setFilterDelayed }: FilterProps) {
         <div className="flex items-center gap-2">
           <Checkbox
             checked={filters.alerts2to5}
-            onCheckedChange={() =>
-              handleFilterChange('alerts2to5', !filters.alerts2to5)
-            }
+            onCheckedChange={() => handleFilterChange('alerts2to5', !filters.alerts2to5)}
             className="border-[#fff]"
           />
           <label>2-5 alerts</label>
@@ -52,9 +48,7 @@ export function AlertsFilter({ setFilterDelayed }: FilterProps) {
         <div className="flex items-center gap-2">
           <Checkbox
             checked={filters.alerts6to8}
-            onCheckedChange={() =>
-              handleFilterChange('alerts6to8', !filters.alerts6to8)
-            }
+            onCheckedChange={() => handleFilterChange('alerts6to8', !filters.alerts6to8)}
             className="border-[#fff]"
           />
           <label>6-8 alerts</label>
@@ -62,9 +56,7 @@ export function AlertsFilter({ setFilterDelayed }: FilterProps) {
         <div className="flex items-center gap-2">
           <Checkbox
             checked={filters.alerts9plus}
-            onCheckedChange={() =>
-              handleFilterChange('alerts9plus', !filters.alerts9plus)
-            }
+            onCheckedChange={() => handleFilterChange('alerts9plus', !filters.alerts9plus)}
             className="border-[#fff]"
           />
           <label>9+ alerts</label>

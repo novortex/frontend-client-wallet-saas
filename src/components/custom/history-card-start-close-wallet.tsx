@@ -1,11 +1,4 @@
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardFooter,
-} from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card'
 import { Button } from '../ui/button'
 import { HistoricEntry } from '@/types/wallet.type'
 import { downloadPdf } from '@/services/managementService'
@@ -19,14 +12,7 @@ interface HistoryCardStartCloseProps {
   data_: HistoricEntry
 }
 
-export default function HistoryCardStartClose({
-  walletState,
-  date,
-  hour,
-  initialValue,
-  closeValue,
-  data_,
-}: HistoryCardStartCloseProps) {
+export default function HistoryCardStartClose({ walletState, date, hour, initialValue, closeValue, data_ }: HistoryCardStartCloseProps) {
   const borderStyle = walletState ? 'border-[#23CE20]' : 'border-[#C81C1C]'
   const walletTitle = walletState ? 'Start Wallet' : 'Close Wallet'
   const walletValue = walletState ? 'Intial Value' : 'Invested Value'
@@ -49,7 +35,7 @@ export default function HistoryCardStartClose({
       String(data.benchmark_value),
       String(data.close_wallet_value_in_organization_fiat),
       String(data.benchmark_exceeded_value),
-      data.assets,
+      data.assets
     )
   }
 

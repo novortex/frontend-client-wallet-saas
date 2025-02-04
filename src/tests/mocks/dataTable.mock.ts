@@ -19,8 +19,7 @@ export const mockAddAssetResponse: AddAssetFunctionResponse = {
       quantity: 12,
       target_allocation: 5,
     },
-    description:
-      '"Uniswap" has been added to the wallet with a quantity of 12 and a target allocation of 5%.',
+    description: '"Uniswap" has been added to the wallet with a quantity of 12 and a target allocation of 5%.',
     historyType: 'ADD_ASSET',
     userUuid: '9ecfc98d-6313-444d-8d4e-1f171cd46fd8',
     walletUuid: '4091e88c-bfa5-4608-8514-212502fb2598',

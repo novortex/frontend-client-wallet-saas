@@ -159,7 +159,7 @@ describe('ProfileTab', () => {
   
       const nameInput = screen.getByText(/name/i)
       await userEvent.type(nameInput, 'J')
-      expect(mockProfileTabProps.setName).toHaveBeenCalledWith('John DoeJ') // testa se o input está vindo com o dado correto e se é possível escrever, ao mesmo tempo
+      expect(mockProfileTabProps.setName).toHaveBeenCalledWith('John DoeJ')
     })
   
     // it('calls handleUpdateCustomer when Save Profile is clicked', async () => {
@@ -299,7 +299,6 @@ describe('WalletTab', () => {
       })
     })
   })
-  
 
   it('calls setInitialFeeIsPaid when the "Initial Fee is paid?" checkbox is clicked', async () => {
     render(
@@ -322,7 +321,6 @@ describe('WalletTab', () => {
         <WalletTab {...mockWalletTabProps} />
       </Dialog>
     )
-
     const checkboxes = screen.getAllByRole('checkbox')
     const contractCheckbox = checkboxes[0]
     
@@ -331,6 +329,3 @@ describe('WalletTab', () => {
   expect(mockWalletTabProps.setContractChecked).toHaveBeenCalledWith(false)
     })
 })
-
-
-

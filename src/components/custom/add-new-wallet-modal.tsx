@@ -1,20 +1,8 @@
 import { Button } from '@/components/ui/button'
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '../ui/input'
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 import { useState, useEffect } from 'react'
 
@@ -31,22 +19,12 @@ interface AddNewWalletModalProps {
   fetchData: () => Promise<void>
 }
 
-export function AddNewWalletModal({
-  isOpen,
-  onClose,
-  walletUuid,
-  fetchData,
-}: AddNewWalletModalProps) {
+export function AddNewWalletModal({ isOpen, onClose, walletUuid, fetchData }: AddNewWalletModalProps) {
   const [selectedAsset, setSelectedAsset] = useState('')
   const [entryValue, setEntryValue] = useState('')
   const [allocation, setAllocation] = useState('')
-  const [assetForSelected, setAssetForSelected] = useState<
-    AssetsOrganizationForSelectedResponse[]
-  >([])
-  const [setSignal, signal] = useSignalStore((state) => [
-    state.setSignal,
-    state.signal,
-  ])
+  const [assetForSelected, setAssetForSelected] = useState<AssetsOrganizationForSelectedResponse[]>([])
+  const [setSignal, signal] = useSignalStore((state) => [state.setSignal, state.signal])
 
   const [errors, setErrors] = useState({
     asset: '',
@@ -67,12 +45,7 @@ export function AddNewWalletModal({
       description: 'Demo Vault !!',
     })
 
-    const result = await addCryptoWalletClient(
-      walletUuid,
-      selectedAsset,
-      Number(entryValue),
-      Number(allocation),
-    )
+    const result = await addCryptoWalletClient(walletUuid, selectedAsset, Number(entryValue), Number(allocation))
 
     if (result === false) {
       setSelectedAsset('')
@@ -126,13 +99,8 @@ export function AddNewWalletModal({
 
     // Validate Allocation
     const allocationValue = parseFloat(allocation)
-    if (
-      !/^\d+(\.\d{0,2})?$/.test(allocation) ||
-      allocationValue < 0 ||
-      allocationValue > 100
-    ) {
-      errorsCopy.allocation =
-        'Allocation must be a number between 0 and 100 with up to two decimal places after the point.'
+    if (!/^\d+(\.\d{0,2})?$/.test(allocation) || allocationValue < 0 || allocationValue > 100) {
+      errorsCopy.allocation = 'Allocation must be a number between 0 and 100 with up to two decimal places after the point.'
       isValid = false
     } else {
       errorsCopy.allocation = ''
@@ -143,11 +111,7 @@ export function AddNewWalletModal({
   }
 
   useEffect(() => {
-    async function getData(
-      setAssetForSelected: React.Dispatch<
-        React.SetStateAction<AssetsOrganizationForSelectedResponse[]>
-      >,
-    ) {
+    async function getData(setAssetForSelected: React.Dispatch<React.SetStateAction<AssetsOrganizationForSelectedResponse[]>>) {
       const result = await getAllAssetsInOrgForAddWalletClient()
 
       if (!result) {
@@ -182,20 +146,14 @@ export function AddNewWalletModal({
                         value={item.uuid}
                       >
                         <div className="flex gap-5">
-                          <img
-                            src={item.icon}
-                            alt={item.name}
-                            className="w-6 h-6 mr-2"
-                          />
+                          <img src={item.icon} alt={item.name} className="w-6 h-6 mr-2" />
                           {item.name}
                         </div>
                       </SelectItem>
                     ))}
                 </SelectContent>
               </Select>
-              {errors.asset && (
-                <Label className="text-red-500">{errors.asset}</Label>
-              )}
+              {errors.asset && <Label className="text-red-500">{errors.asset}</Label>}
             </div>
             <div className="flex flex-col w-1/2 gap-3">
               <Input
@@ -204,9 +162,7 @@ export function AddNewWalletModal({
                 value={entryValue}
                 onChange={(e) => setEntryValue(e.target.value)}
               />
-              {errors.entryValue && (
-                <Label className="text-red-500">{errors.entryValue}</Label>
-              )}
+              {errors.entryValue && <Label className="text-red-500">{errors.entryValue}</Label>}
             </div>
           </div>
           <div className="w-full h-1/2 flex flex-row justify-between gap-4 items-center">
@@ -217,17 +173,12 @@ export function AddNewWalletModal({
                 value={allocation}
                 onChange={(e) => setAllocation(e.target.value)}
               />
-              {errors.allocation && (
-                <Label className="text-red-500">{errors.allocation}</Label>
-              )}
+              {errors.allocation && <Label className="text-red-500">{errors.allocation}</Label>}
             </div>
           </div>
         </div>
         <DialogFooter className="flex justify-end items-end">
-          <Button
-            className="bg-[#1877F2] w-1/4 hover:bg-blue-600 p-5"
-            onClick={handleAddAsset}
-          >
+          <Button className="bg-[#1877F2] w-1/4 hover:bg-blue-600 p-5" onClick={handleAddAsset}>
             Add asset
           </Button>
         </DialogFooter>

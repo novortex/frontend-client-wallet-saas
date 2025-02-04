@@ -1,17 +1,6 @@
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from 'recharts'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from '@/components/ui/chart'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -48,10 +37,7 @@ export function WalletGraph() {
         try {
           const data = await getGraphData(walletUuid)
 
-          const sortedData = data.sort(
-            (a: graphDataEntry, b: graphDataEntry) =>
-              new Date(a.createAt).getTime() - new Date(b.createAt).getTime(),
-          )
+          const sortedData = data.sort((a: graphDataEntry, b: graphDataEntry) => new Date(a.createAt).getTime() - new Date(b.createAt).getTime())
 
           setGraphData(sortedData)
         } catch (error) {
@@ -106,16 +92,8 @@ export function WalletGraph() {
   const chartData = isMonthlyView ? monthlyData : formattedChartData
 
   // Encontrar os valores mínimos e máximos
-  const minValue = Math.min(
-    ...graphData.map((entry) =>
-      Math.min(entry.cryptoMoney, entry.benchmarkMoney),
-    ),
-  )
-  const maxValue = Math.max(
-    ...graphData.map((entry) =>
-      Math.max(entry.cryptoMoney, entry.benchmarkMoney),
-    ),
-  )
+  const minValue = Math.min(...graphData.map((entry) => Math.min(entry.cryptoMoney, entry.benchmarkMoney)))
+  const maxValue = Math.max(...graphData.map((entry) => Math.max(entry.cryptoMoney, entry.benchmarkMoney)))
 
   return (
     <Card className="bg-[#131313] text-card-foreground p-4 rounded-lg shadow-lg border-transparent">
@@ -133,9 +111,7 @@ export function WalletGraph() {
             <div className="flex flex-row text-[#fff] gap-2 items-center">
               <Checkbox
                 checked={showBenchmark}
-                onCheckedChange={(checked) =>
-                  setShowBenchmark(checked === true)
-                }
+                onCheckedChange={(checked) => setShowBenchmark(checked === true)}
                 className="border-transparent bg-[#11a45c] data-[state=checked]:bg-[#11a45c]"
               />
               <Label className="text-lg">Benchmark</Label>
@@ -149,20 +125,13 @@ export function WalletGraph() {
             />
           </div>
         </CardTitle>
-        <CardDescription className="text-sm text-muted-foreground text-[#fff] text-lg">
-          Graphic | Profitability x Time
-        </CardDescription>
+        <CardDescription className="text-sm text-muted-foreground text-[#fff] text-lg">Graphic | Profitability x Time</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="mb-4">
           <LineChart data={chartData}>
             <CartesianGrid vertical={false} horizontal={true} />
-            <XAxis
-              dataKey="date"
-              tickLine={false}
-              axisLine={false}
-              tickMargin={8}
-            />
+            <XAxis dataKey="date" tickLine={false} axisLine={false} tickMargin={8} />
             <YAxis
               domain={[minValue, maxValue]}
               tickLine={false}
@@ -175,24 +144,8 @@ export function WalletGraph() {
                 return value.toFixed(2)
               }}
             />
-            {showWallet && (
-              <Line
-                dataKey="wallet"
-                type="linear"
-                stroke="#1878f3"
-                strokeWidth={1.5}
-                dot={true}
-              />
-            )}
-            {showBenchmark && (
-              <Line
-                dataKey="Benchmark"
-                type="linear"
-                stroke="#11a45c"
-                strokeWidth={1.5}
-                dot={true}
-              />
-            )}
+            {showWallet && <Line dataKey="wallet" type="linear" stroke="#1878f3" strokeWidth={1.5} dot={true} />}
+            {showBenchmark && <Line dataKey="Benchmark" type="linear" stroke="#11a45c" strokeWidth={1.5} dot={true} />}
             <ChartTooltip cursor={true} content={<ChartTooltipContent />} />
           </LineChart>
         </ChartContainer>

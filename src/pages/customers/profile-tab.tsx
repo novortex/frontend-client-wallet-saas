@@ -22,17 +22,7 @@ interface ProfileTabProps {
   handleUpdateCustomer: () => Promise<void>
 }
 
-export function ProfileTab({
-  name,
-  email,
-  phone,
-  errors,
-  setName,
-  setEmail,
-  setPhone,
-  setPhoneCountry,
-  handleUpdateCustomer,
-}: ProfileTabProps) {
+export function ProfileTab({ name, email, phone, errors, setName, setEmail, setPhone, setPhoneCountry, handleUpdateCustomer }: ProfileTabProps) {
   return (
     <div>
       <div className="grid justify-items-center grid-cols-2 gap-5">
@@ -65,9 +55,7 @@ export function ProfileTab({
             placeholder="Email"
             required
           />
-          {errors.email && (
-            <Label className="text-red-500">{errors.email}</Label>
-          )}
+          {errors.email && <Label className="text-red-500">{errors.email}</Label>}
         </div>
 
         <div>
@@ -79,13 +67,7 @@ export function ProfileTab({
             value={phone}
             onChange={(phone, country) => {
               setPhone(phone)
-              if (
-                country &&
-                'name' in country &&
-                'dialCode' in country &&
-                'countryCode' in country &&
-                'format' in country
-              ) {
+              if (country && 'name' in country && 'dialCode' in country && 'countryCode' in country && 'format' in country) {
                 setPhoneCountry(country as CountryData)
               }
             }}
@@ -100,24 +82,17 @@ export function ProfileTab({
               width: '100%',
             }}
           />
-          {errors.phone && (
-            <Label className="text-red-500">{errors.phone}</Label>
-          )}
+          {errors.phone && <Label className="text-red-500">{errors.phone}</Label>}
         </div>
       </div>
 
       <div className="mt-12 flex justify-end gap-5">
-        <Button
-          onClick={handleUpdateCustomer}
-          className="bg-blue-500 hover:bg-blue-600 text-white"
-        >
+        <Button onClick={handleUpdateCustomer} className="bg-blue-500 hover:bg-blue-600 text-white">
           Save Profile
         </Button>
 
         <DialogClose asChild>
-          <Button className="bg-red-500 hover:bg-red-600 text-white">
-            Close
-          </Button>
+          <Button className="bg-red-500 hover:bg-red-600 text-white">Close</Button>
         </DialogClose>
       </div>
     </div>
