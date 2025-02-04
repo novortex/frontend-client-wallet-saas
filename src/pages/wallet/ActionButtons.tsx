@@ -30,21 +30,28 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
   const [error, setError] = useState('')
   const [selectedPeriod, setSelectedPeriod] = useState<'sixmonths' | 'month' | 'week' | null>(null)
   const [kpis, setKpis] = useState<KpiData>({
-    walletPerformance: 0,
-    bitcoinBenchmark: 0,
-    hash11Benchmark: 0,
-    sp500Benchmark: 0,
-  })
+    walletPerformance: { performance: "", percentagePerformance: "" },
+    bitcoinPerformance: { performance: "", percentagePerformance: "" },
+    hash11Performance: { performance: "", percentagePerformance: "" },
+    sp500Performance: { performance: "", percentagePerformance: "" },
+  });
+
+  console.log('WALLET', kpis.walletPerformance)
+  console.log('BITCOIN', kpis.bitcoinPerformance)
+  console.log('HASH11', kpis.hash11Performance)
+  console.log('SP500', kpis.sp500Performance)
 
   const fetchKpis = async (period: 'sixmonths' | 'month' | 'week') => {
-    if (!walletUuid) return
+    if (!walletUuid || !period) return
 
     setLoading(true)
     setError('')
     setSelectedPeriod(period)
     try {
       const kpiData = await getWalletKpis(walletUuid, period)
-      console.log(kpiData)
+      console.log('kpi data', kpiData)
+      console.log('period', period)
+
       setKpis(kpiData)
     } catch (err) {
       setError('Error fetching data')
@@ -99,14 +106,36 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
             </div>
 
             {/* KPI Cards */}
-            {loading && <p className="text-gray-400 text-center">Loading...</p>}
-            {error && <p className="text-red-500 text-center">{error}</p>}
-            {!loading && !error && selectedPeriod && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:grid-cols-2 lg:grid-cols-2 w-full">
-                <KpiCard title="Wallet Performance" value={kpis.walletPerformance} />
-                <KpiCard title="Bitcoin Performance" value={kpis.bitcoinBenchmark} />
-                <KpiCard title="Hash11 Performance" value={kpis.hash11Benchmark} />
-                <KpiCard title="S&P500 Performance" value={kpis.sp500Benchmark} />
+            {!loading && !error && kpis && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:grid-cols-2 lg:grid-cols-2 w-full items-center">
+                <KpiCard
+                  title="Wallet Performance"
+                  performance={kpis?.walletPerformance?.performance ?? ""}
+                  percentagePerformance={kpis?.walletPerformance?.percentagePerformance ?? ""}
+                  startDateUsed={kpis?.walletPerformance?.startDateUsed ?? ""}
+                  endDateUsed={kpis?.walletPerformance?.endDateUsed ?? ""}
+                />
+                <KpiCard
+                  title="Bitcoin Performance"
+                  performance={kpis?.bitcoinPerformance?.performance ?? ""}
+                  percentagePerformance={kpis?.bitcoinPerformance?.percentagePerformance ?? ""}
+                  startDateUsed={kpis?.bitcoinPerformance?.startDateUsed ?? ""}
+                  endDateUsed={kpis?.bitcoinPerformance?.endDateUsed ?? ""}
+                />
+                <KpiCard
+                  title="Hash11 Performance"
+                  performance={kpis?.hash11Performance?.performance ?? ""}
+                  percentagePerformance={kpis?.hash11Performance?.percentagePerformance ?? ""}
+                  startDateUsed={kpis?.hash11Performance?.startDateUsed ?? ""}
+                  endDateUsed={kpis?.hash11Performance?.endDateUsed ?? ""}
+                />
+                <KpiCard
+                  title="S&P500 Performance"
+                  performance={kpis?.sp500Performance?.performance ?? ""}
+                  percentagePerformance={kpis?.sp500Performance?.percentagePerformance ?? ""}
+                  startDateUsed={kpis?.sp500Performance?.startDateUsed ?? ""}
+                  endDateUsed={kpis?.sp500Performance?.endDateUsed ?? ""}
+                />
               </div>
             )}
           </DialogContent>

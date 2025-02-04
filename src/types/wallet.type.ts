@@ -114,8 +114,28 @@ export type RebalanceReturn = {
 
 
 export type KpiData = {
-  walletPerformance: number | null
-  bitcoinBenchmark: number | null
-  hash11Benchmark: number | null
-  sp500Benchmark: number | null
+  walletPerformance: {
+    performance: number | string;
+    percentagePerformance: string;
+    startDateUsed?: string;
+    endDateUsed?: string;
+  };
+  bitcoinPerformance: {
+    performance: number | string;
+    percentagePerformance: string;
+    startDateUsed?: string;
+    endDateUsed?: string;
+  };
+  hash11Performance: {
+    performance: number | string;
+    percentagePerformance: string;
+    startDateUsed?: string;
+    endDateUsed?: string;
+  };
+  sp500Performance: {
+    performance: number | string;
+    percentagePerformance: string;
+    startDateUsed?: string;
+    endDateUsed?: string;
+  };
 };
