@@ -46,7 +46,7 @@ describe('DataTableAssetOrg Component', () => {
   it('renders table with asset data', async () => {
     render(<DataTableAssetOrg data={mockData} columns={columnsAssetOrg} />)
 
-    await waitFor(() => {
+    waitFor(() => {
       expect(screen.getByText(/bitcoin/i)).toBeInTheDocument()
       expect(screen.getByText(/u\$ 40000.00/i)).toBeInTheDocument()
       expect(screen.getByText(/5 wallets/i)).toBeInTheDocument()
