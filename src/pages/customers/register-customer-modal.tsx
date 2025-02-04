@@ -111,7 +111,7 @@ export default function RegisterCustomerModal({
     }
 
     const name = nameRef.current?.value
-    const email = emailRef.current?.value
+    const email = emailRef.current?.value.toLowerCase().trim()
 
     onClose()
 

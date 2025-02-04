@@ -135,10 +135,11 @@ export function EditCustomerModal({
       })
 
       const formattedPhone = formatPhoneNumber(phone)
+      const formattedEmail = email.toLowerCase().trim()
 
       const result = await updateCustomer(rowInfos.id, {
         name,
-        email,
+        email: formattedEmail,
         phone: formattedPhone,
       })
 
