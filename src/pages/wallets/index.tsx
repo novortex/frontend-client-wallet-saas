@@ -57,8 +57,7 @@ export function Clients() {
     fetchClients()
   }, [fetchClients])
 
-  const normalizeRiskProfile = (riskProfile: string) =>
-    riskProfile.toLowerCase().replace(/_/g, '-')
+  const normalizeRiskProfile = (riskProfile: string) => riskProfile.toLowerCase().replace(/_/g, '-')
 
   const applyFilters = useCallback(() => {
     const {
@@ -81,21 +80,13 @@ export function Clients() {
           .toLowerCase()
           .includes(searchTerm.toLowerCase())
 
-        const managerMatches =
-          selectedManagers.length === 0 ||
-          selectedManagers.includes(client.managerName)
+        const managerMatches = selectedManagers.length === 0 || selectedManagers.includes(client.managerName)
 
-        const unbalancedMatches =
-          !filterUnbalanced ||
-          (client.nextBalance && new Date(client.nextBalance) < new Date())
+        const unbalancedMatches = !filterUnbalanced || (client.nextBalance && new Date(client.nextBalance) < new Date())
 
         const walletTypeMatches =
           selectedWalletTypes.length === 0 ||
-          selectedWalletTypes.some(
-            (type) =>
-              normalizeRiskProfile(type) ===
-              normalizeRiskProfile(client.riskProfile),
-          )
+          selectedWalletTypes.some((type) => normalizeRiskProfile(type) === normalizeRiskProfile(client.riskProfile))
 
         const exchangeMatches =
           selectedExchanges.length === 0 ||
@@ -159,6 +150,7 @@ export function Clients() {
           placeholder="Search for ..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
+          data-testid='search-input'
         />
         <ClientsFilterModal handleApplyFilters={handleApplyFilters} />
       </div>
@@ -176,16 +168,8 @@ export function Clients() {
               phone={client.infosClient.phone}
               alerts={0}
               responsible={client.managerName}
-              lastRebalancing={
-                client.lastBalance
-                  ? formatDate(client.lastBalance.toString())
-                  : '-'
-              }
-              nextRebalancing={
-                client.nextBalance
-                  ? formatDate(client.nextBalance.toString())
-                  : '-'
-              }
+              lastRebalancing={client.lastBalance ? formatDate(client.lastBalance.toString()) : '-'}
+              nextRebalancing={client.nextBalance ? formatDate(client.nextBalance.toString()) : '-'}
             />
           ))}
         </div>
@@ -193,3 +177,4 @@ export function Clients() {
     </div>
   )
 }
+export { Clients as Wallets }

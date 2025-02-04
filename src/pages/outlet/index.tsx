@@ -14,21 +14,9 @@ export default function Root() {
         <SideBar alerts={0}>
           <div className="mb-5">
             <h3 className="text-white font-medium">Admin</h3>
-            <SideBarItem
-              icon={<Wallet2Icon size={20} />}
-              text="Wallets"
-              href="/wallets"
-            ></SideBarItem>
-            <SideBarItem
-              icon={<UsersIcon size={20} />}
-              text="Customers"
-              href="/customers"
-            ></SideBarItem>
-            <SideBarItem
-              icon={<Coins size={20} />}
-              text="Assets organization"
-              href="/admin/orgs"
-            ></SideBarItem>
+            <SideBarItem icon={<Wallet2Icon size={20} />} text="Wallets" href="/wallets"></SideBarItem>
+            <SideBarItem icon={<UsersIcon size={20} />} text="Customers" href="/customers"></SideBarItem>
+            <SideBarItem icon={<Coins size={20} />} text="Assets organization" href="/admin/orgs"></SideBarItem>
           </div>
           <div className="mb-5">
             {/* <h3 className="text-white font-semibold">Client</h3> */}

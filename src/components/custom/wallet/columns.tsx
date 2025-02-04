@@ -20,36 +20,24 @@ export type ClientActive = {
   buyOrSell: number
 }
 
-export const createColumns = (
-  fetchData: () => void,
-): ColumnDef<ClientActive>[] => [
+export const createColumns = (fetchData: () => void): ColumnDef<ClientActive>[] => [
   {
     accessorKey: 'asset',
     header: 'Asset',
     cell: ({ row }) => (
       <div className="flex items-center">
-        <img
-          src={row.original.asset.urlImage}
-          alt={row.original.asset.name}
-          className="w-6 h-6 mr-2"
-        />
+        <img src={row.original.asset.urlImage} alt={row.original.asset.name} className="w-6 h-6 mr-2" />
         <span>{row.original.asset.name}</span>
       </div>
     ),
     filterFn: (row, _columnId, filterValue) => {
-      return row.original.asset.name
-        .toLowerCase()
-        .includes(filterValue.toLowerCase())
+      return row.original.asset.name.toLowerCase().includes(filterValue.toLowerCase())
     },
   },
   {
     accessorKey: 'currentAmount',
     header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        className="pl-0"
-      >
+      <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} className="pl-0">
         Invested amount
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
@@ -89,16 +77,10 @@ export const createColumns = (
     id: 'idealAllocation',
     accessorKey: 'idealAllocation',
     header: ({ column, table }) => {
-      const idealAllocationSum = table
-        .getRowModel()
-        .rows.reduce((total, row) => total + row.original.idealAllocation, 0)
+      const idealAllocationSum = table.getRowModel().rows.reduce((total, row) => total + row.original.idealAllocation, 0)
 
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          className="pl-0"
-        >
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} className="pl-0">
           Ideal allocation ({idealAllocationSum.toFixed(2)}%)
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
@@ -129,8 +111,6 @@ export const createColumns = (
   },
   {
     id: 'actions',
-    cell: ({ row }) => (
-      <CellActions rowInfos={row.original} fetchData={fetchData} />
-    ),
+    cell: ({ row }) => <CellActions rowInfos={row.original} fetchData={fetchData} />,
   },
 ]

@@ -1,9 +1,6 @@
 import { instance } from '@/config/api'
 import { BenchmarksProps } from '@/types/asset.type'
-import {
-  TCustomersOrganization,
-  TNewCustomerResponse,
-} from '@/types/customer.type'
+import { TCustomersOrganization, TNewCustomerResponse } from '@/types/customer.type'
 import { TAssetsOrganizationResponse } from '@/types/response.type'
 
 export async function getAllAssetsOrg() {
@@ -24,25 +21,18 @@ export async function addCryptoOrg(idCmc: number[]) {
     return result.data
   } catch (error) {
     console.log(error)
-    return false
+    throw error
   }
 }
 
-export async function registerNewCustomer(
-  name: string,
-  email: string,
-  phone?: string,
-): Promise<TNewCustomerResponse> {
+export async function registerNewCustomer(name: string, email: string, phone?: string): Promise<TNewCustomerResponse> {
   try {
     const data = {
       name,
       email,
       phone,
     }
-    const result = await instance.post<TNewCustomerResponse>(
-      'management/costumer',
-      data,
-    )
+    const result = await instance.post<TNewCustomerResponse>('management/costumer', data)
     return result.data
   } catch (error) {
     console.error('Error registering new customer:', error)
@@ -60,9 +50,7 @@ export async function confirmContactClient(walletUuid: string) {
   }
 }
 
-export async function getAllManagersOnOrganization(): Promise<
-  { name: string; uuid: string }[]
-> {
+export async function getAllManagersOnOrganization(): Promise<{ name: string; uuid: string }[]> {
   try {
     const result = await instance.get('management/managers')
     return result.data
@@ -74,8 +62,7 @@ export async function getAllManagersOnOrganization(): Promise<
 
 export async function getAllCustomersOrganization() {
   try {
-    const result =
-      await instance.get<TCustomersOrganization[]>('management/clients')
+    const result = await instance.get<TCustomersOrganization[]>('management/clients')
     return result.data
   } catch (error) {
     console.log(error)
@@ -108,17 +95,14 @@ export async function updateCustomer(
     name: string
     email: string
     phone: string | null
-  },
+  }
 ) {
   try {
-    const result = await instance.put(
-      `management/customer/${customerUuid}`,
-      data,
-    )
+    const result = await instance.put(`management/customer/${customerUuid}`, data)
     return result.data
   } catch (error) {
     console.error('Error updating customer:', error)
-    return false
+    throw error
   }
 }
 
@@ -133,7 +117,7 @@ export async function updateWallet(
     emailPassword: string
     accountPassword: string
     performanceFee: number
-  },
+  }
 ) {
   try {
     const result = await instance.put(`management/wallet/${walletUuid}`, data)
@@ -160,7 +144,7 @@ export async function downloadPdf(
   wallet_benchmark_value: string,
   close_wallet_value_in_organization_fiat: string,
   wallet_benchmark_exceeded_value: string,
-  assets: { name: string; allocation: number }[],
+  assets: { name: string; allocation: number }[]
 ) {
   const pdfData = {
     client_name,
@@ -222,9 +206,7 @@ export async function getAllExchange() {
 
 export async function getExchangesDisposables() {
   try {
-    const result = await instance.get<{ name: string; uuid: string }[]>(
-      `/management/exchanges`,
-    )
+    const result = await instance.get<{ name: string; uuid: string }[]>(`/management/exchanges`)
     return result.data
   } catch (error) {
     console.log(error)

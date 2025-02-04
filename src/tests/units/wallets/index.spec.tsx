@@ -1,91 +1,171 @@
-// import { render, screen } from '@testing-library/react'
-// import '@testing-library/jest-dom'
-// import { MemoryRouter } from 'react-router-dom'
-// import { ActionButtons } from '../../../pages/wallet'
-// import { Header } from '../../../pages/wallet/Header'
-// import { TriggerSection } from '../../../pages/wallet/TriggerSection'
-// import { WalletInfo } from '../../../pages/wallet/WalletInfo'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import CardClient from '../../../pages/wallets/card-client';
+import { Wallets } from '../../../pages/wallets/index.tsx';
+import { getWalletOrganization } from '@/services/wallet/walleInfoService';
 
-// describe('ActionButtons Component', () => {
-//   it('should render buttons without crashing', () => {
-//     render(
-//       <MemoryRouter>
-//         <ActionButtons
-//           walletUuid="test-wallet-uuid"
-//           openOperationModal={() => {}}
-//           openCloseWalletModal={() => {}}
-//           openOrCloseModalRebalanced={() => {}}
-//           infosWallet={undefined}
-//         />
-//       </MemoryRouter>,
-//     )
+// Mock do serviço de busca de clientes
+jest.mock('@/services/wallet/walleInfoService', () => ({
+  getWalletOrganization: jest.fn(),
+}));
 
-//     expect(
-//       screen.getByRole('button', { name: 'Rebalanced' }),
-//     ).toBeInTheDocument()
-//     expect(screen.getByRole('button', { name: 'Historic' })).toBeInTheDocument()
-//     expect(
-//       screen.getByRole('button', { name: 'Withdrawal / Deposit' }),
-//     ).toBeInTheDocument()
-//     expect(
-//       screen.getByRole('button', { name: /Start Wallet|Close Wallet/ }),
-//     ).toBeInTheDocument()
-//   })
-// })
+// Mock do toast
+jest.mock('@/components/ui/use-toast', () => ({
+  toast: jest.fn(),
+}));
 
-// describe('WalletInfo Component', () => {
-//   it('should render wallet information correctly', () => {
-//     const mockData = {
-//       startDate: '01/01/2023',
-//       investedAmount: 1000,
-//       currentAmount: 1500,
-//       performanceFee: 0.5,
-//       lastRebalance: '02/01/2023',
-//       monthCloseDate: '01/02/2023',
-//     }
+// Mock do useNavigate
+const mockNavigate = jest.fn();
+jest.mock('react-router-dom', () => ({
+  useNavigate: () => mockNavigate,
+}));
 
-//     render(<WalletInfo ownerName={''} isClosed={false} {...mockData} />)
+// Mock dos dados de clientes
+const mockClients = [
+  {
+    walletUuid: '1',
+    infosClient: {
+      name: 'John Doe',
+      email: 'john@example.com',
+      phone: '+1234567890',
+    },
+    managerName: 'Manager One',
+    lastBalance: '2023-10-01',
+    nextBalance: '2023-11-01',
+  },
+  {
+    walletUuid: '2',
+    infosClient: {
+      name: 'Jane Doe',
+      email: 'jane@example.com',
+      phone: '+0987654321',
+    },
+    managerName: 'Manager Two',
+    lastBalance: '2023-09-01',
+    nextBalance: '2023-12-01',
+  },
+];
 
-//     expect(screen.getByText('Start date')).toBeInTheDocument()
-//     expect(screen.getByText('01/01/2023')).toBeInTheDocument()
-//     expect(screen.getByText('Invested Amount')).toBeInTheDocument()
-//     expect(screen.getByText('1000.00')).toBeInTheDocument()
-//     expect(screen.getByText('Current Amount')).toBeInTheDocument()
-//     expect(screen.getByText('1500.00')).toBeInTheDocument()
-//     expect(screen.getByText('Last rebalancing')).toBeInTheDocument()
-//     expect(screen.getByText('02/01/2023')).toBeInTheDocument()
-//     expect(screen.getByText('Month closing date')).toBeInTheDocument()
-//     expect(screen.getByText('01/02/2023')).toBeInTheDocument()
-//     expect(screen.getByText('Performance fee')).toBeInTheDocument()
-//     expect(screen.getByText('0.50')).toBeInTheDocument()
-//   })
-// })
+// Testes para o componente CardClient
+describe('CardClient', () => {
+  it('renders the card with correct data', () => {
+    render(
+      <CardClient
+        name="John Doe"
+        email="john@example.com"
+        phone="+1234567890"
+        alerts={3}
+        responsible="Manager One"
+        lastRebalancing="2023-10-01"
+        nextRebalancing="2023-11-01"
+        walletUuid="1"
+      />,
+    );
 
-// describe('Header Component', () => {
-//   it('renders the header title', () => {
-//     render(<Header walletUuid={undefined} />)
-//     expect(screen.getByText('Client wallet')).toBeInTheDocument()
-//   })
-// })
+    expect(screen.getByText('John Doe')).toBeInTheDocument();
+    expect(screen.getByText('Manager One')).toBeInTheDocument();
+    expect(screen.getByText('3 alerts')).toBeInTheDocument();
+    expect(screen.getByText('Next rebalancing:')).toBeInTheDocument();
+    expect(screen.getByText('Last rebalancing:')).toBeInTheDocument();
+  });
 
-// describe('TriggerSection Component', () => {
-//   const defaultProps = {
-//     isOperationModalOpen: false,
-//     closeOperationModal: jest.fn(),
-//     isCloseWalletModalOpen: false,
-//     closeCloseWalletModal: jest.fn(),
-//     closeModalState: false,
-//     isModalRebalance: false,
-//     openOrCloseModalRebalanced: jest.fn(),
-//     fetchData: jest.fn(),
-//   }
+  it('navigates to the correct page on card click', () => {
+    render(
+      <CardClient
+        name="John Doe"
+        email="john@example.com"
+        phone="+1234567890"
+        alerts={3}
+        responsible="Manager One"
+        lastRebalancing="2023-10-01"
+        nextRebalancing="2023-11-01"
+        walletUuid="1"
+      />,
+    );
 
-//   it('should render basic elements correctly', () => {
-//     render(<TriggerSection {...defaultProps} />)
+    fireEvent.click(screen.getByText('John Doe'));
+    expect(mockNavigate).toHaveBeenCalledWith('/clients/1/infos', {
+      state: { name: 'John Doe', email: 'john@example.com', phone: '+1234567890' },
+    });
+  });
 
-//     expect(screen.getByText('My Triggers')).toBeInTheDocument()
-//     expect(
-//       screen.getByRole('button', { name: 'Trigger Action' }),
-//     ).toBeInTheDocument()
-//   })
-// })
+  it('displays the correct alert color based on the number of alerts', () => {
+    render(
+      <CardClient
+        name="John Doe"
+        email="john@example.com"
+        phone="+1234567890"
+        alerts={5}
+        responsible="Manager One"
+        lastRebalancing="2023-10-01"
+        nextRebalancing="2023-11-01"
+        walletUuid="1"
+      />,
+    );
+
+    const alertDiv = screen.getByText('5 alerts').parentElement;
+    expect(alertDiv).toHaveClass('bg-yellow-500');
+  });
+});
+
+// Testes para o componente Clients
+describe('Clients', () => {
+  beforeEach(() => {
+    (getWalletOrganization as jest.Mock).mockResolvedValue(mockClients);
+  });
+
+  it('renders the list of clients', async () => {
+    render(<Wallets />);
+
+    waitFor(() => {
+      expect(screen.getByText('John')).toBeInTheDocument();
+    });
+  });
+
+  it('filters clients based on search term', async () => {
+    render(<Wallets />);
+
+    waitFor(() => {
+      const searchInput = screen.getByRole('input');
+      userEvent.type(searchInput, 'John');
+    });
+
+    waitFor(() => {
+      expect(screen.getByText('John Doe')).toBeInTheDocument();
+      expect(screen.queryByText('Jane Doe')).not.toBeInTheDocument();
+    });
+  });
+
+  it('displays loading state while fetching data', async () => {
+    (getWalletOrganization as jest.Mock).mockImplementation(
+      () => new Promise(() => {}),
+    );
+
+    render(<Wallets />);
+
+    waitFor(() => expect(screen.getByText(/loading/i)).toBeInTheDocument());
+  });
+
+  it('displays "No wallets found" when there are no clients', async () => {
+    waitFor(() => (getWalletOrganization as jest.Mock).mockResolvedValue([]));
+
+    render(<Wallets />);
+
+    waitFor(() => {
+      expect(screen.getByText('No wallets found')).toBeInTheDocument();
+    });
+  });
+
+  it('applies filters correctly', async () => {
+    render(<Wallets />);
+
+    waitFor(() => {
+    const filterButton = screen.getByText(/filters/i);
+    userEvent.click(filterButton);
+    });
+
+    waitFor(() => {
+      expect(screen.getByText('John Doe')).toBeInTheDocument();
+    });
+  });
+});

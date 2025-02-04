@@ -25,25 +25,13 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
     <div className="flex items-center justify-between mb-10">
       <Label className="text-2xl text-white">{infosWallet?.ownerName}</Label>
       <div className="flex gap-5">
-        <Button
-          className="bg-[#F2BE38] text-black hover:text-white hover:bg-yellow-600"
-          onClick={openOperationModal}
-        >
+        <Button className="bg-[#F2BE38] text-black hover:text-white hover:bg-yellow-600" onClick={openOperationModal}>
           <HandCoins /> Withdrawal / Deposit
         </Button>
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => navigate(`/wallet/${walletUuid}/history`)}
-          className=" hover:bg-gray-400"
-        >
+        <Button type="button" variant="outline" onClick={() => navigate(`/wallet/${walletUuid}/history`)} className=" hover:bg-gray-400">
           Historic
         </Button>
-        <Button
-          type="button"
-          className="bg-[#F2BE38] text-black hover:text-white hover:bg-yellow-600"
-          onClick={openOrCloseModalRebalanced}
-        >
+        <Button type="button" className="bg-[#F2BE38] text-black hover:text-white hover:bg-yellow-600" onClick={openOrCloseModalRebalanced}>
           Rebalanced
         </Button>
         <Button

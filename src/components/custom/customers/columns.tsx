@@ -51,10 +51,7 @@ export const columnsCustomerOrg: ColumnDef<CustomersOrganization>[] = [
     accessorKey: 'active',
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
           Status
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
@@ -62,23 +59,14 @@ export const columnsCustomerOrg: ColumnDef<CustomersOrganization>[] = [
     },
     cell: ({ getValue }) => {
       const active = getValue<boolean>()
-      return (
-        <span
-          className={`px-2 py-1 rounded-full text-white ${active ? 'bg-green-500' : 'bg-red-500'}`}
-        >
-          {active ? 'Active' : 'Inactive'}
-        </span>
-      )
+      return <span className={`px-2 py-1 rounded-full text-white ${active ? 'bg-green-500' : 'bg-red-500'}`}>{active ? 'Active' : 'Inactive'}</span>
     },
   },
   {
     accessorKey: 'isWallet',
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
           Stage
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
@@ -87,9 +75,7 @@ export const columnsCustomerOrg: ColumnDef<CustomersOrganization>[] = [
     cell: ({ getValue }) => {
       const isWallet = getValue<boolean>()
       return (
-        <span
-          className={`px-2 py-1 rounded-full text-white ${isWallet ? 'bg-green-500' : 'bg-red-500'}`}
-        >
+        <span className={`px-2 py-1 rounded-full text-white ${isWallet ? 'bg-green-500' : 'bg-red-500'}`}>
           {isWallet ? 'Completed' : 'Need Wallet'}
         </span>
       )

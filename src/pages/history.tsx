@@ -5,14 +5,7 @@ import filterIcon from '../assets/image/filter-lines.png'
 import HistoryThread from '@/components/custom/history-thread'
 import { useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb'
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb'
 import { HistoricEntry } from '@/types/wallet.type'
 import { DateRange } from 'react-day-picker'
 import { getWalletHistoric } from '@/services/historicService'
@@ -49,53 +42,34 @@ export function History() {
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink
-                className="text-2xl text-white font-medium"
-                href="/wallets"
-              >
+              <BreadcrumbLink className="text-2xl text-white font-medium" href="/wallets">
                 Wallets
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink
-                className="text-2xl text-white font-medium"
-                href={`/clients/${walletUuid}/infos`}
-              >
+              <BreadcrumbLink className="text-2xl text-white font-medium" href={`/clients/${walletUuid}/infos`}>
                 Information clients
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink
-                className="text-2xl text-white font-medium"
-                href={`/wallet/${walletUuid}/assets`}
-              >
+              <BreadcrumbLink className="text-2xl text-white font-medium" href={`/wallet/${walletUuid}/assets`}>
                 Client wallet
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage className="text-2xl text-white font-medium">
-                Historic
-              </BreadcrumbPage>
+              <BreadcrumbPage className="text-2xl text-white font-medium">Historic</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
         <SwitchTheme />
       </div>
       <div className="flex items-center justify-between mb-10">
-        <Input
-          className="bg-[#171717] w-3/4 border-0 text-white focus:ring-0"
-          type="text"
-          placeholder="Search for ..."
-        />
+        <Input className="bg-[#171717] w-3/4 border-0 text-white focus:ring-0" type="text" placeholder="Search for ..." />
         <div className="flex gap-5">
-          <Button
-            type="button"
-            variant="outline"
-            className="gap-2 hover:bg-gray-700"
-          >
+          <Button type="button" variant="outline" className="gap-2 hover:bg-gray-700">
             <img src={filterIcon} alt="" />
             <p>Filters</p>
           </Button>

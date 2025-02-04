@@ -30,7 +30,6 @@ export type TClientInfosResponse = {
   | 'LOW_RISK'
   | 'HIGH_RISK'
   | 'SUPER_HIGH_RISK'
-
   exchange: string
   nextBalance: string
   benchmark: string

@@ -1,13 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { OrderByFilter } from './OrderByFilter'
 import { WalletTypeFilter } from './WalletTypeFilter'
 import { ManagerFilter } from './ManagerFilter'
@@ -120,8 +113,7 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
     setSelectedExchanges((prev) => prev.filter((name) => name !== exchangeName))
   }
 
-  const handleSelectManager = (name: string) =>
-    setSelectedManagers((prev) => [...prev, name])
+  const handleSelectManager = (name: string) => setSelectedManagers((prev) => [...prev, name])
 
   const handleSelectAsset = (asset: { uuid: string; name: string }) => {
     setSelectedAssets((prev) => [...prev, asset]);
@@ -173,12 +165,8 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
 
         <WalletTypeFilter
           selectedWalletTypes={selectedWalletTypes}
-          handleSelectWalletType={(type) =>
-            setSelectedWalletTypes((prev) => [...prev, type])
-          }
-          handleRemoveWalletType={(type) =>
-            setSelectedWalletTypes((prev) => prev.filter((t) => t !== type))
-          }
+          handleSelectWalletType={(type) => setSelectedWalletTypes((prev) => [...prev, type])}
+          handleRemoveWalletType={(type) => setSelectedWalletTypes((prev) => prev.filter((t) => t !== type))}
         />
 
         <OrderByFilter
@@ -188,16 +176,12 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
             nearestRebalancing: filters.filterNearestRebalancing,
             furtherRebalancing: filters.filterFurtherRebalancing,
           }}
-          onFilterChange={(name, value) =>
-            updateFilter(`filter${capitalize(name)}`, value)
-          }
+          onFilterChange={(name, value) => updateFilter(`filter${capitalize(name)}`, value)}
         />
 
         <UnbalancedWalletFilter
           filterUnbalanced={filters.filterUnbalanced}
-          setFilterUnbalanced={(value) =>
-            updateFilter('filterUnbalanced', value)
-          }
+          setFilterUnbalanced={(value) => updateFilter('filterUnbalanced', value)}
         />
 
         <AlertsFilter setFilterDelayed={(value) => updateFilter('filterDelayed', value)} />
