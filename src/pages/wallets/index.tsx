@@ -17,6 +17,8 @@ export function Clients() {
   const [filters, setFilters] = useState({
     selectedManagers: [] as string[],
     selectedWalletTypes: [] as string[],
+    selectedAssets: [] as string[],
+    filterDelayed: false,
     filterUnbalanced: false,
     filterNewest: false,
     filterOldest: false,
@@ -61,6 +63,7 @@ export function Clients() {
     const {
       selectedManagers,
       selectedWalletTypes,
+      selectedAssets,
       filterUnbalanced,
       filterNewest,
       filterOldest,
@@ -72,7 +75,10 @@ export function Clients() {
 
     const filtered = clients
       .filter((client) => {
-        const nameMatches = client.infosClient.name.toLowerCase().includes(searchTerm.toLowerCase())
+
+        const nameMatches = client.infosClient.name
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase())
 
         const managerMatches = selectedManagers.length === 0 || selectedManagers.includes(client.managerName)
 
@@ -84,11 +90,25 @@ export function Clients() {
 
         const exchangeMatches =
           selectedExchanges.length === 0 ||
-          selectedExchanges.some((selectedExchanges) => selectedExchanges.toLowerCase().trim() === client.exchange.toLowerCase().trim())
+          selectedExchanges.some(
+            (selectedExchanges) =>
+              selectedExchanges.toLowerCase().trim() ===
+              client.exchange.toLowerCase().trim(),
+          )
 
-        const benchMarkMatches = selectedBenchmark.length === 0 || selectedBenchmark.includes(client.benchmark)
+        const benchMarkMatches =
+          selectedBenchmark.length === 0 ||
+          selectedBenchmark.includes(client.benchmark)
 
-        return nameMatches && managerMatches && unbalancedMatches && walletTypeMatches && exchangeMatches && benchMarkMatches
+        const assetsMatch =
+          selectedAssets.length === 0 ||
+          selectedAssets.every((assetUuid) => client.assetsUuid.includes(assetUuid));
+
+
+        console.log('assets uuids', client.assetsUuid)
+        console.log('selectedAssets', selectedAssets)
+        console.log('assetsMatch', assetsMatch)
+        return nameMatches && managerMatches && unbalancedMatches && walletTypeMatches && exchangeMatches && benchMarkMatches && assetsMatch
       })
       .sort((a, b) => {
         if (filterNewest) return new Date(b.createAt).getTime() - new Date(a.createAt).getTime()
@@ -99,6 +119,9 @@ export function Clients() {
       })
 
     setFilteredClients(filtered)
+    console.log('clientes filtrados', filteredClients)
+    // console.log(filteredClients)
+
   }, [clients, filters, searchTerm])
 
   useEffect(() => {

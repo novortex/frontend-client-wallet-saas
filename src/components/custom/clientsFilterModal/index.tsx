@@ -8,13 +8,18 @@ import { UnbalancedWalletFilter } from './UnbalanceWalletFilter'
 import { AlertsFilter } from './AlertsFilter'
 import { ExchangeFilter } from './ExchangeFilter'
 import { BenchmarkFilter } from './BenchmarkFilter'
-import { getBenchmarkOptions, getExchangesDisposables } from '@/services/managementService'
-import { getAllManagersOnOrganization } from '@/services/managementService'
+import {
+  getBenchmarkOptions,
+  getExchangesDisposables,
+} from '@/services/managementService'
+import { getAllManagersOnOrganization, getAllAssetsOrg } from '@/services/managementService'
+import { AssetsFilter } from './AssetsFilter'
 
 type ApplyFiltersProps = {
   handleApplyFilters: (filters: {
     selectedManagers: string[]
     selectedWalletTypes: string[]
+    selectedAssets: string[]
     filterDelayed: boolean
     filterUnbalanced: boolean
     filterNewest: boolean
@@ -26,6 +31,8 @@ type ApplyFiltersProps = {
 
 export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
   const [isOpen, setIsOpen] = useState(false)
+  const [assets, setAssets] = useState<{ uuid: string, name: string }[]>([])
+  const [selectedAssets, setSelectedAssets] = useState<{ uuid: string, name: string }[]>([]);
   const [selectedManagers, setSelectedManagers] = useState<string[]>([])
   const [selectedWalletTypes, setSelectedWalletTypes] = useState<string[]>([])
   const [selectedBenchmark, setSelectedBenchmark] = useState<string[]>([])
@@ -53,29 +60,44 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
       setManagers(result.map((item) => ({ name: item.name })))
     }
 
+    const fetchAssets = async () => {
+      try {
+        const result = await getAllAssetsOrg()
+        console.log('result get available assets: ', result)
+
+        setAssets(result.map((item) => ({ uuid: item.uuid, name: item.name })));
+      } catch (error) {
+        console.error('Error fetching assets:', error)
+      }
+    }
+
     const fetchExchanges = async () => {
       const result = await getExchangesDisposables()
       setAvailableExchanges(
-        result?.map((exchange) => ({
-          name: exchange.name,
-        })) || []
+        result?.map((exchange) => ({ name: exchange.name })) || [],
       )
     }
 
     fetchBenchmarks()
     fetchManagers()
     fetchExchanges()
+    fetchAssets()
+
   }, [])
+
+  useEffect(() => {
+    console.log("Updated assets:", assets);
+  }, [assets]); // Runs only when `assets` state updates
 
   const applyFilters = () => {
     handleApplyFilters({
+      selectedAssets: selectedAssets.map((asset) => asset.uuid),
       selectedManagers,
       selectedWalletTypes,
       selectedExchanges,
       selectedBenchmark,
       ...filters,
     })
-
     setIsOpen(false)
   }
 
@@ -93,7 +115,16 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
 
   const handleSelectManager = (name: string) => setSelectedManagers((prev) => [...prev, name])
 
-  const handleRemoveManager = (name: string) => setSelectedManagers((prev) => prev.filter((manager) => manager !== name))
+  const handleSelectAsset = (asset: { uuid: string; name: string }) => {
+    setSelectedAssets((prev) => [...prev, asset]);
+  };
+
+  const handleRemoveAsset = (assetUuid: string) => {
+    setSelectedAssets((prev) => prev.filter((asset) => asset.uuid !== assetUuid));
+  };
+
+  const handleRemoveManager = (name: string) =>
+    setSelectedManagers((prev) => prev.filter((manager) => manager !== name))
 
   const handleSelectBenchmark = (name: string) => {
     setSelectedBenchmark((prev) => [...prev, name])
@@ -109,6 +140,7 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
     setSelectedWalletTypes([])
     setSelectedBenchmark([])
     setSelectedExchanges([])
+    setSelectedAssets([])
     setFilters({
       filterDelayed: false,
       filterUnbalanced: false,
@@ -173,6 +205,13 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
           selectedBenchmarks={selectedBenchmark}
           handleSelectBenchmark={handleSelectBenchmark}
           handleRemoveBenchmark={handleRemoveBenchmark}
+        />
+
+        <AssetsFilter
+          assets={assets}
+          selectedAssets={selectedAssets}
+          handleSelectAsset={handleSelectAsset}
+          handleRemoveAsset={handleRemoveAsset}
         />
 
         <DialogFooter>

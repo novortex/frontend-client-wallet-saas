@@ -5,11 +5,13 @@ import { TAssetsOrganizationResponse } from '@/types/response.type'
 
 export async function getAllAssetsOrg() {
   try {
-    const result = await instance.get<TAssetsOrganizationResponse[]>('management/assets')
-    return result.data
+    const result =
+      await instance.get<TAssetsOrganizationResponse[]>('management/assets')
+
+    return result.data;
   } catch (error) {
     console.log(error)
-    throw error
+    throw error;
   }
 }
 
