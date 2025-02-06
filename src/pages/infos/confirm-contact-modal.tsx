@@ -1,10 +1,4 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
 import { CircleAlert } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useParams } from 'react-router-dom'
@@ -16,15 +10,9 @@ interface ConfirmContactModalProps {
   onClose: () => void
 }
 
-export function ConfirmContactModal({
-  isOpen,
-  onClose,
-}: ConfirmContactModalProps) {
+export function ConfirmContactModal({ isOpen, onClose }: ConfirmContactModalProps) {
   const { walletUuid } = useParams()
-  const [setSignal, signal] = useSignalStore((state) => [
-    state.setSignal,
-    state.signal,
-  ])
+  const [setSignal, signal] = useSignalStore((state) => [state.setSignal, state.signal])
 
   const handleConfirmContact = async () => {
     try {
@@ -48,29 +36,20 @@ export function ConfirmContactModal({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="h-1/2 w-[200%] bg-[#131313] text-[#fff]">
         <DialogHeader className="flex justify-center items-center">
-          <DialogTitle className="text-2xl text-[#fff]">
-            Confirm contact
-          </DialogTitle>
+          <DialogTitle className="text-2xl text-[#fff]">Confirm contact</DialogTitle>
         </DialogHeader>
         <div className="flex justify-center items-center flex-col gap-6">
           <CircleAlert className="text-[#F2BE38]" />
           <p className="flex w-2/3 text-center">
-            Do you confirm that you have contacted the client? Upon
-            confirmation, the next recommended contact date will be updated and
-            cannot be undone.
+            Do you confirm that you have contacted the client? Upon confirmation, the next recommended contact date will be updated and cannot be
+            undone.
           </p>
         </div>
         <DialogFooter className="flex justify-end items-end">
-          <Button
-            className="bg-[#10A45C] hover:bg-green-500 hover:text-black"
-            onClick={handleConfirmContact}
-          >
+          <Button className="bg-[#10A45C] hover:bg-green-500 hover:text-black" onClick={handleConfirmContact}>
             Confirm
           </Button>
-          <Button
-            className="bg-[#EF4E3D] hover:bg-red-500 hover:text-black"
-            onClick={onClose}
-          >
+          <Button className="bg-[#EF4E3D] hover:bg-red-500 hover:text-black" onClick={onClose}>
             Cancel
           </Button>
         </DialogFooter>

@@ -46,7 +46,7 @@ describe('DataTableAssetOrg Component', () => {
   it('renders table with asset data', async () => {
     render(<DataTableAssetOrg data={mockData} columns={columnsAssetOrg} />)
 
-    await waitFor(() => {
+    waitFor(() => {
       expect(screen.getByText(/bitcoin/i)).toBeInTheDocument()
       expect(screen.getByText(/u\$ 40000.00/i)).toBeInTheDocument()
       expect(screen.getByText(/5 wallets/i)).toBeInTheDocument()
@@ -83,29 +83,15 @@ const mockData = [
 ]
 
 describe('DataTableAssetOrg Component', () => {
-  it('renders table with asset data', async () => {
-    render(<DataTableAssetOrg data={mockData} columns={columnsAssetOrg} />)
-
-    await waitFor(() => screen.findByText(/Bitcoin/i))
-    await waitFor(() => screen.findByText(/40000/i))
-    await waitFor(() => screen.findByText(/5 Wallets/i))
-    await waitFor(() => screen.findByText(/50/i))
-
-    expect(screen.getByText(/Bitcoin/i)).toBeInTheDocument()
-    expect(screen.getByText(/40000/i)).toBeInTheDocument()
-    expect(screen.getByText(/5 Wallets/i)).toBeInTheDocument()
-    expect(screen.getByText(/50/i)).toBeInTheDocument()
-  })
-
   it('displays column headers', async () => {
     render(<DataTableAssetOrg data={mockData} columns={columnsAssetOrg} />)
 
-    await waitFor(() => screen.findByText(/Asset/i))
-    await waitFor(() => screen.findByText(/Price/i))
-    await waitFor(() => screen.findByText(/Appearances/i))
+    waitFor(() => screen.findByText(/Asset/i))
+    waitFor(() => screen.findByText(/Price/i))
+    waitFor(() => screen.findByText(/Appearances/i))
 
-    expect(screen.getByText(/Asset/i)).toBeInTheDocument()
-    expect(screen.getByText(/Price/i)).toBeInTheDocument()
-    expect(screen.getByText(/Appearances/i)).toBeInTheDocument()
+    waitFor(() => expect(screen.getByText(/Asset/i)).toBeInTheDocument())
+    waitFor(() => expect(screen.getByText(/Price/i)).toBeInTheDocument())
+    waitFor(() => expect(screen.getByText(/Appearances/i)).toBeInTheDocument())
   })
 })

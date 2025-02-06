@@ -5,10 +5,7 @@ import { addCryptoOrg } from '@/services/managementService'
 
 export const useAddAsset = (onClose: () => void) => {
   const [assetId, setAssetId] = useState('')
-  const [setSignal, signal] = useSignalStore((state) => [
-    state.setSignal,
-    state.signal,
-  ])
+  const [setSignal, signal] = useSignalStore((state) => [state.setSignal, state.signal])
   const { toast } = useToast()
 
   const handleAddAsset = async () => {

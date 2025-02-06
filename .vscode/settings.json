@@ -3,5 +3,6 @@
         "source.fixAll":"explicit" 
     },
     "workbench.iconTheme": "material-icon-theme",
-    
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,   
 }

@@ -1,10 +1,20 @@
-import { instance } from '@/config/api'
-import {
-  TClientInfosResponse,
-  TNewCustomerResponse,
-} from '@/types/customer.type'
-import { TInfosCustomerResponse } from '@/types/response.type'
-import { RebalanceReturn } from '@/types/wallet.type'
+import { instance } from "@/config/api"
+import { TClientInfosResponse, TNewCustomerResponse } from "@/types/customer.type"
+import { TInfosCustomerResponse } from "@/types/response.type"
+import { KpiData, RebalanceReturn } from "@/types/wallet.type"
+
+
+export async function getWalletKpis(walletUuid: string, period: string): Promise<KpiData> {
+  try {
+    const response = await instance.get(`wallet/${walletUuid}/kpis`, {
+      params: { period }, // Pass period as query parameter
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching KPIs:", error);
+    throw error;
+  }
+}
 
 export async function getWalletOrganization(): Promise<TClientInfosResponse[]> {
   try {
@@ -16,16 +26,13 @@ export async function getWalletOrganization(): Promise<TClientInfosResponse[]> {
   }
 }
 
-export async function getInfosCustomer(
-  walletUuid: string,
-): Promise<TInfosCustomerResponse | undefined> {
+export async function getInfosCustomer(walletUuid: string): Promise<TInfosCustomerResponse | undefined> {
   try {
-    const result = await instance.get<TInfosCustomerResponse>(
-      `wallet/${walletUuid}/infos`,
-    )
+    const result = await instance.get<TInfosCustomerResponse>(`wallet/${walletUuid}/infos`)
     return result.data
+
   } catch (error) {
-    console.log(error)
+    throw error;
   }
 }
 
@@ -73,11 +80,10 @@ export async function registerWalletForCustomer(
 
 export async function updateCurrentAmount(walletUuid: string): Promise<void> {
   try {
-    const result = await instance.put(`wallet/${walletUuid}/currentAmount`, {})
-    return result.data
+    const result = await instance.put(`wallet/${walletUuid}/currentAmount`, {});
+    return result.data;
   } catch (error) {
-    console.error(error)
-    throw error
+    throw error;
   }
 }
 
