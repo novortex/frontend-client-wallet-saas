@@ -102,7 +102,7 @@
         },
         "testEnvironment": "jsdom",
         "setupFilesAfterEnv": [
-            "<rootDir>/setup-tests.js"
+            "<rootDir>/setup-tests.ts"
         ],
         "moduleFileExtensions": [
             "js",
