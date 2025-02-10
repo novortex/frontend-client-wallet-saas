@@ -28,20 +28,16 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
   const [isKpiModalOpen, setIsKpiModalOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const [selectedPeriod, setSelectedPeriod] = useState<'sixmonths' | 'month' | 'week' | null>(null)
+  const [selectedPeriod, setSelectedPeriod] = useState<'all' | 'sixmonths' | 'month' | 'week' | null>(null)
   const [kpis, setKpis] = useState<KpiData>({
     walletPerformance: { performance: "", percentagePerformance: "" },
     bitcoinPerformance: { performance: "", percentagePerformance: "" },
     hash11Performance: { performance: "", percentagePerformance: "" },
     sp500Performance: { performance: "", percentagePerformance: "" },
+    allTimePerformance: { performance: "", percentagePerformance: ""}
   });
 
-  console.log('WALLET', kpis.walletPerformance)
-  console.log('BITCOIN', kpis.bitcoinPerformance)
-  console.log('HASH11', kpis.hash11Performance)
-  console.log('SP500', kpis.sp500Performance)
-
-  const fetchKpis = async (period: 'sixmonths' | 'month' | 'week') => {
+  const fetchKpis = async (period: 'all' | 'sixmonths' | 'month' | 'week') => {
     if (!walletUuid || !period) return
 
     setLoading(true)
@@ -83,6 +79,13 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
             {/* Period Selection Buttons */}
             <div className="flex justify-center gap-4 mb-6">
               <Button
+                className={`p-2 rounded-md ${selectedPeriod === 'all' ? 'text-black bg-yellow-500' : 'bg-gray-700'
+                  } hover:bg-yellow-600`}
+                onClick={() => fetchKpis('all')}
+              >
+                All Time
+              </Button>
+              <Button
                 className={`p-2 rounded-md ${selectedPeriod === 'sixmonths' ? 'text-black bg-yellow-500' : 'bg-gray-700'
                   } hover:bg-yellow-600`}
                 onClick={() => fetchKpis('sixmonths')}
@@ -114,6 +117,13 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
                   percentagePerformance={kpis?.walletPerformance?.percentagePerformance ?? ""}
                   startDateUsed={kpis?.walletPerformance?.startDateUsed ?? ""}
                   endDateUsed={kpis?.walletPerformance?.endDateUsed ?? ""}
+                />
+                <KpiCard
+                  title="All Time Performance"
+                  performance={kpis?.allTimePerformance?.performance ?? ""}
+                  percentagePerformance={kpis?.allTimePerformance?.percentagePerformance ?? ""}
+                  startDateUsed={kpis?.allTimePerformance?.startDateUsed ?? ""}
+                  endDateUsed={kpis?.allTimePerformance?.endDateUsed ?? ""}
                 />
                 <KpiCard
                   title="Bitcoin Performance"

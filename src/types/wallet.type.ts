@@ -138,4 +138,10 @@ export type KpiData = {
     startDateUsed?: string;
     endDateUsed?: string;
   };
+  allTimePerformance: {
+    performance: number | string;
+    percentagePerformance: string;
+    startDateUsed?: string;
+    endDateUsed?: string;
+  };
 };
