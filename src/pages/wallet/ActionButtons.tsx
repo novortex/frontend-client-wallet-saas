@@ -29,33 +29,32 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [selectedPeriod, setSelectedPeriod] = useState<'all' | 'sixmonths' | 'month' | 'week' | null>(null)
+  const [showAllTimeOnly, setShowAllTimeOnly] = useState(false)
   const [kpis, setKpis] = useState<KpiData>({
     walletPerformance: { performance: "", percentagePerformance: "" },
     bitcoinPerformance: { performance: "", percentagePerformance: "" },
     hash11Performance: { performance: "", percentagePerformance: "" },
     sp500Performance: { performance: "", percentagePerformance: "" },
     allTimePerformance: { performance: "", percentagePerformance: ""}
-  });
+  });  
 
-  const fetchKpis = async (period: 'all' | 'sixmonths' | 'month' | 'week') => {
-    if (!walletUuid || !period) return
-
-    setLoading(true)
-    setError('')
-    setSelectedPeriod(period)
-    try {
-      const kpiData = await getWalletKpis(walletUuid, period)
-      console.log('kpi data', kpiData)
-      console.log('period', period)
-
-      setKpis(kpiData)
-    } catch (err) {
-      setError('Error fetching data')
-      console.error(err)
-    } finally {
-      setLoading(false)
-    }
-  }
+    const fetchKpis = async (period: 'sixmonths' | 'month' | 'week') => {
+      if (!walletUuid || !period) return;
+  
+      setLoading(true);
+      setError('');
+      setSelectedPeriod(period);
+      setShowAllTimeOnly(false);
+      try {
+        const kpiData = await getWalletKpis(walletUuid, period);
+        setKpis(kpiData);
+      } catch (err) {
+        setError('Error fetching data');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
   return (
     <div className="flex items-center justify-between mb-10">
@@ -79,11 +78,10 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
             {/* Period Selection Buttons */}
             <div className="flex justify-center gap-4 mb-6">
               <Button
-                className={`p-2 rounded-md ${selectedPeriod === 'all' ? 'text-black bg-yellow-500' : 'bg-gray-700'
-                  } hover:bg-yellow-600`}
-                onClick={() => fetchKpis('all')}
-              >
-                All Time
+                  className={`p-2 rounded-md ${showAllTimeOnly ? 'text-black bg-yellow-500' : 'bg-gray-700'} hover:bg-yellow-600`}
+                  onClick={() => setShowAllTimeOnly(true)}
+                >
+                All Time Performance
               </Button>
               <Button
                 className={`p-2 rounded-md ${selectedPeriod === 'sixmonths' ? 'text-black bg-yellow-500' : 'bg-gray-700'
@@ -109,43 +107,48 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
             </div>
 
             {/* KPI Cards */}
-            {!loading && !error && kpis && (
+            {!loading && !error && (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:grid-cols-2 lg:grid-cols-2 w-full items-center">
-                <KpiCard
-                  title="Wallet Performance"
-                  performance={kpis?.walletPerformance?.performance ?? ""}
-                  percentagePerformance={kpis?.walletPerformance?.percentagePerformance ?? ""}
-                  startDateUsed={kpis?.walletPerformance?.startDateUsed ?? ""}
-                  endDateUsed={kpis?.walletPerformance?.endDateUsed ?? ""}
-                />
-                <KpiCard
-                  title="All Time Performance"
-                  performance={kpis?.allTimePerformance?.performance ?? ""}
-                  percentagePerformance={kpis?.allTimePerformance?.percentagePerformance ?? ""}
-                  startDateUsed={kpis?.allTimePerformance?.startDateUsed ?? ""}
-                  endDateUsed={kpis?.allTimePerformance?.endDateUsed ?? ""}
-                />
-                <KpiCard
-                  title="Bitcoin Performance"
-                  performance={kpis?.bitcoinPerformance?.performance ?? ""}
-                  percentagePerformance={kpis?.bitcoinPerformance?.percentagePerformance ?? ""}
-                  startDateUsed={kpis?.bitcoinPerformance?.startDateUsed ?? ""}
-                  endDateUsed={kpis?.bitcoinPerformance?.endDateUsed ?? ""}
-                />
-                <KpiCard
-                  title="Hash11 Performance"
-                  performance={kpis?.hash11Performance?.performance ?? ""}
-                  percentagePerformance={kpis?.hash11Performance?.percentagePerformance ?? ""}
-                  startDateUsed={kpis?.hash11Performance?.startDateUsed ?? ""}
-                  endDateUsed={kpis?.hash11Performance?.endDateUsed ?? ""}
-                />
-                <KpiCard
-                  title="S&P500 Performance"
-                  performance={kpis?.sp500Performance?.performance ?? ""}
-                  percentagePerformance={kpis?.sp500Performance?.percentagePerformance ?? ""}
-                  startDateUsed={kpis?.sp500Performance?.startDateUsed ?? ""}
-                  endDateUsed={kpis?.sp500Performance?.endDateUsed ?? ""}
-                />
+                {showAllTimeOnly ? (
+                  <KpiCard
+                    title="All Time Performance"
+                    performance={kpis.allTimePerformance.performance}
+                    percentagePerformance={kpis.allTimePerformance.percentagePerformance}
+                    startDateUsed={kpis.allTimePerformance.startDateUsed}
+                    endDateUsed={kpis.allTimePerformance.endDateUsed}
+                  />
+                ) : (
+                  <>
+                    <KpiCard
+                      title="Wallet Performance"
+                      performance={kpis.walletPerformance.performance}
+                      percentagePerformance={kpis.walletPerformance.percentagePerformance}
+                      startDateUsed={kpis.walletPerformance.startDateUsed}
+                      endDateUsed={kpis.walletPerformance.endDateUsed}
+                    />
+                    <KpiCard
+                      title="Bitcoin Performance"
+                      performance={kpis.bitcoinPerformance.performance}
+                      percentagePerformance={kpis.bitcoinPerformance.percentagePerformance}
+                      startDateUsed={kpis.bitcoinPerformance.startDateUsed}
+                      endDateUsed={kpis.bitcoinPerformance.endDateUsed}
+                    />
+                    <KpiCard
+                      title="Hash11 Performance"
+                      performance={kpis.hash11Performance.performance}
+                      percentagePerformance={kpis.hash11Performance.percentagePerformance}
+                      startDateUsed={kpis.hash11Performance.startDateUsed}
+                      endDateUsed={kpis.hash11Performance.endDateUsed}
+                    />
+                    <KpiCard
+                      title="S&P500 Performance"
+                      performance={kpis.sp500Performance.performance}
+                      percentagePerformance={kpis.sp500Performance.percentagePerformance}
+                      startDateUsed={kpis.sp500Performance.startDateUsed}
+                      endDateUsed={kpis.sp500Performance.endDateUsed}
+                    />
+                  </>
+                )}
               </div>
             )}
           </DialogContent>
