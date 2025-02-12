@@ -53,7 +53,6 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
         }
         
         const kpiData = await getWalletKpis(walletUuid, 'all');
-        console.log('rendimento total:', kpiData)
         setAllTimePerformance(kpiData as AllTimePerformance);
         setShowAllTimeOnly(true);
       } else {
