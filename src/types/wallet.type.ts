@@ -112,6 +112,14 @@ export type RebalanceReturn = {
   targetAllocation: string
 }
 
+export type AllTimePerformance = {
+  allTimePerformance: {
+    performance: number | string;
+    percentagePerformance: string;
+    startDateUsed?: string;
+    endDateUsed?: string;
+  };
+}
 
 export type KpiData = {
   walletPerformance: {
@@ -123,25 +131,14 @@ export type KpiData = {
   bitcoinPerformance: {
     performance: number | string;
     percentagePerformance: string;
-    startDateUsed?: string;
-    endDateUsed?: string;
   };
   hash11Performance: {
     performance: number | string;
     percentagePerformance: string;
-    startDateUsed?: string;
-    endDateUsed?: string;
   };
   sp500Performance: {
     performance: number | string;
     percentagePerformance: string;
-    startDateUsed?: string;
-    endDateUsed?: string;
   };
-  allTimePerformance: {
-    performance: number | string;
-    percentagePerformance: string;
-    startDateUsed?: string;
-    endDateUsed?: string;
-  };
-};
+}
+

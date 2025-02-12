@@ -1,10 +1,10 @@
 import { instance } from "@/config/api"
 import { TClientInfosResponse, TNewCustomerResponse } from "@/types/customer.type"
 import { TInfosCustomerResponse } from "@/types/response.type"
-import { KpiData, RebalanceReturn } from "@/types/wallet.type"
+import { AllTimePerformance, KpiData, RebalanceReturn } from "@/types/wallet.type"
 
 
-export async function getWalletKpis(walletUuid: string, period: string): Promise<KpiData> {
+export async function getWalletKpis(walletUuid: string, period: string): Promise<KpiData | AllTimePerformance> {
   try {
     const response = await instance.get(`wallet/${walletUuid}/kpis`, {
       params: { period }, // Pass period as query parameter
