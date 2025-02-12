@@ -14,8 +14,8 @@ const KpiCard: React.FC<KpiCardProps> = ({ title, performance, percentagePerform
     // Handle missing performance values correctly
     const isMissingData = performance === "" || performance === "-";
     const performanceValue = !isMissingData ? Number(performance) : null;
-    const isPositive = performanceValue !== null && performanceValue > 0;
-    const isNegative = performanceValue !== null && performanceValue < 0;
+    const isPositive = percentagePerformance !== null && Number(percentagePerformance) > 0;
+    const isNegative = percentagePerformance !== null && Number(percentagePerformance) < 0;
 
     // Format dates properly, ensuring they are valid
     const formatDate = (date?: string) =>
