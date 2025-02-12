@@ -32,7 +32,7 @@ const KpiCard: React.FC<KpiCardProps> = ({ title, performance, percentagePerform
                     <>
                         {isPositive && <span className="text-green-500 mr-1">⬆</span>}
                         {isNegative && <span className="text-red-500 mr-1">⬇</span>}
-                        <span>{formatToTwoDecimalPlaces(numPercentage ?? 0)}</span>
+                        <span>{formatToTwoDecimalPlaces(numPercentage ?? 0)}%</span>
                     </>
                 )}
             </p>
