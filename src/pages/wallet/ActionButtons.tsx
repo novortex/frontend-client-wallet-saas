@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { HandCoins, TrendingUp } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import { KpiData, TWalletAssetsInfo } from '@/types/wallet.type'
+import { AllTimePerformance, KpiData, TWalletAssetsInfo } from '@/types/wallet.type'
 import { Label } from '@/components/ui/label'
 import { useState } from 'react'
 import { getWalletKpis } from '@/services/wallet/walleInfoService'
@@ -30,32 +30,44 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
   const [error, setError] = useState('')
   const [selectedPeriod, setSelectedPeriod] = useState<'all' | 'sixmonths' | 'month' | 'week' | null>(null)
   const [showAllTimeOnly, setShowAllTimeOnly] = useState(false)
+  const [allTimePerformance, setAllTimePerformance] = useState<AllTimePerformance | null>(null);
   const [kpis, setKpis] = useState<KpiData>({
     walletPerformance: { performance: "", percentagePerformance: "" },
     bitcoinPerformance: { performance: "", percentagePerformance: "" },
     hash11Performance: { performance: "", percentagePerformance: "" },
     sp500Performance: { performance: "", percentagePerformance: "" },
-    allTimePerformance: { performance: "", percentagePerformance: ""}
   });  
 
-    const fetchKpis = async (period: 'sixmonths' | 'month' | 'week') => {
-      if (!walletUuid || !period) return;
-  
-      setLoading(true);
-      setError('');
-      setSelectedPeriod(period);
-      setShowAllTimeOnly(false);
-      try {
-        const kpiData = await getWalletKpis(walletUuid, period);
-        setKpis(kpiData);
-      } catch (err) {
-        setError('Error fetching data');
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchKpis = async (period: 'all' | 'sixmonths' | 'month' | 'week') => {
+    if (!walletUuid || !period) return;
 
+    setLoading(true);
+    setError('');
+    setSelectedPeriod(period);
+  
+    try {
+      if (period === 'all') {
+        if (allTimePerformance) {
+          setShowAllTimeOnly(true);
+          return;
+        }
+  
+        const kpiData = await getWalletKpis(walletUuid, 'all');
+        setAllTimePerformance(kpiData as AllTimePerformance);
+        setShowAllTimeOnly(true);
+      } else {
+        const kpiData = await getWalletKpis(walletUuid, period);
+        setKpis(kpiData as KpiData);
+        setShowAllTimeOnly(false);
+      }
+    } catch (err) {
+      setError('Error fetching data');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
   return (
     <div className="flex items-center justify-between mb-10">
       <Label className="text-2xl text-white">{infosWallet?.ownerName}</Label>
@@ -109,13 +121,13 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
             {/* KPI Cards */}
             {!loading && !error && (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:grid-cols-2 lg:grid-cols-2 w-full items-center">
-                {showAllTimeOnly ? (
+                {showAllTimeOnly && allTimePerformance ? (
                   <KpiCard
                     title="All Time Performance"
-                    performance={kpis.allTimePerformance.performance}
-                    percentagePerformance={kpis.allTimePerformance.percentagePerformance}
-                    startDateUsed={kpis.allTimePerformance.startDateUsed}
-                    endDateUsed={kpis.allTimePerformance.endDateUsed}
+                    performance={allTimePerformance.allTimePerformance.performance}
+                    percentagePerformance={allTimePerformance.allTimePerformance.percentagePerformance}
+                    startDateUsed={allTimePerformance.allTimePerformance.startDateUsed}
+                    endDateUsed={allTimePerformance.allTimePerformance.endDateUsed}
                   />
                 ) : (
                   <>
@@ -130,27 +142,22 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
                       title="Bitcoin Performance"
                       performance={kpis.bitcoinPerformance.performance}
                       percentagePerformance={kpis.bitcoinPerformance.percentagePerformance}
-                      startDateUsed={kpis.bitcoinPerformance.startDateUsed}
-                      endDateUsed={kpis.bitcoinPerformance.endDateUsed}
                     />
                     <KpiCard
                       title="Hash11 Performance"
                       performance={kpis.hash11Performance.performance}
                       percentagePerformance={kpis.hash11Performance.percentagePerformance}
-                      startDateUsed={kpis.hash11Performance.startDateUsed}
-                      endDateUsed={kpis.hash11Performance.endDateUsed}
                     />
                     <KpiCard
                       title="S&P500 Performance"
                       performance={kpis.sp500Performance.performance}
                       percentagePerformance={kpis.sp500Performance.percentagePerformance}
-                      startDateUsed={kpis.sp500Performance.startDateUsed}
-                      endDateUsed={kpis.sp500Performance.endDateUsed}
                     />
                   </>
                 )}
               </div>
             )}
+
           </DialogContent>
         </Dialog>
 
