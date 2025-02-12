@@ -11,13 +11,12 @@ interface KpiCardProps {
 
 const KpiCard: React.FC<KpiCardProps> = ({ title, performance, percentagePerformance, startDateUsed, endDateUsed }) => {
 
-    // Handle missing performance values correctly
     const isMissingData = performance === "" || performance === "-";
     const performanceValue = !isMissingData ? Number(performance) : null;
-    const isPositive = percentagePerformance !== null && Number(percentagePerformance) > 0;
-    const isNegative = percentagePerformance !== null && Number(percentagePerformance) < 0;
-
-    // Format dates properly, ensuring they are valid
+    const numPercentage = parseFloat(percentagePerformance);
+    const isPositive = !isNaN(numPercentage) && numPercentage > 0;
+    const isNegative = !isNaN(numPercentage) && numPercentage < 0;
+    
     const formatDate = (date?: string) =>
         date && date !== "-" ? new Date(date).toLocaleDateString() : "N/A";
 
@@ -33,7 +32,7 @@ const KpiCard: React.FC<KpiCardProps> = ({ title, performance, percentagePerform
                     <>
                         {isPositive && <span className="text-green-500 mr-1">⬆</span>}
                         {isNegative && <span className="text-red-500 mr-1">⬇</span>}
-                        <span>{percentagePerformance}</span>
+                        <span>{formatToTwoDecimalPlaces(numPercentage ?? 0)}%</span>
                     </>
                 )}
             </p>
