@@ -46,7 +46,7 @@ const KpiCard: React.FC<KpiCardProps> = ({ title, performance, percentagePerform
             {/* Display Start and End Dates only if they exist */}
             {startDateUsed && endDateUsed && (
                 <div className="text-gray-400 text-sm mt-2">
-                    <p>📅 {formatDate(startDateUsed)} → {formatDate(endDateUsed)}</p>
+                    <p>{formatDate(startDateUsed)} → {formatDate(endDateUsed)}</p>
                 </div>
             )}
         </div>
