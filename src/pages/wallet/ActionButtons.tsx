@@ -51,8 +51,9 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
           setShowAllTimeOnly(true);
           return;
         }
-  
+        
         const kpiData = await getWalletKpis(walletUuid, 'all');
+        console.log('rendimento total:', kpiData)
         setAllTimePerformance(kpiData as AllTimePerformance);
         setShowAllTimeOnly(true);
       } else {
@@ -90,8 +91,8 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
             {/* Period Selection Buttons */}
             <div className="flex justify-center gap-4 mb-6">
               <Button
-                  className={`p-2 rounded-md ${showAllTimeOnly ? 'text-black bg-yellow-500' : 'bg-gray-700'} hover:bg-yellow-600`}
-                  onClick={() => setShowAllTimeOnly(true)}
+                  className={`p-2 rounded-md ${selectedPeriod === 'all' ? 'text-black bg-yellow-500' : 'bg-gray-700'} hover:bg-yellow-600`}
+                  onClick={() => fetchKpis('all')}
                 >
                 All Time Performance
               </Button>
