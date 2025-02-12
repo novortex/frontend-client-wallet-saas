@@ -113,6 +113,15 @@ export type RebalanceReturn = {
 }
 
 
+export type AllTimePerformance = {
+  allTimePerformance: {
+    performance: number | string;
+    percentagePerformance: string;
+    startDateUsed?: string;
+    endDateUsed?: string;
+  };
+}
+
 export type KpiData = {
   walletPerformance: {
     performance: number | string;
@@ -123,19 +132,13 @@ export type KpiData = {
   bitcoinPerformance: {
     performance: number | string;
     percentagePerformance: string;
-    startDateUsed?: string;
-    endDateUsed?: string;
   };
   hash11Performance: {
     performance: number | string;
     percentagePerformance: string;
-    startDateUsed?: string;
-    endDateUsed?: string;
   };
   sp500Performance: {
     performance: number | string;
     percentagePerformance: string;
-    startDateUsed?: string;
-    endDateUsed?: string;
   };
-};
+}
