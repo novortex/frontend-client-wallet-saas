@@ -94,7 +94,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
                   className={`p-2 rounded-md ${selectedPeriod === 'all' ? 'text-black bg-yellow-500' : 'bg-gray-700'} hover:bg-yellow-600`}
                   onClick={() => {fetchKpis('all'); setShowAllTimeOnly(true)}}
                 >
-                All Time Performance
+                All Time Wallet
               </Button>
               <Button
                 className={`p-2 rounded-md ${selectedPeriod === 'sixmonths' ? 'text-black bg-yellow-500' : 'bg-gray-700'

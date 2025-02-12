@@ -28,19 +28,19 @@ const KpiCard: React.FC<KpiCardProps> = ({ title, performance, percentagePerform
             {/* Performance Display */}
             <p className="text-2xl flex items-center justify-center">
                 {isMissingData ? (
-                    <span className="text-gray-400 text-sm">- (Missing data for this period)</span>
+                    <span className="text-gray-400 text-sm">Missing wallet registers for this period</span>
                 ) : (
                     <>
                         {isPositive && <span className="text-green-500 mr-1">⬆</span>}
                         {isNegative && <span className="text-red-500 mr-1">⬇</span>}
-                        <span>{`$ ${formatToTwoDecimalPlaces(performanceValue ?? 0)}`}</span>
+                        <span>{percentagePerformance}</span>
                     </>
                 )}
             </p>
 
             {/* Percentage Performance */}
             {!isMissingData && (
-                <p className="text-lg text-gray-400 mt-1">{percentagePerformance}</p>
+                <p className="text-lg text-gray-400 mt-1">{`$ ${formatToTwoDecimalPlaces(performanceValue ?? 0)}`}</p>
             )}
 
             {/* Display Start and End Dates only if they exist */}
