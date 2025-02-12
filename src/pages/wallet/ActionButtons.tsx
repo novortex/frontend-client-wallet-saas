@@ -38,19 +38,25 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
     sp500Performance: { performance: "", percentagePerformance: "" },
   });  
 
+  console.log('log all time performance', allTimePerformance)
+  console.log('log kpis', kpis)
+
   const fetchKpis = async (period: 'all' | 'sixmonths' | 'month' | 'week') => {
     if (!walletUuid || !period) return;
 
     setLoading(true);
     setError('');
     setSelectedPeriod(period);
-  
+
     try {
       if (period === 'all') {
         if (allTimePerformance) {
+          console.log('already all time data: ', allTimePerformance)
           setShowAllTimeOnly(true);
           return;
         }
+
+        console.log('fetched all time data: ', allTimePerformance)
         
         const kpiData = await getWalletKpis(walletUuid, 'all');
         console.log('rendimento total:', kpiData)
@@ -92,28 +98,28 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
             <div className="flex justify-center gap-4 mb-6">
               <Button
                   className={`p-2 rounded-md ${selectedPeriod === 'all' ? 'text-black bg-yellow-500' : 'bg-gray-700'} hover:bg-yellow-600`}
-                  onClick={() => fetchKpis('all')}
+                  onClick={() => {fetchKpis('all'); setShowAllTimeOnly(true)}}
                 >
                 All Time Performance
               </Button>
               <Button
                 className={`p-2 rounded-md ${selectedPeriod === 'sixmonths' ? 'text-black bg-yellow-500' : 'bg-gray-700'
                   } hover:bg-yellow-600`}
-                onClick={() => fetchKpis('sixmonths')}
+                onClick={() => {fetchKpis('sixmonths'); setShowAllTimeOnly(false)}}
               >
                 Last 6 Months
               </Button>
               <Button
                 className={`p-2 rounded-md ${selectedPeriod === 'month' ? 'text-black bg-yellow-500' : 'bg-gray-700'
                   } hover:bg-yellow-600`}
-                onClick={() => fetchKpis('month')}
+                onClick={() => {fetchKpis('month'); setShowAllTimeOnly(false)}}
               >
                 Last Month
               </Button>
               <Button
                 className={`p-2 rounded-md ${selectedPeriod === 'week' ? 'text-black bg-yellow-500' : 'bg-gray-700'
                   } hover:bg-yellow-600`}
-                onClick={() => fetchKpis('week')}
+                onClick={() => {fetchKpis('week'); setShowAllTimeOnly(false)}}
               >
                 Last Week
               </Button>
@@ -143,16 +149,22 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
                       title="Bitcoin Performance"
                       performance={kpis.bitcoinPerformance.performance}
                       percentagePerformance={kpis.bitcoinPerformance.percentagePerformance}
+                      startDateUsed={kpis.walletPerformance.startDateUsed}
+                      endDateUsed={kpis.walletPerformance.endDateUsed}
                     />
                     <KpiCard
                       title="Hash11 Performance"
                       performance={kpis.hash11Performance.performance}
                       percentagePerformance={kpis.hash11Performance.percentagePerformance}
+                      startDateUsed={kpis.walletPerformance.startDateUsed}
+                      endDateUsed={kpis.walletPerformance.endDateUsed}
                     />
                     <KpiCard
                       title="S&P500 Performance"
                       performance={kpis.sp500Performance.performance}
                       percentagePerformance={kpis.sp500Performance.percentagePerformance}
+                      startDateUsed={kpis.walletPerformance.startDateUsed}
+                      endDateUsed={kpis.walletPerformance.endDateUsed}
                     />
                   </>
                 )}
