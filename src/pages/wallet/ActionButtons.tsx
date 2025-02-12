@@ -38,9 +38,6 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
     sp500Performance: { performance: "", percentagePerformance: "" },
   });  
 
-  console.log('log all time performance', allTimePerformance)
-  console.log('log kpis', kpis)
-
   const fetchKpis = async (period: 'all' | 'sixmonths' | 'month' | 'week') => {
     if (!walletUuid || !period) return;
 
@@ -51,12 +48,9 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
     try {
       if (period === 'all') {
         if (allTimePerformance) {
-          console.log('already all time data: ', allTimePerformance)
           setShowAllTimeOnly(true);
           return;
         }
-
-        console.log('fetched all time data: ', allTimePerformance)
         
         const kpiData = await getWalletKpis(walletUuid, 'all');
         console.log('rendimento total:', kpiData)
@@ -127,48 +121,49 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
 
             {/* KPI Cards */}
             {!loading && !error && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:grid-cols-2 lg:grid-cols-2 w-full items-center">
-                {showAllTimeOnly && allTimePerformance ? (
+              <div className={`flex w-full items-center ${showAllTimeOnly ? "justify-center" : "flex-wrap justify-center gap-6"}`}>
+              {showAllTimeOnly && allTimePerformance ? (
+                <KpiCard
+                  title="All Time Wallet"
+                  performance={allTimePerformance.allTimePerformance.performance}
+                  percentagePerformance={allTimePerformance.allTimePerformance.percentagePerformance}
+                  startDateUsed={allTimePerformance.allTimePerformance.startDateUsed}
+                  endDateUsed={allTimePerformance.allTimePerformance.endDateUsed}
+                />
+              ) : (
+                <>
                   <KpiCard
-                    title="All Time Performance"
-                    performance={allTimePerformance.allTimePerformance.performance}
-                    percentagePerformance={allTimePerformance.allTimePerformance.percentagePerformance}
-                    startDateUsed={allTimePerformance.allTimePerformance.startDateUsed}
-                    endDateUsed={allTimePerformance.allTimePerformance.endDateUsed}
+                    title="Wallet"
+                    performance={kpis.walletPerformance.performance}
+                    percentagePerformance={kpis.walletPerformance.percentagePerformance}
+                    startDateUsed={kpis.walletPerformance.startDateUsed}
+                    endDateUsed={kpis.walletPerformance.endDateUsed}
                   />
-                ) : (
-                  <>
-                    <KpiCard
-                      title="Wallet Performance"
-                      performance={kpis.walletPerformance.performance}
-                      percentagePerformance={kpis.walletPerformance.percentagePerformance}
-                      startDateUsed={kpis.walletPerformance.startDateUsed}
-                      endDateUsed={kpis.walletPerformance.endDateUsed}
-                    />
-                    <KpiCard
-                      title="Bitcoin Performance"
-                      performance={kpis.bitcoinPerformance.performance}
-                      percentagePerformance={kpis.bitcoinPerformance.percentagePerformance}
-                      startDateUsed={kpis.walletPerformance.startDateUsed}
-                      endDateUsed={kpis.walletPerformance.endDateUsed}
-                    />
-                    <KpiCard
-                      title="Hash11 Performance"
-                      performance={kpis.hash11Performance.performance}
-                      percentagePerformance={kpis.hash11Performance.percentagePerformance}
-                      startDateUsed={kpis.walletPerformance.startDateUsed}
-                      endDateUsed={kpis.walletPerformance.endDateUsed}
-                    />
-                    <KpiCard
-                      title="S&P500 Performance"
-                      performance={kpis.sp500Performance.performance}
-                      percentagePerformance={kpis.sp500Performance.percentagePerformance}
-                      startDateUsed={kpis.walletPerformance.startDateUsed}
-                      endDateUsed={kpis.walletPerformance.endDateUsed}
-                    />
-                  </>
-                )}
-              </div>
+                  <KpiCard
+                    title="Bitcoin"
+                    performance={kpis.bitcoinPerformance.performance}
+                    percentagePerformance={kpis.bitcoinPerformance.percentagePerformance}
+                    startDateUsed={kpis.walletPerformance.startDateUsed}
+                    endDateUsed={kpis.walletPerformance.endDateUsed}
+                  />
+                  <KpiCard
+                    title="Hash11"
+                    performance={kpis.hash11Performance.performance}
+                    percentagePerformance={kpis.hash11Performance.percentagePerformance}
+                    startDateUsed={kpis.walletPerformance.startDateUsed}
+                    endDateUsed={kpis.walletPerformance.endDateUsed}
+                  />
+                  <KpiCard
+                    title="S&P500"
+                    performance={kpis.sp500Performance.performance}
+                    percentagePerformance={kpis.sp500Performance.percentagePerformance}
+                    startDateUsed={kpis.walletPerformance.startDateUsed}
+                    endDateUsed={kpis.walletPerformance.endDateUsed}
+                  />
+                </>
+              )}
+            </div>
+            
             )}
 
           </DialogContent>

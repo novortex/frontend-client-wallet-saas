@@ -22,7 +22,7 @@ const KpiCard: React.FC<KpiCardProps> = ({ title, performance, percentagePerform
         date && date !== "-" ? new Date(date).toLocaleDateString() : "N/A";
 
     return (
-        <div className="bg-gray-900 text-white p-6 rounded-lg shadow-md w-64 text-center border border-gray-700">
+        <div className="bg-gray-900 text-white p-6 rounded-lg shadow-md w-full max-w-xs text-center border border-gray-700">
             <h3 className="text-lg font-semibold mb-2">{title}</h3>
 
             {/* Performance Display */}
