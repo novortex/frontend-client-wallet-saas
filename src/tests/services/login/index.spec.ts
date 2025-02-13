@@ -9,7 +9,12 @@ describe('auth service', () => {
   })
 
   it('should set the logout function', () => {
-    expect(typeof mockLogoutFn).toBe('function')
+    const newMockFn = jest.fn()
+    setLogoutFunction(newMockFn) 
+    handleUnauthorized() 
+
+    expect(typeof newMockFn).toBe('function')
+    expect(newMockFn).toHaveBeenCalledWith({ returnTo: window.location.origin })
   })
 
   it('should call logout function with returnTo when handleUnauthorized is called', () => {
@@ -18,8 +23,10 @@ describe('auth service', () => {
   })
 
   it('should not call logout function if it is not set', () => {
-    setLogoutFunction(null)
-    handleUnauthorized()
-    expect(mockLogoutFn).not.toHaveBeenCalled()
-  })
+    setLogoutFunction(null);
+
+    handleUnauthorized();
+    
+    expect(mockLogoutFn).not.toHaveBeenCalled();
+  });
 })
