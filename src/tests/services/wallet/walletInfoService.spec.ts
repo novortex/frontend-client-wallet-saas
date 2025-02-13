@@ -1,6 +1,15 @@
 import { instance } from "@/config/api";
 import { calculateRebalanceInWallet, getGraphData, getInfosCustomer, getWalletKpis, getWalletOrganization, registerWalletForCustomer, requestCloseWallet, updateCurrentAmount } from "@/services/wallet/walleInfoService";
 
+jest.mock('@/config/api', () => ({
+    instance: {
+      get: jest.fn(),
+      post: jest.fn(),
+      put: jest.fn(),
+      delete: jest.fn(),
+    },
+  }));
+
 describe('walletInfoService', () => {
   
     describe('getWalletOrganization', () => {
@@ -125,11 +134,12 @@ describe('walletInfoService', () => {
       });
   
       it('should throw an error when rebalancing a wallet with invalid data', async () => {
-        (instance.put as jest.Mock).mockRejectedValue(new Error('Rebalance failed'));
-  
+        (instance.post as jest.Mock).mockRejectedValue(new Error('Rebalance failed'));
+      
         await expect(calculateRebalanceInWallet('invalid')).rejects.toThrow('Rebalance failed');
-        expect(instance.put).toHaveBeenCalledWith('wallet/invalid/rebalance');
+        expect(instance.post).toHaveBeenCalledWith('wallet/invalid/rebalanceWallet', {});
       });
+      
     });
   
     describe('getWalletKpis', () => {
