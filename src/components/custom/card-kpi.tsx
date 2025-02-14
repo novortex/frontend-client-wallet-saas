@@ -16,9 +16,11 @@ const KpiCard: React.FC<KpiCardProps> = ({ title, performance, percentagePerform
     const numPercentage = parseFloat(percentagePerformance);
     const isPositive = !isNaN(numPercentage) && numPercentage > 0;
     const isNegative = !isNaN(numPercentage) && numPercentage < 0;
-    
-    const formatDate = (date?: string) =>
-        date && date !== "-" ? new Date(date).toLocaleDateString() : "N/A";
+
+    const formatDate = (date?: string) => 
+        date && date !== "-" 
+            ? new Date(date).toISOString().split("T")[0].split("-").reverse().join("/") 
+            : "N/A";
 
     return (
         <div className="bg-gray-900 text-white p-6 rounded-lg shadow-md w-full max-w-xs text-center border border-gray-700">
@@ -45,8 +47,8 @@ const KpiCard: React.FC<KpiCardProps> = ({ title, performance, percentagePerform
             {/* Display Start and End Dates only if they exist */}
             {startDateUsed && endDateUsed && (
                 <div className="text-gray-400 text-sm mt-2">
-                    <p>{formatDate(startDateUsed)} → {formatDate(endDateUsed)}</p>
-                </div>
+                    <p>{`${formatDate(startDateUsed)} → ${formatDate(endDateUsed)}`}</p>
+                    </div>
             )}
         </div>
     );
