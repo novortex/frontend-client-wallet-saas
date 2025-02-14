@@ -18,7 +18,7 @@ export type ClientActive = {
   idealAllocation: number
   idealAmount: number
   buyOrSell: number
-  avaragePrice: number
+  averagePrice: number
   profitLoss: number
 }
 
@@ -104,10 +104,10 @@ export const createColumns = (fetchData: () => void): ColumnDef<ClientActive>[] 
     },
   },
   {
-    accessorKey: 'avaragePrice',
+    accessorKey: 'averagePrice',
     header: () => <div className="text-center">Average Price</div>,
     cell: ({ row }) => {
-      const value = Number(row.original.avaragePrice)
+      const value = Number(row.original.averagePrice)
       const textColor =
         isNaN(value) ? 'text-gray-600' : value > 0 ? '' : ''
       return <div className={`text-center ${textColor}`}>{!isNaN(value) ? value.toFixed(2) : 'N/A'}</div>

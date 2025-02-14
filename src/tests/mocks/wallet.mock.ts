@@ -26,7 +26,7 @@ const mockResponse: WalletDataResponse = {
       idealAllocation: 50,
       idealAmountInMoney: 500,
       buyOrSell: 1,
-      avaragePrice: 95000,
+      averagePrice: 95000,
       profitLoss: 2000
     },
     {
@@ -40,7 +40,7 @@ const mockResponse: WalletDataResponse = {
       idealAllocation: 50,
       idealAmountInMoney: 1000,
       buyOrSell: 1,
-      avaragePrice: 95000,
+      averagePrice: 95000,
       profitLoss: 2000
     },
   ],
