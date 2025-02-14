@@ -24,6 +24,9 @@ const KpiCard: React.FC<KpiCardProps> = ({ title, performance, percentagePerform
     let endDate = endDateUsed
     endDate = endDateUsed && endDateUsed !== "-" ? formatDate(endDateUsed) : "N/A";
 
+    console.log(startDate)
+    console.log(endDate)
+
     return (
         <div className="bg-gray-900 text-white p-6 rounded-lg shadow-md w-full max-w-xs text-center border border-gray-700">
             <h3 className="text-lg font-semibold mb-2">{title}</h3>
