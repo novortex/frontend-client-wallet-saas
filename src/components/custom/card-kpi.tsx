@@ -1,3 +1,4 @@
+import { formatDate } from "@/utils";
 import { formatToTwoDecimalPlaces } from "@/utils/formatToTwoDecimalPlates";
 import React from "react";
 
@@ -16,9 +17,12 @@ const KpiCard: React.FC<KpiCardProps> = ({ title, performance, percentagePerform
     const numPercentage = parseFloat(percentagePerformance);
     const isPositive = !isNaN(numPercentage) && numPercentage > 0;
     const isNegative = !isNaN(numPercentage) && numPercentage < 0;
+
+    let startDate = startDateUsed
+    startDate = startDateUsed && startDateUsed !== "-" ? formatDate(startDateUsed) : "N/A";
     
-    const formatDate = (date?: string) =>
-        date && date !== "-" ? new Date(date).toLocaleDateString() : "N/A";
+    let endDate = endDateUsed
+    endDate = endDateUsed && endDateUsed !== "-" ? formatDate(endDateUsed) : "N/A";
 
     return (
         <div className="bg-gray-900 text-white p-6 rounded-lg shadow-md w-full max-w-xs text-center border border-gray-700">
@@ -45,7 +49,7 @@ const KpiCard: React.FC<KpiCardProps> = ({ title, performance, percentagePerform
             {/* Display Start and End Dates only if they exist */}
             {startDateUsed && endDateUsed && (
                 <div className="text-gray-400 text-sm mt-2">
-                    <p>{formatDate(startDateUsed)} → {formatDate(endDateUsed)}</p>
+                    <p>{startDate} → {endDate}</p>
                 </div>
             )}
         </div>
