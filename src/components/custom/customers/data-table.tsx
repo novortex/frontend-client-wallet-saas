@@ -68,7 +68,7 @@ export function DataTableCustomers<TData, TValue>({ columns, data }: DataTablePr
           <Button className="bg-white text-black flex gap-2 hover:bg-gray-400 w-1/3 p-5">
             <img src={exportIcon} alt="" /> Export
           </Button>
-          <Button onClick={openModal} className="bg-[#F2BE38] text-black w-1/2 hover:bg-yellow-600 p-5">
+          <Button onClick={openModal} className="bg-[#F2BE38] w-1/2 text-black hover:text-white hover:bg-yellow-600">
             + Add new
           </Button>
           <div className="border-l-2 border-gray-500 pl-5 flex items-center justify-end space-x-2 py-4">
