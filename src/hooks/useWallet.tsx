@@ -34,6 +34,8 @@ export function useWallet(walletUuid: string) {
             idealAllocation: item.idealAllocation,
             idealAmount: item.idealAmountInMoney,
             buyOrSell: item.buyOrSell,
+            avaragePrice: item.avaragePrice,
+            profitLoss: item.profitLoss,
           }))
           .sort((a, b) => b.currentAmount - a.currentAmount)
       )
