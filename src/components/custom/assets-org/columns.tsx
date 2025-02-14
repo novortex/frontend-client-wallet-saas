@@ -70,6 +70,14 @@ export const columnsAssetOrg: ColumnDef<AssetOrgs>[] = [
     header: 'Qty. Standard',
   },
   {
+    accessorKey: 'quantHighRisk',
+    header: 'Qty. High Risk',
+  },
+  {
+    accessorKey: 'quantSHighRisk',
+    header: 'Qty. S. High Risk',
+  },
+  {
     id: 'actions',
     cell: ({ row }) => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
