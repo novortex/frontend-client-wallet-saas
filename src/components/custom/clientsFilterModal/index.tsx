@@ -111,7 +111,6 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
   }, [])
 
   useEffect(() => {
-    console.log('Updated assets:', assets)
   }, [assets])
 
   const applyFilters = () => {
