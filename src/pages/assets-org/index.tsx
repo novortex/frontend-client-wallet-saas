@@ -39,6 +39,8 @@ export function AssetsOrg() {
           quantSLowRisk: `${item.riskProfileCounts.superLowRisk} Wallets`,
           quantLowRisk: `${item.riskProfileCounts.lowRisk} Wallets`,
           quantStandard: `${item.riskProfileCounts.standard} Wallets`,
+          quantHighRisk: `${item.riskProfileCounts.highRisk} Wallets`,
+          quantSHighRisk: `${item.riskProfileCounts.superHighRisk} Wallets`,
         }))
 
         setDate(dataTable)

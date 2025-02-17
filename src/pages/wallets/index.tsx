@@ -104,10 +104,6 @@ export function Clients() {
           selectedAssets.length === 0 ||
           selectedAssets.every((assetUuid) => client.assetsUuid.includes(assetUuid));
 
-
-        console.log('assets uuids', client.assetsUuid)
-        console.log('selectedAssets', selectedAssets)
-        console.log('assetsMatch', assetsMatch)
         return nameMatches && managerMatches && unbalancedMatches && walletTypeMatches && exchangeMatches && benchMarkMatches && assetsMatch
       })
       .sort((a, b) => {
@@ -119,9 +115,6 @@ export function Clients() {
       })
 
     setFilteredClients(filtered)
-    console.log('clientes filtrados', filteredClients)
-    // console.log(filteredClients)
-
   }, [clients, filters, searchTerm])
 
   useEffect(() => {

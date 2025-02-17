@@ -132,7 +132,6 @@ export async function calculateRebalanceInWallet(
       {},
     )
 
-    console.log(`result =>`, result)
     return result.data
   } catch (error) {
     console.error(error)
