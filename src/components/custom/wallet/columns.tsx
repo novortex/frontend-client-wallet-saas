@@ -18,14 +18,16 @@ export type ClientActive = {
   idealAllocation: number
   idealAmount: number
   buyOrSell: number
+  averagePrice: number
+  profitLoss: number
 }
 
 export const createColumns = (fetchData: () => void): ColumnDef<ClientActive>[] => [
   {
     accessorKey: 'asset',
-    header: 'Asset',
+    header: () => <div className="text-center">Asset</div>,
     cell: ({ row }) => (
-      <div className="flex items-center">
+      <div className="flex items-center justify-center">
         <img src={row.original.asset.urlImage} alt={row.original.asset.name} className="w-6 h-6 mr-2" />
         <span>{row.original.asset.name}</span>
       </div>
@@ -36,77 +38,89 @@ export const createColumns = (fetchData: () => void): ColumnDef<ClientActive>[] 
   },
   {
     accessorKey: 'currentAmount',
-    header: ({ column }) => (
-      <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} className="pl-0">
-        Invested amount
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
+    header: () => <div className="text-center">Invested Amount</div>,
     cell: ({ row }) => {
-      const currentAmount = Number(row.original.currentAmount)
-      return !isNaN(currentAmount) ? currentAmount.toFixed(2) : 'N/A'
+      const value = Number(row.original.currentAmount)
+      return <div className="text-center">{!isNaN(value) ? value.toFixed(2) : 'N/A'}</div>
     },
-    sortingFn: 'basic',
-    sortDescFirst: true,
   },
   {
     accessorKey: 'assetQuantity',
-    header: 'Asset quantity',
+    header: () => <div className="text-center">Quantity</div>,
     cell: ({ row }) => {
-      const assetQuantity = Number(row.original.assetQuantity)
-      return !isNaN(assetQuantity) ? assetQuantity.toFixed(6) : 'N/A'
+      const value = Number(row.original.assetQuantity)
+      return <div className="text-center">{!isNaN(value) ? value.toFixed(6) : 'N/A'}</div>
     },
   },
   {
     accessorKey: 'price',
-    header: 'Price',
+    header: () => <div className="text-center">Price</div>,
     cell: ({ row }) => {
-      const price = Number(row.original.price)
-      return !isNaN(price) ? price.toFixed(2) : 'N/A'
+      const value = Number(row.original.price)
+      return <div className="text-center">{!isNaN(value) ? value.toFixed(2) : 'N/A'}</div>
     },
   },
   {
     accessorKey: 'allocation',
-    header: 'Allocation',
+    header: () => <div className="text-center">Current Allocation</div>,
     cell: ({ row }) => {
-      const allocation = Number(row.original.allocation)
-      return !isNaN(allocation) ? allocation.toFixed(2) : 'N/A'
+      const value = Number(row.original.allocation)
+      return <div className="text-center">{!isNaN(value) ? `${value.toFixed(2)}%` : 'N/A'}</div>
     },
   },
   {
     id: 'idealAllocation',
     accessorKey: 'idealAllocation',
     header: ({ column, table }) => {
-      const idealAllocationSum = table.getRowModel().rows.reduce((total, row) => total + row.original.idealAllocation, 0)
-
+      const total = table.getRowModel().rows.reduce((sum, row) => sum + row.original.idealAllocation, 0)
       return (
         <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} className="pl-0">
-          Ideal allocation ({idealAllocationSum.toFixed(2)}%)
+          Ideal Allocation ({total.toFixed(2)}%)
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
     },
     cell: ({ row }) => {
-      const idealAllocation = Number(row.original.idealAllocation)
-      return !isNaN(idealAllocation) ? idealAllocation.toFixed(2) : 'N/A'
+      const value = Number(row.original.idealAllocation)
+      return <div className="text-center">{!isNaN(value) ? `${value.toFixed(2)}%` : 'N/A'}</div>
     },
-    sortingFn: 'basic',
-    sortDescFirst: true,
   },
   {
     accessorKey: 'idealAmount',
-    header: 'Ideal amount',
+    header: () => <div className="text-center">Ideal Amount</div>,
     cell: ({ row }) => {
-      const idealAmount = Number(row.original.idealAmount)
-      return !isNaN(idealAmount) ? idealAmount.toFixed(2) : 'N/A'
+      const value = Number(row.original.idealAmount)
+      return <div className="text-center">{!isNaN(value) ? value.toFixed(2) : 'N/A'}</div>
     },
   },
   {
     accessorKey: 'buyOrSell',
-    header: 'Buy/Sell',
+    header: () => <div className="text-center">Buy/Sell</div>,
     cell: ({ row }) => {
-      const buyOrSell = Number(row.original.buyOrSell)
-      return !isNaN(buyOrSell) ? buyOrSell.toFixed(2) : 'N/A'
+      const value = Number(row.original.buyOrSell)
+      const textColor =
+        isNaN(value) || value === 0 ? 'text-gray-600' : value > 0 ? 'text-green-400' : 'text-red-500'
+      return <div className={`text-center ${textColor}`}>{!isNaN(value) ? value.toFixed(2) : 'N/A'}</div>
+    },
+  },
+  {
+    accessorKey: 'averagePrice',
+    header: () => <div className="text-center">Average Price</div>,
+    cell: ({ row }) => {
+      const value = Number(row.original.averagePrice)
+      const textColor =
+        isNaN(value) ? 'text-gray-600' : value > 0 ? '' : ''
+      return <div className={`text-center ${textColor}`}>{!isNaN(value) ? value.toFixed(2) : 'N/A'}</div>
+    },
+  },
+  {
+    accessorKey: 'profitLoss',
+    header: () => <div className="text-center">P/L</div>,
+    cell: ({ row }) => {
+      const value = Number(row.original.profitLoss)
+      const textColor =
+        isNaN(value) || value === 0 ? 'text-gray-600' : value > 0 ? 'text-green-500' : 'text-red-500'
+      return <div className={`text-center ${textColor}`}>{!isNaN(value) ? value.toFixed(2) : 'N/A'}</div>
     },
   },
   {

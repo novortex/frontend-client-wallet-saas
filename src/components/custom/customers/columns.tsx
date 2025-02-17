@@ -33,56 +33,66 @@ export type CustomersOrganization = {
 export const columnsCustomerOrg: ColumnDef<CustomersOrganization>[] = [
   {
     accessorKey: 'name',
-    header: 'Name',
+    header: () => <div className="text-center">Name</div>,
+    cell: ({ row }) => <div className="text-center">{row.original.name}</div>,
   },
   {
     accessorKey: 'email',
-    header: 'Email',
+    header: () => <div className="text-center">Email</div>,
+    cell: ({ row }) => <div className="text-center">{row.original.email}</div>,
   },
   {
     accessorKey: 'phone',
-    header: 'Phone',
-    cell: ({ getValue }) => {
-      const phone = getValue<string | null>()
-      return phone ?? ' - '
-    },
+    header: () => <div className="text-center">Phone</div>,
+    cell: ({ row }) => <div className="text-center">{row.original.phone ?? ' - '}</div>,
   },
   {
     accessorKey: 'active',
-    header: ({ column }) => {
+    header: ({ column }) => (
+      <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} className="w-full">
+        <div className="text-center w-full flex justify-center items-center">
+          Status <ArrowUpDown className="ml-2 h-4 w-4" />
+        </div>
+      </Button>
+    ),
+    cell: ({ row }) => {
+      const active = row.original.active
       return (
-        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-          Status
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+        <div className="text-center">
+          <span className={`px-2 py-1 rounded-full text-white ${active ? 'bg-green-500' : 'bg-red-500'}`}>
+            {active ? 'Active' : 'Inactive'}
+          </span>
+        </div>
       )
-    },
-    cell: ({ getValue }) => {
-      const active = getValue<boolean>()
-      return <span className={`px-2 py-1 rounded-full text-white ${active ? 'bg-green-500' : 'bg-red-500'}`}>{active ? 'Active' : 'Inactive'}</span>
     },
   },
   {
     accessorKey: 'isWallet',
-    header: ({ column }) => {
+    header: ({ column }) => (
+      <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} className="w-full">
+        <div className="text-center w-full flex justify-center items-center">
+          Stage <ArrowUpDown className="ml-2 h-4 w-4" />
+        </div>
+      </Button>
+    ),
+    cell: ({ row }) => {
+      const isWallet = row.original.isWallet
       return (
-        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-          Stage
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
-    cell: ({ getValue }) => {
-      const isWallet = getValue<boolean>()
-      return (
-        <span className={`px-2 py-1 rounded-full text-white ${isWallet ? 'bg-green-500' : 'bg-red-500'}`}>
-          {isWallet ? 'Completed' : 'Need Wallet'}
-        </span>
+        <div className="text-center">
+          <span className={`px-2 py-1 rounded-full text-white ${isWallet ? 'bg-green-500' : 'bg-red-500'}`}>
+            {isWallet ? 'Completed' : 'Need Wallet'}
+          </span>
+        </div>
       )
     },
   },
   {
     id: 'actions',
-    cell: ({ row }) => <CellActions rowInfos={row.original} />,
+    header: () => <div className="text-center">Actions</div>,
+    cell: ({ row }) => (
+      <div className="text-center">
+        <CellActions rowInfos={row.original} />
+      </div>
+    ),
   },
 ]

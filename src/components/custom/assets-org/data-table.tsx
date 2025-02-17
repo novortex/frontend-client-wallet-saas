@@ -43,7 +43,7 @@ export function DataTableAssetOrg<TData, TValue>({ columns, data }: DataTablePro
             {' '}
             <img src={exportIcon} alt="" /> Export
           </Button>
-          <Button className="bg-[#1877F2] w-1/2 hover:bg-blue-600 p-5" onClick={openModal}>
+          <Button className="bg-[#F2BE38] w-1/2 text-black hover:text-white hover:bg-yellow-600" onClick={openModal}>
             + Add new
           </Button>
         </div>
