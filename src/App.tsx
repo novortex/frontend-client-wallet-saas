@@ -19,6 +19,7 @@ import { ApiAuthManager } from '@/auth/apiAuthManager'
 import { UserDataHandler } from './auth/userDataHandler'
 import { ProtectedRouteWrapper } from './auth/protectedRouteWrapper'
 import { setLogoutFunction } from './services/auth'
+import { OrganizationProvider } from './contexts/organizationContext'
 
 export function App() {
   const [isMobile, setIsMobile] = useState(false)
@@ -47,29 +48,31 @@ export function App() {
   return (
     <AuthProvider>
       <UserDataHandler />
-      <ApiAuthManager />
-      <Routes>
-        {isMobile ? (
-          <Route path="/" element={<AdviceToTeam />} />
-        ) : (
-          <Route element={<AuthHandler />}>
-            <Route path="/callback" element={<Auth0Callback />} />
-            <Route element={<ProtectedRouteWrapper />}>
-              <Route element={<Root />}>
-                <Route path="/" element={<Navigate to="/wallets" replace />} />
-                <Route path="/wallet/:walletUuid/assets" element={<Wallet />} />
-                <Route path="/wallets" element={<Clients />} />
-                <Route path="/customers" element={<Customers />} />
-                <Route path="/admin/orgs" element={<AssetsOrg />} />
-                <Route path="/clients/:walletUuid/infos" element={<Infos />} />
-                <Route path="/wallet/:walletUuid/graphs" element={<Graphs />} />
-                <Route path="/wallet/:walletUuid/history" element={<History />} />
-                <Route path="*" element={<ErrorPage />} />
+      <OrganizationProvider>
+        <ApiAuthManager />
+        <Routes>
+          {isMobile ? (
+            <Route path="/" element={<AdviceToTeam />} />
+          ) : (
+            <Route element={<AuthHandler />}>
+              <Route path="/callback" element={<Auth0Callback />} />
+              <Route element={<ProtectedRouteWrapper />}>
+                <Route element={<Root />}>
+                  <Route path="/" element={<Navigate to="/wallets" replace />} />
+                  <Route path="/wallet/:walletUuid/assets" element={<Wallet />} />
+                  <Route path="/wallets" element={<Clients />} />
+                  <Route path="/customers" element={<Customers />} />
+                  <Route path="/admin/orgs" element={<AssetsOrg />} />
+                  <Route path="/clients/:walletUuid/infos" element={<Infos />} />
+                  <Route path="/wallet/:walletUuid/graphs" element={<Graphs />} />
+                  <Route path="/wallet/:walletUuid/history" element={<History />} />
+                  <Route path="*" element={<ErrorPage />} />
+                </Route>
               </Route>
             </Route>
-          </Route>
-        )}
-      </Routes>
+          )}
+        </Routes>
+      </OrganizationProvider>
     </AuthProvider>
   )
 }
