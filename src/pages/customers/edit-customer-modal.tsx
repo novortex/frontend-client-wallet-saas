@@ -178,8 +178,6 @@ export function EditCustomerModal({ isOpen, onOpenChange, rowInfos }: EditCustom
         performanceFee: parseFloat(String(performanceFee)),
       })
 
-      console.log('Result from updateWallet:', result)
-
       if (!result) {
         toast({
           className: 'bg-red-500 border-0',
