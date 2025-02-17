@@ -92,7 +92,6 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
     const fetchAssets = async () => {
       try {
         const result = await getAllAssetsOrg()
-        console.log('result get available assets: ', result)
         setAssets(result.map((item) => ({ uuid: item.uuid, name: item.name })))
       } catch (error) {
         console.error('Error fetching assets:', error)
@@ -111,7 +110,6 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
   }, [])
 
   useEffect(() => {
-    console.log('Updated assets:', assets)
   }, [assets])
 
   const applyFilters = () => {
