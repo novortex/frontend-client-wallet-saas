@@ -32,6 +32,8 @@ export default function OperationsModal({ isOpen, onClose, fetchData }: Operatio
   const [fiatCurrencies, setFiatCurrencies] = useState<string[]>([])
   const [signal, setSignal] = useSignalStore((state) => [state.signal, state.setSignal])
 
+  const [date, setDate] = useState<Date | null>(null)
+
   const { walletUuid } = useParams()
 
   const { toast } = useToast()
@@ -71,9 +73,10 @@ export default function OperationsModal({ isOpen, onClose, fetchData }: Operatio
     return true
   }
 
-  const [date, setDate] = useState<Date>(new Date())
+  const isToday = (dateToCheck: Date | null) => {
 
-  const isToday = (dateToCheck: Date) => {
+    if (!dateToCheck) return false
+    
     const today = new Date()
     return (
       dateToCheck.getDate() === today.getDate() && dateToCheck.getMonth() === today.getMonth() && dateToCheck.getFullYear() === today.getFullYear()
@@ -117,6 +120,15 @@ export default function OperationsModal({ isOpen, onClose, fetchData }: Operatio
         title: 'Operation in progress',
         description: `Operation: ${operation}, Amount: ${amount}, Currency: ${currency}`,
       })
+
+      if (!date) {
+        toast({
+          className: 'bg-red-500 border-0',
+          title: 'Validation Error',
+          description: 'Exactly date of transaction must be provided',
+        })
+        return 
+      }
 
       const customDateFormatted = formatDateToISO(date)
 
@@ -217,14 +229,13 @@ export default function OperationsModal({ isOpen, onClose, fetchData }: Operatio
                 className="w-[50%] bg-[#131313] border-[#323232] text-[#959CB6] justify-between"
                 disabled={!isCustomDateEnabled}
               >
-                {date.toLocaleDateString()}
+                {date?.toLocaleDateString()}
                 <CalendarIcon className="h-4 w-4 opacity-50" />
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="start">
               <Calendar
                 mode="single"
-                selected={date}
                 onSelect={(newDate) => newDate && setDate(newDate)}
                 className="bg-[#131313] text-white rounded-md"
                 classNames={{
