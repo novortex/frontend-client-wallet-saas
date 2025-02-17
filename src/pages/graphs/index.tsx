@@ -65,6 +65,8 @@ export function Graphs() {
           idealAllocation: item.idealAllocation,
           idealAmount: item.idealAmountInMoney,
           buyOrSell: item.buyOrSell,
+          averagePrice: item.averagePrice,
+          profitLoss: item.profitLoss
         }))
 
         setData(dataTable)

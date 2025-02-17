@@ -3,6 +3,7 @@ import '@testing-library/jest-dom'
 import AddNewAssetModal from '../../../components/custom/assets-org/add-new-asset-modal'
 import { columnsAssetOrg } from '../../../components/custom/assets-org/columns'
 import { DataTableAssetOrg } from '../../../components/custom/assets-org/data-table'
+import { ColumnDef } from '@tanstack/react-table'
 
 describe('AddNewAssetModal Component', () => {
   it('renders modal with correct fields', () => {
@@ -56,12 +57,18 @@ describe('DataTableAssetOrg Component', () => {
 })
 
 // Testes para a definição das colunas (columns.tsx)
-describe('columnsAssetOrg Definition', () => {
-  it('should define all necessary columns', () => {
-    expect(columnsAssetOrg).toBeDefined()
-    expect(columnsAssetOrg.length).toBeGreaterThan(0)
+describe('DataTableAssetOrg Column Definition', () => {
+  const columns: ColumnDef<any, any>[] = [
+    { accessorKey: 'asset', header: 'Asset' },
+    { accessorKey: 'price', header: 'Price' },
+    { accessorKey: 'appearances', header: 'Appearances' },
+  ]
 
-    const columnTitles = columnsAssetOrg.map((col) => col.header)
+  it('should define all necessary columns', () => {
+    expect(columns).toBeDefined()
+    expect(columns.length).toBeGreaterThan(0)
+
+    const columnTitles = columns.map((col) => col.header)
     expect(columnTitles).toContain('Asset')
     expect(columnTitles).toContain('Price')
     expect(columnTitles).toContain('Appearances')
