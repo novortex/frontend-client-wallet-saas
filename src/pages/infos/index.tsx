@@ -233,7 +233,10 @@ export function Infos() {
               </div>
               <div className="flex gap-3">
                 <Calendar className="text-[#F2BE38]" />
-                <p className="text-white">Current value: {walletI.currentAmount !== undefined ? Number(walletI.currentAmount).toFixed(2) : '-'}</p>
+                <p className="text-white">
+                  Current value:{' '}
+                  {walletI.currentAmount !== null && walletI.currentAmount !== undefined ? Number(walletI.currentAmount).toFixed(2) : '-'}
+                </p>
               </div>
               <div className="flex gap-3">
                 <Calendar className="text-[#F2BE38]" />
