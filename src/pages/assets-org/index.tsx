@@ -1,9 +1,6 @@
 import { useEffect, useState } from 'react'
 import { SwitchTheme } from '@/components/custom/switch-theme'
-import {
-  AssetOrgs,
-  columnsAssetOrg,
-} from '@/components/custom/assets-org/columns'
+import { AssetOrgs, columnsAssetOrg } from '@/components/custom/assets-org/columns'
 import { useSignalStore } from '@/store/signalEffect'
 import { useToast } from '@/components/ui/use-toast'
 import { getAllAssetsOrg } from '@/services/managementService'
@@ -18,9 +15,7 @@ export function AssetsOrg() {
 
   useEffect(() => {
     // TODO: separe this script this file :)
-    async function getData(
-      setDate: React.Dispatch<React.SetStateAction<AssetOrgs[]>>,
-    ) {
+    async function getData(setDate: React.Dispatch<React.SetStateAction<AssetOrgs[]>>) {
       try {
         const result = await getAllAssetsOrg()
 
@@ -44,6 +39,8 @@ export function AssetsOrg() {
           quantSLowRisk: `${item.riskProfileCounts.superLowRisk} Wallets`,
           quantLowRisk: `${item.riskProfileCounts.lowRisk} Wallets`,
           quantStandard: `${item.riskProfileCounts.standard} Wallets`,
+          quantHighRisk: `${item.riskProfileCounts.highRisk} Wallets`,
+          quantSHighRisk: `${item.riskProfileCounts.superHighRisk} Wallets`,
         }))
 
         setDate(dataTable)

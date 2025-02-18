@@ -63,10 +63,7 @@ export function App() {
                 <Route path="/admin/orgs" element={<AssetsOrg />} />
                 <Route path="/clients/:walletUuid/infos" element={<Infos />} />
                 <Route path="/wallet/:walletUuid/graphs" element={<Graphs />} />
-                <Route
-                  path="/wallet/:walletUuid/history"
-                  element={<History />}
-                />
+                <Route path="/wallet/:walletUuid/history" element={<History />} />
                 <Route path="*" element={<ErrorPage />} />
               </Route>
             </Route>

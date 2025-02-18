@@ -1,19 +1,7 @@
 import { Button } from '@/components/ui/button'
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { StepForwardIcon, HandCoins, Info, CalendarIcon } from 'lucide-react'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -21,11 +9,7 @@ import { useEffect, useState } from 'react'
 import { useToast } from '@/components/ui/use-toast'
 import { useParams } from 'react-router-dom'
 import { useSignalStore } from '@/store/signalEffect'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Calendar } from '@/components/ui/calendar'
 import { getAllFiatCurrencies } from '@/services/managementService'
 import { createDepositWithdrawal } from '@/services/wallet/walletAssetService'
@@ -36,11 +20,7 @@ interface OperationsModalProps {
   fetchData: () => Promise<void>
 }
 
-export default function OperationsModal({
-  isOpen,
-  onClose,
-  fetchData,
-}: OperationsModalProps) {
+export default function OperationsModal({ isOpen, onClose, fetchData }: OperationsModalProps) {
   const [operation, setOperation] = useState('')
   const [amount, setAmount] = useState('')
   const [currency, setCurrency] = useState('')
@@ -50,10 +30,7 @@ export default function OperationsModal({
   const [currencyError, setCurrencyError] = useState('')
 
   const [fiatCurrencies, setFiatCurrencies] = useState<string[]>([])
-  const [signal, setSignal] = useSignalStore((state) => [
-    state.signal,
-    state.setSignal,
-  ])
+  const [signal, setSignal] = useSignalStore((state) => [state.signal, state.setSignal])
 
   const { walletUuid } = useParams()
 
@@ -81,9 +58,7 @@ export default function OperationsModal({
   const validateAmount = (amount: string) => {
     const numberPattern = /^\d+(\.\d{1,2})?$/
     if (!numberPattern.test(amount)) {
-      setAmountError(
-        'Amount must be a positive number and can only contain numbers and points, with up to two decimal places (e.g., 199.99).',
-      )
+      setAmountError('Amount must be a positive number and can only contain numbers and points, with up to two decimal places (e.g., 199.99).')
       return false
     }
 
@@ -101,9 +76,7 @@ export default function OperationsModal({
   const isToday = (dateToCheck: Date) => {
     const today = new Date()
     return (
-      dateToCheck.getDate() === today.getDate() &&
-      dateToCheck.getMonth() === today.getMonth() &&
-      dateToCheck.getFullYear() === today.getFullYear()
+      dateToCheck.getDate() === today.getDate() && dateToCheck.getMonth() === today.getMonth() && dateToCheck.getFullYear() === today.getFullYear()
     )
   }
 
@@ -147,13 +120,7 @@ export default function OperationsModal({
 
       const customDateFormatted = formatDateToISO(date)
 
-      const result = await createDepositWithdrawal(
-        parseFloat(amount),
-        walletUuid,
-        currency,
-        isWithdrawal,
-        customDateFormatted,
-      )
+      const result = await createDepositWithdrawal(parseFloat(amount), walletUuid, currency, isWithdrawal, customDateFormatted)
 
       fetchData()
 
@@ -213,9 +180,7 @@ export default function OperationsModal({
               ))}
             </SelectContent>
           </Select>
-          {currencyError && (
-            <Label className="text-red-500 mt-2">{currencyError}</Label>
-          )}
+          {currencyError && <Label className="text-red-500 mt-2">{currencyError}</Label>}
         </div>
         <div className="w-full flex justify-center gap-2 flex-col">
           <Label>Operation</Label>
@@ -228,9 +193,7 @@ export default function OperationsModal({
               <SelectItem value="Deposit">Deposit</SelectItem>
             </SelectContent>
           </Select>
-          {operationError && (
-            <Label className="text-red-500 mt-2">{operationError}</Label>
-          )}
+          {operationError && <Label className="text-red-500 mt-2">{operationError}</Label>}
         </div>
         <div className="w-full flex justify-center gap-2 flex-col">
           <Label>Amount</Label>
@@ -240,18 +203,11 @@ export default function OperationsModal({
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
           />
-          {amountError && (
-            <Label className="text-red-500 mt-2">{amountError}</Label>
-          )}
+          {amountError && <Label className="text-red-500 mt-2">{amountError}</Label>}
         </div>
         <div className="w-full flex justify-center gap-4 flex-col">
           <div className="flex flex-row gap-2 items-center">
-            <Checkbox
-              className="border-gray-500"
-              onCheckedChange={(checked) =>
-                setIsCustomDateEnabled(checked === true)
-              }
-            />
+            <Checkbox className="border-gray-500" onCheckedChange={(checked) => setIsCustomDateEnabled(checked === true)} />
             <Label>Set Deposit or Withdrawal on a different date</Label>
           </div>
           <Popover>
@@ -285,16 +241,12 @@ export default function OperationsModal({
         <div className="w-full flex items-center">
           <Info className="w-[10%] text-blue-600" />
           <p className="text-[14px] w-[90%]">
-            After clicking to finish this operation, the data will be updated
-            with no way to revert it, so make sure to check the entire operation
+            After clicking to finish this operation, the data will be updated with no way to revert it, so make sure to check the entire operation
             before completing it.
           </p>
         </div>
         <DialogFooter className="flex justify-end items-end">
-          <Button
-            className="bg-[#1877F2] w-1/4 hover:bg-blue-600 p-5 flex items-center justify-center gap-3"
-            onClick={sendOperation}
-          >
+          <Button className="bg-[#1877F2] w-1/4 hover:bg-blue-600 p-5 flex items-center justify-center gap-3" onClick={sendOperation}>
             <StepForwardIcon />
             Finish
           </Button>

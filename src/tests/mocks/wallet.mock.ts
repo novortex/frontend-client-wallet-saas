@@ -26,6 +26,8 @@ const mockResponse: WalletDataResponse = {
       idealAllocation: 50,
       idealAmountInMoney: 500,
       buyOrSell: 1,
+      averagePrice: 95000,
+      profitLoss: 2000
     },
     {
       uuid: '2',
@@ -38,6 +40,8 @@ const mockResponse: WalletDataResponse = {
       idealAllocation: 50,
       idealAmountInMoney: 1000,
       buyOrSell: 1,
+      averagePrice: 95000,
+      profitLoss: 2000
     },
   ],
 }

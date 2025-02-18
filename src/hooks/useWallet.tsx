@@ -3,10 +3,7 @@ import { useToast } from '@/components/ui/use-toast'
 import { TWalletAssetsInfo } from '@/types/wallet.type'
 import { getAllAssetsWalletClient } from '@/services/wallet/walletAssetService'
 import { ClientActive } from '@/components/custom/wallet/columns'
-import {
-  calculateRebalanceInWallet,
-  updateCurrentAmount,
-} from '@/services/wallet/walleInfoService'
+import { calculateRebalanceInWallet, updateCurrentAmount } from '@/services/wallet/walleInfoService'
 
 export function useWallet(walletUuid: string) {
   const [data, setData] = useState<ClientActive[]>([])
@@ -37,8 +34,10 @@ export function useWallet(walletUuid: string) {
             idealAllocation: item.idealAllocation,
             idealAmount: item.idealAmountInMoney,
             buyOrSell: item.buyOrSell,
+            averagePrice: item.averagePrice,
+            profitLoss: item.profitLoss,
           }))
-          .sort((a, b) => b.currentAmount - a.currentAmount),
+          .sort((a, b) => b.currentAmount - a.currentAmount)
       )
     } catch (error) {
       toast({

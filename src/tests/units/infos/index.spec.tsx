@@ -8,15 +8,7 @@ import { MemoryRouter } from 'react-router-dom'
 
 describe('ClientInfoModal Component', () => {
   it('renders client information correctly', async () => {
-    render(
-      <ClientsInfoModal
-        isOpen={true}
-        onClose={() => {}}
-        name="John Doe"
-        email="john@example.com"
-        phone="+123456789"
-      />,
-    )
+    render(<ClientsInfoModal isOpen={true} onClose={() => {}} name="John Doe" email="john@example.com" phone="+123456789" />)
 
     await waitFor(() => {
       expect(screen.getByText(/information/i)).toBeInTheDocument()
@@ -28,15 +20,7 @@ describe('ClientInfoModal Component', () => {
 
   it('closes modal when close button is clicked', async () => {
     const mockOnClose = jest.fn()
-    render(
-      <ClientsInfoModal
-        isOpen={true}
-        onClose={mockOnClose}
-        name="John Doe"
-        email="john@example.com"
-        phone="+123456789"
-      />,
-    )
+    render(<ClientsInfoModal isOpen={true} onClose={mockOnClose} name="John Doe" email="john@example.com" phone="+123456789" />)
 
     await waitFor(() => {
       const closeButton = screen.getByText(/close/i)
@@ -69,7 +53,7 @@ describe('ExchangeInfoModal Component', () => {
         accountEmail="account@example.com"
         emailPassword="email-pass"
         exchangePassword="exchange-pass"
-      />,
+      />
     )
 
     await waitFor(() => {
@@ -93,7 +77,7 @@ jest.mock('@/services/wallet/walleInfoService', () => ({
       },
       walletPreInfos: {},
       walletCommission: [],
-    }),
+    })
   ),
   updateCurrentAmount: jest.fn(() => Promise.resolve()),
 }))

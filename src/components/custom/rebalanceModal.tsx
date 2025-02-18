@@ -13,9 +13,7 @@ type RebalanceModalProps = {
 export function RebalanceModal({ walletUuid }: RebalanceModalProps) {
   const [isResultModalOpen, setIsResultModalOpen] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [rebalanceResults, setRebalancesResults] = useState<RebalanceReturn[]>(
-    [],
-  )
+  const [rebalanceResults, setRebalancesResults] = useState<RebalanceReturn[]>([])
 
   const { calculateRebalance } = useWallet(walletUuid)
 
@@ -54,11 +52,7 @@ export function RebalanceModal({ walletUuid }: RebalanceModalProps) {
         {loading ? 'Calculating...' : 'Calculate Rebalance'}
       </Button>
 
-      <ResultRebalanceModal
-        open={isResultModalOpen}
-        onOpenChange={setIsResultModalOpen}
-        rebalanceResults={rebalanceResults}
-      />
+      <ResultRebalanceModal open={isResultModalOpen} onOpenChange={setIsResultModalOpen} rebalanceResults={rebalanceResults} />
     </>
   )
 }
