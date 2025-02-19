@@ -64,12 +64,13 @@ export type HistoricEntry = {
     | 'CLOSE_WALLET'
   createAt: string
   data: {
-    date: string
+    data: string
     client_name: string
     start_date: string
     start_date_formated: string
     close_date: string
     close_date_formated: string
+    organization_fiat: string
     invested_amount_in_organization_fiat: number
     benchmark: string
     company_comission: number
