@@ -139,15 +139,15 @@ export default function HistoryThread({
       case 'DEPOSIT':
         return (
           <div className="flex flex-row gap-1.5">
-            <p className="font-bold">{user}</p> made a deposit on {date} ({hour})
-            <p className="font-bold">Effective date of deposit: {effective_date}</p>
+            <p className="font-bold">{user}</p> registered a deposit on {date} ({hour}).
+            <p className="">Deposit made on: {effective_date}</p>
           </div>
         )
       case 'WITHDRAWAL':
         return (
           <div className="flex flex-row gap-1.5">
-            <p className="font-bold">{user}</p> performed a withdrawal on {date} ({hour})
-            <p className="font-bold">Effective date of withdrawal: {effective_date}</p>
+            <p className="font-bold">{user}</p> registered a withdrawal on {date} ({hour}).
+            <p className="">Withdrawal made on: {effective_date}</p>
           </div>
         )
       case 'START_WALLET':

@@ -13,7 +13,6 @@ import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, Dialog
 import { Calendar } from '@/components/ui/calendar'
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'
 import { CalendarIcon } from 'lucide-react'
-import { useOrganization } from '@/contexts/organizationContext'
 
 export type Filters = {
   eventTypes: HistoricEntry['historyType'][]
@@ -39,8 +38,6 @@ export function History() {
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false)
   const [filters, setFilters] = useState<Filters>({ eventTypes: [], dateRange: undefined })
   const { walletUuid } = useParams()
-
-  const { organization } = useOrganization();
 
   useEffect(() => {
     async function fetchHistoric() {
@@ -182,8 +179,8 @@ export function History() {
         {filteredHistoric.slice().reverse().map((entry) => (
           <HistoryThread
             key={entry.cuid}
-            fiat_currency={organization?.fiatCurrency}
-            effective_date={new Date(entry.data.date).toLocaleDateString()}
+            fiat_currency={entry.data.organization_fiat}
+            effective_date={entry.data.data}
             data={entry}
             user={entry.user.name}
             operationType={entry.historyType}
