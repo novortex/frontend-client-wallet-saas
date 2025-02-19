@@ -19,7 +19,6 @@ import { ApiAuthManager } from '@/auth/apiAuthManager'
 import { UserDataHandler } from './auth/userDataHandler'
 import { ProtectedRouteWrapper } from './auth/protectedRouteWrapper'
 import { setLogoutFunction } from './services/auth'
-import { OrganizationProvider } from './contexts/organizationContext'
 
 export function App() {
   const [isMobile, setIsMobile] = useState(false)
@@ -48,8 +47,7 @@ export function App() {
   return (
     <AuthProvider>
       <UserDataHandler />
-      <OrganizationProvider>
-        <ApiAuthManager />
+      <ApiAuthManager />
         <Routes>
           {isMobile ? (
             <Route path="/" element={<AdviceToTeam />} />
@@ -72,7 +70,6 @@ export function App() {
             </Route>
           )}
         </Routes>
-      </OrganizationProvider>
     </AuthProvider>
   )
 }
