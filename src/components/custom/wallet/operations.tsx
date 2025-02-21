@@ -4,7 +4,6 @@ import { StepForwardIcon, HandCoins, Info, CalendarIcon } from 'lucide-react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Checkbox } from '@/components/ui/checkbox'
 import { useEffect, useState } from 'react'
 import { useToast } from '@/components/ui/use-toast'
 import { useParams } from 'react-router-dom'
@@ -28,16 +27,16 @@ export default function OperationsModal({ isOpen, onClose, fetchData }: Operatio
   const [operationError, setOperationError] = useState('')
   const [amountError, setAmountError] = useState('')
   const [currencyError, setCurrencyError] = useState('')
+  const [dateError, setDateError] = useState('')
 
   const [fiatCurrencies, setFiatCurrencies] = useState<string[]>([])
   const [signal, setSignal] = useSignalStore((state) => [state.signal, state.setSignal])
 
+  const [date, setDate] = useState<Date | null>(null)
+
   const { walletUuid } = useParams()
 
   const { toast } = useToast()
-
-  // Estado para controlar o checkbox
-  const [isCustomDateEnabled, setIsCustomDateEnabled] = useState(false)
 
   useEffect(() => {
     const fetchFiatCurrencies = async () => {
@@ -71,16 +70,18 @@ export default function OperationsModal({ isOpen, onClose, fetchData }: Operatio
     return true
   }
 
-  const [date, setDate] = useState<Date>(new Date())
+  const isToday = (dateToCheck: Date | null) => {
 
-  const isToday = (dateToCheck: Date) => {
+    if (!dateToCheck) return false
+    
     const today = new Date()
     return (
       dateToCheck.getDate() === today.getDate() && dateToCheck.getMonth() === today.getMonth() && dateToCheck.getFullYear() === today.getFullYear()
     )
   }
 
-  const formatDateToISO = (date: Date): string => {
+  const formatDateToISO = (date: Date | null): string => {
+    if (!date) return '-'
     return date.toISOString() // Retorna "YYYY-MM-DDTHH:mm:ss.sssZ"
   }
 
@@ -103,6 +104,13 @@ export default function OperationsModal({ isOpen, onClose, fetchData }: Operatio
 
     if (!validateAmount(amount)) {
       valid = false
+    }
+
+    if (!date) {
+      setDateError('Effective date of operation must be provided')
+      valid = false
+    } else {
+      setDateError('')
     }
 
     if (!walletUuid) throw new Error('Wallet UUID is required.')
@@ -148,15 +156,9 @@ export default function OperationsModal({ isOpen, onClose, fetchData }: Operatio
 
     setOperation('')
     setAmount('')
+    setDate(null)
     onClose()
   }
-
-  useEffect(() => {
-    if (!isOpen) {
-      setIsCustomDateEnabled(false)
-      setDate(new Date())
-    }
-  }, [isOpen])
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -206,25 +208,19 @@ export default function OperationsModal({ isOpen, onClose, fetchData }: Operatio
           {amountError && <Label className="text-red-500 mt-2">{amountError}</Label>}
         </div>
         <div className="w-full flex justify-center gap-4 flex-col">
-          <div className="flex flex-row gap-2 items-center">
-            <Checkbox className="border-gray-500" onCheckedChange={(checked) => setIsCustomDateEnabled(checked === true)} />
-            <Label>Set Deposit or Withdrawal on a different date</Label>
-          </div>
           <Popover>
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
                 className="w-[50%] bg-[#131313] border-[#323232] text-[#959CB6] justify-between"
-                disabled={!isCustomDateEnabled}
               >
-                {date.toLocaleDateString()}
+                {date?.toLocaleDateString()}
                 <CalendarIcon className="h-4 w-4 opacity-50" />
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="start">
               <Calendar
                 mode="single"
-                selected={date}
                 onSelect={(newDate) => newDate && setDate(newDate)}
                 className="bg-[#131313] text-white rounded-md"
                 classNames={{
@@ -233,10 +229,10 @@ export default function OperationsModal({ isOpen, onClose, fetchData }: Operatio
                     : 'bg-transparent text-white hover:bg-white rounded-md text-black',
                   day_selected: 'bg-white text-black hover:bg-white rounded-md',
                 }}
-                disabled={!isCustomDateEnabled}
               />
             </PopoverContent>
           </Popover>
+          {dateError && <Label className="text-red-500 mt-2">{dateError}</Label>}
         </div>
         <div className="w-full flex items-center">
           <Info className="w-[10%] text-blue-600" />

@@ -179,6 +179,8 @@ export function History() {
         {filteredHistoric.slice().reverse().map((entry) => (
           <HistoryThread
             key={entry.cuid}
+            fiat_currency={entry.data.organization_fiat}
+            effective_date={entry.data.data}
             data={entry}
             user={entry.user.name}
             operationType={entry.historyType}

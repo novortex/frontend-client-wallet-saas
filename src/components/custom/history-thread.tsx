@@ -17,6 +17,8 @@ import { HistoricEntry } from '@/types/wallet.type'
 
 interface HistoryThreadProps {
   user: string
+  effective_date: string
+  fiat_currency: string | undefined
   operationType: string
   asset: string
   date: string
@@ -62,6 +64,8 @@ const getIcon = (operationType: string) => {
 
 export default function HistoryThread({
   user,
+  effective_date,
+  fiat_currency,
   operationType,
   asset,
   date,
@@ -135,13 +139,15 @@ export default function HistoryThread({
       case 'DEPOSIT':
         return (
           <div className="flex flex-row gap-1.5">
-            <p className="font-bold">{user}</p> made a deposit on {date} ({hour})
+            <p className="font-bold">{user}</p> registered a deposit on {date} ({hour}).
+            <p className="">Deposit made on: {effective_date}</p>
           </div>
         )
       case 'WITHDRAWAL':
         return (
           <div className="flex flex-row gap-1.5">
-            <p className="font-bold">{user}</p> performed a withdrawal on {date} ({hour})
+            <p className="font-bold">{user}</p> registered a withdrawal on {date} ({hour}).
+            <p className="">Withdrawal made on: {effective_date}</p>
           </div>
         )
       case 'START_WALLET':
@@ -192,9 +198,9 @@ export default function HistoryThread({
       case 'DELETE_ASSET':
         return <HistoryCardAddDelete asset={asset} assetIcon={assetIcon} quantity={0} targetAllocation={0} operation={false} />
       case 'DEPOSIT':
-        return <HistoryCardDepositWithdrawal quantity={depositValue ?? 0} operation={false} />
+        return <HistoryCardDepositWithdrawal fiatCurrency={fiat_currency} quantity={depositValue ?? 0} operation={false} />
       case 'WITHDRAWAL':
-        return <HistoryCardDepositWithdrawal quantity={withdrawalValue ?? 0} operation={true} />
+        return <HistoryCardDepositWithdrawal fiatCurrency={fiat_currency} quantity={withdrawalValue ?? 0} operation={true} />
       case 'START_WALLET':
         return <HistoryCardStartClose walletState={true} date={date} hour={hour} initialValue={Number(initialValue?.toFixed(2)) ?? 0} data_={data} />
       case 'CLOSE_WALLET':
