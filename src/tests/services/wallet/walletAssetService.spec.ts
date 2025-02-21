@@ -11,6 +11,12 @@ jest.mock('@/config/api', () => ({
   }));
   
 describe('walletAssetService', () => {
+
+    beforeAll(()=>{
+        jest.spyOn(console, 'log').mockImplementation(() => {});
+        }
+    )
+    
     beforeEach(() => {
       jest.clearAllMocks();
     });

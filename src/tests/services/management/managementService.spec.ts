@@ -23,6 +23,11 @@ jest.mock('@/config/api', () => ({
 }));
 
 describe('managementService', () => {
+
+   beforeAll(()=>{
+    jest.spyOn(console, 'log').mockImplementation(() => {});
+   })
+
   beforeEach(() => {
     jest.clearAllMocks();
   });
