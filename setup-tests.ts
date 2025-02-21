@@ -1,8 +1,16 @@
 import '@testing-library/jest-dom';
 import dotenv from 'dotenv';
 
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
+
+const mockAxios = new MockAdapter(axios);
+
 dotenv.config();
 process.env.VITE_API_URL = process.env.VITE_API_URL || 'http://localhost:5173';
+
+// Mock padrão para todas as requisições
+mockAxios.onAny().reply(200, {});
 
 beforeAll(() => {
     jest.spyOn(console, 'warn').mockImplementation((msg) => {
@@ -17,6 +25,11 @@ beforeAll(() => {
           return;
         }
       });      
+  });
+
+  // Limpar mocks depois de cada teste para evitar interferências
+  afterEach(() => {
+    mockAxios.resetHistory();
   });
   
   afterAll(() => {
