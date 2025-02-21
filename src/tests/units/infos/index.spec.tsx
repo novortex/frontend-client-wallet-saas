@@ -5,9 +5,22 @@ import { ConfirmContactModal } from '../../../pages/infos/confirm-contact-modal'
 import { ExchangeInfoModal } from '../../../pages/infos/exchange-info-modal'
 import Infos from '../../../pages/infos/index'
 import { MemoryRouter } from 'react-router-dom'
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
 
+const mockAxios = new MockAdapter(axios);
 
 describe('Infos Components', () => {
+
+    beforeEach(() => {
+        mockAxios.onGet('management/timezone').reply(200, { timezone: 'GMT' });
+    });
+
+    afterEach(() => {
+        mockAxios.reset();
+    });
+
+
     describe('ClientInfoModal Component', () => {
         it('renders client information correctly', async () => {
             render(<ClientsInfoModal isOpen={true} onClose={() => { }} name="John Doe" email="john@example.com" phone="+123456789" />)
