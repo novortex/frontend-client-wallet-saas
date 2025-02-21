@@ -163,17 +163,6 @@ describe('CustomersOrganization', () => {
             await userEvent.type(nameInput, 'J')
             expect(mockProfileTabProps.setName).toHaveBeenCalledWith('John DoeJ')
         })
-
-        // it('calls handleUpdateCustomer when Save Profile is clicked', async () => {
-        //   render(
-        //     <Dialog open={true} onOpenChange={() => {}}>
-        //       <ProfileTab {...mockProfileTabProps} />
-        //     </Dialog>
-        //   )
-
-        //   await userEvent.click(screen.getByText(/save profile/i))
-        //   expect(mockProfileTabProps.handleUpdateCustomer).toHaveBeenCalled()
-        // })
     })
 
     // Tests for RegisterCustomerModal

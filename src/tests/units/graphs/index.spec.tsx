@@ -1,7 +1,7 @@
 import { render, screen, waitFor, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { WalletGraph } from '../../../pages/graphs/graph-wallet'
-import Graphs from '../../../pages/graphs/index'
+import Graphs from '@/pages/graphs/index'
 
 // Mock do ResizeObserver para evitar falhas no Recharts
 class ResizeObserver {
