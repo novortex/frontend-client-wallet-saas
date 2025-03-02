@@ -11,11 +11,18 @@ type SideBarContextProps = {
   expanded: boolean
 }
 
-const SideBarContext = createContext<SideBarContextProps | null>({
-  expanded: true,
-})
+const SideBarContext = createContext<SideBarContextProps | null>({ expanded: true })
 
 export function SideBar({ children, alerts }: { children: ReactNode; alerts: number }) {
+  useEffect(() => {
+    const storedTheme = localStorage.getItem('theme') || 'dark'
+    if (storedTheme === 'dark') {
+      document.documentElement.classList.add('dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+    }
+  }, [])
+
   const [expanded, setExpanded] = useState(false)
   const userInfo = useUserStore((state) => state.user)
   const { logout } = useAuth0()
@@ -99,7 +106,7 @@ export function SideBar({ children, alerts }: { children: ReactNode; alerts: num
               <div
                 className="leading-4 w-full max-w-[calc(100%-40px)] overflow-hidden"
                 style={{
-                  display: 'inline-block', // Para garantir comportamento de bloco
+                  display: 'inline-block',
                 }}
               >
                 <p
@@ -113,9 +120,7 @@ export function SideBar({ children, alerts }: { children: ReactNode; alerts: num
                 >
                   {userInfo?.name?.split('@')[0] || 'Guest'}
                 </p>
-                <span
-                  className="text-xs text-black dark:text-[#959CB6] truncate"
-                >
+                <span className="text-xs text-black dark:text-[#959CB6] truncate">
                   {userInfo?.role || 'User'}
                 </span>
               </div>
@@ -156,16 +161,14 @@ export function SideBarItem({ icon, text, active, alert, href }: { icon: ReactNo
   return (
     <li
       onClick={() => navigate(href)}
-      className={`relative flex items-center py-2 px-3 my-1 font-medium text-black dark:text-[#959CB6] rounded-md cursor-pointer transition-colors group hover:bg-[#F2BE38] hover:text-black ${!expanded ? 'justify-center' : ''} ${active ? 'bg-gradient-to-tr from-indigo-200 to-indigo-100 text-indigo-800' : ''}`}
+      className={`relative flex items-center py-2 px-3 my-1 font-medium dark:hover:text-black text-black dark:text-[#959CB6] rounded-md cursor-pointer transition-colors group hover:bg-[#F2BE38] hover:text-black ${!expanded ? 'justify-center' : ''} ${active ? 'bg-gradient-to-tr from-indigo-200 to-indigo-100 text-indigo-800' : ''}`}
     >
       {icon}
-      <span className={`text-black dark:text-[#959CB6] overflow-hidden transition-all ${expanded ? 'w-52 ml-3' : 'w-0'}`}>{text}</span>
-      {alert && <div className={`absolute right-2 w-2 h-2 rounded bg-indigo-400`}></div>}
+      <span className={`overflow-hidden transition-all ${expanded ? 'w-52 ml-3' : 'w-0'}`}>{text}</span>
+      {alert && <div className="absolute right-2 w-2 h-2 rounded bg-indigo-400"></div>}
 
       {!expanded && (
-        <div
-          className={`absolute left-full rounded-md px-2 py-1 ml-6 bg-yellow-300 text-black text-sm invisible opacity-20 -translate-x-3 transition-all group-hover:visible group-hover:opacity-100 group-hover:translate-x-0`}
-        >
+        <div className="absolute left-full rounded-md px-2 py-1 ml-6 bg-yellow-300 text-black text-sm invisible opacity-20 -translate-x-3 transition-all group-hover:visible group-hover:opacity-100 group-hover:translate-x-0">
           {text}
         </div>
       )}
