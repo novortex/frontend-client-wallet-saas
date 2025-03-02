@@ -56,10 +56,10 @@ export function SideBar({ children, alerts }: { children: ReactNode; alerts: num
   }
 
   return (
-    <aside className={`h-screen ${expanded ? 'w-1/6' : 'w-20'} z-10`}>
+    <aside className={`bg-lightComponent dark:bg-[#171717] h-screen ${expanded ? 'w-1/6' : 'w-9'} z-10`}>
       <nav
         ref={navRef}
-        className={`h-full fixed flex flex-col bg-[#171717] shadow-sm transition-all ${expanded ? 'w-1/6' : 'w-20'}`}
+        className={`h-full fixed flex flex-col bg-lightComponent dark:bg-[#171717] shadow-sm ${expanded ? 'w-1/6' : 'w-20'}`}
         onMouseEnter={() => setExpanded(true)}
         onMouseLeave={() => {
           if (!dropdownRef.current) {
@@ -68,17 +68,17 @@ export function SideBar({ children, alerts }: { children: ReactNode; alerts: num
         }}
         onClick={handleNavClick}
       >
-        <div className="flex gap-5 items-center relative mt-5 mb-5">
+        <div className="flex gap-5 items-center mt-5 mb-5">
           <img src={LogoOrg} className="w-16" alt="" />
           <div className={`overflow-hidden transition-all ${expanded ? 'w-20' : 'w-0'}`}>
-            <h2 className="text-white font-semibold">Vault</h2>
-            <p className="text-[#959CB6] text-sm">Dashboard</p>
+            <h2 className="text-black dark:text-white font-semibold">Vault</h2>
+            <p className="text-[#959CB6] text-sm">Capital</p>
           </div>
         </div>
 
         <SideBarContext.Provider value={{ expanded }}>
           <ul className="flex-1 px-3">
-            <li className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer transition-colors text-white mb-10`}>
+            <li className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer transition-colors text-black dark:text-white mb-10`}>
               <Bell size={20} />
               <p className={`ml-3 font-normal overflow-hidden transition-all ${expanded ? 'w-52 ' : 'w-0'}`}>Notifications</p>
 
@@ -89,7 +89,7 @@ export function SideBar({ children, alerts }: { children: ReactNode; alerts: num
           </ul>
         </SideBarContext.Provider>
 
-        <div className="flex p-3 bg-[#272727]">
+        <div className="flex p-3 bg-white text-black dark:text-white dark:bg-[#272727]">
           <Avatar>
             <AvatarImage src={userInfo?.picture || 'https://github.com/shadcn.png'} alt={userInfo?.name || 'Guest'} />
             <AvatarFallback>CN</AvatarFallback>
@@ -103,7 +103,7 @@ export function SideBar({ children, alerts }: { children: ReactNode; alerts: num
                 }}
               >
                 <p
-                  className="font-normal text-white mb-2 truncate"
+                  className="font-normal mb-2 truncate"
                   style={{
                     whiteSpace: 'nowrap',
                     overflow: 'hidden',
@@ -114,24 +114,18 @@ export function SideBar({ children, alerts }: { children: ReactNode; alerts: num
                   {userInfo?.name?.split('@')[0] || 'Guest'}
                 </p>
                 <span
-                  className="text-xs text-[#959CB6] truncate"
-                  style={{
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    maxWidth: '100%',
-                  }}
+                  className="text-xs text-black dark:text-[#959CB6] truncate"
                 >
                   {userInfo?.role || 'User'}
                 </span>
               </div>
               <DropdownMenu onOpenChange={handleDropdownOpenChange} open={isDropdownOpen}>
                 <DropdownMenuTrigger asChild className="flex justify-center items-center w-[25%] h-[100%]">
-                  <button className="focus:outline-none">
-                    <MoreVertical color="white" className="cursor-pointer hover:text-yellow-300 transition-colors" />
+                  <button className="focus:outline-none hover:bg-gray-300 dark:hover:bg-[#171717] rounded-md">
+                    <MoreVertical className=" text-black dark:text-white cursor-pointer dark:hover:text-yellow-300 transition-colors" />
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-40 bg-[#272727] border-[#171717]">
+                <DropdownMenuContent align="end" className="w-40 dark:bg-[#272727] dark:border-[#171717]">
                   <DropdownMenuItem
                     onClick={handleLogout}
                     className="text-[#959CB6] focus:text-white focus:bg-red-600 cursor-pointer flex items-center"
@@ -162,10 +156,10 @@ export function SideBarItem({ icon, text, active, alert, href }: { icon: ReactNo
   return (
     <li
       onClick={() => navigate(href)}
-      className={`relative flex items-center py-2 px-3 my-1 font-medium text-[#959CB6] rounded-md cursor-pointer transition-colors group hover:bg-[#F2BE38] hover:text-black ${!expanded ? 'justify-center' : ''} ${active ? 'bg-gradient-to-tr from-indigo-200 to-indigo-100 text-indigo-800' : ''}`}
+      className={`relative flex items-center py-2 px-3 my-1 font-medium text-black dark:text-[#959CB6] rounded-md cursor-pointer transition-colors group hover:bg-[#F2BE38] hover:text-black ${!expanded ? 'justify-center' : ''} ${active ? 'bg-gradient-to-tr from-indigo-200 to-indigo-100 text-indigo-800' : ''}`}
     >
       {icon}
-      <span className={`overflow-hidden transition-all ${expanded ? 'w-52 ml-3' : 'w-0'}`}>{text}</span>
+      <span className={`text-black dark:text-[#959CB6] overflow-hidden transition-all ${expanded ? 'w-52 ml-3' : 'w-0'}`}>{text}</span>
       {alert && <div className={`absolute right-2 w-2 h-2 rounded bg-indigo-400`}></div>}
 
       {!expanded && (
