@@ -25,20 +25,20 @@ const getTagAlertColor = (alerts: number) => {
     case alerts >= 9:
       return 'bg-red-500'
     default:
-      return 'bg-[#272727]'
+      return 'bg-gray-200 dark:bg-[#272727]'
   }
 }
 
 const getTextAlertColor = (alerts: number) => {
   switch (true) {
     case alerts >= 1 && alerts <= 3:
-      return 'text-[#fff]'
+      return 'text-black dark:text-white'
     case alerts >= 4 && alerts <= 6:
-      return 'text-[#fff]'
+      return 'text-black dark:text-white'
     case alerts >= 7 && alerts <= 8:
-      return 'text-[#fff]'
+      return 'text-black dark:text-white'
     case alerts >= 9:
-      return 'text-[#fff]'
+      return 'text-black dark:text-white'
     default:
       return 'text-[#f0bc32]'
   }
@@ -65,18 +65,18 @@ export default function CardClient({ name, responsible, alerts, nextRebalancing,
 
   return (
     <Card
-      className="rounded-[12px] border border-[#272727] bg-[#171717] w-[100%] h-[300px] hover:bg-[#373737] cursor-pointer"
+      className="rounded-[12px] border dark:border-[#272727] bg-lightComponent dark:bg-[#171717] w-[100%] h-[300px] hover:bg-gray-100 dark:hover:bg-[#373737] cursor-pointer"
       onClick={handleCardClick}
     >
       <CardHeader className="w-full h-1/2 gap-3">
         <CardTitle className="flex flex-row">
-          <div className="h-full w-1/2 flex items-center justify-start text-[#fff] text-2xl">
+          <div className="h-full w-1/2 flex items-center justify-start text-black dark:text-white text-2xl">
             <p className="truncate max-w-full">{name}</p>
           </div>
           <div className="relative h-full w-1/2 flex items-center justify-end">
             <div className="relative group">
               <CircleAlert className="text-[#F2BE38]" />
-              <div className="absolute bottom-full right-full mb-2 w-[1250%] px-4 py-2 bg-black text-sm text-white text-start rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+              <div className="absolute bottom-full right-full mb-2 w-[1250%] px-4 py-2 bg-white dark:bg-black text-sm text-black dark:text-white text-start rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
                 {name}
                 <br />
                 email: {email}
@@ -103,18 +103,18 @@ export default function CardClient({ name, responsible, alerts, nextRebalancing,
       </CardHeader>
       <CardContent className="w-full h-1/2">
         <div className="flex flex-row h-1/2 w-full">
-          <div className="flex h-full w-1/2 justify-start items-center text-base gap-2 text-[#fff]">
+          <div className="flex h-full w-1/2 justify-start items-center text-base gap-2 text-black dark:text-white">
             <Calendar className="text-[#F2BE38]" />
             <p>Next rebalancing:</p>
           </div>
-          <div className="flex h-full w-1/2 justify-end items-center text-base text-[#fff]">{nextRebalancing}</div>
+          <div className="flex h-full w-1/2 justify-end items-center text-base text-black dark:text-white">{nextRebalancing}</div>
         </div>
         <div className="flex flex-row h-1/2 w-full">
-          <div className="flex h-full w-1/2 justify-start items-center text-base gap-2 text-[#fff]">
+          <div className="flex h-full w-1/2 justify-start items-center text-base gap-2 text-black dark:text-white">
             <Calendar className="text-[#F2BE38]" />
             <p>Last rebalancing:</p>
           </div>
-          <div className="flex h-full w-1/2 justify-end items-center text-base text-[#fff]">{lastRebalancing}</div>
+          <div className="flex h-full w-1/2 justify-end items-center text-base text-black dark:text-white">{lastRebalancing}</div>
         </div>
       </CardContent>
     </Card>

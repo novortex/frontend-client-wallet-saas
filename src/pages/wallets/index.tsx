@@ -34,7 +34,7 @@ export function Clients() {
       const result = await getWalletOrganization()
       if (!result) {
         return toast({
-          className: 'bg-red-500 border-0 text-white',
+          className: 'bg-red-500 border-0 text-black dark:text-white',
           title: 'Failed to get clients :(',
           description: 'Demo Vault !!',
         })
@@ -44,7 +44,7 @@ export function Clients() {
     } catch (error) {
       console.error('Error fetching clients:', error)
       toast({
-        className: 'bg-red-500 border-0 text-white',
+        className: 'bg-red-500 border-0 text-black dark:text-white',
         title: 'Error',
         description: 'Failed to fetch clients. Please try again.',
       })
@@ -130,15 +130,15 @@ export function Clients() {
   }
 
   return (
-    <div className="p-10">
+    <div className="p-10 bg-white dark:bg-transparent">
       <div className="mb-10 flex items-center justify-between">
-        <h1 className="text-2xl text-white font-medium">Wallets</h1>
+        <h1 className="text-2xl text-black dark:text-white font-medium">Wallets</h1>
         <SwitchTheme />
       </div>
 
       <div className="flex items-center justify-between mb-10">
         <Input
-          className="bg-[#171717] w-5/6 border-0 text-white focus:ring-0"
+          className="bg-gray-100 dark:bg-[#171717] w-5/6 border-0 text-black dark:text-white focus:ring-0"
           type="text"
           placeholder="Search for ..."
           value={searchTerm}
@@ -149,7 +149,7 @@ export function Clients() {
       </div>
 
       {clients.length === 0 ? (
-        <div className="text-white text-center">No wallets found</div>
+        <div className="text-black dark:text-white text-center">No wallets found</div>
       ) : (
         <div className="w-full grid grid-cols-3 gap-7">
           {filteredClients.map((client) => (
