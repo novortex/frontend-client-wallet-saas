@@ -3,23 +3,18 @@ import moonIcon from '../../assets/icons/moon.svg'
 import sunIcon from '../../assets/icons/Union.svg'
 
 export function SwitchTheme() {
-  const [isDarkMode, setIsDarkMode] = useState(true)
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const savedTheme = localStorage.getItem('theme')
+    return savedTheme ? savedTheme === 'dark' : true
+  })
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme')
-    if (savedTheme) {
-      const isDark = savedTheme === 'dark'
-      setIsDarkMode(isDark)
-      if (isDark) {
-        document.documentElement.classList.add('dark')
-      } else {
-        document.documentElement.classList.remove('dark')
-      }
-    } else {
+    if (isDarkMode) {
       document.documentElement.classList.add('dark')
-      localStorage.setItem('theme', 'dark')
+    } else {
+      document.documentElement.classList.remove('dark')
     }
-  }, [])
+  }, [isDarkMode])
 
   const toggleTheme = () => {
     const newTheme = !isDarkMode
