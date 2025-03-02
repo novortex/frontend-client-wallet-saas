@@ -12,6 +12,7 @@ import { WalletGraph } from './graph-wallet'
 import { getGraphData, updateCurrentAmount } from '@/services/wallet/walleInfoService'
 import { getAllAssetsWalletClient } from '@/services/wallet/walletAssetService'
 import { ClientActive } from '@/components/custom/wallet/columns'
+import { Loading } from '@/components/custom/loading'
 
 interface graphDataEntry {
   cuid: string
@@ -116,7 +117,7 @@ export function Graphs() {
   console.log(graphData)
 
   if (loading) {
-    return <div>Loading...</div>
+    return <Loading />
   }
 
   return (

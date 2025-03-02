@@ -5,6 +5,7 @@ import { useSignalStore } from '@/store/signalEffect'
 import { useToast } from '@/components/ui/use-toast'
 import { getAllAssetsOrg } from '@/services/managementService'
 import { DataTableAssetOrg } from '@/components/custom/assets-org/data-table'
+import { Loading } from '@/components/custom/loading'
 
 export function AssetsOrg() {
   const [data, setData] = useState<AssetOrgs[]>([])
@@ -57,7 +58,7 @@ export function AssetsOrg() {
   }, [signal, toast])
 
   if (loading) {
-    return <div>Loading...</div>
+    return <Loading />
   }
 
   return (

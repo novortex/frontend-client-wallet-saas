@@ -134,7 +134,7 @@ export function SideBar({ children, alerts }: { children: ReactNode; alerts: num
                 <DropdownMenuContent align="end" className="w-40 bg-[#272727] border-[#171717]">
                   <DropdownMenuItem
                     onClick={handleLogout}
-                    className="text-[#959CB6] focus:text-black focus:bg-yellow-300 cursor-pointer flex items-center"
+                    className="text-[#959CB6] focus:text-white focus:bg-red-600 cursor-pointer flex items-center"
                   >
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Logout</span>

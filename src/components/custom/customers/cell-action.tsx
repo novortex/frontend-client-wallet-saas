@@ -21,7 +21,7 @@ export default function CellActions({ rowInfos }: { rowInfos: CustomersOrganizat
     <>
       <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-8 w-8 p-0">
+          <Button variant="ghost" className="h-8 w-8 p-0 hover:bg-gray-300 dark:hover:bg-[#171717]">
             <MoreHorizontal className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
@@ -32,7 +32,7 @@ export default function CellActions({ rowInfos }: { rowInfos: CustomersOrganizat
               setIsEditDialogOpen(true)
               handleClose()
             }}
-            className="flex items-center gap-2 px-4 py-2 text-sm cursor-pointer hover:bg-black hover:text-white focus:bg-black focus:text-white transition-colors"
+            className="flex items-center gap-2 px-4 py-2 text-sm cursor-pointer text-black hover:bg-black hover:text-white focus:bg-black focus:text-white transition-colors"
           >
             <PencilIcon className="h-4 w-4" />
             <span>Edit</span>
@@ -44,7 +44,7 @@ export default function CellActions({ rowInfos }: { rowInfos: CustomersOrganizat
                 setIsModalOpen(true)
                 handleClose()
               }}
-              className="flex items-center gap-2 px-4 py-2 text-sm cursor-pointer hover:bg-black hover:text-white focus:bg-black focus:text-white transition-colors"
+              className="flex items-center gap-2 px-4 py-2 text-sm cursor-pointer text-black hover:bg-black hover:text-white focus:bg-black focus:text-white transition-colors"
             >
               <StepForward className="h-4 w-4" />
               <span>Continue</span>
@@ -56,7 +56,7 @@ export default function CellActions({ rowInfos }: { rowInfos: CustomersOrganizat
               setIsDisableDialogOpen(true)
               handleClose()
             }}
-            className="flex items-center gap-2 px-4 py-2 text-sm cursor-pointer hover:bg-black hover:text-white focus:bg-black focus:text-white transition-colors"
+            className="flex items-center gap-2 px-4 py-2 text-sm text-black cursor-pointer hover:bg-black hover:text-white focus:bg-black focus:text-white transition-colors"
           >
             <EyeOffIcon className="h-4 w-4" />
             <span>Disable</span>
