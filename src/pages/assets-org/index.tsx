@@ -62,7 +62,7 @@ export function AssetsOrg() {
   }
 
   return (
-    <div className="bg-white dark:bg-transparent p-10">
+    <div className="p-10 bg-white dark:bg-transparent h-full">
       <div className="mb-10 flex items-center justify-between">
         <h1 className="text-2xl text-black dark:text-white font-medium">Assets</h1>
         <SwitchTheme />

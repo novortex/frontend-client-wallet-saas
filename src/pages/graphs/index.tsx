@@ -121,7 +121,7 @@ export function Graphs() {
   }
 
   return (
-    <div className="bg-white dark:bg-transparent p-10">
+    <div className="p-10 bg-white dark:bg-transparent h-full">
       <div className="mb-10 flex items-center justify-between">
         <Breadcrumb>
           <BreadcrumbList>

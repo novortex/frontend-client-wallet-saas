@@ -30,7 +30,7 @@ export function Wallet() {
   if (!infosWallet) return <div className="dark:text-white flex justify-center items-center h-screen">Error: Wallet information is not available.</div>
   else {
     return (
-      <div className="p-10 bg-white dark:bg-transparent">
+      <div className="p-10 bg-white dark:bg-transparent h-full">
         <Header walletUuid={walletUuid} />
         <ActionButtons
           walletUuid={walletUuid}
