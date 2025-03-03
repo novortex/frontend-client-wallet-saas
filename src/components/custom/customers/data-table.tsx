@@ -84,7 +84,7 @@ export function DataTableCustomers<TData, TValue>({ columns, data }: DataTablePr
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id} className="bg-gray-100 dark:bg-[#000000] dark:hover:bg-transparent">
+            <TableRow key={headerGroup.id} className="bg-gray-200 hover:bg-gray-300 dark:bg-[#131313] dark:hover:bg-[#101010]">
               {headerGroup.headers.map((header) => {
                 return (
                   <TableHead key={header.id} className="dark:text-white">
@@ -98,7 +98,7 @@ export function DataTableCustomers<TData, TValue>({ columns, data }: DataTablePr
         <TableBody className="bg-lightComponent dark:text-[#959CB6] dark:bg-[#171717]">
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
-              <TableRow className=" dark:hover:bg-[#000000]" key={row.id} data-state={row.getIsSelected() && 'selected'}>
+              <TableRow className="hover:bg-gray-200 dark:hover:bg-[#171717] dark:hover:bg-[#101010]" key={row.id} data-state={row.getIsSelected() && 'selected'}>
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                 ))}
