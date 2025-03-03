@@ -12,7 +12,7 @@ export default function HistoryCardAllocation({ assetIcon, allocation, tagState 
   const tagText = tagState ? 'New' : 'Old'
 
   return (
-    <Card className="w-2/5 h-full min-h-[220px] rounded-[12px] border dark:border-[#272727] dark:bg-[#131313] flex flex-col">
+    <Card className="w-2/5 h-full min-h-[220px] rounded-[12px] border bg-lightComponent dark:border-[#272727] dark:bg-[#131313] flex flex-col">
       <CardHeader className="flex flex-row">
         <div className="w-1/3 h-full"></div>
         <CardDescription className="w-1/3 h-full flex justify-center items-center dark:text-[#fff] text-lg">Allocation</CardDescription>
