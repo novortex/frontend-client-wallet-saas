@@ -3,7 +3,7 @@ import { DataTable } from '@/components/custom/wallet/data-table'
 import { Header } from './Header'
 import { ActionButtons } from './ActionButtons'
 import { WalletInfo } from './WalletInfo'
-import { TriggerSection } from './TriggerSection'
+// import { TriggerSection } from './TriggerSection'
 import OperationsModal from '@/components/custom/wallet/operations'
 import ConfirmCloseWalletModal from '@/components/custom/confirm-close-wallet-modal'
 import ConfirmRebalanceModal from '@/components/custom/modal/confirm-rebalance-modal'
@@ -47,7 +47,7 @@ export function Wallet() {
           fetchData={fetchData}
           calculateRebalance={calculateRebalance}
         />
-        <TriggerSection
+        {/* <TriggerSection
           isOperationModalOpen={isOperationModalOpen}
           closeOperationModal={closeOperationModal}
           isCloseWalletModalOpen={isCloseWalletModalOpen}
@@ -56,7 +56,7 @@ export function Wallet() {
           isModalRebalance={isModalRebalance}
           openOrCloseModalRebalanced={openOrCloseModalRebalanced}
           fetchData={fetchData}
-        />
+        /> */}
         <OperationsModal isOpen={isOperationModalOpen} onClose={closeOperationModal} fetchData={fetchData} />
         <ConfirmCloseWalletModal
           isOpen={isCloseWalletModalOpen}

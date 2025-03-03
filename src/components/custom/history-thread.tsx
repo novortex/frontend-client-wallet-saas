@@ -163,7 +163,7 @@ export default function HistoryThread({
           </div>
         )
       default:
-        return <div className="flex flex-row text-[#fff]">Operação não identificada</div>
+        return <div className="flex flex-row dark:text-[#fff]">Operação não identificada</div>
     }
   }
 
@@ -215,13 +215,13 @@ export default function HistoryThread({
           />
         )
       default:
-        return <div className="text-[#fff]">Operação não identificada</div>
+        return <div className="dark:text-[#fff]">Operação não identificada</div>
     }
   }
 
   return (
     <div className="flex flex-col gap-3 mb-20">
-      <div className="flex flex-row items-center gap-3 text-lg text-[#fff]">
+      <div className="flex flex-row items-center gap-3 text-lg dark:text-[#fff]">
         <img className="w-[3%] h-full" src={getIcon(operationType)} alt="" />
         <p className="w-[97%] h-full">{renderOperationDescription()}</p>
       </div>

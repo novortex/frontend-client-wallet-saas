@@ -27,7 +27,7 @@ export const createColumns = (fetchData: () => void): ColumnDef<ClientActive>[] 
     accessorKey: 'asset',
     header: () => <div className="text-center">Asset</div>,
     cell: ({ row }) => (
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-left ml-6">
         <img src={row.original.asset.urlImage} alt={row.original.asset.name} className="w-6 h-6 mr-2" />
         <span>{row.original.asset.name}</span>
       </div>
@@ -62,7 +62,7 @@ export const createColumns = (fetchData: () => void): ColumnDef<ClientActive>[] 
   },
   {
     accessorKey: 'allocation',
-    header: () => <div className="text-center">Current Allocation</div>,
+    header: () => <div className="text-center">Allocation</div>,
     cell: ({ row }) => {
       const value = Number(row.original.allocation)
       return <div className="text-center">{!isNaN(value) ? `${value.toFixed(2)}%` : 'N/A'}</div>
@@ -98,9 +98,10 @@ export const createColumns = (fetchData: () => void): ColumnDef<ClientActive>[] 
     header: () => <div className="text-center">Buy/Sell</div>,
     cell: ({ row }) => {
       const value = Number(row.original.buyOrSell)
+      const formattedValue = value > 0 ? `+${Number(row.original.buyOrSell).toFixed(2)}` : Number(row.original.buyOrSell).toFixed(2)
       const textColor =
-        isNaN(value) || value === 0 ? 'text-gray-600' : value > 0 ? 'text-green-400' : 'text-red-500'
-      return <div className={`text-center ${textColor}`}>{!isNaN(value) ? value.toFixed(2) : 'N/A'}</div>
+        isNaN(value) || value === 0 ? 'text-gray-400' : value > 0 ? 'text-green-400' : 'text-red-500'
+      return <div className={`text-center ${textColor}`}>{!isNaN(value) ? formattedValue : 'N/A'}</div>
     },
   },
   {
@@ -118,9 +119,10 @@ export const createColumns = (fetchData: () => void): ColumnDef<ClientActive>[] 
     header: () => <div className="text-center">P/L</div>,
     cell: ({ row }) => {
       const value = Number(row.original.profitLoss)
+      const formattedValue = value > 0 ? `+${Number(row.original.profitLoss).toFixed(2)}` : Number(row.original.profitLoss).toFixed(2)
       const textColor =
-        isNaN(value) || value === 0 ? 'text-gray-600' : value > 0 ? 'text-green-500' : 'text-red-500'
-      return <div className={`text-center ${textColor}`}>{!isNaN(value) ? value.toFixed(2) : 'N/A'}</div>
+        isNaN(value) || value === 0 ? 'text-gray-400' : value > 0 ? 'text-green-400' : 'text-red-500'
+      return <div className={`text-center ${textColor}`}>{!isNaN(value) ? formattedValue : 'N/A'}</div>
     },
   },
   {
