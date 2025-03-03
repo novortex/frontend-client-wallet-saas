@@ -26,7 +26,7 @@ export function CellActions({ rowInfos, fetchData }: { rowInfos: ClientActive; f
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="bg-white rounded-lg w-32 p-0 border border-gray-200">
         <DropdownMenuItem
-          className="flex items-center gap-2 px-4 py-2 text-sm cursor-pointer hover:bg-black hover:text-white focus:bg-black focus:text-white transition-colors"
+          className="flex items-center gap-2 px-4 py-2 text-sm cursor-pointer text-black hover:bg-black hover:text-white focus:bg-black focus:text-white transition-colors"
           onClick={() => {
             setIsEditDialogOpen(true)
             handleClose()
@@ -36,7 +36,7 @@ export function CellActions({ rowInfos, fetchData }: { rowInfos: ClientActive; f
           <span>Edit</span>
         </DropdownMenuItem>
         <DropdownMenuItem
-          className="flex items-center gap-2 px-4 py-2 text-sm cursor-pointer hover:bg-black hover:text-white focus:bg-black focus:text-white transition-colors"
+          className="flex items-center gap-2 px-4 py-2 text-black text-sm cursor-pointer hover:bg-black hover:text-white focus:bg-black focus:text-white transition-colors"
           onClick={() => {
             setIsDisableDialogOpen(true)
             handleClose()
