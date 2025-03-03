@@ -29,7 +29,6 @@ export function WalletGraph() {
   const [showBenchmark, setShowBenchmark] = useState(true)
   const [graphData, setGraphData] = useState<graphDataEntry[]>([])
   const [isMonthlyView, setIsMonthlyView] = useState(false)
-  // Aqui usamos índice em vez de label para a posição
   const [dragStart, setDragStart] = useState<{ index: number; value: number } | null>(null)
   const [dragEnd, setDragEnd] = useState<{ index: number; value: number } | null>(null)
   const [isDragging, setIsDragging] = useState(false)
@@ -70,7 +69,6 @@ export function WalletGraph() {
     return Array.from(months.values())
   }
 
-  // Adiciona um campo "index" para cada item dos dados
   const formattedChartData = graphData.map((entry, index) => ({
     index,
     date: new Date(entry.createAt).toLocaleDateString('pt-BR', {
@@ -92,18 +90,25 @@ export function WalletGraph() {
   }))
 
   const chartData = isMonthlyView ? monthlyData : formattedChartData
-  const minValue = Math.min(...graphData.map((entry) => Math.min(entry.cryptoMoney, entry.benchmarkMoney)))
-  const maxValue = Math.max(...graphData.map((entry) => Math.max(entry.cryptoMoney, entry.benchmarkMoney)))
+
+  const activeValues = chartData.flatMap((d) => {
+    const values: number[] = []
+    if (showWallet) values.push(d.wallet)
+    if (showBenchmark) values.push(d.Benchmark)
+    return values
+  })
+  const minValue = activeValues.length ? Math.min(...activeValues) : 0
+  const maxValue = activeValues.length ? Math.max(...activeValues) : 0
 
   const handleMouseDown = (e: any) => {
     if (e && e.activePayload && e.activePayload.length > 0) {
-      const walletPayload = e.activePayload.find((p: any) => p.dataKey === 'wallet')
-      if (walletPayload) {
+      const payloadKey = showWallet ? 'wallet' : 'Benchmark'
+      const selectedPayload = e.activePayload.find((p: any) => p.dataKey === payloadKey)
+      if (selectedPayload) {
         setIsDragging(true)
-        const walletValue = walletPayload.payload.wallet
-        // Usa o índice do payload para posicionamento
-        const payloadIndex = walletPayload.payload.index
-        setDragStart({ index: payloadIndex, value: walletValue })
+        const value = selectedPayload.payload[payloadKey]
+        const payloadIndex = selectedPayload.payload.index
+        setDragStart({ index: payloadIndex, value })
         setDragEnd(null)
         setDiffAbsolute(null)
         setDiffPercent(null)
@@ -113,16 +118,17 @@ export function WalletGraph() {
 
   const handleMouseMove = (e: any) => {
     if (isDragging && e && e.activePayload && e.activePayload.length > 0 && dragStart !== null) {
-      const walletPayload = e.activePayload.find((p: any) => p.dataKey === 'wallet')
-      if (walletPayload) {
-        const walletValue = walletPayload.payload.wallet
-        const payloadIndex = walletPayload.payload.index
-        setDragEnd({ index: payloadIndex, value: walletValue })
+      const payloadKey = showWallet ? 'wallet' : 'Benchmark'
+      const selectedPayload = e.activePayload.find((p: any) => p.dataKey === payloadKey)
+      if (selectedPayload) {
+        const value = selectedPayload.payload[payloadKey]
+        const payloadIndex = selectedPayload.payload.index
+        setDragEnd({ index: payloadIndex, value })
         if (e.chartX && e.chartY) {
           setMouseCoords({ x: e.chartX, y: e.chartY })
         }
         if (dragStart.value !== 0) {
-          const absDiff = walletValue - dragStart.value
+          const absDiff = value - dragStart.value
           const percDiff = (absDiff / dragStart.value) * 100
           setDiffAbsolute(absDiff)
           setDiffPercent(percDiff)
@@ -141,19 +147,11 @@ export function WalletGraph() {
         <CardTitle className="text-2xl font-semibold flex flex-row gap-5">
           <div className="flex flex-row gap-5 w-1/2">
             <div className="flex flex-row dark:text-[#fff] gap-2 items-center">
-              <Checkbox
-                checked={showWallet}
-                onCheckedChange={(checked) => setShowWallet(checked === true)}
-                className="border-transparent bg-[#1878f3] data-[state=checked]:bg-[#1878f3]"
-              />
+              <Checkbox checked={showWallet} onCheckedChange={(checked) => setShowWallet(checked === true)} className="border-transparent bg-[#1878f3] data-[state=checked]:bg-[#1878f3]" />
               <Label className="text-lg">Wallet</Label>
             </div>
             <div className="flex flex-row dark:text-[#fff] gap-2 items-center">
-              <Checkbox
-                checked={showBenchmark}
-                onCheckedChange={(checked) => setShowBenchmark(checked === true)}
-                className="border-transparent bg-[#11a45c] data-[state=checked]:bg-[#11a45c]"
-              />
+              <Checkbox checked={showBenchmark} onCheckedChange={(checked) => setShowBenchmark(checked === true)} className="border-transparent bg-[#11a45c] data-[state=checked]:bg-[#11a45c]" />
               <Label className="text-lg">Benchmark</Label>
             </div>
           </div>
@@ -168,26 +166,12 @@ export function WalletGraph() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {/* Evita seleção de texto */}
         <div className="relative" style={{ userSelect: 'none' }}>
           <ChartContainer config={chartConfig} className="w-full mb-4 h-[400px]">
-            <LineChart
-              data={chartData}
-              onMouseDown={handleMouseDown}
-              onMouseMove={handleMouseMove}
-              onMouseUp={handleMouseUp}
-            >
+            <LineChart data={chartData} onMouseDown={handleMouseDown} onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>
               <CartesianGrid vertical={false} horizontal={true} />
               {dragStart && dragEnd && diffAbsolute !== null && (
-                <ReferenceArea
-                  x1={dragStart.index}
-                  x2={dragEnd.index}
-                  y1={minValue}
-                  y2={maxValue}
-                  strokeOpacity={0}
-                  fillOpacity={0.3}
-                  fill={diffAbsolute >= 0 ? 'green' : 'red'}
-                />
+                <ReferenceArea x1={dragStart.index} x2={dragEnd.index} y1={minValue} y2={maxValue} strokeOpacity={0} fillOpacity={0.3} fill={diffAbsolute >= 0 ? 'green' : 'red'} />
               )}
               <XAxis dataKey="date" tickLine={false} axisLine={false} tickMargin={8} />
               <YAxis
@@ -203,37 +187,16 @@ export function WalletGraph() {
                 }}
               />
               {showWallet && (
-                <Line
-                  dataKey="wallet"
-                  type="linear"
-                  stroke="#1878f3"
-                  strokeWidth={1.5}
-                  dot={false}
-                  activeDot={{ r: 4 }}
-                />
+                <Line dataKey="wallet" type="linear" stroke="#1878f3" strokeWidth={1.5} dot={false} activeDot={{ r: 4 }} />
               )}
               {showBenchmark && (
-                <Line
-                  dataKey="Benchmark"
-                  type="linear"
-                  stroke="#11a45c"
-                  strokeWidth={1.5}
-                  dot={false}
-                  activeDot={{ r: 4 }}
-                />
+                <Line dataKey="Benchmark" type="linear" stroke="#11a45c" strokeWidth={1.5} dot={false} activeDot={{ r: 4 }} />
               )}
               <ChartTooltip cursor={true} content={<ChartTooltipContent />} />
             </LineChart>
           </ChartContainer>
           {mouseCoords && dragStart && dragEnd && diffAbsolute !== null && diffPercent !== null && (
-            <div
-              style={{
-                position: 'absolute',
-                left: mouseCoords.x,
-                top: mouseCoords.y - 40,
-                zIndex: 10,
-              }}
-            >
+            <div style={{ position: 'absolute', left: mouseCoords.x, top: mouseCoords.y - 40, zIndex: 10 }}>
               <div className={`text-sm font-bold ${diffAbsolute >= 0 ? 'text-green-500' : 'text-red-500'}`}>
                 {diffAbsolute >= 0 ? '+' : ''}
                 {diffAbsolute.toFixed(2)} ({diffPercent >= 0 ? '+' : ''}
