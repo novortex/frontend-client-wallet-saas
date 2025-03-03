@@ -45,7 +45,7 @@ export function Graphs() {
 
         if (!result) {
           return toast({
-            className: 'bg-red-500 border-0 text-white',
+            className: 'bg-red-500 border-0 text-black dark:text-white',
             title: 'Failed get assets organization :(',
             description: 'Demo Vault !!',
           })
@@ -74,7 +74,7 @@ export function Graphs() {
         setLoading(false)
       } catch (error) {
         toast({
-          className: 'bg-red-500 border-0 text-white',
+          className: 'bg-red-500 border-0 text-black dark:text-white',
           title: 'Failed get assets organization :(',
           description: 'Demo Vault !!',
         })
@@ -83,7 +83,7 @@ export function Graphs() {
 
     if (!walletUuid) {
       toast({
-        className: 'bg-red-500 border-0 text-white',
+        className: 'bg-red-500 border-0 text-black dark:text-white',
         title: 'Failed get assets organization :(',
         description: 'Demo Vault !!',
       })
@@ -121,31 +121,31 @@ export function Graphs() {
   }
 
   return (
-    <div className="p-10">
+    <div className="bg-white dark:bg-transparent p-10">
       <div className="mb-10 flex items-center justify-between">
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink className="text-2xl text-white font-medium" href="/wallets">
+              <BreadcrumbLink className="text-2xl text-black dark:text-white font-medium" href="/wallets">
                 Wallets
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink className="text-2xl text-white font-medium" href={`/clients/${walletUuid}/infos`}>
+              <BreadcrumbLink className="text-2xl text-black dark:text-white font-medium" href={`/clients/${walletUuid}/infos`}>
                 Information clients
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage className="text-2xl text-white font-medium">Wallet Graphic</BreadcrumbPage>
+              <BreadcrumbPage className="text-2xl text-black dark:text-white font-medium">Wallet Graphic</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
         <SwitchTheme />
       </div>
       <div className="flex items-center justify-between mb-10">
-        <Input className="bg-[#171717] w-full border-0 text-white focus:ring-0" type="text" placeholder="Search for ..." />
+        <Input className="bg-lightComponent border dark:bg-[#171717] w-full text-black dark:text-white focus:ring-0" type="text" placeholder="Search for ..." />
       </div>
       <div className="w-full h-1/3 mb-5 flex flex-row justify-between">
         <CardDashboard title="Entry date" data={infosWallet?.startDate !== null ? formatDate(infosWallet?.startDate?.toString() ?? '-') : '-'} />
