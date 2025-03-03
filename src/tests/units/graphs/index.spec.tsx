@@ -11,13 +11,11 @@ class ResizeObserver {
 }
 global.ResizeObserver = ResizeObserver
 
-// Mock do useParams para simular um UUID válido da carteira
 jest.mock('react-router-dom', () => ({
     ...jest.requireActual('react-router-dom'),
     useParams: () => ({ walletUuid: 'mock-wallet-uuid' }),
 }))
 
-// Mock de dados de gráficos
 jest.mock('@/services/wallet/walleInfoService', () => ({
     getGraphData: jest.fn().mockResolvedValue([
         {
@@ -31,7 +29,6 @@ jest.mock('@/services/wallet/walleInfoService', () => ({
     ]),
 }))
 
-// Mock do Recharts para evitar erros ao renderizar gráficos
 jest.mock('recharts', () => ({
     ...jest.requireActual('recharts'),
     ResponsiveContainer: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
@@ -43,7 +40,6 @@ jest.mock('recharts', () => ({
     Tooltip: () => null,
 }))
 
-// Mock do Recharts
 jest.mock('recharts', () => ({
     ...jest.requireActual('recharts'),
     ResponsiveContainer: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
@@ -70,7 +66,9 @@ describe('Graph Components', () => {
             await waitFor(() => {
                 expect(screen.queryByText(/Wallet/i)).toBeInTheDocument()
                 expect(screen.queryByText(/Benchmark/i)).toBeInTheDocument()
-                expect(screen.queryByText(/View: Days \/ Months/i)).toBeInTheDocument()
+                expect(screen.queryByText(/Daily/i)).toBeInTheDocument()
+                expect(screen.queryByText(/monthly/i)).toBeInTheDocument()
+
             })
         })
 
@@ -80,7 +78,7 @@ describe('Graph Components', () => {
             })
 
             const switches = screen.getAllByRole('checkbox')
-            const switchElement = switches[0] // Selecionando o primeiro switch
+            const switchElement = switches[0]
 
             expect(switchElement).toBeChecked()
 
@@ -97,7 +95,7 @@ describe('Graph Components', () => {
             })
 
             const checkboxes = screen.getAllByRole('checkbox')
-            const walletCheckbox = checkboxes[1] // Selecionando o checkbox correto
+            const walletCheckbox = checkboxes[1]
 
             expect(walletCheckbox).toBeChecked()
 
@@ -114,7 +112,7 @@ describe('Graph Components', () => {
             })
 
             const checkboxes = screen.getAllByRole('checkbox')
-            const benchmarkCheckbox = checkboxes[1] // Selecionando o checkbox correto
+            const benchmarkCheckbox = checkboxes[1]
 
             expect(benchmarkCheckbox).toBeChecked()
 
@@ -138,7 +136,6 @@ describe('Graph Components', () => {
             })
 
             await waitFor(() => {
-                // Verifica se os componentes do gráfico foram renderizados
                 expect(screen.getByTestId('line')).toBeInTheDocument();
                 expect(screen.getByTestId('xaxis')).toBeInTheDocument();
                 expect(screen.getByTestId('yaxis')).toBeInTheDocument();
@@ -159,7 +156,6 @@ describe('Graph Components', () => {
             })
 
             await waitFor(() => {
-                // Verifica se os componentes do gráfico foram renderizados
                 expect(screen.getByTestId('line')).toBeInTheDocument();
                 expect(screen.getByTestId('xaxis')).toBeInTheDocument();
                 expect(screen.getByTestId('yaxis')).toBeInTheDocument();
