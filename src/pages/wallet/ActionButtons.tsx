@@ -70,9 +70,8 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
   
   return (
     <div className="flex items-center justify-between mb-10">
-      <Label className="text-2xl text-white">{infosWallet?.ownerName}</Label>
+      <Label className="text-2xl dark:text-white">{infosWallet?.ownerName}</Label>
       <div className="flex gap-5">
-        {/* KPI Button to Open Modal */}
         <Button
           className="bg-[#F2BE38] text-black hover:text-white hover:bg-yellow-600"
           onClick={() => setIsKpiModalOpen(true)}
@@ -80,14 +79,12 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
           <TrendingUp /> KPI's
         </Button>
 
-        {/* KPI Modal */}
         <Dialog open={isKpiModalOpen} onOpenChange={setIsKpiModalOpen}>
-          <DialogContent className="w-full max-w-3xl bg-[#131313] text-[#fff] p-6 rounded-lg">
+          <DialogContent className="w-full max-w-3xl dark:bg-[#131313] dark:text-[#fff] p-6 rounded-lg">
             <DialogHeader className="mb-4">
-              <DialogTitle className="text-white text-xl">Wallet KPI's</DialogTitle>
+              <DialogTitle className="dark:text-white text-xl">Wallet KPI's</DialogTitle>
             </DialogHeader>
 
-            {/* Period Selection Buttons */}
             <div className="flex justify-center gap-4 mb-6">
               <Button
                   className={`p-2 rounded-md ${selectedPeriod === 'all' ? 'text-black bg-yellow-500' : 'bg-gray-700'} hover:bg-yellow-600`}
@@ -187,7 +184,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
           Rebalanced
         </Button>
         <Button
-          className={`p-5 ${infosWallet?.isClosed ? 'bg-[#10A45C] hover:bg-green-700' : 'bg-[#EF4E3D] hover:bg-red-700'
+          className={`p-5 text-white ${infosWallet?.isClosed ? 'bg-[#10A45C] hover:bg-green-700' : 'bg-[#EF4E3D] hover:bg-red-700'
             }`}
           type="button"
           onClick={openCloseWalletModal}

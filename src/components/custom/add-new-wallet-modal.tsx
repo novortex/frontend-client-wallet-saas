@@ -81,7 +81,6 @@ export function AddNewWalletModal({ isOpen, onClose, walletUuid, fetchData }: Ad
     let isValid = true
     const errorsCopy = { ...errors }
 
-    // Validate Asset Selection
     if (!selectedAsset) {
       errorsCopy.asset = 'Asset must be selected.'
       isValid = false
@@ -89,7 +88,6 @@ export function AddNewWalletModal({ isOpen, onClose, walletUuid, fetchData }: Ad
       errorsCopy.asset = ''
     }
 
-    // Validate Entry Value
     if (!/^\d+(\.\d{0,30})?$/.test(entryValue) || parseFloat(entryValue) < 0) {
       errorsCopy.entryValue = 'Asset value must be a positive number.'
       isValid = false
@@ -97,7 +95,6 @@ export function AddNewWalletModal({ isOpen, onClose, walletUuid, fetchData }: Ad
       errorsCopy.entryValue = ''
     }
 
-    // Validate Allocation
     const allocationValue = parseFloat(allocation)
     if (!/^\d+(\.\d{0,2})?$/.test(allocation) || allocationValue < 0 || allocationValue > 100) {
       errorsCopy.allocation = 'Allocation must be a number between 0 and 100 with up to two decimal places after the point.'
@@ -126,22 +123,22 @@ export function AddNewWalletModal({ isOpen, onClose, walletUuid, fetchData }: Ad
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="h-[45%] w-[200%] bg-[#131313] text-[#fff] border-transparent">
+      <DialogContent className="h-[45%] w-[200%] dark:bg-[#131313] dark:text-[#fff] border-transparent">
         <DialogHeader>
-          <DialogTitle className="text-3xl text-[#fff]">New Asset</DialogTitle>
+          <DialogTitle className="text-3xl dark:text-[#fff]">New Asset</DialogTitle>
         </DialogHeader>
         <div className="w-full flex flex-col gap-4">
           <div className="w-full h-1/2 flex flex-row justify-between gap-4 items-start">
             <div className="flex flex-col w-1/2 gap-3">
               <Select onValueChange={(item) => setSelectedAsset(item)}>
-                <SelectTrigger className="w-full h-full bg-[#131313] border-[#323232]">
+                <SelectTrigger className="w-full h-full bg-lightComponent dark:bg-[#131313] dark:border-[#323232]">
                   <SelectValue placeholder="Asset" />
                 </SelectTrigger>
-                <SelectContent className="bg-[#131313] border-2 border-[#323232]">
+                <SelectContent className="dark:bg-[#131313] dark:border-2 dark:border-[#323232]">
                   {assetForSelected &&
                     assetForSelected.map((item) => (
                       <SelectItem
-                        className=" bg-[#131313] border-0  focus:bg-[#252525] focus:text-white text-white"
+                        className="dark:bg-[#131313] border-0  dark:focus:bg-[#252525] dark:focus:text-white dark:text-white"
                         key={item.uuid}
                         value={item.uuid}
                       >
@@ -157,7 +154,8 @@ export function AddNewWalletModal({ isOpen, onClose, walletUuid, fetchData }: Ad
             </div>
             <div className="flex flex-col w-1/2 gap-3">
               <Input
-                className="w-full h-full bg-[#131313] border-[#323232] text-[#959CB6]"
+                type="number"
+                className="w-full h-full bg-lightComponent dark:bg-[#131313] dark:border-[#323232] dark:text-[#959CB6]"
                 placeholder="Asset Quantity (Ex: 10)"
                 value={entryValue}
                 onChange={(e) => setEntryValue(e.target.value)}
@@ -168,7 +166,8 @@ export function AddNewWalletModal({ isOpen, onClose, walletUuid, fetchData }: Ad
           <div className="w-full h-1/2 flex flex-row justify-between gap-4 items-center">
             <div className="flex flex-col w-1/2 gap-3">
               <Input
-                className="w-full h-full bg-[#131313] border-[#323232] text-[#959CB6]"
+                type="number"
+                className="w-full h-full bg-lightComponent dark:bg-[#131313] dark:border-[#323232] dark:text-[#959CB6]"
                 placeholder="Ideal Allocation (%)"
                 value={allocation}
                 onChange={(e) => setAllocation(e.target.value)}
