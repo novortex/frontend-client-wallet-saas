@@ -31,12 +31,12 @@ export function SwitchTheme() {
     <button
       type="button"
       onClick={toggleTheme}
-      className="flex items-center p-1 rounded-md cursor-pointer focus:outline-none w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/6"
+      className="flex items-center p-1 rounded-md cursor-pointer focus:outline-none w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/6 border"
       style={{ backgroundColor: isDarkMode ? '#171717' : '#F7FBFF' }}
     >
       {/* Lado Light */}
       <div
-        className={`w-1/2 flex items-center justify-center transition-all duration-300 ease-in-out ${
+        className={`w-1/2 flex items-center justify-center border dark:border-0 transition-all duration-300 ease-in-out ${
           !isDarkMode ? 'bg-white rounded-md' : ''
         }`}
       >
@@ -57,7 +57,7 @@ export function SwitchTheme() {
 
       {/* Lado Dark */}
       <div
-        className={`w-1/2 flex items-center justify-center transition-all duration-300 ease-in-out ${
+        className={`w-1/2 flex items-center justify-center border-0 dark:border transition-all duration-300 ease-in-out ${
           isDarkMode ? 'bg-[#1C1C1C] rounded-md' : ''
         }`}
       >

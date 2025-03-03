@@ -31,7 +31,7 @@ export function DataTableAssetOrg<TData, TValue>({ columns, data }: DataTablePro
   }
 
   return (
-    <div className="rounded-md">
+    <div className="rounded-md border">
       <div className="bg-lightComponent dark:bg-[#171717] rounded-t-lg p-5 flex items-center justify-between">
         <h1 className="text-xl dark:text-white">Administrator</h1>
         <div className="flex gap-5">

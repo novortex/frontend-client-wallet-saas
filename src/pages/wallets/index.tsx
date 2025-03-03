@@ -138,7 +138,7 @@ export function Clients() {
 
       <div className="flex items-center justify-between mb-10">
         <Input
-          className="bg-gray-100 dark:bg-[#171717] w-5/6 border-0 text-black dark:text-white focus:ring-0"
+          className="bg-gray-100 dark:bg-[#171717] w-5/6 border text-black dark:text-white focus:ring-0"
           type="text"
           placeholder="Search for ..."
           value={searchTerm}

@@ -53,7 +53,7 @@ export function DataTableCustomers<TData, TValue>({ columns, data }: DataTablePr
   }
 
   return (
-    <div className="rounded-md">
+    <div className="rounded-md border">
       <div className="bg-lightComponent dark:bg-[#171717] rounded-t-lg p-5 flex items-center justify-between">
         <h1 className="text-xl dark:text-white">Customers organization</h1>
         <div className="flex gap-5 items-center">

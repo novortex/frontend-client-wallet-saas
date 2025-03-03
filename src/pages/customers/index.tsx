@@ -82,7 +82,7 @@ export function Customers() {
 
   return (
     <div className="p-10 bg-white dark:bg-transparent">
-      <div className="mb-10 flex items-center justify-between">
+      <div className="mb-10 flex items-center justify-between ">
         <h1 className="text-2xl dark:text-white font-medium">Customers</h1>
         <SwitchTheme />
       </div>

@@ -66,7 +66,7 @@ export function SideBar({ children, alerts }: { children: ReactNode; alerts: num
     <aside className={`bg-lightComponent dark:bg-[#171717] h-screen ${expanded ? 'w-1/6' : 'w-9'} z-10`}>
       <nav
         ref={navRef}
-        className={`h-full fixed flex flex-col bg-lightComponent dark:bg-[#171717] shadow-sm ${expanded ? 'w-1/6' : 'w-20'}`}
+        className={`h-full fixed flex flex-col bg-lightComponent dark:bg-[#171717] border shadow-sm ${expanded ? 'w-1/6' : 'w-20'}`}
         onMouseEnter={() => setExpanded(true)}
         onMouseLeave={() => {
           if (!dropdownRef.current) {
@@ -75,20 +75,21 @@ export function SideBar({ children, alerts }: { children: ReactNode; alerts: num
         }}
         onClick={handleNavClick}
       >
-        <div className="flex gap-5 items-center mt-5 mb-5">
+        <div className={`flex items-center mt-5 mb-5 ${!expanded ? 'justify-center' : 'gap-5'}`}>
           <img src={LogoOrg} className="w-16" alt="" />
-          <div className={`overflow-hidden transition-all ${expanded ? 'w-20' : 'w-0'}`}>
-            <h2 className="text-black dark:text-white font-semibold">Vault</h2>
-            <p className="text-[#959CB6] text-sm">Capital</p>
-          </div>
+          {expanded && (
+            <div className="overflow-hidden transition-all w-20">
+              <h2 className="text-black dark:text-white font-semibold">Vault</h2>
+              <p className="text-[#959CB6] text-sm">Capital</p>
+            </div>
+          )}
         </div>
 
         <SideBarContext.Provider value={{ expanded }}>
           <ul className="flex-1 px-3">
-            <li className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer transition-colors text-black dark:text-white mb-10`}>
+            <li className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer transition-colors text-black dark:text-white mb-10  ${!expanded ? 'justify-center' : ''}`}>
               <Bell size={20} />
-              <p className={`ml-3 font-normal overflow-hidden transition-all ${expanded ? 'w-52 ' : 'w-0'}`}>Notifications</p>
-
+              <p className={`font-normal overflow-hidden transition-all ${expanded ? 'ml-3 w-52' : 'w-0'}`}>Notifications</p>
               <div className={`text-[#F2BE38] h-5 text-center overflow-hidden transition-all ${expanded ? 'w-5' : 'w-0'}`}>{alerts}</div>
             </li>
 
@@ -96,7 +97,7 @@ export function SideBar({ children, alerts }: { children: ReactNode; alerts: num
           </ul>
         </SideBarContext.Provider>
 
-        <div className="flex p-3 bg-white text-black dark:text-white dark:bg-[#272727]">
+        <div className={`flex p-3 bg-white text-black dark:text-white dark:bg-[#272727] border ${!expanded ? 'justify-center' : 'justify-start'}`}>
           <Avatar>
             <AvatarImage src={userInfo?.picture || 'https://github.com/shadcn.png'} alt={userInfo?.name || 'Guest'} />
             <AvatarFallback>CN</AvatarFallback>
@@ -105,9 +106,7 @@ export function SideBar({ children, alerts }: { children: ReactNode; alerts: num
             <div className="flex justify-between items-center ml-3 w-[80%]">
               <div
                 className="leading-4 w-full max-w-[calc(100%-40px)] overflow-hidden"
-                style={{
-                  display: 'inline-block',
-                }}
+                style={{ display: 'inline-block' }}
               >
                 <p
                   className="font-normal mb-2 truncate"
@@ -127,7 +126,7 @@ export function SideBar({ children, alerts }: { children: ReactNode; alerts: num
               <DropdownMenu onOpenChange={handleDropdownOpenChange} open={isDropdownOpen}>
                 <DropdownMenuTrigger asChild className="flex justify-center items-center w-[25%] h-[100%]">
                   <button className="focus:outline-none hover:bg-gray-300 dark:hover:bg-[#171717] rounded-md">
-                    <MoreVertical className=" text-black dark:text-white cursor-pointer dark:hover:text-yellow-300 transition-colors" />
+                    <MoreVertical className="text-black dark:text-white cursor-pointer dark:hover:text-yellow-300 transition-colors" />
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-40 dark:bg-[#272727] dark:border-[#171717]">

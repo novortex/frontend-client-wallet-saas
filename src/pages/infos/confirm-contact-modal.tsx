@@ -34,12 +34,12 @@ export function ConfirmContactModal({ isOpen, onClose }: ConfirmContactModalProp
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="h-1/2 w-[200%] bg-[#131313] text-[#fff]">
+      <DialogContent className="h-1/2 w-[200%] dark:bg-[#131313] dark:text-[#fff]">
         <DialogHeader className="flex justify-center items-center">
-          <DialogTitle className="text-2xl text-[#fff]">Confirm contact</DialogTitle>
+          <DialogTitle className="text-2xl dark:text-[#fff]">Confirm contact</DialogTitle>
         </DialogHeader>
         <div className="flex justify-center items-center flex-col gap-6">
-          <CircleAlert className="text-[#F2BE38]" />
+          <CircleAlert className="text-red-600 dark:text-[#F2BE38]" />
           <p className="flex w-2/3 text-center">
             Do you confirm that you have contacted the client? Upon confirmation, the next recommended contact date will be updated and cannot be
             undone.
