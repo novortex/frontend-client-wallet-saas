@@ -87,7 +87,7 @@ export function DataTableCustomers<TData, TValue>({ columns, data }: DataTablePr
             <TableRow key={headerGroup.id} className="bg-gray-200 hover:bg-gray-300 dark:bg-[#131313] dark:hover:bg-[#101010]">
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableHead key={header.id} className="dark:text-white">
+                  <TableHead key={header.id} className="text-black dark:text-white">
                     {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                   </TableHead>
                 )

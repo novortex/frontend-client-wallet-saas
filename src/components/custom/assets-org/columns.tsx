@@ -5,18 +5,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/compon
 import { Skeleton } from '@/components/ui/skeleton'
 import { EyeOffIcon, MoreHorizontal, PencilIcon, TriangleAlert } from 'lucide-react'
 import { Button } from '../../ui/button'
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-  DialogTrigger,
-  DialogFooter,
-  DialogHeader,
-} from '@/components/ui/dialog'
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle, DialogTrigger, DialogFooter, DialogHeader } from '@/components/ui/dialog'
 
-// Define the type for the data
 export type AssetOrgs = {
   id: string
   asset: {
@@ -29,14 +19,16 @@ export type AssetOrgs = {
   quantSLowRisk: string
   quantLowRisk: string
   quantStandard: string
+  quantHighRisk: string
+  quantSHighRisk: string
 }
 
 export const columnsAssetOrg: ColumnDef<AssetOrgs>[] = [
   {
     accessorKey: 'asset',
-    header: () => <div className="text-center">Asset</div>,
+    header: () => <div className="text-left text-center">Asset</div>,
     cell: ({ row }) => (
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-start pl-4">
         <img src={row.original.asset.urlImage} alt={row.original.asset.name} className="w-6 h-6 mr-2" />
         <span>{row.original.asset.name}</span>
       </div>
@@ -80,18 +72,19 @@ export const columnsAssetOrg: ColumnDef<AssetOrgs>[] = [
   },
   {
     accessorKey: 'quantHighRisk',
-    header: 'Qty. High Risk',
+    header: () => <div className="text-center">Qty. High Risk</div>,
+    cell: ({ row }) => <div className="text-center">{row.original.quantHighRisk}</div>,
   },
   {
     accessorKey: 'quantSHighRisk',
-    header: 'Qty. S. High Risk',
+    header: () => <div className="text-center">Qty. S. High Risk</div>,
+    cell: ({ row }) => <div className="text-center">{row.original.quantSHighRisk}</div>,
   },
   {
     id: 'actions',
     header: () => <div className="text-center">Actions</div>,
     cell: ({ row }) => {
       const uuidAssetOrganization = row.original
-
       return (
         <div className="text-center">
           <DropdownMenu>
@@ -133,7 +126,6 @@ export const columnsAssetOrg: ColumnDef<AssetOrgs>[] = [
                     </DialogFooter>
                   </DialogContent>
                 </Dialog>
-
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button className="flex justify-center gap-3 bg-white text-black hover:bg-black hover:text-white">

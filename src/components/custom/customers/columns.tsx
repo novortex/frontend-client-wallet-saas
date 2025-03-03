@@ -5,7 +5,6 @@ import { ArrowUpDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import CellActions from './cell-action'
 
-// Define the shape of our data
 export type CustomersOrganization = {
   id: string
   name: string
@@ -33,18 +32,18 @@ export type CustomersOrganization = {
 export const columnsCustomerOrg: ColumnDef<CustomersOrganization>[] = [
   {
     accessorKey: 'name',
-    header: () => <div className="text-center">Name</div>,
-    cell: ({ row }) => <div className="text-center">{row.original.name}</div>,
+    header: () => <div className="text-left w-fit pl-10">Name</div>,
+    cell: ({ row }) => <div className="text-left w-fit pl-4 whitespace-nowrap">{row.original.name}</div>,
   },
   {
     accessorKey: 'email',
-    header: () => <div className="text-center">Email</div>,
-    cell: ({ row }) => <div className="text-center">{row.original.email}</div>,
+    header: () => <div className="text-left w-fit pl-20">Email</div>,
+    cell: ({ row }) => <div className="text-left w-fit pl-4 whitespace-nowrap">{row.original.email}</div>,
   },
   {
     accessorKey: 'phone',
     header: () => <div className="text-center">Phone</div>,
-    cell: ({ row }) => <div className="text-center">{row.original.phone ?? ' - '}</div>,
+    cell: ({ row }) => <div className="text-center whitespace-nowrap">{row.original.phone ?? ' - '}</div>,
   },
   {
     accessorKey: 'active',
