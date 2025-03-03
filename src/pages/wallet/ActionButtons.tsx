@@ -179,7 +179,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
           type="button"
           variant="outline"
           onClick={() => navigate(`/wallet/${walletUuid}/history`)}
-          className="hover:bg-gray-400"
+          className="hover:bg-gray-200 dark:hover:bg-gray-800"
         >
           Historic
         </Button>
@@ -187,7 +187,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
           Rebalanced
         </Button>
         <Button
-          className={`p-5 ${infosWallet?.isClosed ? 'bg-[#10A45C] hover:bg-green-700' : 'bg-[#EF4E3D] hover:bg-red-600'
+          className={`p-5 ${infosWallet?.isClosed ? 'bg-[#10A45C] hover:bg-green-700' : 'bg-[#EF4E3D] hover:bg-red-700'
             }`}
           type="button"
           onClick={openCloseWalletModal}

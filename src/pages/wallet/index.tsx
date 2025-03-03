@@ -27,10 +27,10 @@ export function Wallet() {
   } = useWalletModals()
 
   if (loading) return <Loading />
-  if (!infosWallet) return <div className="text-white flex justify-center items-center h-screen">Error: Wallet information is not available.</div>
+  if (!infosWallet) return <div className="dark:text-white flex justify-center items-center h-screen">Error: Wallet information is not available.</div>
   else {
     return (
-      <div className="p-10">
+      <div className="p-10 bg-white dark:bg-transparent">
         <Header walletUuid={walletUuid} />
         <ActionButtons
           walletUuid={walletUuid}

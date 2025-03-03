@@ -55,21 +55,21 @@ export function DataTable<TData, TValue>({ columns, data, walletUuid, fetchData 
 
   return (
     <div className="rounded-md">
-      <div className="bg-[#171717] rounded-t-lg p-5 flex items-center justify-between w-full">
-        <h1 className="text-xl text-white w-1/3">Assets wallet</h1>
+      <div className="bg-lightComponent border dark:bg-[#171717] rounded-t-lg p-5 flex items-center justify-between w-full">
+        <h1 className="text-xl dark:text-white w-1/3">Assets wallet</h1>
         <div className="flex gap-5 w-fit">
           <Input
             placeholder="Filter asset name..."
             value={(table.getColumn('asset')?.getFilterValue() as string) ?? ''}
             onChange={(event) => table.getColumn('asset')?.setFilterValue(event.target.value)}
-            className="bg-gray-800 text-gray-400 border-transparent h-11"
+            className="bg-gray-300 border dark:bg-gray-800 dark:text-gray-400 border-transparent h-11"
           />
 
           <RebalanceModal walletUuid={walletUuid} />
-          <Button className="bg-white text-black flex gap-2 hover:bg-gray-400 w-1/3 p-5">
+          <Button className="bg-gray-200 dark:bg-white text-black border flex gap-2 hover:bg-gray-400 w-1/3 p-5">
             <img src={filterIcon} alt="" /> Filters
           </Button>
-          <Button className="bg-white text-black flex gap-2 hover:bg-gray-400 w-1/3 p-5">
+          <Button className="bg-gray-200 dark:bg-white text-black flex gap-2 hover:bg-gray-400 w-1/3 p-5">
             <img src={exportIcon} alt="" /> Export
           </Button>
           <Button className="bg-[#F2BE38] text-black w-1/2 hover:text-white hover:bg-yellow-600 p-5" onClick={openModal}>
@@ -80,19 +80,19 @@ export function DataTable<TData, TValue>({ columns, data, walletUuid, fetchData 
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id} className="bg-[#131313] hover:bg-[#131313]">
+            <TableRow key={headerGroup.id} className="border bg-gray-200 dark:bg-[#131313] dark:hover:bg-[#131313]">
               {headerGroup.headers.map((header) => (
-                <TableHead key={header.id} className="text-white">
+                <TableHead key={header.id} className="text-black dark:text-white">
                   {!header.isPlaceholder && flexRender(header.column.columnDef.header, header.getContext())}
                 </TableHead>
               ))}
             </TableRow>
           ))}
         </TableHeader>
-        <TableBody className="text-[#959CB6] bg-[#171717] hover:bg-[#171717]">
+        <TableBody className="bg-lightComponent border dark:text-[#959CB6] dark:bg-[#171717] dark:hover:bg-[#171717]">
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
-              <TableRow className="hover:bg-[#171717]" key={row.id} data-state={row.getIsSelected() && 'selected'}>
+              <TableRow className="hover:bg-gray-200 dark:hover:bg-[#131313]" key={row.id} data-state={row.getIsSelected() && 'selected'}>
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                 ))}

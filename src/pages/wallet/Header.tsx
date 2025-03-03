@@ -10,19 +10,19 @@ const Header: React.FC<HeaderProps> = ({ walletUuid }) => (
     <Breadcrumb>
       <BreadcrumbList>
         <BreadcrumbItem>
-          <BreadcrumbLink className="text-2xl text-white font-medium" href="/wallets">
+          <BreadcrumbLink className="text-2xl text-black dark:text-white font-medium" href="/wallets">
             Wallets
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
-          <BreadcrumbLink className="text-2xl text-white font-medium" href={`/clients/${walletUuid}/infos`}>
+          <BreadcrumbLink className="text-2xl text-black dark:text-white font-medium" href={`/clients/${walletUuid}/infos`}>
             Information clients
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
-          <BreadcrumbPage className="text-2xl text-white font-medium">Client wallet</BreadcrumbPage>
+          <BreadcrumbPage className="text-2xl text-black dark:text-white font-medium">Client wallet</BreadcrumbPage>
         </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>
