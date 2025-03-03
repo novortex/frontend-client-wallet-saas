@@ -36,13 +36,13 @@ export function SwitchTheme() {
     >
       <div
         className={`w-1/2 flex items-center justify-center rounded-full p-1 transition-all duration-300 ease-in-out ${
-          !isDarkMode ? 'bg-white' : 'bg-transparent'
+          !isDarkMode ? 'bg-white border' : 'bg-transparent'
         }`}
       >
         <img
           src={sunIcon}
           alt="Light mode"
-          className="max-w-[20px] sm:max-w-[25px]"
+          className="w-4 h-4 max-w-[20px] sm:max-w-[25px]"
           style={{
             filter: isDarkMode
               ? 'invert(53%) sepia(32%) saturate(0%) hue-rotate(297deg) brightness(98%) contrast(97%)'
@@ -52,13 +52,13 @@ export function SwitchTheme() {
       </div>
       <div
         className={`w-1/2 flex items-center justify-center rounded-full p-1 transition-all duration-300 ease-in-out ${
-          isDarkMode ? 'bg-[#1C1C1C]' : 'bg-transparent'
+          isDarkMode ? 'bg-[#1C1C1C] border' : 'bg-transparent'
         }`}
       >
         <img
           src={moonIcon}
           alt="Dark mode"
-          className="max-w-[20px] sm:max-w-[25px]"
+          className="w-4 h-4 max-w-[20px] sm:max-w-[25px]"
           style={{
             filter: isDarkMode
               ? 'invert(34%) sepia(7%) saturate(2567%) hue-rotate(334deg) brightness(93%) contrast(92%)'
