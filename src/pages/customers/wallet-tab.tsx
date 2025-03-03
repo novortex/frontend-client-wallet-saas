@@ -56,10 +56,10 @@ export function WalletTab({
           Exchange
         </Label>
         <Select onValueChange={setExchangeSelected} defaultValue={ExchangeSelected}>
-          <SelectTrigger className="bg-[#131313] border-[#323232] text-[#959CB6]">
+          <SelectTrigger className="dark:bg-[#131313] dark:border-[#323232] dark:text-[#959CB6]">
             <SelectValue>{ExchangeSelected ? exchanges.find((mgr) => mgr.uuid === ExchangeSelected)?.name : 'Name'}</SelectValue>
           </SelectTrigger>
-          <SelectContent className="bg-[#131313] border-[#323232] text-[#959CB6]">
+          <SelectContent className="dark:bg-[#131313] dark:border-[#323232] dark:text-[#959CB6]">
             {exchanges.map((bench) => (
               <SelectItem key={bench.uuid} value={bench.uuid}>
                 {bench.name}
@@ -69,12 +69,12 @@ export function WalletTab({
         </Select>
       </div>
 
-      <div>
+      <div className="w-full">
         <Label className="ml-2" htmlFor="Email Password">
           Email Password
         </Label>
         <Input
-          className="bg-[#131313] border-[#323232] text-white"
+          className="dark:bg-[#131313] dark:border-[#323232] dark:text-white"
           type="text"
           id="Email Password"
           placeholder="Email Password"
@@ -84,12 +84,12 @@ export function WalletTab({
         />
       </div>
 
-      <div>
+      <div className="w-full">
         <Label className="ml-2" htmlFor="EmailExchage">
           Email (Exchange)
         </Label>
         <Input
-          className="bg-[#131313] border-[#323232] text-white"
+          className="dark:bg-[#131313] dark:border-[#323232] dark:text-white"
           type="email"
           id="Email Exchage"
           ref={emailExchangeRef}
@@ -99,12 +99,12 @@ export function WalletTab({
         />
       </div>
 
-      <div>
+      <div className="w-full">
         <Label className="ml-2" htmlFor="Exchange Password">
           Exchange Password
         </Label>
         <Input
-          className="bg-[#131313] border-[#323232] text-white"
+          className="dark:bg-[#131313] dark:border-[#323232] dark:text-white"
           type="text"
           id="Exchange Password"
           placeholder="Exchange Password"
@@ -119,10 +119,10 @@ export function WalletTab({
           Manager
         </Label>
         <Select onValueChange={setManager} defaultValue={manager} required>
-          <SelectTrigger className="bg-[#131313] border-[#323232] text-white">
+          <SelectTrigger className="dark:bg-[#131313] dark:border-[#323232] dark:text-white">
             <SelectValue>{manager ? managersOrganization.find((mgr) => mgr.uuid === manager)?.name : 'Name'}</SelectValue>
           </SelectTrigger>
-          <SelectContent className="bg-[#131313] border-[#323232] text-white">
+          <SelectContent className="dark:bg-[#131313] dark:border-[#323232] dark:text-white">
             {managersOrganization.map((manager) => (
               <SelectItem key={manager.uuid} value={manager.uuid}>
                 {manager.name}
@@ -132,12 +132,12 @@ export function WalletTab({
         </Select>
       </div>
 
-      <div>
+      <div className="w-full">
         <Label className="ml-2" htmlFor="performanceFee">
           Performance Fee
         </Label>
         <Input
-          className="bg-[#131313] border-[#323232] text-white"
+          className="dark:bg-[#131313] dark:border-[#323232] dark:text-white"
           type="text"
           id="performanceFee"
           value={String(performanceFee)}

@@ -1,6 +1,6 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { useManagerOrganization } from '@/store/managers_benckmark_exchanges'
 import { useSignalStore } from '@/store/signalEffect'
 import { useToast } from '@/components/ui/use-toast'
@@ -26,50 +26,29 @@ export function EditCustomerModal({ isOpen, onOpenChange, rowInfos }: EditCustom
   const [name, setName] = useState(rowInfos.name || '')
   const [email, setEmail] = useState(rowInfos.email || '')
   const [phone, setPhone] = useState(rowInfos.phone || '')
-  const [phoneCountry, setPhoneCountry] = useState<CountryData>({
-    name: '',
-    dialCode: '',
-    countryCode: '',
-    format: '',
-  })
-  const [errors, setErrors] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    general: '',
-  })
+  const [phoneCountry, setPhoneCountry] = useState<CountryData>({ name: '', dialCode: '', countryCode: '', format: '' })
+  const [errors, setErrors] = useState({ name: '', email: '', phone: '', general: '' })
 
   const accountPasswordRef = useRef<HTMLInputElement>(null)
   const emailExchangeRef = useRef<HTMLInputElement>(null)
   const emailPasswordRef = useRef<HTMLInputElement>(null)
 
   const [managersOrganization, exchanges] = useManagerOrganization((state) => [state.managers, state.exchanges])
-
   const [setSignal, signal] = useSignalStore((state) => [state.setSignal, state.signal])
   const { toast } = useToast()
 
   const validateInputs = () => {
-    const newErrors = {
-      name: '',
-      email: '',
-      phone: '',
-      general: '',
-    }
-
+    const newErrors = { name: '', email: '', phone: '', general: '' }
     const normalizedName = name.replace(/\s+/g, ' ').trim()
-
     if (!/^[A-ZÀ-ÖØ-Ý][a-zà-öø-ÿ]{1,}(?:\s[A-ZÀ-ÖØ-Ý][a-zà-öø-ÿ]{1,})+$/.test(normalizedName) || /\s$/.test(name)) {
       newErrors.name = 'Name must include both first and last names, each starting with a capital letter and containing at least two letters.'
     }
-
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       newErrors.email = 'Invalid email format.'
     }
-
     if (!/^\d+$/.test(phone.replace(/\D/g, '')) || phone.trim().length < 13) {
       newErrors.phone = 'The phone number must contain only numbers and include the country code.'
     }
-
     setErrors(newErrors)
     return !Object.values(newErrors).some((error) => error)
   }
@@ -93,23 +72,19 @@ export function EditCustomerModal({ isOpen, onOpenChange, rowInfos }: EditCustom
       })
       return
     }
-
     try {
       toast({
         className: 'bg-yellow-500 border-0',
         title: 'Processando atualização',
         description: 'Aguarde enquanto atualizamos os dados...',
       })
-
       const formattedPhone = formatPhoneNumber(phone)
       const formattedEmail = email.toLowerCase().trim()
-
       const result = await updateCustomer(rowInfos.id, {
         name,
         email: formattedEmail,
         phone: formattedPhone,
       })
-
       if (result === false) {
         toast({
           className: 'bg-red-500 border-0',
@@ -118,21 +93,16 @@ export function EditCustomerModal({ isOpen, onOpenChange, rowInfos }: EditCustom
         })
         return
       }
-
       setSignal(!signal)
       onOpenChange(false)
-
       toast({
         className: 'bg-green-500 border-0',
         title: 'Sucesso!',
         description: 'Dados do cliente atualizados com sucesso.',
       })
     } catch (err) {
-      // Tipando o erro corretamente
       const error = err as { response?: { data?: { message?: string } } }
-
       const errorMessage = error.response?.data?.message || 'Erro ao atualizar dados do cliente.'
-
       toast({
         className: 'bg-red-500 border-0',
         title: 'Erro inesperado',
@@ -148,7 +118,6 @@ export function EditCustomerModal({ isOpen, onOpenChange, rowInfos }: EditCustom
         title: 'Processando atualização',
         description: 'Atualizando dados da carteira...',
       })
-
       if (!ExchangeSelected) {
         toast({
           className: 'bg-red-500 border-0',
@@ -157,7 +126,6 @@ export function EditCustomerModal({ isOpen, onOpenChange, rowInfos }: EditCustom
         })
         return
       }
-
       if (!manager) {
         toast({
           className: 'bg-red-500 border-0',
@@ -166,7 +134,6 @@ export function EditCustomerModal({ isOpen, onOpenChange, rowInfos }: EditCustom
         })
         return
       }
-
       const result = await updateWallet(rowInfos.walletUuid || '', {
         accountPassword: accountPasswordRef.current?.value ?? '',
         contract: contractChecked,
@@ -177,7 +144,6 @@ export function EditCustomerModal({ isOpen, onOpenChange, rowInfos }: EditCustom
         manager,
         performanceFee: parseFloat(String(performanceFee)),
       })
-
       if (!result) {
         toast({
           className: 'bg-red-500 border-0',
@@ -186,10 +152,8 @@ export function EditCustomerModal({ isOpen, onOpenChange, rowInfos }: EditCustom
         })
         return
       }
-
       setSignal(!signal)
       onOpenChange(false)
-
       toast({
         className: 'bg-green-500 border-0',
         title: 'Sucesso!',
@@ -206,24 +170,36 @@ export function EditCustomerModal({ isOpen, onOpenChange, rowInfos }: EditCustom
     }
   }
 
+  useEffect(() => {
+    if (!isOpen) {
+      setContractChecked(!!rowInfos.contract)
+      setInitialFeeIsPaid(rowInfos.initialFeePaid)
+      setManager(rowInfos.manager?.managerUuid || '')
+      setExchangeSelected(rowInfos.exchange?.exchangeUuid || '')
+      setPerformanceFee(rowInfos.performanceFee ? String(rowInfos.performanceFee) : '')
+      setName(rowInfos.name || '')
+      setEmail(rowInfos.email || '')
+      setPhone(rowInfos.phone || '')
+      setErrors({ name: '', email: '', phone: '', general: '' })
+    }
+  }, [isOpen, rowInfos])
+
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-[#1C1C1C] border-0 text-white max-w-fit">
+      <DialogContent className="dark:bg-[#1C1C1C] border-0 dark:text-white max-w-[600px] w-full mx-auto">
         <DialogHeader>
-          <DialogTitle className="text-white text-3xl">Customer edit</DialogTitle>
+          <DialogTitle className="dark:text-white text-3xl">Customer edit</DialogTitle>
         </DialogHeader>
-
         <Tabs defaultValue="Profile">
-          <TabsList className="flex justify-between gap-5 bg-[#1C1C1C]">
-            <TabsTrigger className="w-1/2 bg-[#171717] text-[#F2BE38] data-[state=active]:bg-yellow-500" value="Profile">
+          <TabsList className="flex justify-between gap-5 border dark:border-0 dark:bg-[#1C1C1C]">
+            <TabsTrigger className="w-1/2 bg-lightComponent border dark:border-0 dark:bg-[#171717] text-[#F2BE38] data-[state=active]:bg-yellow-500 dark:data-[state=active]:bg-yellow-500 dark:data-[state=active]:text-black" value="Profile">
               Profile
             </TabsTrigger>
-            <TabsTrigger className="w-1/2 bg-[#171717] text-[#F2BE38] data-[state=active]:bg-yellow-500" value="Wallet">
+            <TabsTrigger className="w-1/2 bg-lightComponent border dark:bg-[#171717] text-[#F2BE38] data-[state=active]:bg-yellow-500 dark:data-[state=active]:bg-yellow-500 dark:data-[state=active]:text-black" value="Wallet">
               Wallet
             </TabsTrigger>
           </TabsList>
-
-          <TabsContent className="mt-10" value="Profile">
+          <TabsContent className="mt-10" value={'Profile'}>
             <ProfileTab
               name={name}
               email={email}
@@ -231,15 +207,12 @@ export function EditCustomerModal({ isOpen, onOpenChange, rowInfos }: EditCustom
               errors={errors}
               setName={setName}
               setEmail={setEmail}
-              setPhone={(phone) => {
-                setPhone(phone)
-              }}
+              setPhone={setPhone}
               setPhoneCountry={setPhoneCountry}
               handleUpdateCustomer={handleUpdateCustomer}
             />
           </TabsContent>
-
-          <TabsContent className="mt-10" value="Wallet">
+          <TabsContent className="mt-10" value={'Wallet'}>
             <WalletTab
               rowInfos={rowInfos}
               ExchangeSelected={ExchangeSelected}
