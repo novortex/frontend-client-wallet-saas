@@ -177,7 +177,7 @@ export function AddNewWalletModal({ isOpen, onClose, walletUuid, fetchData }: Ad
           </div>
         </div>
         <DialogFooter className="flex justify-end items-end">
-          <Button className="bg-[#1877F2] w-1/4 hover:bg-blue-600 p-5" onClick={handleAddAsset}>
+          <Button className="text-white bg-[#1877F2] w-1/4 hover:bg-blue-600 p-5" onClick={handleAddAsset}>
             Add asset
           </Button>
         </DialogFooter>
