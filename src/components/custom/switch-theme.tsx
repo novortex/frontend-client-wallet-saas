@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import moonIcon from '../../assets/icons/moon.svg'
-import sunIcon from '../../assets/icons/Union.svg'
+import sunIcon from '../../assets/icons/sun.svg'
 
 export function SwitchTheme() {
   const [isDarkMode, setIsDarkMode] = useState(() => {
