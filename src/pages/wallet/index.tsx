@@ -3,7 +3,7 @@ import { DataTable } from '@/components/custom/wallet/data-table'
 import { Header } from './Header'
 import { ActionButtons } from './ActionButtons'
 import { WalletInfo } from './WalletInfo'
-import { TriggerSection } from './TriggerSection'
+// ***DO NOT DELETE import { TriggerSection } from './TriggerSection'
 import OperationsModal from '@/components/custom/wallet/operations'
 import ConfirmCloseWalletModal from '@/components/custom/confirm-close-wallet-modal'
 import ConfirmRebalanceModal from '@/components/custom/modal/confirm-rebalance-modal'
@@ -27,10 +27,10 @@ export function Wallet() {
   } = useWalletModals()
 
   if (loading) return <Loading />
-  if (!infosWallet) return <div className="text-white flex justify-center items-center h-screen">Error: Wallet information is not available.</div>
+  if (!infosWallet) return <div className="dark:text-white flex justify-center items-center h-screen">Error: Wallet information is not available.</div>
   else {
     return (
-      <div className="p-10">
+      <div className="p-10 bg-white dark:bg-transparent h-full">
         <Header walletUuid={walletUuid} />
         <ActionButtons
           walletUuid={walletUuid}
@@ -47,7 +47,7 @@ export function Wallet() {
           fetchData={fetchData}
           calculateRebalance={calculateRebalance}
         />
-        <TriggerSection
+        {/* ***DO NOT DELETE <TriggerSection
           isOperationModalOpen={isOperationModalOpen}
           closeOperationModal={closeOperationModal}
           isCloseWalletModalOpen={isCloseWalletModalOpen}
@@ -56,7 +56,7 @@ export function Wallet() {
           isModalRebalance={isModalRebalance}
           openOrCloseModalRebalanced={openOrCloseModalRebalanced}
           fetchData={fetchData}
-        />
+        /> */}
         <OperationsModal isOpen={isOperationModalOpen} onClose={closeOperationModal} fetchData={fetchData} />
         <ConfirmCloseWalletModal
           isOpen={isCloseWalletModalOpen}

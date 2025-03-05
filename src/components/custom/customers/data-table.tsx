@@ -53,42 +53,41 @@ export function DataTableCustomers<TData, TValue>({ columns, data }: DataTablePr
   }
 
   return (
-    <div className="rounded-md">
-      <div className="bg-[#171717] rounded-t-lg p-5 flex items-center justify-between">
-        <h1 className="text-xl text-white">Customers organization</h1>
+    <div className="rounded-md border">
+      <div className="bg-lightComponent dark:bg-[#171717] rounded-t-lg p-5 flex items-center justify-between">
+        <h1 className="text-xl dark:text-white">Customers organization</h1>
         <div className="flex gap-5 items-center">
-          <div className="flex items-center py-4 w-full">
+          <div className="flex items-center py-4 w-[200%]">
             <Input
-              placeholder="Filter name customer..."
+              placeholder="Search for a customer name..."
               value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
               onChange={(event) => table.getColumn('name')?.setFilterValue(event.target.value)}
-              className="bg-gray-800 text-gray-400 border-transparent h-11"
+              className="bg-gray-200 dark:bg-[#000] text-gray-400 border-transparent h-11 w-[100%]"
             />
           </div>
-          <Button className="bg-white text-black flex gap-2 hover:bg-gray-400 w-1/3 p-5">
+          <Button className="bg-gray-200 dark:bg-white text-black flex gap-2 hover:bg-gray-400 dark:hover:bg-gray-400 w-1/3 p-5">
             <img src={exportIcon} alt="" /> Export
           </Button>
           <Button onClick={openModal} className="bg-[#F2BE38] w-1/2 text-black hover:text-white hover:bg-yellow-600">
             + Add new
           </Button>
-          <div className="border-l-2 border-gray-500 pl-5 flex items-center justify-end space-x-2 py-4">
-            <Button size="sm" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()} className="bg-white text-black">
+          <div className="border-l-2 border-gray-300 dark:border-gray-600 pl-5 flex items-center justify-end space-x-2 py-4">
+            <Button size="sm" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()} className="hover:bg-gray-400 bg-gray-200 dark:bg-white text-black">
               Previous
             </Button>
-            <Button size="sm" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()} className="bg-[#F2BE38] text-black">
+            <Button size="sm" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()} className="bg-[#F2BE38] text-black hover:text-white hover:bg-yellow-600">
               Next
             </Button>
           </div>
         </div>
       </div>
-
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id} className="bg-[#131313] hover:bg-[#131313]">
+            <TableRow key={headerGroup.id} className="bg-gray-200 hover:bg-gray-300 dark:bg-[#131313] dark:hover:bg-[#101010]">
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableHead key={header.id} className="text-white">
+                  <TableHead key={header.id} className="text-black dark:text-white">
                     {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                   </TableHead>
                 )
@@ -96,10 +95,10 @@ export function DataTableCustomers<TData, TValue>({ columns, data }: DataTablePr
             </TableRow>
           ))}
         </TableHeader>
-        <TableBody className="text-[#959CB6] bg-[#171717] hover:bg-[#171717]">
+        <TableBody className="bg-lightComponent dark:text-[#959CB6] dark:bg-[#171717]">
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
-              <TableRow className="hover:bg-[#171717]" key={row.id} data-state={row.getIsSelected() && 'selected'}>
+              <TableRow className="hover:bg-gray-200 dark:hover:bg-[#171717] dark:hover:bg-[#101010]" key={row.id} data-state={row.getIsSelected() && 'selected'}>
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                 ))}

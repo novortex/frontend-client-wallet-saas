@@ -1,8 +1,6 @@
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
-
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
-
 import filterIcon from '@/assets/icons/filter.svg'
 import exportIcon from '@/assets/icons/export.svg'
 import { useState } from 'react'
@@ -31,16 +29,14 @@ export function DataTableAssetOrg<TData, TValue>({ columns, data }: DataTablePro
   }
 
   return (
-    <div className="rounded-md">
-      <div className="bg-[#171717] rounded-t-lg p-5 flex items-center justify-between">
-        <h1 className="text-xl text-white">Administrator</h1>
+    <div className="rounded-md border">
+      <div className="bg-lightComponent dark:bg-[#171717] rounded-t-lg p-5 flex items-center justify-between">
+        <h1 className="text-xl dark:text-white">Administrator</h1>
         <div className="flex gap-5">
-          <Button className="bg-white text-black flex gap-2 hover:bg-gray-400 w-1/3 p-5">
-            {' '}
+          <Button className="bg-gray-200 dark:bg-white text-black flex gap-2 hover:bg-gray-300 w-1/3 p-5">
             <img src={filterIcon} alt="" /> Filters
           </Button>
-          <Button className="bg-white text-black flex gap-2 hover:bg-gray-400 w-1/3 p-5">
-            {' '}
+          <Button className="bg-gray-200 dark:bg-white text-black flex gap-2 hover:bg-gray-300 w-1/3 p-5">
             <img src={exportIcon} alt="" /> Export
           </Button>
           <Button className="bg-[#F2BE38] w-1/2 text-black hover:text-white hover:bg-yellow-600" onClick={openModal}>
@@ -51,23 +47,23 @@ export function DataTableAssetOrg<TData, TValue>({ columns, data }: DataTablePro
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id} className="bg-[#131313] hover:bg-[#131313]">
-              {headerGroup.headers.map((header) => {
-                return (
-                  <TableHead key={header.id} className="text-white">
-                    {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                  </TableHead>
-                )
-              })}
+            <TableRow key={headerGroup.id} className="bg-gray-200 hover:bg-gray-300 dark:bg-[#131313] dark:hover:bg-[#101010]">
+              {headerGroup.headers.map((header, idx) => (
+                <TableHead key={header.id} className={`text-black dark:text-white ${idx === 0 ? 'pl-4' : ''}`}>
+                  {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                </TableHead>
+              ))}
             </TableRow>
           ))}
         </TableHeader>
-        <TableBody className="text-[#959CB6] bg-[#171717] hover:bg-[#171717]">
+        <TableBody className="bg-lightComponent dark:text-[#959CB6] dark:bg-[#171717]">
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
-              <TableRow className="hover:bg-[#171717]" key={row.id} data-state={row.getIsSelected() && 'selected'}>
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+              <TableRow className="hover:bg-gray-200 dark:hover:bg-[#171717] dark:hover:bg-[#101010]" key={row.id} data-state={row.getIsSelected() && 'selected'}>
+                {row.getVisibleCells().map((cell, idx) => (
+                  <TableCell key={cell.id} className={`${idx === 0 ? 'pl-4' : ''}`}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
                 ))}
               </TableRow>
             ))

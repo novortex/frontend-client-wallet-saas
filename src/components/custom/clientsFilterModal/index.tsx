@@ -189,12 +189,12 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button type="button" variant="outline" className="gap-2 hover:bg-gray-700">
+        <Button type="button" variant="outline" className="gap-2 hover:bg-gray-200 dark:hover:bg-gray-700">
           Filters
         </Button>
       </DialogTrigger>
-      <DialogContent className="bg-[#131313] h-[90vh] max-h-[90vh] overflow-y-auto">
-        <DialogHeader className="text-[#fff]">
+      <DialogContent className="bg-white dark:bg-[#131313] h-[90vh] max-h-[90vh] overflow-y-auto">
+        <DialogHeader className="text-black dark:text-[#fff]">
           <DialogTitle className="text-2xl text-center">Filter Customer</DialogTitle>
         </DialogHeader>
 

@@ -55,7 +55,7 @@ export default function ConfirmCloseWalletModal({ isOpen, onClose, startWallet, 
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="h-[80%] w-[40%] bg-[#131313] text-[#fff] max-w-full border-transparent">
+      <DialogContent className="h-[80%] w-[40%] dark:bg-[#131313] dark:text-[#fff] max-w-full border-transparent">
         <DialogHeader className="flex justify-center items-center">
           <DialogTitle className="text-3xl">Confirmation</DialogTitle>
         </DialogHeader>
@@ -66,7 +66,7 @@ export default function ConfirmCloseWalletModal({ isOpen, onClose, startWallet, 
           <div className="flex flex-col gap-2 w-1/2">
             <Popover>
               <PopoverTrigger asChild>
-                <Button variant="outline" className="w-full bg-[#131313] border-[#323232] text-[#959CB6] justify-between">
+                <Button variant="outline" className="w-full dark:bg-[#131313] dark:border-[#323232] dark:text-[#959CB6] justify-between">
                   {date.toLocaleDateString()}
                   <CalendarIcon className="h-4 w-4 opacity-50" />
                 </Button>
@@ -77,7 +77,7 @@ export default function ConfirmCloseWalletModal({ isOpen, onClose, startWallet, 
                   selected={date}
                   onSelect={(newDate) => newDate && setDate(newDate)}
                   disabled={(date) => date > new Date()}
-                  className="bg-[#131313] text-white rounded-md"
+                  className="dark:bg-[#131313] dark:text-white rounded-md"
                   classNames={{
                     day_today: isToday(date)
                       ? 'bg-white text-black hover:bg-white rounded-md'
@@ -90,7 +90,7 @@ export default function ConfirmCloseWalletModal({ isOpen, onClose, startWallet, 
           </div>
 
           <Label className="flex flex-row gap-3 text-lg">
-            <p className="text-[#959CB6]">Type to confirm:</p>
+            <p className="dark:text-[#959CB6]">Type to confirm:</p>
             <p>{expectedValue}</p>
           </Label>
 
@@ -104,12 +104,12 @@ export default function ConfirmCloseWalletModal({ isOpen, onClose, startWallet, 
               }
             }}
             onPaste={(e) => e.preventDefault()}
-            className="w-1/2 bg-[#131313] border-[#323232] text-[#959CB6]"
+            className="w-1/2 dark:bg-[#131313] dark:border-[#323232] dark:text-[#959CB6]"
           />
         </div>
 
         <DialogFooter className="flex justify-end items-end">
-          <Button className="bg-[#1877F2] w-[20%] hover:bg-blue-600 p-5" disabled={!isInputValid} onClick={handleSendWalletAction}>
+          <Button className="text-white bg-[#1877F2] w-[20%] hover:bg-blue-600 p-5" disabled={!isInputValid} onClick={handleSendWalletAction}>
             Finish
           </Button>
         </DialogFooter>

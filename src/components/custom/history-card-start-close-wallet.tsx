@@ -40,23 +40,23 @@ export default function HistoryCardStartClose({ walletState, date, hour, initial
   }
 
   return (
-    <Card className={`${borderStyle} rounded-[12px] border bg-[#131313] w-1/3`}>
+    <Card className={`${borderStyle} rounded-[12px] border bg-lightComponent dark:bg-[#131313] w-1/3`}>
       <CardHeader className="flex justify-center items-center">
-        <CardTitle className="text-3xl text-[#fff]">{walletTitle}</CardTitle>
+        <CardTitle className="text-3xl text-black dark:text-[#fff]">{walletTitle}</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col items-center justify-center gap-4">
         <CardDescription className="flex flex-row gap-2 text-lg">
           Date:
-          <p className="text-[#fff]">
+          <p className="text-black dark:text-[#fff]">
             {date} ({hour})
           </p>
         </CardDescription>
         <CardDescription className="flex flex-row gap-2 text-lg">
-          {walletValue}: <p className="text-[#fff]">{initialValue}</p>
+          {walletValue}: <p className="text-black dark:text-[#fff]">{initialValue}</p>
         </CardDescription>
         {!walletState && (
           <CardDescription className="flex flex-row gap-2 text-lg">
-            Close Value: <p className="text-[#fff]">{closeValue}</p>
+            Close Value: <p className="text-black dark:text-[#fff]">{closeValue}</p>
           </CardDescription>
         )}
         {!walletState && (

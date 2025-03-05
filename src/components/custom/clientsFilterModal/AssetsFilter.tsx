@@ -27,7 +27,7 @@ export function AssetsFilter({
 
     return (
         <div className="w-full flex flex-col gap-2">
-            <div className="h-[20%] w-full font-bold text-[#959CB6]">
+            <div className="h-[20%] w-full font-bold dark:text-[#959CB6]">
                 Filter by assets
             </div>
             <div className="h-[80%] w-full flex flex-col items-center justify-center gap-4">
@@ -37,15 +37,15 @@ export function AssetsFilter({
                     </div>
                     <div className="w-full flex items-center justify-start">
                         <Select onValueChange={handleAssetSelection}>
-                            <SelectTrigger className="w-full bg-[#131313] border-[#323232] text-[#fff]">
+                            <SelectTrigger className="w-full dark:bg-[#131313] dark:border-[#323232] dark:text-[#fff]">
                                 <SelectValue placeholder="Select assets" />
                             </SelectTrigger>
-                            <SelectContent className="bg-[#131313] border-2 border-[#323232]">
+                            <SelectContent className="dark:bg-[#131313] border-2 dark:border-[#323232]">
                                 {assets.map((asset) => (
                                     <SelectItem
                                         key={asset.uuid}
                                         value={asset.name}
-                                        className="bg-[#131313] border-0 focus:bg-[#252525] focus:text-white text-white"
+                                        className="dark:bg-[#131313] border-0 dark:focus:bg-[#252525] dark:focus:text-white dark:text-white"
                                     >
                                         <div>{asset.name}</div>
                                     </SelectItem>

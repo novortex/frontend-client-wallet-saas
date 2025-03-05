@@ -7,12 +7,12 @@ type TCardDashboard = {
 }
 export function CardDashboard({ title, data }: TCardDashboard) {
   return (
-    <Card className="bg-[#131313] border-0 w-1/5">
+    <Card className="bg-lightComponent border dark:bg-[#131313] w-1/5">
       <CardHeader>
-        <CardTitle className="text-lg text-[#959CB6] font-medium">{title || '-'}</CardTitle>
+        <CardTitle className="text-lg dark:text-[#959CB6] font-medium">{title || '-'}</CardTitle>
       </CardHeader>
       <CardContent>
-        <h1 className="text-2xl text-white font-medium">{data || '-'}</h1>
+        <h1 className="text-2xl dark:text-white font-medium">{data || '-'}</h1>
       </CardContent>
     </Card>
   )

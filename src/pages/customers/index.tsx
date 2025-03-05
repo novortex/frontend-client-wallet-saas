@@ -4,9 +4,9 @@ import { getAllBenchmark, getAllCustomersOrganization, getAllExchange, getAllMan
 import { useSignalStore } from '@/store/signalEffect'
 import { useToast } from '@/components/ui/use-toast'
 import { DataTableCustomers } from '@/components/custom/customers/data-table'
-
 import { useManagerOrganization } from '@/store/managers_benckmark_exchanges'
 import { columnsCustomerOrg, CustomersOrganization } from '@/components/custom/customers/columns'
+import { Loading } from '@/components/custom/loading'
 
 export function Customers() {
   const [data, setData] = useState<CustomersOrganization[]>([])
@@ -77,13 +77,13 @@ export function Customers() {
   }, [signal, toast, setManager, setBenchs, setExchanges])
 
   if (loading) {
-    return <div>Loading...</div>
+    return <Loading />
   }
 
   return (
-    <div className="p-10">
-      <div className="mb-10 flex items-center justify-between">
-        <h1 className="text-2xl text-white font-medium">Customers</h1>
+    <div className="p-10 bg-white dark:bg-transparent h-full">
+      <div className="mb-10 flex items-center justify-between ">
+        <h1 className="text-2xl dark:text-white font-medium">Customers</h1>
         <SwitchTheme />
       </div>
 

@@ -5,18 +5,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/compon
 import { Skeleton } from '@/components/ui/skeleton'
 import { EyeOffIcon, MoreHorizontal, PencilIcon, TriangleAlert } from 'lucide-react'
 import { Button } from '../../ui/button'
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-  DialogTrigger,
-  DialogFooter,
-  DialogHeader,
-} from '@/components/ui/dialog'
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle, DialogTrigger, DialogFooter, DialogHeader } from '@/components/ui/dialog'
 
-// Define the type for the data
 export type AssetOrgs = {
   id: string
   asset: {
@@ -29,14 +19,16 @@ export type AssetOrgs = {
   quantSLowRisk: string
   quantLowRisk: string
   quantStandard: string
+  quantHighRisk: string
+  quantSHighRisk: string
 }
 
 export const columnsAssetOrg: ColumnDef<AssetOrgs>[] = [
   {
     accessorKey: 'asset',
-    header: () => <div className="text-center">Asset</div>,
+    header: () => <div className="text-left text-center">Asset</div>,
     cell: ({ row }) => (
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-start pl-4">
         <img src={row.original.asset.urlImage} alt={row.original.asset.name} className="w-6 h-6 mr-2" />
         <span>{row.original.asset.name}</span>
       </div>
@@ -80,18 +72,19 @@ export const columnsAssetOrg: ColumnDef<AssetOrgs>[] = [
   },
   {
     accessorKey: 'quantHighRisk',
-    header: 'Qty. High Risk',
+    header: () => <div className="text-center">Qty. High Risk</div>,
+    cell: ({ row }) => <div className="text-center">{row.original.quantHighRisk}</div>,
   },
   {
     accessorKey: 'quantSHighRisk',
-    header: 'Qty. S. High Risk',
+    header: () => <div className="text-center">Qty. S. High Risk</div>,
+    cell: ({ row }) => <div className="text-center">{row.original.quantSHighRisk}</div>,
   },
   {
     id: 'actions',
     header: () => <div className="text-center">Actions</div>,
     cell: ({ row }) => {
       const uuidAssetOrganization = row.original
-
       return (
         <div className="text-center">
           <DropdownMenu>
@@ -105,20 +98,20 @@ export const columnsAssetOrg: ColumnDef<AssetOrgs>[] = [
               <div className="flex flex-col">
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button className="flex justify-center gap-3 border-b border-[#D4D7E3] hover:bg-black hover:text-white" variant="secondary">
+                    <Button className="flex justify-center gap-3 border-b border-[#D4D7E3] bg-white text-black hover:bg-black hover:text-white">
                       <PencilIcon className="w-5" /> Edit
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="bg-[#1C1C1C] border-0 text-white">
+                  <DialogContent className="dark:bg-[#1C1C1C] border-0 dark:text-white">
                     <DialogHeader>
-                      <DialogTitle className="text-white">
+                      <DialogTitle className="dakr:text-white">
                         Edit asset <span className="text-yellow-500">{uuidAssetOrganization.asset.name}</span>
                       </DialogTitle>
                       <DialogDescription>
                         Now you are editing information about {uuidAssetOrganization.asset.name} in your organization
                         <div className="flex items-center space-x-4 mt-5">
                           <div className="space-y-2">
-                            <h1 className="text-2xl text-white">This feature is coming!!</h1>
+                            <h1 className="text-2xl text-black dark:text-white">This feature is coming!!</h1>
                             <Skeleton className="h-10 w-[250px]" />
                             <Skeleton className="h-10 w-[250px]" />
                           </div>
@@ -133,21 +126,20 @@ export const columnsAssetOrg: ColumnDef<AssetOrgs>[] = [
                     </DialogFooter>
                   </DialogContent>
                 </Dialog>
-
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button className="flex justify-center gap-3 hover:bg-black hover:text-white" variant="secondary">
+                    <Button className="flex justify-center gap-3 bg-white text-black hover:bg-black hover:text-white">
                       <EyeOffIcon className="w-5" /> Disable
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="bg-[#1C1C1C] border-0 text-white">
+                  <DialogContent className="dark:bg-[#1C1C1C] border-0 text-black dark:text-white">
                     <DialogHeader>
                       <DialogTitle className="flex gap-5 items-center mb-5">
-                        Disabled asset <TriangleAlert className="text-yellow-400 w-5" />
+                        Disabled asset <TriangleAlert className="text-red-600 dark:text-yellow-400 w-5" />
                       </DialogTitle>
                       <DialogDescription>
-                        Disabled the <span className="font-bold text-white">{uuidAssetOrganization.asset.name}</span> for all wallets
-                        <p className="mt-5 font-bold text-yellow-200">
+                        Disabled the <span className="font-bold text-black dark:text-white">{uuidAssetOrganization.asset.name}</span> for all wallets
+                        <p className="bg-gray-300 dark:bg-transparent rounded m-4 p-4 font-bold text-red-600 dark:text-yellow-200">
                           Warning: You are about to disable this crypto asset for all wallets. This action is irreversible and will affect all users
                           holding this asset. Please confirm that you want to proceed with this operation.
                         </p>
@@ -155,9 +147,9 @@ export const columnsAssetOrg: ColumnDef<AssetOrgs>[] = [
                     </DialogHeader>
                     <DialogFooter>
                       <DialogClose asChild>
-                        <Button className="bg-red-500 hover:bg-red-600 text-white">Close</Button>
+                        <Button className="bg-gray-200 hover:text-black hover:bg-gray-100 text-black">Close</Button>
                       </DialogClose>
-                      <Button disabled className="bg-blue-500 hover:bg-blue-600 text-black">Disabled</Button>
+                      <Button disabled className="bg-red-600 hover:bg-red-700 text-white">Disable Asset</Button>
                     </DialogFooter>
                   </DialogContent>
                 </Dialog>

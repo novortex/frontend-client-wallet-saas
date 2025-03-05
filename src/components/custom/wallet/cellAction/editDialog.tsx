@@ -34,9 +34,9 @@ export function EditDialog({ isOpen, onOpenChange, rowInfos, onSave }: EditDialo
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose} modal>
-      <DialogContent className="bg-[#1C1C1C] border-0 text-white">
+      <DialogContent className="dark:bg-[#1C1C1C] border-0 text-white">
         <DialogHeader>
-          <DialogTitle className="text-white">Editing information asset in wallet</DialogTitle>
+          <DialogTitle className="text-black dark:text-white">Editing information asset in wallet</DialogTitle>
           <DialogDescription>
             <div className="flex mt-3">
               <p>Now you are editing information about</p>
@@ -52,14 +52,14 @@ export function EditDialog({ isOpen, onOpenChange, rowInfos, onSave }: EditDialo
             </div>
             <div className="flex mt-5 gap-5 w-full">
               <Input
-                className="w-1/2 h-full bg-[#131313] border-[#323232] text-[#959CB6]"
+                className="w-1/2 h-full dark:bg-[#131313] dark:border-[#323232] dark:text-[#959CB6]"
                 placeholder="Quantity"
                 type="number"
                 defaultValue={rowInfos.assetQuantity}
                 ref={newQuantityAssetRef}
               />
               <Input
-                className="w-1/2 h-full bg-[#131313] border-[#323232] text-[#959CB6]"
+                className="w-1/2 h-full dark:bg-[#131313] dark:border-[#323232] dark:text-[#959CB6]"
                 placeholder="Ideal allocation"
                 type="number"
                 defaultValue={rowInfos.idealAllocation}

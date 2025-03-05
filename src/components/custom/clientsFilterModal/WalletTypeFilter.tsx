@@ -15,12 +15,12 @@ export function WalletTypeFilter({ selectedWalletTypes, handleSelectWalletType, 
 
   return (
     <div className="w-full flex flex-col gap-2">
-      <div className="font-bold text-[#959CB6] mb-2">Wallet Type</div>
+      <div className="font-bold text-black dark:text-[#959CB6] mb-2">Wallet Type</div>
       <div className="w-full flex flex-wrap gap-4">
         {options.map((option, index) => (
-          <div key={index} className="flex items-center gap-2 text-[#fff]" style={{ flex: '1 0 30%' }}>
+          <div key={index} className="flex items-center gap-2 text-black dark:text-[#fff]" style={{ flex: '1 0 30%' }}>
             <Checkbox
-              className="border-[#fff]"
+              className="border-black dark:border-[#fff]"
               onCheckedChange={() => {
                 const normalizedOption = normalizeOption(option)
                 if (selectedWalletTypes.includes(normalizedOption)) {

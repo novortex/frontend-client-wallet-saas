@@ -5,6 +5,7 @@ import { useSignalStore } from '@/store/signalEffect'
 import { useToast } from '@/components/ui/use-toast'
 import { getAllAssetsOrg } from '@/services/managementService'
 import { DataTableAssetOrg } from '@/components/custom/assets-org/data-table'
+import { Loading } from '@/components/custom/loading'
 
 export function AssetsOrg() {
   const [data, setData] = useState<AssetOrgs[]>([])
@@ -57,13 +58,13 @@ export function AssetsOrg() {
   }, [signal, toast])
 
   if (loading) {
-    return <div>Loading...</div>
+    return <Loading />
   }
 
   return (
-    <div className="p-10">
+    <div className="p-10 bg-white dark:bg-transparent h-full">
       <div className="mb-10 flex items-center justify-between">
-        <h1 className="text-2xl text-white font-medium">Assets</h1>
+        <h1 className="text-2xl text-black dark:text-white font-medium">Assets</h1>
         <SwitchTheme />
       </div>
 

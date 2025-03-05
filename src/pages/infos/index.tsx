@@ -123,18 +123,18 @@ export function Infos() {
   }, [])
 
   return (
-    <div className="p-10">
+    <div className="p-10 bg-white dark:bg-transparent h-full">
       <div className="mb-10 flex items-center justify-between">
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink className="text-2xl text-white font-medium" href="/wallets">
+              <BreadcrumbLink className="text-2xl text-black dark:text-white font-medium" href="/wallets">
                 Wallets
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage className="text-2xl text-white font-medium">Information clients</BreadcrumbPage>
+              <BreadcrumbPage className="text-2xl text-black dark:text-white font-medium">Information clients</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
@@ -142,9 +142,9 @@ export function Infos() {
       </div>
 
       <div className="flex items-center justify-between mb-10">
-        <Input className="bg-[#171717] w-5/6 border-0 text-white focus:ring-0" type="text" placeholder="Search for ..." />
+        <Input className="bg-gray-100 dark:bg-[#171717] w-5/6 border-0 dark:text-white focus:ring-0 border" type="text" placeholder="Search for ..." />
         <div className="">
-          <Button className="bg-white text-black flex gap-2 hover:bg-gray-400 p-5">
+          <Button className="bg-gray-200 dark:bg-white text-black flex gap-2 hover:bg-gray-400 p-5">
             {' '}
             <img src={exportIcon} alt="" /> Export
           </Button>
@@ -155,9 +155,9 @@ export function Infos() {
         <div className="flex flex-col w-3/5">
           <div className="flex justify-between mb-5">
             <div className="flex gap-5">
-              <h1 className="text-3xl text-white">{walletI.user.name || '-'}</h1>
+              <h1 className="text-3xl text-black dark:text-white">{walletI.user.name || '-'}</h1>
               {walletInfos.lastContactAt == null || (timeZone && walletI.monthCloseDate && new Date(timeZone) > new Date(walletI.monthCloseDate)) ? (
-                <Badge className="bg-red-500 h-10 text-white flex gap-2 hover:bg-red-800 hover:text-white">
+                <Badge className="bg-red-500 h-10 text-white flex gap-2 hover:bg-red-500">
                   <Check className="w-5" /> Not registered
                 </Badge>
               ) : (
@@ -168,11 +168,11 @@ export function Infos() {
             </div>
 
             <div className="flex gap-5">
-              <Button className="bg-[#131313] text-[#F2BE38] flex gap-3 hover:bg-yellow-500 hover:text-black" onClick={openModal}>
+              <Button className="bg-gray-200 text-black bg-yellow-500 hover:bg-yellow-400 dark:hover:bg-yellow-500 dark:bg-[#131313] dark:text-[#F2BE38] flex gap-3 dark:hover:text-black" onClick={openModal}>
                 {' '}
                 <CircleAlert className="w-5" /> Information
               </Button>
-              <Button className="bg-[#131313] text-[#F2BE38] flex gap-3 hover:bg-yellow-500 hover:text-black" onClick={openModalContact}>
+              <Button className="bg-gray-200 text-black bg-yellow-500 hover:bg-yellow-400 dark:hover:bg-yellow-500 dark:bg-[#131313] dark:text-[#F2BE38] flex gap-3 dark:hover:text-black" onClick={openModalContact}>
                 {' '}
                 <PhoneCall className="w-5" />
                 Contact confirm
@@ -201,14 +201,14 @@ export function Infos() {
             </div>
           </div>
 
-          <div className="w-full bg-[#171717] p-10 rounded-xl border border-[#272727]">
+          <div className="w-full bg-lightComponent dark:bg-[#171717] p-10 rounded-xl border dark:border-[#272727]">
             <div className="flex justify-between gap-2 text-[#959CB6] text-xl mb-5">
               <div className="flex items-center gap-5">
-                <div className="bg-[#131313] border border-[#221D11] rounded-full p-2">
+                <div className="bg-transparent rounded-full p-2">
                   <img className="w-6" src={responsibleIcon} alt="" />
                 </div>
 
-                <p className="text-white">Wallet informations</p>
+                <p className="text-black dark:text-white">Wallet informations</p>
               </div>
 
               <Badge className="bg-[#F2BE38] text-black flex gap-2 hover:bg-[#F2BE38] hover:text-black p-2 pl-5 pr-5">
@@ -220,73 +220,73 @@ export function Infos() {
             <div className="w-full p-2 grid grid-cols-2 gap-5 mb-5">
               <div className="flex gap-3">
                 <Calendar className="text-[#F2BE38]" />
-                <p className="text-white">
+                <p className="text-black dark:text-white">
                   Initial amount invested: {walletI.investedAmount !== undefined ? Number(walletI.investedAmount).toFixed(2) : '-'}
                 </p>
               </div>
               <div className="flex gap-3">
                 <Calendar className="text-[#F2BE38]" />
-                <p className="text-white">
+                <p className="text-black dark:text-white">
                   Current value referring to the benchmark:{' '}
                   {walletI.currentValueBenchmark !== undefined ? Number(walletI.currentValueBenchmark).toFixed(2) : '-'}
                 </p>
               </div>
               <div className="flex gap-3">
                 <Calendar className="text-[#F2BE38]" />
-                <p className="text-white">
+                <p className="text-black dark:text-white">
                   Current value:{' '}
                   {walletI.currentAmount !== null && walletI.currentAmount !== undefined ? Number(walletI.currentAmount).toFixed(2) : '-'}
                 </p>
               </div>
               <div className="flex gap-3">
                 <Calendar className="text-[#F2BE38]" />
-                <p className="text-white">
+                <p className="text-black dark:text-white">
                   Next rebalancing date: {walletI.nextBalance !== null ? formatDate(walletI.nextBalance?.toString()) : '-'}
                 </p>
               </div>
               <div className="flex gap-3">
                 <Calendar className="text-[#F2BE38]" />
-                <p className="text-white">
+                <p className="text-black dark:text-white">
                   Performance fee: {walletI.performanceFee !== undefined ? Number(walletI.performanceFee).toFixed(2) : '-'}
                 </p>
               </div>
               <div className="flex gap-3">
                 <Calendar className="text-[#F2BE38]" />
-                <p className="text-white">
+                <p className="text-black dark:text-white">
                   Last rebalance date: {walletI.lastRebalance !== null ? formatDate(walletI.lastRebalance?.toString()) : '-'}
                 </p>
               </div>
               <div className="flex gap-3">
                 <Calendar className="text-[#F2BE38]" />
-                <p className="text-white">Benchmark: {walletI.benchmark.name || '-'}</p>
+                <p className="text-black dark:text-white">Benchmark: {walletI.benchmark.name || '-'}</p>
               </div>
               <div className="flex gap-3">
                 <Calendar className="text-[#F2BE38]" />
-                <p className="text-white">
+                <p className="text-black dark:text-white">
                   Next monthly closing date: {walletI.monthCloseDate !== null ? formatDate(walletI.monthCloseDate?.toString()) : '-'}
                 </p>
               </div>
             </div>
 
-            <div className="bg-[#272727] w-full h-1 rounded-md mb-5"></div>
+            <div className="bg-gray-300 dark:bg-[#393939] w-full h-0.5 rounded-md mb-5"></div>
 
             <div className="w-full p-2 grid grid-cols-2 gap-5">
               <div className="flex gap-3">
                 <Calendar className="text-[#F2BE38]" />
-                <p className="text-white">Exchange: {walletI.exchange.name || '-'}</p>
+                <p className="text-black dark:text-white">Exchange: {walletI.exchange.name || '-'}</p>
               </div>
               <div className="flex gap-3">
                 <Calendar className="text-[#F2BE38]" />
-                <p className="text-white">Initial fee: {walletI.initialFee !== undefined ? Number(walletI.initialFee).toFixed(2) : '-'}</p>
+                <p className="text-black dark:text-white">Initial fee: {walletI.initialFee !== undefined ? Number(walletI.initialFee).toFixed(2) : '-'}</p>
               </div>
               <div className="flex gap-3">
-                <Button className="bg-[#F2BE38] text-black hover:bg-yellow-400/35" onClick={openModalExchange}>
+                <Button className="bg-[#F2BE38] text-black hover:bg-yellow-400" onClick={openModalExchange}>
                   Account exchange information
                 </Button>
               </div>
               <div className="flex gap-3">
                 <Calendar className="text-[#F2BE38]" />
-                <p className="text-white">Initial fee was paid or not (checker): {walletI.initialFeePaid ? '✅' : '❌'}</p>
+                <p className="text-black dark:text-white">Initial fee was paid or not (checker): {walletI.initialFeePaid ? '✅' : '❌'}</p>
               </div>
             </div>
           </div>
@@ -294,41 +294,41 @@ export function Infos() {
 
         <div className="flex flex-col w-2/5">
           <div className="flex justify-end gap-7 mb-5">
-            <div className="bg-[#171717] flex flex-col items-center p-10 rounded-lg">
+            <div className="bg-lightComponent border dark:bg-[#171717] flex flex-col items-center p-10 rounded-lg">
               <Calendar className="text-[#F2BE38]" />
-              <p className="text-white">Start Date</p>
+              <p className="text-black dark:text-white">Start Date</p>
               <p className="text-[#959CB6]">{walletI.startDate !== null ? formatDate(walletI.startDate?.toString()) : '-'}</p>
             </div>
-            <div className="bg-[#171717] flex flex-col items-center p-10 rounded-lg">
+            <div className="bg-lightComponent border dark:bg-[#171717] flex flex-col items-center p-10 rounded-lg">
               <Calendar className="text-[#F2BE38]" />
-              <p className="text-white">Close Date</p>
+              <p className="text-black dark:text-white">Close Date</p>
               <p className="text-[#959CB6]">{walletI.closeDate !== null ? formatDate(walletI.closeDate?.toString()) : '-'}</p>
             </div>
           </div>
 
-          <div className="w-full bg-[#171717] p-10 rounded-xl border border-[#272727] h-full">
+          <div className="w-full bg-lightComponent dark:bg-[#171717] p-10 rounded-xl border dark:border-[#272727] h-full">
             <div className="flex items-center justify-between mb-16">
-              <h1 className="text-white text-xl">Alerts</h1>
+              <h1 className="text-black dark:text-white text-xl">Alerts</h1>
               <div className="flex gap-5">
-                <Button onClick={() => navigate(`/wallet/${walletUuid}/assets`)} className="bg-yellow-600 flex gap-3 pt-5 pb-5">
+                <Button onClick={() => navigate(`/wallet/${walletUuid}/assets`)} className="hover:bg-yellow-500 text-white bg-yellow-600 flex gap-3 pt-5 pb-5">
                   <Wallet />
                   <p>Wallet</p>
                 </Button>
 
-                <Button onClick={() => navigate(`/wallet/${walletUuid}/graphs`)} className="bg-yellow-600 flex gap-3 pt-5 pb-5">
+                <Button onClick={() => navigate(`/wallet/${walletUuid}/graphs`)} className="hover:bg-yellow-500 text-white bg-yellow-600 flex gap-3 pt-5 pb-5">
                   <BarChartBigIcon />
                   <p>Graphics</p>
                 </Button>
               </div>
             </div>
             <div className="flex flex-col gap-5">
-              <div className="bg-[#EF4E3D] w-full p-5 rounded-md">
+              <div className="text-white bg-[#EF4E3D] w-full p-5 rounded-md">
                 <h2>Alert when it happens X</h2>
               </div>
-              <div className="bg-[#F1BA00] w-full p-5 rounded-md">
+              <div className="text-white bg-[#F1BA00] w-full p-5 rounded-md">
                 <h2>Alert when it happens Y</h2>
               </div>
-              <div className="bg-[#10A45C] w-full p-5 rounded-md">
+              <div className="text-white bg-[#10A45C] w-full p-5 rounded-md">
                 <h2>Alert when it happens Z</h2>
               </div>
             </div>
