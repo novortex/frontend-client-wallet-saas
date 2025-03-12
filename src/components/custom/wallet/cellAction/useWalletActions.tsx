@@ -1,22 +1,39 @@
 import { useParams } from 'react-router-dom'
 import { useToast } from '@/components/ui/use-toast'
 import { useSignalStore } from '@/store/signalEffect'
-import { deleteAssetWallet, updateAssetWalletInformations } from '@/services/wallet/walletAssetService'
+import {
+  deleteAssetWallet,
+  updateAssetWalletInformations,
+} from '@/services/wallet/walletAssetService'
 import { ClientActive } from '../columns'
 
-export function useWalletActions(rowInfos: ClientActive, fetchData: () => void) {
+export function useWalletActions(
+  rowInfos: ClientActive,
+  fetchData: () => void,
+) {
   const { walletUuid } = useParams()
   const { toast } = useToast()
-  const [setSignal, signal] = useSignalStore((state) => [state.setSignal, state.signal])
+  const [setSignal, signal] = useSignalStore((state) => [
+    state.setSignal,
+    state.signal,
+  ])
 
-  const handleUpdateInformationAssetWallet = async (quantity: number, idealAllocation: number) => {
+  const handleUpdateInformationAssetWallet = async (
+    quantity: number,
+    idealAllocation: number,
+  ) => {
     toast({
       className: 'bg-yellow-500 border-0',
       title: 'Processing add Asset in organization',
       description: 'Demo Vault !!',
     })
 
-    const result = await updateAssetWalletInformations(walletUuid as string, rowInfos.id, quantity, idealAllocation)
+    const result = await updateAssetWalletInformations(
+      walletUuid as string,
+      rowInfos.id,
+      quantity,
+      idealAllocation,
+    )
 
     if (result === false) {
       return toast({

@@ -8,7 +8,9 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [token, setToken] = React.useState<string | null>(null)
   const { getToken } = useAuthToken()
 
@@ -21,7 +23,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     updateToken()
   }, [updateToken])
 
-  return <AuthContext.Provider value={{ token, updateToken }}>{children}</AuthContext.Provider>
+  return (
+    <AuthContext.Provider value={{ token, updateToken }}>
+      {children}
+    </AuthContext.Provider>
+  )
 }
 
 export const useAuth = () => {

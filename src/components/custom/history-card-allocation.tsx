@@ -1,4 +1,10 @@
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from '@/components/ui/card'
 
 interface HistoryCardAllocationProps {
   assetIcon: string
@@ -6,21 +12,33 @@ interface HistoryCardAllocationProps {
   tagState: boolean
 }
 
-export default function HistoryCardAllocation({ assetIcon, allocation, tagState }: HistoryCardAllocationProps) {
-  const tagStyles = tagState ? 'text-[#74F238] bg-[#74F238]' : 'text-[#F2BE38] bg-[#F2BE38]'
+export default function HistoryCardAllocation({
+  assetIcon,
+  allocation,
+  tagState,
+}: HistoryCardAllocationProps) {
+  const tagStyles = tagState
+    ? 'text-[#74F238] bg-[#74F238]'
+    : 'text-[#F2BE38] bg-[#F2BE38]'
 
   const tagText = tagState ? 'New' : 'Old'
 
   return (
-    <Card className="w-2/5 h-full min-h-[220px] rounded-[12px] border border-[#272727] bg-[#131313] flex flex-col">
+    <Card className="flex h-full min-h-[220px] w-2/5 flex-col rounded-[12px] border bg-lightComponent dark:border-[#272727] dark:bg-[#131313]">
       <CardHeader className="flex flex-row">
-        <div className="w-1/3 h-full"></div>
-        <CardDescription className="w-1/3 h-full flex justify-center items-center text-[#fff] text-lg">Allocation</CardDescription>
-        <div className="w-1/3 h-full flex justify-end">
-          <p className={`w-1/2 flex items-center justify-center bg-opacity-30 rounded-[40px] ${tagStyles}`}>{tagText}</p>
+        <div className="h-full w-1/3"></div>
+        <CardDescription className="flex h-full w-1/3 items-center justify-center text-lg dark:text-[#fff]">
+          Allocation
+        </CardDescription>
+        <div className="flex h-full w-1/3 justify-end">
+          <p
+            className={`flex w-1/2 items-center justify-center rounded-[40px] bg-opacity-30 ${tagStyles}`}
+          >
+            {tagText}
+          </p>
         </div>
       </CardHeader>
-      <CardContent className="flex justify-center items-center text-[#fff] gap-3">
+      <CardContent className="flex items-center justify-center gap-3 dark:text-[#fff]">
         <img src={assetIcon} alt="" className="h-2/3" />
         <CardTitle className="text-4xl">{allocation}%</CardTitle>
       </CardContent>

@@ -54,4 +54,6 @@ export type UpdateCurrentAmountOfWalletResponse = {
   }
 }
 
-export type AddAssetFunctionResponse = AddAssetResponse & SaveHistoryResponse & UpdateCurrentAmountOfWalletResponse
+export type AddAssetFunctionResponse = AddAssetResponse &
+  SaveHistoryResponse &
+  UpdateCurrentAmountOfWalletResponse

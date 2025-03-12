@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import AddNewAssetModal from '../../../components/custom/assets-org/add-new-asset-modal'
@@ -5,100 +6,115 @@ import { columnsAssetOrg } from '../../../components/custom/assets-org/columns'
 import { DataTableAssetOrg } from '../../../components/custom/assets-org/data-table'
 import { ColumnDef } from '@tanstack/react-table'
 
-describe('AddNewAssetModal Component', () => {
-  it('renders modal with correct fields', () => {
-    render(<AddNewAssetModal isOpen={true} onClose={() => {}} />)
+type AssetOrg = {
+  id: string
+  asset: { urlImage: string; name: string }
+  price: number
+  appearances: string
+  porcentOfApp: string
+  quantSLowRisk: string
+  quantLowRisk: string
+  quantStandard: string
+  averagePrice?: number
+}
 
-    expect(screen.getByText(/new asset/i)).toBeInTheDocument()
-    expect(screen.getByPlaceholderText(/idcmc/i)).toBeInTheDocument()
-    expect(screen.getByText(/check the desired asset id/i)).toBeInTheDocument()
-  })
+const expectedColumns = columnsAssetOrg as ColumnDef<AssetOrg, unknown>[]
 
-  it('allows user to input CoinMarketCap ID and submit', async () => {
-    const mockOnClose = jest.fn()
-    render(<AddNewAssetModal isOpen={true} onClose={mockOnClose} />)
+describe('Asset Organization', () => {
+  describe('AddNewAssetModal Component', () => {
+    it('renders modal with correct fields', () => {
+      render(<AddNewAssetModal isOpen={true} onClose={() => {}} />)
 
-    const input = screen.getByPlaceholderText(/idcmc/i)
-    fireEvent.change(input, { target: { value: '1' } })
+      expect(screen.getByText(/new asset/i)).toBeInTheDocument()
+      expect(screen.getByPlaceholderText(/idcmc/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(/check the desired asset id/i),
+      ).toBeInTheDocument()
+    })
 
-    const addButton = screen.getByText(/add asset/i)
-    fireEvent.click(addButton)
+    it('allows user to input CoinMarketCap ID and submit', async () => {
+      const mockOnClose = jest.fn()
+      render(<AddNewAssetModal isOpen={true} onClose={mockOnClose} />)
 
-    await waitFor(() => {
-      expect(mockOnClose).toHaveBeenCalledTimes(1)
+      const input = screen.getByPlaceholderText(/idcmc/i)
+      fireEvent.change(input, { target: { value: '1' } })
+
+      const addButton = screen.getByText(/add asset/i)
+      fireEvent.click(addButton)
+
+      await waitFor(() => {
+        expect(mockOnClose).toHaveBeenCalledTimes(1)
+      })
     })
   })
-})
 
-describe('DataTableAssetOrg Component', () => {
-  const mockData = [
-    {
-      id: '1',
-      asset: { urlImage: 'bitcoin.png', name: 'Bitcoin' },
-      price: 40000,
-      appearances: '5 wallets',
-      porcentOfApp: '50%',
-      quantSLowRisk: '2 wallets',
-      quantLowRisk: '1 wallet',
-      quantStandard: '2 wallets',
-    },
-  ]
+  describe('DataTableAssetOrg Component', () => {
+    const mockData: AssetOrg[] = [
+      {
+        id: '1',
+        asset: { urlImage: 'bitcoin.png', name: 'Bitcoin' },
+        price: 40000,
+        appearances: '5 wallets',
+        porcentOfApp: '50%',
+        quantSLowRisk: '2 wallets',
+        quantLowRisk: '1 wallet',
+        quantStandard: '2 wallets',
+        averagePrice: 30000,
+      },
+    ]
 
-  it('renders table with asset data', async () => {
-    render(<DataTableAssetOrg data={mockData} columns={columnsAssetOrg} />)
+    it('renders table with asset data', async () => {
+      render(<DataTableAssetOrg data={mockData} columns={expectedColumns} />)
 
-    waitFor(() => {
-      expect(screen.getByText(/bitcoin/i)).toBeInTheDocument()
-      expect(screen.getByText(/u\$ 40000.00/i)).toBeInTheDocument()
-      expect(screen.getByText(/5 wallets/i)).toBeInTheDocument()
-      expect(screen.getByText(/50/i)).toBeInTheDocument()
+      await waitFor(() => {
+        expect(screen.getByText(/bitcoin/i)).toBeInTheDocument()
+        expect(screen.getByText(/u\$ 40000.00/i)).toBeInTheDocument()
+        expect(screen.getByText(/5 wallets/i)).toBeInTheDocument()
+        expect(screen.getByText(/50/i)).toBeInTheDocument()
+      })
     })
   })
-})
 
-// Testes para a definição das colunas (columns.tsx)
-describe('DataTableAssetOrg Column Definition', () => {
-  const columns: ColumnDef<any, any>[] = [
-    { accessorKey: 'asset', header: 'Asset' },
-    { accessorKey: 'price', header: 'Price' },
-    { accessorKey: 'appearances', header: 'Appearances' },
-  ]
+  describe('DataTableAssetOrg Column Definition', () => {
+    const columns: ColumnDef<any, any>[] = [
+      { accessorKey: 'asset', header: 'Asset' },
+      { accessorKey: 'price', header: 'Price' },
+      { accessorKey: 'appearances', header: 'Appearances' },
+    ]
 
-  it('should define all necessary columns', () => {
-    expect(columns).toBeDefined()
-    expect(columns.length).toBeGreaterThan(0)
+    it('should define all necessary columns', () => {
+      expect(columns).toBeDefined()
+      expect(columns.length).toBeGreaterThan(0)
 
-    const columnTitles = columns.map((col) => col.header)
-    expect(columnTitles).toContain('Asset')
-    expect(columnTitles).toContain('Price')
-    expect(columnTitles).toContain('Appearances')
+      const columnTitles = columns.map((col) => col.header)
+      expect(columnTitles).toContain('Asset')
+      expect(columnTitles).toContain('Price')
+      expect(columnTitles).toContain('Appearances')
+    })
   })
-})
 
-// Testes para DataTableAssetOrg
-const mockData = [
-  {
-    id: '1',
-    asset: { urlImage: '/assets/bitcoin.png', name: 'Bitcoin' },
-    price: 40000,
-    appearances: '5 Wallets',
-    porcentOfApp: '50%',
-    quantSLowRisk: '2 Wallets',
-    quantLowRisk: '1 Wallet',
-    quantStandard: '2 Wallets',
-  },
-]
+  describe('DataTableAssetOrg Component', () => {
+    const mockData: AssetOrg[] = [
+      {
+        id: '1',
+        asset: { urlImage: '/assets/bitcoin.png', name: 'Bitcoin' },
+        price: 40000,
+        appearances: '5 Wallets',
+        porcentOfApp: '50%',
+        quantSLowRisk: '2 Wallets',
+        quantLowRisk: '1 Wallet',
+        quantStandard: '2 Wallets',
+      },
+    ]
 
-describe('DataTableAssetOrg Component', () => {
-  it('displays column headers', async () => {
-    render(<DataTableAssetOrg data={mockData} columns={columnsAssetOrg} />)
+    it('displays column headers', async () => {
+      render(<DataTableAssetOrg data={mockData} columns={expectedColumns} />)
 
-    waitFor(() => screen.findByText(/Asset/i))
-    waitFor(() => screen.findByText(/Price/i))
-    waitFor(() => screen.findByText(/Appearances/i))
-
-    waitFor(() => expect(screen.getByText(/Asset/i)).toBeInTheDocument())
-    waitFor(() => expect(screen.getByText(/Price/i)).toBeInTheDocument())
-    waitFor(() => expect(screen.getByText(/Appearances/i)).toBeInTheDocument())
+      await waitFor(() => {
+        expect(screen.getByText(/Asset/i)).toBeInTheDocument()
+        expect(screen.getByText(/Price/i)).toBeInTheDocument()
+        expect(screen.getByText(/Appearances/i)).toBeInTheDocument()
+      })
+    })
   })
 })

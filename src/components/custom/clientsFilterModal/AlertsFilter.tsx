@@ -26,38 +26,48 @@ export function AlertsFilter({ setFilterDelayed }: FilterProps) {
   }, [filters, setFilterDelayed])
 
   return (
-    <div className="w-full mb-4">
-      <div className="font-bold text-[#959CB6] mb-2">Number of alerts</div>
-      <div className="grid grid-cols-2 gap-4 text-[#fff]">
+    <div className="mb-4 w-full">
+      <div className="mb-2 font-bold text-black dark:text-[#959CB6]">
+        Number of alerts
+      </div>
+      <div className="text:black grid grid-cols-2 gap-4 dark:text-[#fff]">
         <div className="flex items-center gap-2">
           <Checkbox
             checked={filters.alerts1to2}
-            onCheckedChange={() => handleFilterChange('alerts1to2', !filters.alerts1to2)}
-            className="border-[#fff]"
+            onCheckedChange={() =>
+              handleFilterChange('alerts1to2', !filters.alerts1to2)
+            }
+            className="border-black dark:border-[#fff]"
           />
           <label>1-2 alerts</label>
         </div>
         <div className="flex items-center gap-2">
           <Checkbox
             checked={filters.alerts2to5}
-            onCheckedChange={() => handleFilterChange('alerts2to5', !filters.alerts2to5)}
-            className="border-[#fff]"
+            onCheckedChange={() =>
+              handleFilterChange('alerts2to5', !filters.alerts2to5)
+            }
+            className="border-black dark:border-[#fff]"
           />
           <label>2-5 alerts</label>
         </div>
         <div className="flex items-center gap-2">
           <Checkbox
             checked={filters.alerts6to8}
-            onCheckedChange={() => handleFilterChange('alerts6to8', !filters.alerts6to8)}
-            className="border-[#fff]"
+            onCheckedChange={() =>
+              handleFilterChange('alerts6to8', !filters.alerts6to8)
+            }
+            className="border-black dark:border-[#fff]"
           />
           <label>6-8 alerts</label>
         </div>
         <div className="flex items-center gap-2">
           <Checkbox
             checked={filters.alerts9plus}
-            onCheckedChange={() => handleFilterChange('alerts9plus', !filters.alerts9plus)}
-            className="border-[#fff]"
+            onCheckedChange={() =>
+              handleFilterChange('alerts9plus', !filters.alerts9plus)
+            }
+            className="border-black dark:border-[#fff]"
           />
           <label>9+ alerts</label>
         </div>

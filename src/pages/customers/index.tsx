@@ -1,24 +1,36 @@
 import { useEffect, useState } from 'react'
 import { SwitchTheme } from '@/components/custom/switch-theme'
-import { getAllBenchmark, getAllCustomersOrganization, getAllExchange, getAllManagersOnOrganization } from '@/services/managementService'
+import {
+  getAllBenchmark,
+  getAllCustomersOrganization,
+  getAllExchange,
+  getAllManagersOnOrganization,
+} from '@/services/managementService'
 import { useSignalStore } from '@/store/signalEffect'
 import { useToast } from '@/components/ui/use-toast'
 import { DataTableCustomers } from '@/components/custom/customers/data-table'
-
 import { useManagerOrganization } from '@/store/managers_benckmark_exchanges'
-import { columnsCustomerOrg, CustomersOrganization } from '@/components/custom/customers/columns'
+import {
+  columnsCustomerOrg,
+  CustomersOrganization,
+} from '@/components/custom/customers/columns'
+import { Loading } from '@/components/custom/loading'
 
 export function Customers() {
   const [data, setData] = useState<CustomersOrganization[]>([])
   const [loading, setLoading] = useState(true)
   const [signal] = useSignalStore((state) => [state.signal])
-  const [setManager, setBenchs, setExchanges] = useManagerOrganization((state) => [state.setManagers, state.setBenchs, state.setExchanges])
+  const [setManager, setBenchs, setExchanges] = useManagerOrganization(
+    (state) => [state.setManagers, state.setBenchs, state.setExchanges],
+  )
 
   const { toast } = useToast()
 
   useEffect(() => {
     // TODO: separe this script this file :)
-    async function getData(setDate: React.Dispatch<React.SetStateAction<CustomersOrganization[]>>) {
+    async function getData(
+      setDate: React.Dispatch<React.SetStateAction<CustomersOrganization[]>>,
+    ) {
       try {
         const result = await getAllCustomersOrganization()
 
@@ -77,13 +89,13 @@ export function Customers() {
   }, [signal, toast, setManager, setBenchs, setExchanges])
 
   if (loading) {
-    return <div>Loading...</div>
+    return <Loading />
   }
 
   return (
-    <div className="p-10">
+    <div className="h-full bg-white p-10 dark:bg-transparent">
       <div className="mb-10 flex items-center justify-between">
-        <h1 className="text-2xl text-white font-medium">Customers</h1>
+        <h1 className="text-2xl font-medium dark:text-white">Customers</h1>
         <SwitchTheme />
       </div>
 

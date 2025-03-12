@@ -22,18 +22,26 @@ export type ClientActive = {
   profitLoss: number
 }
 
-export const createColumns = (fetchData: () => void): ColumnDef<ClientActive>[] => [
+export const createColumns = (
+  fetchData: () => void,
+): ColumnDef<ClientActive>[] => [
   {
     accessorKey: 'asset',
     header: () => <div className="text-center">Asset</div>,
     cell: ({ row }) => (
-      <div className="flex items-center justify-center">
-        <img src={row.original.asset.urlImage} alt={row.original.asset.name} className="w-6 h-6 mr-2" />
+      <div className="justify-left ml-6 flex items-center">
+        <img
+          src={row.original.asset.urlImage}
+          alt={row.original.asset.name}
+          className="mr-2 h-6 w-6"
+        />
         <span>{row.original.asset.name}</span>
       </div>
     ),
     filterFn: (row, _columnId, filterValue) => {
-      return row.original.asset.name.toLowerCase().includes(filterValue.toLowerCase())
+      return row.original.asset.name
+        .toLowerCase()
+        .includes(filterValue.toLowerCase())
     },
   },
   {
@@ -41,7 +49,11 @@ export const createColumns = (fetchData: () => void): ColumnDef<ClientActive>[] 
     header: () => <div className="text-center">Invested Amount</div>,
     cell: ({ row }) => {
       const value = Number(row.original.currentAmount)
-      return <div className="text-center">{!isNaN(value) ? value.toFixed(2) : 'N/A'}</div>
+      return (
+        <div className="text-center">
+          {!isNaN(value) ? value.toFixed(2) : 'N/A'}
+        </div>
+      )
     },
   },
   {
@@ -49,7 +61,11 @@ export const createColumns = (fetchData: () => void): ColumnDef<ClientActive>[] 
     header: () => <div className="text-center">Quantity</div>,
     cell: ({ row }) => {
       const value = Number(row.original.assetQuantity)
-      return <div className="text-center">{!isNaN(value) ? value.toFixed(6) : 'N/A'}</div>
+      return (
+        <div className="text-center">
+          {!isNaN(value) ? value.toFixed(6) : 'N/A'}
+        </div>
+      )
     },
   },
   {
@@ -57,24 +73,38 @@ export const createColumns = (fetchData: () => void): ColumnDef<ClientActive>[] 
     header: () => <div className="text-center">Price</div>,
     cell: ({ row }) => {
       const value = Number(row.original.price)
-      return <div className="text-center">{!isNaN(value) ? value.toFixed(2) : 'N/A'}</div>
+      return (
+        <div className="text-center">
+          {!isNaN(value) ? value.toFixed(2) : 'N/A'}
+        </div>
+      )
     },
   },
   {
     accessorKey: 'allocation',
-    header: () => <div className="text-center">Current Allocation</div>,
+    header: () => <div className="text-center">Allocation</div>,
     cell: ({ row }) => {
       const value = Number(row.original.allocation)
-      return <div className="text-center">{!isNaN(value) ? `${value.toFixed(2)}%` : 'N/A'}</div>
+      return (
+        <div className="text-center">
+          {!isNaN(value) ? `${value.toFixed(2)}%` : 'N/A'}
+        </div>
+      )
     },
   },
   {
     id: 'idealAllocation',
     accessorKey: 'idealAllocation',
     header: ({ column, table }) => {
-      const total = table.getRowModel().rows.reduce((sum, row) => sum + row.original.idealAllocation, 0)
+      const total = table
+        .getRowModel()
+        .rows.reduce((sum, row) => sum + row.original.idealAllocation, 0)
       return (
-        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} className="pl-0">
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          className="pl-0"
+        >
           Ideal Allocation ({total.toFixed(2)}%)
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
@@ -82,7 +112,11 @@ export const createColumns = (fetchData: () => void): ColumnDef<ClientActive>[] 
     },
     cell: ({ row }) => {
       const value = Number(row.original.idealAllocation)
-      return <div className="text-center">{!isNaN(value) ? `${value.toFixed(2)}%` : 'N/A'}</div>
+      return (
+        <div className="text-center">
+          {!isNaN(value) ? `${value.toFixed(2)}%` : 'N/A'}
+        </div>
+      )
     },
   },
   {
@@ -90,7 +124,11 @@ export const createColumns = (fetchData: () => void): ColumnDef<ClientActive>[] 
     header: () => <div className="text-center">Ideal Amount</div>,
     cell: ({ row }) => {
       const value = Number(row.original.idealAmount)
-      return <div className="text-center">{!isNaN(value) ? value.toFixed(2) : 'N/A'}</div>
+      return (
+        <div className="text-center">
+          {!isNaN(value) ? value.toFixed(2) : 'N/A'}
+        </div>
+      )
     },
   },
   {
@@ -98,9 +136,21 @@ export const createColumns = (fetchData: () => void): ColumnDef<ClientActive>[] 
     header: () => <div className="text-center">Buy/Sell</div>,
     cell: ({ row }) => {
       const value = Number(row.original.buyOrSell)
+      const formattedValue =
+        value > 0
+          ? `+${Number(row.original.buyOrSell).toFixed(2)}`
+          : Number(row.original.buyOrSell).toFixed(2)
       const textColor =
-        isNaN(value) || value === 0 ? 'text-gray-600' : value > 0 ? 'text-green-400' : 'text-red-500'
-      return <div className={`text-center ${textColor}`}>{!isNaN(value) ? value.toFixed(2) : 'N/A'}</div>
+        isNaN(value) || value === 0
+          ? 'text-gray-400'
+          : value > 0
+            ? 'text-green-400'
+            : 'text-red-500'
+      return (
+        <div className={`text-center ${textColor}`}>
+          {!isNaN(value) ? formattedValue : 'N/A'}
+        </div>
+      )
     },
   },
   {
@@ -108,9 +158,12 @@ export const createColumns = (fetchData: () => void): ColumnDef<ClientActive>[] 
     header: () => <div className="text-center">Average Price</div>,
     cell: ({ row }) => {
       const value = Number(row.original.averagePrice)
-      const textColor =
-        isNaN(value) ? 'text-gray-600' : value > 0 ? '' : ''
-      return <div className={`text-center ${textColor}`}>{!isNaN(value) ? value.toFixed(2) : 'N/A'}</div>
+      const textColor = isNaN(value) ? 'text-gray-600' : value > 0 ? '' : ''
+      return (
+        <div className={`text-center ${textColor}`}>
+          {!isNaN(value) ? value.toFixed(2) : 'N/A'}
+        </div>
+      )
     },
   },
   {
@@ -118,13 +171,27 @@ export const createColumns = (fetchData: () => void): ColumnDef<ClientActive>[] 
     header: () => <div className="text-center">P/L</div>,
     cell: ({ row }) => {
       const value = Number(row.original.profitLoss)
+      const formattedValue =
+        value > 0
+          ? `+${Number(row.original.profitLoss).toFixed(2)}`
+          : Number(row.original.profitLoss).toFixed(2)
       const textColor =
-        isNaN(value) || value === 0 ? 'text-gray-600' : value > 0 ? 'text-green-500' : 'text-red-500'
-      return <div className={`text-center ${textColor}`}>{!isNaN(value) ? value.toFixed(2) : 'N/A'}</div>
+        isNaN(value) || value === 0
+          ? 'text-gray-400'
+          : value > 0
+            ? 'text-green-400'
+            : 'text-red-500'
+      return (
+        <div className={`text-center ${textColor}`}>
+          {!isNaN(value) ? formattedValue : 'N/A'}
+        </div>
+      )
     },
   },
   {
     id: 'actions',
-    cell: ({ row }) => <CellActions rowInfos={row.original} fetchData={fetchData} />,
+    cell: ({ row }) => (
+      <CellActions rowInfos={row.original} fetchData={fetchData} />
+    ),
   },
 ]
