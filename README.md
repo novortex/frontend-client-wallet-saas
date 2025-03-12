@@ -3,22 +3,31 @@
 Esse front tem como objetivo ser o app para os clientes do software como todo, ou sejá, adm's, gestores e clientes.
 
 ## Pré-requisitos
-Para iniciar a aplicação, você precisa ter a versão 20.11 do Node.js instalada em sua máquina. Se você não tiver essa versão, recomendação do uso do NVM.
+Antes de iniciar, é necessário ter o Node.js na versão 18.19.11 instalado em sua máquina. Caso não tenha esta versão, recomendamos a utilização do NVM (Node Version Manager) para gerenciar e instalar a versão correta.
 
-## Comandos para Executar o React
-Após garantir que a versão correta do Node.js está instalada, siga os passos abaixo para rodar a aplicação React:
+## Configuração do Ambiente
+Primeiro, clone o repositório e navegue até o diretório do projeto. Antes de iniciar a aplicação, você precisará configurar as variáveis de ambiente:
 
-Instale as dependências do projeto:
+1. Copie o arquivo `.env.example` para um novo arquivo chamado `.env` e edite as variaveis.
+
+2. Instale as dependências do projeto:
 
 ```bash
 npm i
 ```
 
+3. Inicie o projeto
+   
 ```bash
 npm run dev
 ```
 
 Esses comandos irão instalar todas as dependências necessárias e iniciar o servidor de desenvolvimento, permitindo que você visualize e trabalhe na aplicação localmente.
+
+
+### Realizando o Login
+
+Para acessar o sistema, seu e-mail deve estar previamente cadastrado no banco de dados do ambiente que você está utilizando. Após a confirmação do seu e-mail, você poderá criar uma conta e logar no sistema através da autenticação do ambiente.
 
 
 ## Tecnologias Utilizadas
