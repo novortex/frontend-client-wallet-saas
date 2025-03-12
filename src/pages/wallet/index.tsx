@@ -14,7 +14,8 @@ import { createColumns } from '@/components/custom/wallet/columns'
 
 export function Wallet() {
   const { walletUuid } = useParams()
-  const { data, infosWallet, loading, fetchData, calculateRebalance } = useWallet(walletUuid as string)
+  const { data, infosWallet, loading, fetchData, calculateRebalance } =
+    useWallet(walletUuid as string)
   const {
     isOperationModalOpen,
     openOperationModal,
@@ -27,10 +28,15 @@ export function Wallet() {
   } = useWalletModals()
 
   if (loading) return <Loading />
-  if (!infosWallet) return <div className="dark:text-white flex justify-center items-center h-screen">Error: Wallet information is not available.</div>
+  if (!infosWallet)
+    return (
+      <div className="flex h-screen items-center justify-center dark:text-white">
+        Error: Wallet information is not available.
+      </div>
+    )
   else {
     return (
-      <div className="p-10 bg-white dark:bg-transparent h-full">
+      <div className="h-full bg-white p-10 dark:bg-transparent">
         <Header walletUuid={walletUuid} />
         <ActionButtons
           walletUuid={walletUuid}
@@ -57,14 +63,22 @@ export function Wallet() {
           openOrCloseModalRebalanced={openOrCloseModalRebalanced}
           fetchData={fetchData}
         /> */}
-        <OperationsModal isOpen={isOperationModalOpen} onClose={closeOperationModal} fetchData={fetchData} />
+        <OperationsModal
+          isOpen={isOperationModalOpen}
+          onClose={closeOperationModal}
+          fetchData={fetchData}
+        />
         <ConfirmCloseWalletModal
           isOpen={isCloseWalletModalOpen}
           onClose={closeCloseWalletModal}
           startWallet={infosWallet.isClosed}
           fetchData={fetchData}
         />
-        <ConfirmRebalanceModal isOpen={isModalRebalance} onClose={openOrCloseModalRebalanced} fetchData={fetchData} />
+        <ConfirmRebalanceModal
+          isOpen={isModalRebalance}
+          onClose={openOrCloseModalRebalanced}
+          fetchData={fetchData}
+        />
       </div>
     )
   }

@@ -7,14 +7,24 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { StepForwardIcon, HandCoins, Info, CalendarIcon } from 'lucide-react'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useEffect, useState } from 'react'
 import { useToast } from '@/components/ui/use-toast'
 import { useParams } from 'react-router-dom'
 import { useSignalStore } from '@/store/signalEffect'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 import { Calendar } from '@/components/ui/calendar'
 import { getAllFiatCurrencies } from '@/services/managementService'
 import { createDepositWithdrawal } from '@/services/wallet/walletAssetService'
@@ -25,7 +35,11 @@ interface OperationsModalProps {
   fetchData: () => Promise<void>
 }
 
-export default function OperationsModal({ isOpen, onClose, fetchData }: OperationsModalProps) {
+export default function OperationsModal({
+  isOpen,
+  onClose,
+  fetchData,
+}: OperationsModalProps) {
   const [operation, setOperation] = useState('')
   const [amount, setAmount] = useState('')
   const [currency, setCurrency] = useState('')
@@ -34,7 +48,10 @@ export default function OperationsModal({ isOpen, onClose, fetchData }: Operatio
   const [currencyError, setCurrencyError] = useState('')
   const [dateError, setDateError] = useState('')
   const [fiatCurrencies, setFiatCurrencies] = useState<string[]>([])
-  const [signal, setSignal] = useSignalStore((state) => [state.signal, state.setSignal])
+  const [signal, setSignal] = useSignalStore((state) => [
+    state.signal,
+    state.setSignal,
+  ])
   const [date, setDate] = useState<Date | null>(null)
   const { walletUuid } = useParams()
   const { toast } = useToast()
@@ -68,7 +85,9 @@ export default function OperationsModal({ isOpen, onClose, fetchData }: Operatio
   const validateAmount = (amount: string) => {
     const numberPattern = /^\d+(\.\d{1,2})?$/
     if (!numberPattern.test(amount)) {
-      setAmountError('Amount must be a positive number and can only contain numbers and points, with up to two decimal places (e.g., 199.99).')
+      setAmountError(
+        'Amount must be a positive number and can only contain numbers and points, with up to two decimal places (e.g., 199.99).',
+      )
       return false
     }
     if (parseFloat(amount) <= 0) {
@@ -117,7 +136,13 @@ export default function OperationsModal({ isOpen, onClose, fetchData }: Operatio
         description: `Operation: ${operation}, Amount: ${amount}, Currency: ${currency}`,
       })
       const customDateFormatted = formatDateToISO(date)
-      const result = await createDepositWithdrawal(parseFloat(amount), walletUuid, currency, operation === 'Withdrawal', customDateFormatted)
+      const result = await createDepositWithdrawal(
+        parseFloat(amount),
+        walletUuid,
+        currency,
+        operation === 'Withdrawal',
+        customDateFormatted,
+      )
       fetchData()
       toast({
         className: 'bg-green-500 border-0',
@@ -142,19 +167,19 @@ export default function OperationsModal({ isOpen, onClose, fetchData }: Operatio
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="dark:bg-[#131313] h-[95%] dark:text-[#fff] border-transparent">
+      <DialogContent className="h-[95%] border-transparent dark:bg-[#131313] dark:text-[#fff]">
         <DialogHeader>
-          <DialogTitle className="flex flex-row gap-4 text-2xl items-center">
+          <DialogTitle className="flex flex-row items-center gap-4 text-2xl">
             Withdrawal / Deposit <HandCoins className="text-[#F2BE38]" />
           </DialogTitle>
         </DialogHeader>
-        <div className="w-full flex justify-center gap-2 flex-col">
+        <div className="flex w-full flex-col justify-center gap-2">
           <Label>Currency</Label>
           <Select onValueChange={(value) => setCurrency(value)}>
-            <SelectTrigger className="bg-lightComponent border dark:bg-[#131313] dark:border-[#323232] dark:text-[#959CB6] w-1/6">
+            <SelectTrigger className="w-1/6 border bg-lightComponent dark:border-[#323232] dark:bg-[#131313] dark:text-[#959CB6]">
               <SelectValue placeholder="" />
             </SelectTrigger>
-            <SelectContent className="max-h-40% scrollbar-thumb-gray-500 bg-lightComponent border dark:bg-[#131313] dark:border-[#323232] dark:text-[#959CB6]">
+            <SelectContent className="max-h-40% scrollbar-thumb-gray-500 border bg-lightComponent dark:border-[#323232] dark:bg-[#131313] dark:text-[#959CB6]">
               {fiatCurrencies.map((currency) => (
                 <SelectItem key={currency} value={currency}>
                   {currency}
@@ -162,39 +187,45 @@ export default function OperationsModal({ isOpen, onClose, fetchData }: Operatio
               ))}
             </SelectContent>
           </Select>
-          {currencyError && <Label className="text-red-500 mt-2">{currencyError}</Label>}
+          {currencyError && (
+            <Label className="mt-2 text-red-500">{currencyError}</Label>
+          )}
         </div>
-        <div className="w-full flex justify-center gap-2 flex-col">
+        <div className="flex w-full flex-col justify-center gap-2">
           <Label>Operation</Label>
           <Select onValueChange={(value) => setOperation(value)}>
-            <SelectTrigger className="bg-lightComponent border dark:bg-[#131313] dark:border-[#323232] dark:text-[#959CB6] w-1/2">
+            <SelectTrigger className="w-1/2 border bg-lightComponent dark:border-[#323232] dark:bg-[#131313] dark:text-[#959CB6]">
               <SelectValue placeholder="Select operation" />
             </SelectTrigger>
-            <SelectContent className="bg-lightComponent border dark:bg-[#131313] dark:border-[#323232] dark:text-[#959CB6]">
+            <SelectContent className="border bg-lightComponent dark:border-[#323232] dark:bg-[#131313] dark:text-[#959CB6]">
               <SelectItem value="Withdrawal">Withdrawal</SelectItem>
               <SelectItem value="Deposit">Deposit</SelectItem>
             </SelectContent>
           </Select>
-          {operationError && <Label className="text-red-500 mt-2">{operationError}</Label>}
+          {operationError && (
+            <Label className="mt-2 text-red-500">{operationError}</Label>
+          )}
         </div>
-        <div className="w-full flex justify-center gap-2 flex-col">
+        <div className="flex w-full flex-col justify-center gap-2">
           <Label>Amount</Label>
           <Input
-            className="w-1/2 bg-lightComponent border dark:bg-[#131313] dark:border-[#323232] dark:text-[#959CB6]"
+            className="w-1/2 border bg-lightComponent dark:border-[#323232] dark:bg-[#131313] dark:text-[#959CB6]"
             placeholder="Ex: 1000"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
           />
-          {amountError && <Label className="text-red-500 mt-2">{amountError}</Label>}
+          {amountError && (
+            <Label className="mt-2 text-red-500">{amountError}</Label>
+          )}
         </div>
-        <div className="w-full flex justify-center gap-4 flex-col">
+        <div className="flex w-full flex-col justify-center gap-4">
           <Popover>
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
-                className="w-[50%] bg-lightComponent border dark:bg-[#131313] dark:border-[#323232] dark:text-[#959CB6] justify-between"
+                className="w-[50%] justify-between border bg-lightComponent dark:border-[#323232] dark:bg-[#131313] dark:text-[#959CB6]"
               >
-                {date ? date.toLocaleDateString() : "DD/MM/YYYY"}
+                {date ? date.toLocaleDateString() : 'DD/MM/YYYY'}
                 <CalendarIcon className="h-4 w-4 opacity-50" />
               </Button>
             </PopoverTrigger>
@@ -202,26 +233,30 @@ export default function OperationsModal({ isOpen, onClose, fetchData }: Operatio
               <Calendar
                 mode="single"
                 onSelect={(newDate) => newDate && setDate(newDate)}
-                className="dark:bg-[#131313] dark:text-white rounded-md"
+                className="rounded-md dark:bg-[#131313] dark:text-white"
                 classNames={{
-                  day_today: 'bg-transparent text-black dark:text-white hover:bg-white hover:text-black rounded-md',
+                  day_today:
+                    'bg-transparent text-black dark:text-white hover:bg-white hover:text-black rounded-md',
                   day_selected: 'bg-white text-black hover:bg-white rounded-md',
                 }}
               />
             </PopoverContent>
           </Popover>
-          {dateError && <Label className="text-red-500 mt-2">{dateError}</Label>}
+          {dateError && (
+            <Label className="mt-2 text-red-500">{dateError}</Label>
+          )}
         </div>
-        <div className="w-full flex items-center">
+        <div className="flex w-full items-center">
           <Info className="w-[10%] text-blue-600" />
-          <p className="text-[14px] w-[90%]">
-            After clicking to finish this operation, the data will be updated with no way to revert it, so make sure to check the entire operation
+          <p className="w-[90%] text-[14px]">
+            After clicking to finish this operation, the data will be updated
+            with no way to revert it, so make sure to check the entire operation
             before completing it.
           </p>
         </div>
-        <DialogFooter className="flex justify-end items-end">
+        <DialogFooter className="flex items-end justify-end">
           <Button
-            className="bg-[#1877F2] w-1/4 hover:bg-blue-600 p-5 flex items-center justify-center gap-3"
+            className="flex w-1/4 items-center justify-center gap-3 bg-[#1877F2] p-5 hover:bg-blue-600"
             onClick={sendOperation}
           >
             <StepForwardIcon />

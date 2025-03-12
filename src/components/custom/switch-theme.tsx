@@ -31,18 +31,18 @@ export function SwitchTheme() {
     <button
       type="button"
       onClick={toggleTheme}
-      className="flex items-center p-1 rounded-md cursor-pointer focus:outline-none w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/6 border"
+      className="flex w-1/2 cursor-pointer items-center rounded-md border p-1 focus:outline-none sm:w-1/3 md:w-1/4 lg:w-1/6"
       style={{ backgroundColor: isDarkMode ? '#171717' : '#F7FBFF' }}
     >
       <div
-        className={`w-1/2 flex items-center justify-center rounded-full p-1 transition-all duration-300 ease-in-out ${
-          !isDarkMode ? 'bg-white border' : 'bg-transparent'
+        className={`flex w-1/2 items-center justify-center rounded-full p-1 transition-all duration-300 ease-in-out ${
+          !isDarkMode ? 'border bg-white' : 'bg-transparent'
         }`}
       >
         <img
           src={sunIcon}
           alt="Light mode"
-          className="w-4 h-4 max-w-[20px] sm:max-w-[25px]"
+          className="h-4 w-4 max-w-[20px] sm:max-w-[25px]"
           style={{
             filter: isDarkMode
               ? 'invert(53%) sepia(32%) saturate(0%) hue-rotate(297deg) brightness(98%) contrast(97%)'
@@ -51,14 +51,14 @@ export function SwitchTheme() {
         />
       </div>
       <div
-        className={`w-1/2 flex items-center justify-center rounded-full p-1 transition-all duration-300 ease-in-out ${
-          isDarkMode ? 'bg-[#1C1C1C] border' : 'bg-transparent'
+        className={`flex w-1/2 items-center justify-center rounded-full p-1 transition-all duration-300 ease-in-out ${
+          isDarkMode ? 'border bg-[#1C1C1C]' : 'bg-transparent'
         }`}
       >
         <img
           src={moonIcon}
           alt="Dark mode"
-          className="w-4 h-4 max-w-[20px] sm:max-w-[25px]"
+          className="h-4 w-4 max-w-[20px] sm:max-w-[25px]"
           style={{
             filter: isDarkMode
               ? 'invert(34%) sepia(7%) saturate(2567%) hue-rotate(334deg) brightness(93%) contrast(92%)'

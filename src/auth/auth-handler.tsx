@@ -15,7 +15,7 @@ export const AuthHandler = () => {
           'auth_app_state',
           JSON.stringify({
             returnTo: location.pathname,
-          })
+          }),
         )
 
         await loginWithRedirect({

@@ -1,4 +1,10 @@
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from '@/components/ui/card'
 import { CircleAlert, Calendar } from 'lucide-react'
 import responsibleIcon from '../../assets/image/responsible-icon.png'
 import { useNavigate } from 'react-router-dom'
@@ -44,7 +50,16 @@ const getTextAlertColor = (alerts: number) => {
   }
 }
 
-export default function CardClient({ name, responsible, alerts, nextRebalancing, lastRebalancing, email, phone, walletUuid }: CardClientProps) {
+export default function CardClient({
+  name,
+  responsible,
+  alerts,
+  nextRebalancing,
+  lastRebalancing,
+  email,
+  phone,
+  walletUuid,
+}: CardClientProps) {
   const alertColor = getTagAlertColor(alerts)
   const alertTextColor = getTextAlertColor(alerts)
   const navigate = useNavigate()
@@ -61,22 +76,23 @@ export default function CardClient({ name, responsible, alerts, nextRebalancing,
   }
 
   // Check if the current date is after nextRebalancing
-  const isDelayedRebalancing = nextRebalancing && new Date() > parseDate(nextRebalancing)
+  const isDelayedRebalancing =
+    nextRebalancing && new Date() > parseDate(nextRebalancing)
 
   return (
     <Card
-      className="rounded-[12px] border dark:border-[#272727] bg-lightComponent dark:bg-[#171717] w-[100%] h-[300px] hover:bg-gray-100 dark:hover:bg-[#373737] cursor-pointer"
+      className="h-[300px] w-[100%] cursor-pointer rounded-[12px] border bg-lightComponent hover:bg-gray-100 dark:border-[#272727] dark:bg-[#171717] dark:hover:bg-[#373737]"
       onClick={handleCardClick}
     >
-      <CardHeader className="w-full h-1/2 gap-3">
+      <CardHeader className="h-1/2 w-full gap-3">
         <CardTitle className="flex flex-row">
-          <div className="h-full w-1/2 flex items-center justify-start text-black dark:text-white text-2xl">
-            <p className="truncate max-w-full">{name}</p>
+          <div className="flex h-full w-1/2 items-center justify-start text-2xl text-black dark:text-white">
+            <p className="max-w-full truncate">{name}</p>
           </div>
-          <div className="relative h-full w-1/2 flex items-center justify-end">
-            <div className="relative group">
+          <div className="relative flex h-full w-1/2 items-center justify-end">
+            <div className="group relative">
               <CircleAlert className="text-[#F2BE38]" />
-              <div className="absolute bottom-full right-full mb-2 w-[1250%] px-4 py-2 bg-white dark:bg-black text-sm text-black dark:text-white text-start rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+              <div className="pointer-events-none absolute bottom-full right-full mb-2 w-[1250%] rounded bg-white px-4 py-2 text-start text-sm text-black opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-black dark:text-white">
                 {name}
                 <br />
                 email: {email}
@@ -87,34 +103,44 @@ export default function CardClient({ name, responsible, alerts, nextRebalancing,
           </div>
         </CardTitle>
         <CardDescription className="flex flex-row">
-          <div className="h-full w-1/2 flex items-center justify-start gap-2 text-[#959CB6] text-lg">
+          <div className="flex h-full w-1/2 items-center justify-start gap-2 text-lg text-[#959CB6]">
             <img src={responsibleIcon} alt="" />
             <p>{responsible}</p>
           </div>
-          <div className="flex flex-col w-full">
-            <div className="h-full flex-col p-4 flex items-center justify-end">
-              <div className={`${alertColor} h-full flex flex-col justify-center items-center rounded-[20px] font-bold`}>
-                <p className={`${alertTextColor} text-[12px] p-2`}>{alerts} alerts</p>
+          <div className="flex w-full flex-col">
+            <div className="flex h-full flex-col items-center justify-end p-4">
+              <div
+                className={`${alertColor} flex h-full flex-col items-center justify-center rounded-[20px] font-bold`}
+              >
+                <p className={`${alertTextColor} p-2 text-[12px]`}>
+                  {alerts} alerts
+                </p>
               </div>
-              {isDelayedRebalancing && <p className="text-red-600 text-[12px]">delayed rebalancing</p>}
+              {isDelayedRebalancing && (
+                <p className="text-[12px] text-red-600">delayed rebalancing</p>
+              )}
             </div>
           </div>
         </CardDescription>
       </CardHeader>
-      <CardContent className="w-full h-1/2">
-        <div className="flex flex-row h-1/2 w-full">
-          <div className="flex h-full w-1/2 justify-start items-center text-base gap-2 text-black dark:text-white">
+      <CardContent className="h-1/2 w-full">
+        <div className="flex h-1/2 w-full flex-row">
+          <div className="flex h-full w-1/2 items-center justify-start gap-2 text-base text-black dark:text-white">
             <Calendar className="text-[#F2BE38]" />
             <p>Next rebalancing:</p>
           </div>
-          <div className="flex h-full w-1/2 justify-end items-center text-base text-black dark:text-white">{nextRebalancing}</div>
+          <div className="flex h-full w-1/2 items-center justify-end text-base text-black dark:text-white">
+            {nextRebalancing}
+          </div>
         </div>
-        <div className="flex flex-row h-1/2 w-full">
-          <div className="flex h-full w-1/2 justify-start items-center text-base gap-2 text-black dark:text-white">
+        <div className="flex h-1/2 w-full flex-row">
+          <div className="flex h-full w-1/2 items-center justify-start gap-2 text-base text-black dark:text-white">
             <Calendar className="text-[#F2BE38]" />
             <p>Last rebalancing:</p>
           </div>
-          <div className="flex h-full w-1/2 justify-end items-center text-base text-black dark:text-white">{lastRebalancing}</div>
+          <div className="flex h-full w-1/2 items-center justify-end text-base text-black dark:text-white">
+            {lastRebalancing}
+          </div>
         </div>
       </CardContent>
     </Card>

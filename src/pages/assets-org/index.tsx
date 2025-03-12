@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react'
 import { SwitchTheme } from '@/components/custom/switch-theme'
-import { AssetOrgs, columnsAssetOrg } from '@/components/custom/assets-org/columns'
+import {
+  AssetOrgs,
+  columnsAssetOrg,
+} from '@/components/custom/assets-org/columns'
 import { useSignalStore } from '@/store/signalEffect'
 import { useToast } from '@/components/ui/use-toast'
 import { getAllAssetsOrg } from '@/services/managementService'
@@ -16,7 +19,9 @@ export function AssetsOrg() {
 
   useEffect(() => {
     // TODO: separe this script this file :)
-    async function getData(setDate: React.Dispatch<React.SetStateAction<AssetOrgs[]>>) {
+    async function getData(
+      setDate: React.Dispatch<React.SetStateAction<AssetOrgs[]>>,
+    ) {
       try {
         const result = await getAllAssetsOrg()
 
@@ -62,9 +67,11 @@ export function AssetsOrg() {
   }
 
   return (
-    <div className="p-10 bg-white dark:bg-transparent h-full">
+    <div className="h-full bg-white p-10 dark:bg-transparent">
       <div className="mb-10 flex items-center justify-between">
-        <h1 className="text-2xl text-black dark:text-white font-medium">Assets</h1>
+        <h1 className="text-2xl font-medium text-black dark:text-white">
+          Assets
+        </h1>
         <SwitchTheme />
       </div>
 

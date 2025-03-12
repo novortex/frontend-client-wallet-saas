@@ -32,24 +32,40 @@ export type CustomersOrganization = {
 export const columnsCustomerOrg: ColumnDef<CustomersOrganization>[] = [
   {
     accessorKey: 'name',
-    header: () => <div className="text-left w-fit pl-10">Name</div>,
-    cell: ({ row }) => <div className="text-left w-fit pl-4 whitespace-nowrap">{row.original.name}</div>,
+    header: () => <div className="w-fit pl-10 text-left">Name</div>,
+    cell: ({ row }) => (
+      <div className="w-fit whitespace-nowrap pl-4 text-left">
+        {row.original.name}
+      </div>
+    ),
   },
   {
     accessorKey: 'email',
-    header: () => <div className="text-left w-fit pl-20">Email</div>,
-    cell: ({ row }) => <div className="text-left w-fit pl-4 whitespace-nowrap">{row.original.email}</div>,
+    header: () => <div className="w-fit pl-20 text-left">Email</div>,
+    cell: ({ row }) => (
+      <div className="w-fit whitespace-nowrap pl-4 text-left">
+        {row.original.email}
+      </div>
+    ),
   },
   {
     accessorKey: 'phone',
     header: () => <div className="text-center">Phone</div>,
-    cell: ({ row }) => <div className="text-center whitespace-nowrap">{row.original.phone ?? ' - '}</div>,
+    cell: ({ row }) => (
+      <div className="whitespace-nowrap text-center">
+        {row.original.phone ?? ' - '}
+      </div>
+    ),
   },
   {
     accessorKey: 'active',
     header: ({ column }) => (
-      <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} className="w-full">
-        <div className="text-center w-full flex justify-center items-center">
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        className="w-full"
+      >
+        <div className="flex w-full items-center justify-center text-center">
           Status <ArrowUpDown className="ml-2 h-4 w-4" />
         </div>
       </Button>
@@ -58,7 +74,9 @@ export const columnsCustomerOrg: ColumnDef<CustomersOrganization>[] = [
       const active = row.original.active
       return (
         <div className="text-center">
-          <span className={`px-2 py-1 rounded-full text-white ${active ? 'bg-green-500' : 'bg-red-500'}`}>
+          <span
+            className={`rounded-full px-2 py-1 text-white ${active ? 'bg-green-500' : 'bg-red-500'}`}
+          >
             {active ? 'Active' : 'Inactive'}
           </span>
         </div>
@@ -68,8 +86,12 @@ export const columnsCustomerOrg: ColumnDef<CustomersOrganization>[] = [
   {
     accessorKey: 'isWallet',
     header: ({ column }) => (
-      <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} className="w-full">
-        <div className="text-center w-full flex justify-center items-center">
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        className="w-full"
+      >
+        <div className="flex w-full items-center justify-center text-center">
           Stage <ArrowUpDown className="ml-2 h-4 w-4" />
         </div>
       </Button>
@@ -78,7 +100,9 @@ export const columnsCustomerOrg: ColumnDef<CustomersOrganization>[] = [
       const isWallet = row.original.isWallet
       return (
         <div className="text-center">
-          <span className={`px-2 py-1 rounded-full text-white ${isWallet ? 'bg-green-500' : 'bg-red-500'}`}>
+          <span
+            className={`rounded-full px-2 py-1 text-white ${isWallet ? 'bg-green-500' : 'bg-red-500'}`}
+          >
             {isWallet ? 'Completed' : 'Need Wallet'}
           </span>
         </div>

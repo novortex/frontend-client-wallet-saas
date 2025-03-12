@@ -1,4 +1,10 @@
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import responsibleIcon from '@/assets/image/responsible-icon.png'
 
 export function ManagerFilter({
@@ -19,21 +25,27 @@ export function ManagerFilter({
   }
 
   return (
-    <div className="w-full flex flex-col gap-2">
-      <div className="h-[20%] w-full font-bold dark:text-[#959CB6]">Filter by manager</div>
-      <div className="h-[80%] w-full flex flex-col items-center justify-center gap-4">
-        <div className="h-full w-[100%] flex justify-center gap-2 items-center">
-          <div className="h-full w-[10%] flex justify-center items-center">
+    <div className="flex w-full flex-col gap-2">
+      <div className="h-[20%] w-full font-bold dark:text-[#959CB6]">
+        Filter by manager
+      </div>
+      <div className="flex h-[80%] w-full flex-col items-center justify-center gap-4">
+        <div className="flex h-full w-[100%] items-center justify-center gap-2">
+          <div className="flex h-full w-[10%] items-center justify-center">
             <img src={responsibleIcon} alt="icon" className="w-12" />
           </div>
-          <div className="w-full flex items-center justify-start">
+          <div className="flex w-full items-center justify-start">
             <Select onValueChange={handleManagerSelection}>
-              <SelectTrigger className="w-full dark:bg-[#131313] dark:border-[#323232] dark:text-[#fff]">
+              <SelectTrigger className="w-full dark:border-[#323232] dark:bg-[#131313] dark:text-[#fff]">
                 <SelectValue placeholder="Select managers" />
               </SelectTrigger>
-              <SelectContent className="dark:bg-[#131313] border-2 dark:border-[#323232]">
+              <SelectContent className="border-2 dark:border-[#323232] dark:bg-[#131313]">
                 {managers.map((manager, index) => (
-                  <SelectItem key={index} value={manager.name} className="dark:bg-[#131313] border-0 dark:focus:bg-[#252525] dark:focus:text-white dark:text-white">
+                  <SelectItem
+                    key={index}
+                    value={manager.name}
+                    className="border-0 dark:bg-[#131313] dark:text-white dark:focus:bg-[#252525] dark:focus:text-white"
+                  >
                     <div>{manager.name}</div>
                   </SelectItem>
                 ))}
@@ -41,10 +53,16 @@ export function ManagerFilter({
             </Select>
           </div>
         </div>
-        <div className="flex flex-wrap justify-start items-start gap-2 w-full">
+        <div className="flex w-full flex-wrap items-start justify-start gap-2">
           {selectedManagers.map((managerName, index) => (
-            <div key={index} className="h-8 flex justify-start items-center bg-[#959CB6] text-white rounded-md px-2">
-              <div className="cursor-pointer mr-2" onClick={() => handleRemoveManager(managerName)}>
+            <div
+              key={index}
+              className="flex h-8 items-center justify-start rounded-md bg-[#959CB6] px-2 text-white"
+            >
+              <div
+                className="mr-2 cursor-pointer"
+                onClick={() => handleRemoveManager(managerName)}
+              >
                 X
               </div>
               <div>{managerName}</div>

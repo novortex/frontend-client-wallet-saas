@@ -5,192 +5,199 @@ import Graphs from '@/pages/graphs/index'
 
 // Mock do ResizeObserver para evitar falhas no Recharts
 class ResizeObserver {
-    observe() { }
-    unobserve() { }
-    disconnect() { }
+  observe() {}
+  unobserve() {}
+  disconnect() {}
 }
 global.ResizeObserver = ResizeObserver
 
 jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
-    useParams: () => ({ walletUuid: 'mock-wallet-uuid' }),
+  ...jest.requireActual('react-router-dom'),
+  useParams: () => ({ walletUuid: 'mock-wallet-uuid' }),
 }))
 
 jest.mock('@/services/wallet/walleInfoService', () => ({
-    getGraphData: jest.fn().mockResolvedValue([
-        {
-            cuid: '1',
-            amountPercentage: 10,
-            cryptoMoney: 1000,
-            benchmarkMoney: 900,
-            walletUuid: 'mock-wallet-uuid',
-            createAt: '2023-10-01',
-        },
-    ]),
+  getGraphData: jest.fn().mockResolvedValue([
+    {
+      cuid: '1',
+      amountPercentage: 10,
+      cryptoMoney: 1000,
+      benchmarkMoney: 900,
+      walletUuid: 'mock-wallet-uuid',
+      createAt: '2023-10-01',
+    },
+  ]),
 }))
 
 jest.mock('recharts', () => ({
-    ...jest.requireActual('recharts'),
-    ResponsiveContainer: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-    LineChart: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-    Line: () => null,
-    XAxis: () => null,
-    YAxis: () => null,
-    CartesianGrid: () => null,
-    Tooltip: () => null,
+  ...jest.requireActual('recharts'),
+  ResponsiveContainer: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
+  LineChart: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
+  Line: () => null,
+  XAxis: () => null,
+  YAxis: () => null,
+  CartesianGrid: () => null,
+  Tooltip: () => null,
 }))
 
 jest.mock('recharts', () => ({
-    ...jest.requireActual('recharts'),
-    ResponsiveContainer: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-    LineChart: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-    Line: () => <div data-testid="line" />,
-    XAxis: () => <div data-testid="xaxis" />,
-    YAxis: () => <div data-testid="yaxis" />,
-    CartesianGrid: () => <div data-testid="cartesian-grid" />,
-    Tooltip: () => <div data-testid="tooltip" />,
-}));
+  ...jest.requireActual('recharts'),
+  ResponsiveContainer: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
+  LineChart: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
+  Line: () => <div data-testid="line" />,
+  XAxis: () => <div data-testid="xaxis" />,
+  YAxis: () => <div data-testid="yaxis" />,
+  CartesianGrid: () => <div data-testid="cartesian-grid" />,
+  Tooltip: () => <div data-testid="tooltip" />,
+}))
 
 describe('Graph Components', () => {
+  beforeAll(() => {
+    jest.spyOn(console, 'log').mockImplementation(() => {})
+  })
 
-    beforeAll(() => {
-        jest.spyOn(console, 'log').mockImplementation(() => { });
+  describe('WalletGraph Component', () => {
+    it('renders WalletGraph correctly', async () => {
+      await act(async () => {
+        render(<WalletGraph />)
+      })
+
+      await waitFor(() => {
+        expect(screen.queryByText(/Wallet/i)).toBeInTheDocument()
+        expect(screen.queryByText(/Benchmark/i)).toBeInTheDocument()
+        expect(screen.queryByText(/Daily/i)).toBeInTheDocument()
+        expect(screen.queryByText(/monthly/i)).toBeInTheDocument()
+      })
     })
 
-    describe('WalletGraph Component', () => {
-        it('renders WalletGraph correctly', async () => {
-            await act(async () => {
-                render(<WalletGraph />)
-            })
+    it('toggles the switch', async () => {
+      await act(async () => {
+        render(<WalletGraph />)
+      })
 
-            await waitFor(() => {
-                expect(screen.queryByText(/Wallet/i)).toBeInTheDocument()
-                expect(screen.queryByText(/Benchmark/i)).toBeInTheDocument()
-                expect(screen.queryByText(/Daily/i)).toBeInTheDocument()
-                expect(screen.queryByText(/monthly/i)).toBeInTheDocument()
+      const switches = screen.getAllByRole('checkbox')
+      const switchElement = switches[0]
 
-            })
-        })
+      expect(switchElement).toBeChecked()
 
-        it('toggles the switch', async () => {
-            await act(async () => {
-                render(<WalletGraph />)
-            })
+      await act(async () => {
+        await userEvent.click(switchElement)
+      })
 
-            const switches = screen.getAllByRole('checkbox')
-            const switchElement = switches[0]
-
-            expect(switchElement).toBeChecked()
-
-            await act(async () => {
-                await userEvent.click(switchElement)
-            })
-
-            expect(switchElement).not.toBeChecked()
-        })
-
-        it('toggles wallet checkbox', async () => {
-            await act(async () => {
-                render(<WalletGraph />)
-            })
-
-            const checkboxes = screen.getAllByRole('checkbox')
-            const walletCheckbox = checkboxes[1]
-
-            expect(walletCheckbox).toBeChecked()
-
-            await act(async () => {
-                await userEvent.click(walletCheckbox)
-            })
-
-            expect(walletCheckbox).not.toBeChecked()
-        })
-
-        it('toggles benchmark checkbox', async () => {
-            await act(async () => {
-                render(<WalletGraph />)
-            })
-
-            const checkboxes = screen.getAllByRole('checkbox')
-            const benchmarkCheckbox = checkboxes[1]
-
-            expect(benchmarkCheckbox).toBeChecked()
-
-            await act(async () => {
-                await userEvent.click(benchmarkCheckbox)
-            })
-
-            expect(benchmarkCheckbox).not.toBeChecked()
-        })
-
-        it('loads and displays graph data - banchmark', async () => {
-            await act(async () => {
-                render(<WalletGraph />);
-            });
-
-            const switches = screen.getAllByRole('checkbox')
-            const switchElement = switches[0]
-
-            await act(async () => {
-                await userEvent.click(switchElement)
-            })
-
-            await waitFor(() => {
-                expect(screen.getByTestId('line')).toBeInTheDocument();
-                expect(screen.getByTestId('xaxis')).toBeInTheDocument();
-                expect(screen.getByTestId('yaxis')).toBeInTheDocument();
-                expect(screen.getByTestId('cartesian-grid')).toBeInTheDocument();
-                expect(screen.getByTestId('tooltip')).toBeInTheDocument();
-            });
-        });
-        it('loads and displays graph data - wallet', async () => {
-            await act(async () => {
-                render(<WalletGraph />);
-            });
-
-            const switches = screen.getAllByRole('checkbox')
-            const switchElement = switches[1]
-
-            await act(async () => {
-                await userEvent.click(switchElement)
-            })
-
-            await waitFor(() => {
-                expect(screen.getByTestId('line')).toBeInTheDocument();
-                expect(screen.getByTestId('xaxis')).toBeInTheDocument();
-                expect(screen.getByTestId('yaxis')).toBeInTheDocument();
-                expect(screen.getByTestId('cartesian-grid')).toBeInTheDocument();
-                expect(screen.getByTestId('tooltip')).toBeInTheDocument();
-            });
-        });
+      expect(switchElement).not.toBeChecked()
     })
 
-    describe('Graphs Component', () => {
-        it('renders Graphs Component correctly', async () => {
-            await act(async () => {
-                render(<Graphs />)
-            })
+    it('toggles wallet checkbox', async () => {
+      await act(async () => {
+        render(<WalletGraph />)
+      })
 
-            waitFor(() => {
-                expect(screen.queryByText(/Wallets/i)).toBeInTheDocument()
-                expect(screen.queryByText(/Information clients/i)).toBeInTheDocument()
-                expect(screen.queryByText(/Wallet Graphic/i)).toBeInTheDocument()
-                expect(screen.queryByPlaceholderText(/Search for .../i)).toBeInTheDocument()
-            })
-        })
+      const checkboxes = screen.getAllByRole('checkbox')
+      const walletCheckbox = checkboxes[1]
 
-        it('loads and displays dashboard data', async () => {
-            await act(async () => {
-                render(<Graphs />)
-            })
+      expect(walletCheckbox).toBeChecked()
 
-            waitFor(() => {
-                expect(screen.queryByText(/Entry date/i)).toBeInTheDocument()
-                expect(screen.queryByText(/Closing date/i)).toBeInTheDocument()
-                expect(screen.queryByText(/Initial value/i)).toBeInTheDocument()
-                expect(screen.queryByText(/Current value/i)).toBeInTheDocument()
-            })
-        })
+      await act(async () => {
+        await userEvent.click(walletCheckbox)
+      })
+
+      expect(walletCheckbox).not.toBeChecked()
     })
+
+    it('toggles benchmark checkbox', async () => {
+      await act(async () => {
+        render(<WalletGraph />)
+      })
+
+      const checkboxes = screen.getAllByRole('checkbox')
+      const benchmarkCheckbox = checkboxes[1]
+
+      expect(benchmarkCheckbox).toBeChecked()
+
+      await act(async () => {
+        await userEvent.click(benchmarkCheckbox)
+      })
+
+      expect(benchmarkCheckbox).not.toBeChecked()
+    })
+
+    it('loads and displays graph data - banchmark', async () => {
+      await act(async () => {
+        render(<WalletGraph />)
+      })
+
+      const switches = screen.getAllByRole('checkbox')
+      const switchElement = switches[0]
+
+      await act(async () => {
+        await userEvent.click(switchElement)
+      })
+
+      await waitFor(() => {
+        expect(screen.getByTestId('line')).toBeInTheDocument()
+        expect(screen.getByTestId('xaxis')).toBeInTheDocument()
+        expect(screen.getByTestId('yaxis')).toBeInTheDocument()
+        expect(screen.getByTestId('cartesian-grid')).toBeInTheDocument()
+        expect(screen.getByTestId('tooltip')).toBeInTheDocument()
+      })
+    })
+    it('loads and displays graph data - wallet', async () => {
+      await act(async () => {
+        render(<WalletGraph />)
+      })
+
+      const switches = screen.getAllByRole('checkbox')
+      const switchElement = switches[1]
+
+      await act(async () => {
+        await userEvent.click(switchElement)
+      })
+
+      await waitFor(() => {
+        expect(screen.getByTestId('line')).toBeInTheDocument()
+        expect(screen.getByTestId('xaxis')).toBeInTheDocument()
+        expect(screen.getByTestId('yaxis')).toBeInTheDocument()
+        expect(screen.getByTestId('cartesian-grid')).toBeInTheDocument()
+        expect(screen.getByTestId('tooltip')).toBeInTheDocument()
+      })
+    })
+  })
+
+  describe('Graphs Component', () => {
+    it('renders Graphs Component correctly', async () => {
+      await act(async () => {
+        render(<Graphs />)
+      })
+
+      waitFor(() => {
+        expect(screen.queryByText(/Wallets/i)).toBeInTheDocument()
+        expect(screen.queryByText(/Information clients/i)).toBeInTheDocument()
+        expect(screen.queryByText(/Wallet Graphic/i)).toBeInTheDocument()
+        expect(
+          screen.queryByPlaceholderText(/Search for .../i),
+        ).toBeInTheDocument()
+      })
+    })
+
+    it('loads and displays dashboard data', async () => {
+      await act(async () => {
+        render(<Graphs />)
+      })
+
+      waitFor(() => {
+        expect(screen.queryByText(/Entry date/i)).toBeInTheDocument()
+        expect(screen.queryByText(/Closing date/i)).toBeInTheDocument()
+        expect(screen.queryByText(/Initial value/i)).toBeInTheDocument()
+        expect(screen.queryByText(/Current value/i)).toBeInTheDocument()
+      })
+    })
+  })
 })
-

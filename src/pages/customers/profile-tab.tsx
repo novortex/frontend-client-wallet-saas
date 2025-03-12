@@ -46,11 +46,13 @@ export function ProfileTab({
   }, [])
   return (
     <div>
-      <div className="grid justify-items-center grid-cols-2 gap-5">
+      <div className="grid grid-cols-2 justify-items-center gap-5">
         <div className="w-full">
-          <Label className="ml-2" htmlFor="Name">Name</Label>
+          <Label className="ml-2" htmlFor="Name">
+            Name
+          </Label>
           <Input
-            className="bg-lightComponent border dark:bg-[#131313] dark:border-[#323232] dark:text-[#959CB6] w-full"
+            className="w-full border bg-lightComponent dark:border-[#323232] dark:bg-[#131313] dark:text-[#959CB6]"
             type="text"
             id="Name"
             value={name}
@@ -59,15 +61,17 @@ export function ProfileTab({
             required
           />
           {errors.name && (
-            <Label className="text-red-500 break-words whitespace-normal max-w-[300px]">
+            <Label className="max-w-[300px] whitespace-normal break-words text-red-500">
               {errors.name}
             </Label>
           )}
         </div>
         <div className="w-full">
-          <Label className="ml-2" htmlFor="email">Email</Label>
+          <Label className="ml-2" htmlFor="email">
+            Email
+          </Label>
           <Input
-            className="bg-lightComponent border dark:bg-[#131313] dark:border-[#323232] dark:text-[#959CB6] w-full"
+            className="w-full border bg-lightComponent dark:border-[#323232] dark:bg-[#131313] dark:text-[#959CB6]"
             type="email"
             id="email"
             value={email}
@@ -76,13 +80,15 @@ export function ProfileTab({
             required
           />
           {errors.email && (
-            <Label className="text-red-500 break-words whitespace-normal max-w-[300px]">
+            <Label className="max-w-[300px] whitespace-normal break-words text-red-500">
               {errors.email}
             </Label>
           )}
         </div>
         <div className="w-full">
-          <Label className="ml-2" htmlFor="Phone">Phone</Label>
+          <Label className="ml-2" htmlFor="Phone">
+            Phone
+          </Label>
           <PhoneInput
             key={`phone-input-${isDark ? 'dark' : 'light'}`}
             country="br"
@@ -100,30 +106,57 @@ export function ProfileTab({
               }
             }}
             containerClass={`flex ${
-              isDark ? 'bg-[#131313] border-[#323232] text-[#959CB6]' : 'bg-white border-gray-300 text-black'
+              isDark
+                ? 'bg-[#131313] border-[#323232] text-[#959CB6]'
+                : 'bg-white border-gray-300 text-black'
             } rounded-md border`}
-            inputClass={isDark ? 'bg-[#131313] border-none text-[#959CB6]' : 'bg-white border border-gray-300 text-black'}
-            dropdownClass={isDark ? 'bg-[#131313] text-[#959CB6]' : 'bg-white text-black'}
-            searchClass={isDark ? 'bg-[#131313] border-[#323232] text-[#959CB6]' : 'bg-white border border-gray-300 text-black'}
+            inputClass={
+              isDark
+                ? 'bg-[#131313] border-none text-[#959CB6]'
+                : 'bg-white border border-gray-300 text-black'
+            }
+            dropdownClass={
+              isDark ? 'bg-[#131313] text-[#959CB6]' : 'bg-white text-black'
+            }
+            searchClass={
+              isDark
+                ? 'bg-[#131313] border-[#323232] text-[#959CB6]'
+                : 'bg-white border border-gray-300 text-black'
+            }
             inputStyle={
               isDark
-                ? { backgroundColor: '#131313', color: '#959CB6', border: 'none', width: '100%' }
-                : { backgroundColor: '#ffffff', color: '#000000', border: 'none', width: '100%' }
+                ? {
+                    backgroundColor: '#131313',
+                    color: '#959CB6',
+                    border: 'none',
+                    width: '100%',
+                  }
+                : {
+                    backgroundColor: '#ffffff',
+                    color: '#000000',
+                    border: 'none',
+                    width: '100%',
+                  }
             }
           />
           {errors.phone && (
-            <Label className="text-red-500 break-words whitespace-normal max-w-[300px]">
+            <Label className="max-w-[300px] whitespace-normal break-words text-red-500">
               {errors.phone}
             </Label>
           )}
         </div>
-      </div >
+      </div>
       <div className="mt-12 flex justify-end gap-5">
-        <Button onClick={handleUpdateCustomer} className="bg-blue-500 hover:bg-blue-600 text-white">
+        <Button
+          onClick={handleUpdateCustomer}
+          className="bg-blue-500 text-white hover:bg-blue-600"
+        >
           Save Profile
         </Button>
         <DialogClose asChild>
-          <Button className="bg-red-500 hover:bg-red-600 text-white">Close</Button>
+          <Button className="bg-red-500 text-white hover:bg-red-600">
+            Close
+          </Button>
         </DialogClose>
       </div>
     </div>

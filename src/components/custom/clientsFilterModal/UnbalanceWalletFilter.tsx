@@ -9,9 +9,11 @@ export function UnbalancedWalletFilter({
   setFilterUnbalanced: (checked: boolean) => void
 }) {
   return (
-    <div className="w-full ">
-      <div className="font-bold text-black dark:text-[#959CB6] mb-2">Wallet Status</div>
-      <div className="h-[80%] w-full mt-2">
+    <div className="w-full">
+      <div className="mb-2 font-bold text-black dark:text-[#959CB6]">
+        Wallet Status
+      </div>
+      <div className="mt-2 h-[80%] w-full">
         <div className="flex items-center gap-2 text-black dark:text-[#fff]">
           <Checkbox
             checked={filterUnbalanced}
