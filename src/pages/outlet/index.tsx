@@ -13,15 +13,27 @@ export default function Root() {
       {!shouldHideNavigation && (
         <SideBar alerts={0}>
           <div className="mb-5">
-            <h3 className="dark:text-white font-medium text-center w-full">Admin</h3>
+            <h3 className="w-full text-center font-medium dark:text-white">
+              Admin
+            </h3>
             <br />
-            <SideBarItem icon={<Wallet2Icon size={20} />} text="Wallets" href="/wallets" />
-            <SideBarItem icon={<UsersIcon size={20} />} text="Customers" href="/customers" />
-            <SideBarItem icon={<Coins size={20} />} text="Assets organization" href="/admin/orgs" />
+            <SideBarItem
+              icon={<Wallet2Icon size={20} />}
+              text="Wallets"
+              href="/wallets"
+            />
+            <SideBarItem
+              icon={<UsersIcon size={20} />}
+              text="Customers"
+              href="/customers"
+            />
+            <SideBarItem
+              icon={<Coins size={20} />}
+              text="Assets organization"
+              href="/admin/orgs"
+            />
           </div>
-          <div className="mb-5">
-            {/* Outras seções */}
-          </div>
+          <div className="mb-5">{/* Outras seções */}</div>
         </SideBar>
       )}
       <div className="w-screen" id="detail">

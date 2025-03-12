@@ -25,7 +25,11 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog'
 import { Calendar } from '@/components/ui/calendar'
-import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from '@/components/ui/popover'
 import { CalendarIcon } from 'lucide-react'
 import { Loading } from '@/components/custom/loading'
 
@@ -51,7 +55,10 @@ export function History() {
   const [historic, setHistoric] = useState<HistoricEntry[]>([])
   const [filteredHistoric, setFilteredHistoric] = useState<HistoricEntry[]>([])
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false)
-  const [filters, setFilters] = useState<Filters>({ eventTypes: [], dateRange: undefined })
+  const [filters, setFilters] = useState<Filters>({
+    eventTypes: [],
+    dateRange: undefined,
+  })
   const [isLoading, setIsLoading] = useState(true)
   const { walletUuid } = useParams()
 
@@ -80,7 +87,7 @@ export function History() {
 
     if (filters.eventTypes.length > 0) {
       filteredData = filteredData.filter((entry) =>
-        filters.eventTypes.includes(entry.historyType)
+        filters.eventTypes.includes(entry.historyType),
       )
     }
 
@@ -91,7 +98,10 @@ export function History() {
 
       filteredData = filteredData.filter((entry) => {
         const entryDate = new Date(entry.createAt)
-        return (!fromDate || entryDate >= fromDate) && (!toDate || entryDate <= toDate)
+        return (
+          (!fromDate || entryDate >= fromDate) &&
+          (!toDate || entryDate <= toDate)
+        )
       })
     }
 
@@ -99,61 +109,79 @@ export function History() {
   }, [filters, historic])
 
   if (isLoading) {
-    return (
-        <Loading />
-    )
+    return <Loading />
   }
 
   return (
-    <div className="p-10 bg-white dark:bg-transparent">
+    <div className="bg-white p-10 dark:bg-transparent">
       <div className="mb-10 flex items-center justify-between">
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink className="text-2xl text-black dark:text-white font-medium" href="/wallets">
+              <BreadcrumbLink
+                className="text-2xl font-medium text-black dark:text-white"
+                href="/wallets"
+              >
                 Wallets
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink className="text-2xl text-black dark:text-white font-medium" href={`/clients/${walletUuid}/infos`}>
+              <BreadcrumbLink
+                className="text-2xl font-medium text-black dark:text-white"
+                href={`/clients/${walletUuid}/infos`}
+              >
                 Information clients
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink className="text-2xl text-black dark:text-white font-medium" href={`/wallet/${walletUuid}/assets`}>
+              <BreadcrumbLink
+                className="text-2xl font-medium text-black dark:text-white"
+                href={`/wallet/${walletUuid}/assets`}
+              >
                 Client wallet
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage className="text-2xl text-black dark:text-white font-medium">Historic</BreadcrumbPage>
+              <BreadcrumbPage className="text-2xl font-medium text-black dark:text-white">
+                Historic
+              </BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
         <SwitchTheme />
       </div>
-      <div className="flex items-center justify-between mb-10">
+      <div className="mb-10 flex items-center justify-between">
         <Input
-          className="bg-lightComponent dark:bg-[#171717] w-3/4 border dark:border-0 dark:text-white focus:ring-0"
+          className="w-3/4 border bg-lightComponent focus:ring-0 dark:border-0 dark:bg-[#171717] dark:text-white"
           type="text"
           placeholder="Search for ..."
         />
         <Dialog open={isFilterModalOpen} onOpenChange={setIsFilterModalOpen}>
           <DialogTrigger asChild>
-            <Button type="button" variant="outline" className="gap-2 bg-lightComponent hover:bg-gray-200">
+            <Button
+              type="button"
+              variant="outline"
+              className="gap-2 bg-lightComponent hover:bg-gray-200"
+            >
               <img src={filterIcon} alt="" />
               <p className="dark:text-black">Filters</p>
             </Button>
           </DialogTrigger>
-          <DialogContent className="dark:bg-[#131313] h-[90vh] overflow-y-auto">
+          <DialogContent className="h-[90vh] overflow-y-auto dark:bg-[#131313]">
             <DialogHeader className="dark:text-[#fff]">
-              <DialogTitle className="text-2xl text-center">Filter Historic</DialogTitle>
+              <DialogTitle className="text-center text-2xl">
+                Filter Historic
+              </DialogTitle>
             </DialogHeader>
             <div className="grid grid-cols-2 gap-4">
               {historyTypes.map((type) => (
-                <label key={type} className="text-black dark:text-white flex items-center gap-2">
+                <label
+                  key={type}
+                  className="flex items-center gap-2 text-black dark:text-white"
+                >
                   <input
                     type="checkbox"
                     checked={filters.eventTypes.includes(type)}
@@ -175,8 +203,12 @@ export function History() {
             </div>
             <Popover>
               <PopoverTrigger asChild>
-                <Button variant="outline" className="w-[50%] bg-lightComponent dark:bg-[#131313] dark:border-[#323232] dark:text-[#959CB6] justify-between">
-                  {filters.dateRange?.from?.toLocaleDateString() || 'Start'} - {filters.dateRange?.to?.toLocaleDateString() || 'End'}
+                <Button
+                  variant="outline"
+                  className="w-[50%] justify-between bg-lightComponent dark:border-[#323232] dark:bg-[#131313] dark:text-[#959CB6]"
+                >
+                  {filters.dateRange?.from?.toLocaleDateString() || 'Start'} -{' '}
+                  {filters.dateRange?.to?.toLocaleDateString() || 'End'}
                   <CalendarIcon className="h-4 w-4 opacity-50" />
                 </Button>
               </PopoverTrigger>
@@ -184,17 +216,26 @@ export function History() {
                 <Calendar
                   mode="range"
                   selected={filters.dateRange}
-                  onSelect={(range) => setFilters((prev) => ({ ...prev, dateRange: range }))}
-                  className="dark:bg-[#131313] text-black dark:text-white rounded-md"
+                  onSelect={(range) =>
+                    setFilters((prev) => ({ ...prev, dateRange: range }))
+                  }
+                  className="rounded-md text-black dark:bg-[#131313] dark:text-white"
                   classNames={{
-                    day_today: 'bg-transparent text-black dark:text-white hover:bg-white hover:text-black rounded-md',
-                    day_selected: 'bg-white text-black hover:bg-white rounded-md',
+                    day_today:
+                      'bg-transparent text-black dark:text-white hover:bg-white hover:text-black rounded-md',
+                    day_selected:
+                      'bg-white text-black hover:bg-white rounded-md',
                   }}
                 />
               </PopoverContent>
             </Popover>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setFilters({ eventTypes: [], dateRange: undefined })}>
+              <Button
+                variant="outline"
+                onClick={() =>
+                  setFilters({ eventTypes: [], dateRange: undefined })
+                }
+              >
                 Clear
               </Button>
             </DialogFooter>
@@ -202,28 +243,45 @@ export function History() {
         </Dialog>
       </div>
       <div>
-        {filteredHistoric.slice().reverse().map((entry) => (
-          <HistoryThread
-            key={entry.cuid}
-            fiat_currency={entry.data.organization_fiat}
-            effective_date={entry.data.data}
-            data={entry}
-            user={entry.user.name}
-            operationType={entry.historyType}
-            asset={entry.data.asset}
-            date={new Date(entry.createAt).toLocaleDateString()}
-            hour={new Date(entry.createAt).toLocaleTimeString()}
-            assetIcon={entry.data.icon}
-            oldValue={Number(entry.data.before) || undefined}
-            newValue={Number(entry.data.after) || undefined}
-            addAssetQuantity={Number(entry.data.quantity) || undefined}
-            addAssetAllocation={Number(entry.data.target_allocation) || undefined}
-            depositValue={Number(entry.data.deposit_amount_in_organization_fiat) || undefined}
-            withdrawalValue={Number(entry.data.withdrawal_value_in_organization_fiat) || undefined}
-            initialValue={Number(entry.data.invested_amount_in_organization_fiat) || undefined}
-            closeValue={Number(entry.data.close_wallet_value_in_organization_fiat) || undefined}
-          />
-        ))}
+        {filteredHistoric
+          .slice()
+          .reverse()
+          .map((entry) => (
+            <HistoryThread
+              key={entry.cuid}
+              fiat_currency={entry.data.organization_fiat}
+              effective_date={entry.data.data}
+              data={entry}
+              user={entry.user.name}
+              operationType={entry.historyType}
+              asset={entry.data.asset}
+              date={new Date(entry.createAt).toLocaleDateString()}
+              hour={new Date(entry.createAt).toLocaleTimeString()}
+              assetIcon={entry.data.icon}
+              oldValue={Number(entry.data.before) || undefined}
+              newValue={Number(entry.data.after) || undefined}
+              addAssetQuantity={Number(entry.data.quantity) || undefined}
+              addAssetAllocation={
+                Number(entry.data.target_allocation) || undefined
+              }
+              depositValue={
+                Number(entry.data.deposit_amount_in_organization_fiat) ||
+                undefined
+              }
+              withdrawalValue={
+                Number(entry.data.withdrawal_value_in_organization_fiat) ||
+                undefined
+              }
+              initialValue={
+                Number(entry.data.invested_amount_in_organization_fiat) ||
+                undefined
+              }
+              closeValue={
+                Number(entry.data.close_wallet_value_in_organization_fiat) ||
+                undefined
+              }
+            />
+          ))}
       </div>
     </div>
   )

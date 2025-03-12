@@ -1,19 +1,39 @@
 import { MoreVertical, Bell, LogOut } from 'lucide-react'
 import LogoOrg from '../../assets/image/vault-logo.png'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { ReactNode, useContext, useState, createContext, useRef, useEffect } from 'react'
+import {
+  ReactNode,
+  useContext,
+  useState,
+  createContext,
+  useRef,
+  useEffect,
+} from 'react'
 import { useUserStore } from '@/store/user'
 import { useNavigate } from 'react-router-dom'
 import { useAuth0 } from '@auth0/auth0-react'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 
 type SideBarContextProps = {
   expanded: boolean
 }
 
-const SideBarContext = createContext<SideBarContextProps | null>({ expanded: true })
+const SideBarContext = createContext<SideBarContextProps | null>({
+  expanded: true,
+})
 
-export function SideBar({ children, alerts }: { children: ReactNode; alerts: number }) {
+export function SideBar({
+  children,
+  alerts,
+}: {
+  children: ReactNode
+  alerts: number
+}) {
   useEffect(() => {
     const storedTheme = localStorage.getItem('theme') || 'dark'
     if (storedTheme === 'dark') {
@@ -46,7 +66,11 @@ export function SideBar({ children, alerts }: { children: ReactNode; alerts: num
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (navRef.current && !navRef.current.contains(event.target as Node) && !dropdownRef.current) {
+      if (
+        navRef.current &&
+        !navRef.current.contains(event.target as Node) &&
+        !dropdownRef.current
+      ) {
         setExpanded(false)
       }
     }
@@ -63,10 +87,12 @@ export function SideBar({ children, alerts }: { children: ReactNode; alerts: num
   }
 
   return (
-    <aside className={`bg-lightComponent dark:bg-[#171717] h-screen ${expanded ? 'w-1/6' : 'w-9'} z-10`}>
+    <aside
+      className={`h-screen bg-lightComponent dark:bg-[#171717] ${expanded ? 'w-1/6' : 'w-9'} z-10`}
+    >
       <nav
         ref={navRef}
-        className={`h-full fixed flex flex-col bg-lightComponent dark:bg-[#171717] border shadow-sm ${expanded ? 'w-1/6' : 'w-20'}`}
+        className={`fixed flex h-full flex-col border bg-lightComponent shadow-sm dark:bg-[#171717] ${expanded ? 'w-1/6' : 'w-20'}`}
         onMouseEnter={() => setExpanded(true)}
         onMouseLeave={() => {
           if (!dropdownRef.current) {
@@ -75,41 +101,60 @@ export function SideBar({ children, alerts }: { children: ReactNode; alerts: num
         }}
         onClick={handleNavClick}
       >
-        <div className={`flex items-center mt-5 mb-5 ${!expanded ? 'justify-center' : 'gap-5'}`}>
+        <div
+          className={`mb-5 mt-5 flex items-center ${!expanded ? 'justify-center' : 'gap-5'}`}
+        >
           <img src={LogoOrg} className="w-16" alt="" />
           {expanded && (
-            <div className="overflow-hidden transition-all w-20">
-              <h2 className="text-black dark:text-white font-semibold">Vault</h2>
-              <p className="text-[#959CB6] text-sm">Capital</p>
+            <div className="w-20 overflow-hidden transition-all">
+              <h2 className="font-semibold text-black dark:text-white">
+                Vault
+              </h2>
+              <p className="text-sm text-[#959CB6]">Capital</p>
             </div>
           )}
         </div>
 
         <SideBarContext.Provider value={{ expanded }}>
           <ul className="flex-1 px-3">
-            <li className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer transition-colors text-black dark:text-white mb-10  ${!expanded ? 'justify-center' : ''}`}>
+            <li
+              className={`relative my-1 mb-10 flex cursor-pointer items-center rounded-md px-3 py-2 font-medium text-black transition-colors dark:text-white ${!expanded ? 'justify-center' : ''}`}
+            >
               <Bell size={20} />
-              <p className={`font-normal overflow-hidden transition-all ${expanded ? 'ml-3 w-52' : 'w-0'}`}>Notifications</p>
-              <div className={`text-[#F2BE38] h-5 text-center overflow-hidden transition-all ${expanded ? 'w-5' : 'w-0'}`}>{alerts}</div>
+              <p
+                className={`overflow-hidden font-normal transition-all ${expanded ? 'ml-3 w-52' : 'w-0'}`}
+              >
+                Notifications
+              </p>
+              <div
+                className={`h-5 overflow-hidden text-center text-[#F2BE38] transition-all ${expanded ? 'w-5' : 'w-0'}`}
+              >
+                {alerts}
+              </div>
             </li>
 
             {children}
           </ul>
         </SideBarContext.Provider>
 
-        <div className={`flex p-3 bg-white text-black dark:text-white dark:bg-[#272727] border ${!expanded ? 'justify-center' : 'justify-start'}`}>
+        <div
+          className={`flex border bg-white p-3 text-black dark:bg-[#272727] dark:text-white ${!expanded ? 'justify-center' : 'justify-start'}`}
+        >
           <Avatar>
-            <AvatarImage src={userInfo?.picture || 'https://github.com/shadcn.png'} alt={userInfo?.name || 'Guest'} />
+            <AvatarImage
+              src={userInfo?.picture || 'https://github.com/shadcn.png'}
+              alt={userInfo?.name || 'Guest'}
+            />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
           {expanded && (
-            <div className="flex justify-between items-center ml-3 w-[80%]">
+            <div className="ml-3 flex w-[80%] items-center justify-between">
               <div
-                className="leading-4 w-full max-w-[calc(100%-40px)] overflow-hidden"
+                className="w-full max-w-[calc(100%-40px)] overflow-hidden leading-4"
                 style={{ display: 'inline-block' }}
               >
                 <p
-                  className="font-normal mb-2 truncate"
+                  className="mb-2 truncate font-normal"
                   style={{
                     whiteSpace: 'nowrap',
                     overflow: 'hidden',
@@ -119,20 +164,29 @@ export function SideBar({ children, alerts }: { children: ReactNode; alerts: num
                 >
                   {userInfo?.name?.split('@')[0] || 'Guest'}
                 </p>
-                <span className="text-xs text-black dark:text-[#959CB6] truncate">
+                <span className="truncate text-xs text-black dark:text-[#959CB6]">
                   {userInfo?.role || 'User'}
                 </span>
               </div>
-              <DropdownMenu onOpenChange={handleDropdownOpenChange} open={isDropdownOpen}>
-                <DropdownMenuTrigger asChild className="flex justify-center items-center w-[25%] h-[100%]">
-                  <button className="focus:outline-none hover:bg-gray-300 dark:hover:bg-[#171717] rounded-md">
-                    <MoreVertical className="text-black dark:text-white cursor-pointer dark:hover:text-yellow-300 transition-colors" />
+              <DropdownMenu
+                onOpenChange={handleDropdownOpenChange}
+                open={isDropdownOpen}
+              >
+                <DropdownMenuTrigger
+                  asChild
+                  className="flex h-[100%] w-[25%] items-center justify-center"
+                >
+                  <button className="rounded-md hover:bg-gray-300 focus:outline-none dark:hover:bg-[#171717]">
+                    <MoreVertical className="cursor-pointer text-black transition-colors dark:text-white dark:hover:text-yellow-300" />
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-40 dark:bg-[#272727] dark:border-[#171717]">
+                <DropdownMenuContent
+                  align="end"
+                  className="w-40 dark:border-[#171717] dark:bg-[#272727]"
+                >
                   <DropdownMenuItem
                     onClick={handleLogout}
-                    className="text-[#959CB6] focus:text-white focus:bg-red-600 cursor-pointer flex items-center"
+                    className="flex cursor-pointer items-center text-[#959CB6] focus:bg-red-600 focus:text-white"
                   >
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Logout</span>
@@ -147,7 +201,19 @@ export function SideBar({ children, alerts }: { children: ReactNode; alerts: num
   )
 }
 
-export function SideBarItem({ icon, text, active, alert, href }: { icon: ReactNode; text: string; active?: boolean; alert?: boolean; href: string }) {
+export function SideBarItem({
+  icon,
+  text,
+  active,
+  alert,
+  href,
+}: {
+  icon: ReactNode
+  text: string
+  active?: boolean
+  alert?: boolean
+  href: string
+}) {
   const navigate = useNavigate()
   const context = useContext(SideBarContext)
 
@@ -160,14 +226,20 @@ export function SideBarItem({ icon, text, active, alert, href }: { icon: ReactNo
   return (
     <li
       onClick={() => navigate(href)}
-      className={`relative flex items-center py-2 px-3 my-1 font-medium dark:hover:text-black text-black dark:text-[#959CB6] rounded-md cursor-pointer transition-colors group hover:bg-[#F2BE38] hover:text-black ${!expanded ? 'justify-center' : ''} ${active ? 'bg-gradient-to-tr from-indigo-200 to-indigo-100 text-indigo-800' : ''}`}
+      className={`group relative my-1 flex cursor-pointer items-center rounded-md px-3 py-2 font-medium text-black transition-colors hover:bg-[#F2BE38] hover:text-black dark:text-[#959CB6] dark:hover:text-black ${!expanded ? 'justify-center' : ''} ${active ? 'bg-gradient-to-tr from-indigo-200 to-indigo-100 text-indigo-800' : ''}`}
     >
       {icon}
-      <span className={`overflow-hidden transition-all ${expanded ? 'w-52 ml-3' : 'w-0'}`}>{text}</span>
-      {alert && <div className="absolute right-2 w-2 h-2 rounded bg-indigo-400"></div>}
+      <span
+        className={`overflow-hidden transition-all ${expanded ? 'ml-3 w-52' : 'w-0'}`}
+      >
+        {text}
+      </span>
+      {alert && (
+        <div className="absolute right-2 h-2 w-2 rounded bg-indigo-400"></div>
+      )}
 
       {!expanded && (
-        <div className="absolute left-full rounded-md px-2 py-1 ml-6 bg-yellow-300 text-black text-sm invisible opacity-20 -translate-x-3 transition-all group-hover:visible group-hover:opacity-100 group-hover:translate-x-0">
+        <div className="invisible absolute left-full ml-6 -translate-x-3 rounded-md bg-yellow-300 px-2 py-1 text-sm text-black opacity-20 transition-all group-hover:visible group-hover:translate-x-0 group-hover:opacity-100">
           {text}
         </div>
       )}

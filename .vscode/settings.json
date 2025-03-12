@@ -1,8 +1,5 @@
 {
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": "explicit",
-        "source.removeUnusedImports": "explicit"
     },
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
-    "editor.formatOnSave": true,
 }

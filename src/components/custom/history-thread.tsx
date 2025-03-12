@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import HistoryCardAllocation from './history-card-allocation'
 import HistoryCardBuySell from './history-card-buy-sell'
 import HistoryCardAddDelete from './history-card-add-delete'
@@ -86,7 +87,9 @@ export default function HistoryThread({
       case 'BUY_ASSET':
         return (
           <div className="flex flex-row gap-1.5">
-            <p className="font-bold">{user}</p> performed a buy of <p className="font-bold">{asset}</p> on {date} ({hour}). Before the buy:{' '}
+            <p className="font-bold">{user}</p> performed a buy of{' '}
+            <p className="font-bold">{asset}</p> on {date} ({hour}). Before the
+            buy:{' '}
             <p className="font-bold text-[#F2BE38]">
               {oldValue} {asset}
             </p>
@@ -99,7 +102,9 @@ export default function HistoryThread({
       case 'SELL_ASSET':
         return (
           <div className="flex flex-row gap-1.5">
-            <p className="font-bold">{user}</p> performed a sell of <p className="font-bold">{asset}</p> on {date} ({hour}). Before the sell:{' '}
+            <p className="font-bold">{user}</p> performed a sell of{' '}
+            <p className="font-bold">{asset}</p> on {date} ({hour}). Before the
+            sell:{' '}
             <p className="font-bold text-[#F2BE38]">
               {oldValue} {asset}
             </p>
@@ -112,48 +117,62 @@ export default function HistoryThread({
       case 'INCREASE_ALLOCATION':
         return (
           <div className="flex flex-row gap-1.5">
-            <p className="font-bold">{user}</p> increased the allocation of <p className="font-bold">{asset}</p> on {date} ({hour}) from{' '}
-            <p className="text-[#5696F5]">{oldValue}%</p> to <p className="text-[#5696F5]">{newValue}%</p>
+            <p className="font-bold">{user}</p> increased the allocation of{' '}
+            <p className="font-bold">{asset}</p> on {date} ({hour}) from{' '}
+            <p className="text-[#5696F5]">{oldValue}%</p> to{' '}
+            <p className="text-[#5696F5]">{newValue}%</p>
           </div>
         )
       case 'DECREASE_ALLOCATION':
         return (
           <div className="flex flex-row gap-1.5">
-            <p className="font-bold">{user}</p> decreased the allocation of <p className="font-bold">{asset}</p> on {date} ({hour}) from{' '}
-            <p className="text-[#5696F5]">{oldValue}%</p> to <p className="text-[#5696F5]">{newValue}%</p>
+            <p className="font-bold">{user}</p> decreased the allocation of{' '}
+            <p className="font-bold">{asset}</p> on {date} ({hour}) from{' '}
+            <p className="text-[#5696F5]">{oldValue}%</p> to{' '}
+            <p className="text-[#5696F5]">{newValue}%</p>
           </div>
         )
       case 'ADD_ASSET':
         return (
           <div className="flex flex-row gap-1.5">
-            <p className="font-bold">{user}</p> <p className="text-[#7DE44C]">added</p> <p className="font-bold">{addAssetQuantity}</p> of{' '}
-            <p className="font-bold">{asset}</p> on {date} ({hour}) with a <p className="font-bold">target allocation of {addAssetAllocation}%</p>
+            <p className="font-bold">{user}</p>{' '}
+            <p className="text-[#7DE44C]">added</p>{' '}
+            <p className="font-bold">{addAssetQuantity}</p> of{' '}
+            <p className="font-bold">{asset}</p> on {date} ({hour}) with a{' '}
+            <p className="font-bold">
+              target allocation of {addAssetAllocation}%
+            </p>
           </div>
         )
       case 'DELETE_ASSET':
         return (
           <div className="flex flex-row gap-1.5">
-            <p className="font-bold">{user}</p> <p className="text-[#F23F3F]">deleted</p> <p className="font-bold">{asset}</p> on {date} ({hour})
+            <p className="font-bold">{user}</p>{' '}
+            <p className="text-[#F23F3F]">deleted</p>{' '}
+            <p className="font-bold">{asset}</p> on {date} ({hour})
           </div>
         )
       case 'DEPOSIT':
         return (
           <div className="flex flex-row gap-1.5">
-            <p className="font-bold">{user}</p> registered a deposit on {date} ({hour}).
+            <p className="font-bold">{user}</p> registered a deposit on {date} (
+            {hour}).
             <p className="">Deposit made on: {effective_date}</p>
           </div>
         )
       case 'WITHDRAWAL':
         return (
           <div className="flex flex-row gap-1.5">
-            <p className="font-bold">{user}</p> registered a withdrawal on {date} ({hour}).
+            <p className="font-bold">{user}</p> registered a withdrawal on{' '}
+            {date} ({hour}).
             <p className="">Withdrawal made on: {effective_date}</p>
           </div>
         )
       case 'START_WALLET':
         return (
           <div className="flex flex-row gap-1.5">
-            <p className="font-bold">{user}</p> started wallet on {date} ({hour})
+            <p className="font-bold">{user}</p> started wallet on {date} ({hour}
+            )
           </div>
         )
       case 'CLOSE_WALLET':
@@ -163,7 +182,11 @@ export default function HistoryThread({
           </div>
         )
       default:
-        return <div className="flex flex-row dark:text-[#fff]">Operação não identificada</div>
+        return (
+          <div className="flex flex-row dark:text-[#fff]">
+            Operação não identificada
+          </div>
+        )
     }
   }
 
@@ -173,16 +196,32 @@ export default function HistoryThread({
       case 'SELL_ASSET':
         return (
           <>
-            <HistoryCardBuySell assetIcon={assetIcon} quantity={oldValue ?? 0} tagState={false} />
-            <HistoryCardBuySell assetIcon={assetIcon} quantity={newValue ?? 0} tagState={true} />
+            <HistoryCardBuySell
+              assetIcon={assetIcon}
+              quantity={oldValue ?? 0}
+              tagState={false}
+            />
+            <HistoryCardBuySell
+              assetIcon={assetIcon}
+              quantity={newValue ?? 0}
+              tagState={true}
+            />
           </>
         )
       case 'INCREASE_ALLOCATION':
       case 'DECREASE_ALLOCATION':
         return (
           <>
-            <HistoryCardAllocation assetIcon={assetIcon} allocation={oldValue ?? 0} tagState={false} />
-            <HistoryCardAllocation assetIcon={assetIcon} allocation={newValue ?? 0} tagState={true} />
+            <HistoryCardAllocation
+              assetIcon={assetIcon}
+              allocation={oldValue ?? 0}
+              tagState={false}
+            />
+            <HistoryCardAllocation
+              assetIcon={assetIcon}
+              allocation={newValue ?? 0}
+              tagState={true}
+            />
           </>
         )
       case 'ADD_ASSET':
@@ -196,13 +235,41 @@ export default function HistoryThread({
           />
         )
       case 'DELETE_ASSET':
-        return <HistoryCardAddDelete asset={asset} assetIcon={assetIcon} quantity={0} targetAllocation={0} operation={false} />
+        return (
+          <HistoryCardAddDelete
+            asset={asset}
+            assetIcon={assetIcon}
+            quantity={0}
+            targetAllocation={0}
+            operation={false}
+          />
+        )
       case 'DEPOSIT':
-        return <HistoryCardDepositWithdrawal fiatCurrency={fiat_currency} quantity={depositValue ?? 0} operation={false} />
+        return (
+          <HistoryCardDepositWithdrawal
+            fiatCurrency={fiat_currency}
+            quantity={depositValue ?? 0}
+            operation={false}
+          />
+        )
       case 'WITHDRAWAL':
-        return <HistoryCardDepositWithdrawal fiatCurrency={fiat_currency} quantity={withdrawalValue ?? 0} operation={true} />
+        return (
+          <HistoryCardDepositWithdrawal
+            fiatCurrency={fiat_currency}
+            quantity={withdrawalValue ?? 0}
+            operation={true}
+          />
+        )
       case 'START_WALLET':
-        return <HistoryCardStartClose walletState={true} date={date} hour={hour} initialValue={Number(initialValue?.toFixed(2)) ?? 0} data_={data} />
+        return (
+          <HistoryCardStartClose
+            walletState={true}
+            date={date}
+            hour={hour}
+            initialValue={Number(initialValue?.toFixed(2)) ?? 0}
+            data_={data}
+          />
+        )
       case 'CLOSE_WALLET':
         return (
           <HistoryCardStartClose
@@ -220,14 +287,16 @@ export default function HistoryThread({
   }
 
   return (
-    <div className="flex flex-col gap-3 mb-20">
+    <div className="mb-20 flex flex-col gap-3">
       <div className="flex flex-row items-center gap-3 text-lg dark:text-[#fff]">
-        <img className="w-[3%] h-full" src={getIcon(operationType)} alt="" />
-        <p className="w-[97%] h-full">{renderOperationDescription()}</p>
+        <img className="h-full w-[3%]" src={getIcon(operationType)} alt="" />
+        <p className="h-full w-[97%]">{renderOperationDescription()}</p>
       </div>
       <div className="flex flex-row gap-3">
-        <div className="h-full w-[3%] flex items-center justify-center"></div>
-        <div className="h-full w-[97%] flex flex-row items-center justify-start gap-10">{renderHistoryCard()}</div>
+        <div className="flex h-full w-[3%] items-center justify-center"></div>
+        <div className="flex h-full w-[97%] flex-row items-center justify-start gap-10">
+          {renderHistoryCard()}
+        </div>
       </div>
     </div>
   )

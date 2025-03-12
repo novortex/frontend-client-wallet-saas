@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import AddNewAssetModal from '../../../components/custom/assets-org/add-new-asset-modal'
@@ -22,11 +23,13 @@ const expectedColumns = columnsAssetOrg as ColumnDef<AssetOrg, unknown>[]
 describe('Asset Organization', () => {
   describe('AddNewAssetModal Component', () => {
     it('renders modal with correct fields', () => {
-      render(<AddNewAssetModal isOpen={true} onClose={() => { }} />)
+      render(<AddNewAssetModal isOpen={true} onClose={() => {}} />)
 
       expect(screen.getByText(/new asset/i)).toBeInTheDocument()
       expect(screen.getByPlaceholderText(/idcmc/i)).toBeInTheDocument()
-      expect(screen.getByText(/check the desired asset id/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(/check the desired asset id/i),
+      ).toBeInTheDocument()
     })
 
     it('allows user to input CoinMarketCap ID and submit', async () => {

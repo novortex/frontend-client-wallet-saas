@@ -2,7 +2,7 @@ import vaultLogo from '@/assets/image/vault-logo.png'
 
 export function AdviceToTeam() {
   return (
-    <div className="bg-black text-white min-h-screen flex flex-col items-center justify-center">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-black text-white">
       {/* Container para logo + texto */}
       <div className="flex items-center space-x-2">
         {/* Logo */}
@@ -11,9 +11,11 @@ export function AdviceToTeam() {
         <h1 className="text-5xl font-bold">ÃO</h1>
       </div>
       {/* Texto "Trabalhar" abaixo do "ÃO" */}
-      <h1 className="text-3xl font-medium mt-2">Trabalhar</h1>
+      <h1 className="mt-2 text-3xl font-medium">Trabalhar</h1>
       {/* Descrição abaixo de "VÃO Trabalhar" */}
-      <p className="mt-4 text-lg text-center break-words">O trabalho é pelo computador</p>
+      <p className="mt-4 break-words text-center text-lg">
+        O trabalho é pelo computador
+      </p>
     </div>
   )
 }

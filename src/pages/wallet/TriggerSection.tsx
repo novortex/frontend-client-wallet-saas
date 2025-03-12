@@ -26,11 +26,17 @@ const TriggerSection: React.FC<TriggerSectionInterface> = ({
 }) => {
   return (
     <div className="mt-5">
-      <div className="bg-gray-200 dark:bg-[#171717] rounded-t-lg p-5 flex items-center justify-between ">
+      <div className="flex items-center justify-between rounded-t-lg bg-gray-200 p-5 dark:bg-[#171717]">
         <h1 className="dark:text-white">My Triggers</h1>
-        <Button className="bg-[#F2BE38] text-black hover:text-white hover:bg-yellow-600">Trigger Action</Button>
+        <Button className="bg-[#F2BE38] text-black hover:bg-yellow-600 hover:text-white">
+          Trigger Action
+        </Button>
       </div>
-      <OperationsModal isOpen={isOperationModalOpen} onClose={closeOperationModal} fetchData={fetchData} />
+      <OperationsModal
+        isOpen={isOperationModalOpen}
+        onClose={closeOperationModal}
+        fetchData={fetchData}
+      />
       <ConfirmCloseWalletModal
         isOpen={isCloseWalletModalOpen}
         onClose={closeCloseWalletModal}
