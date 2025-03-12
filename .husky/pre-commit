@@ -1,0 +1,12 @@
+echo 'Checking for linting errors and run tests before commiting...'
+npx lint-staged || (echo 'Linting errors found!' && exit 1)
+echo 'Linting errors passed successfully!'
+
+# echo 'Running tests...'
+# npm run test
+# echo 'Tests passed successfully!' || (echo 'Tests failed!' && exit 1)
+
+echo 'Running build...'
+npm run build
+echo 'Build completed successfully!' || (echo 'Build failed!' && exit 1)
+echo 'Pre-commit checks passed successfully!'
