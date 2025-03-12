@@ -49,28 +49,31 @@ export function App() {
     <AuthProvider>
       <UserDataHandler />
       <ApiAuthManager />
-        <Routes>
-          {isMobile ? (
-            <Route path="/" element={<AdviceToTeam />} />
-          ) : (
-            <Route element={<AuthHandler />}>
-              <Route path="/callback" element={<Auth0Callback />} />
-              <Route element={<ProtectedRouteWrapper />}>
-                <Route element={<Root />}>
-                  <Route path="/" element={<Navigate to="/wallets" replace />} />
-                  <Route path="/wallet/:walletUuid/assets" element={<Wallet />} />
-                  <Route path="/wallets" element={<Clients />} />
-                  <Route path="/customers" element={<Customers />} />
-                  <Route path="/admin/orgs" element={<AssetsOrg />} />
-                  <Route path="/clients/:walletUuid/infos" element={<Infos />} />
-                  <Route path="/wallet/:walletUuid/graphs" element={<Graphs />} />
-                  <Route path="/wallet/:walletUuid/history" element={<History />} />
-                  <Route path="*" element={<ErrorPage />} />
-                </Route>
+      <Routes>
+        {isMobile ? (
+          <Route path="/" element={<AdviceToTeam />} />
+        ) : (
+          <Route element={<AuthHandler />}>
+            <Route path="/callback" element={<Auth0Callback />} />
+            <Route element={<ProtectedRouteWrapper />}>
+              <Route element={<Root />}>
+                <Route path="/" element={<Navigate to="/wallets" replace />} />
+                <Route path="/wallet/:walletUuid/assets" element={<Wallet />} />
+                <Route path="/wallets" element={<Clients />} />
+                <Route path="/customers" element={<Customers />} />
+                <Route path="/admin/orgs" element={<AssetsOrg />} />
+                <Route path="/clients/:walletUuid/infos" element={<Infos />} />
+                <Route path="/wallet/:walletUuid/graphs" element={<Graphs />} />
+                <Route
+                  path="/wallet/:walletUuid/history"
+                  element={<History />}
+                />
+                <Route path="*" element={<ErrorPage />} />
               </Route>
             </Route>
-          )}
-        </Routes>
+          </Route>
+        )}
+      </Routes>
     </AuthProvider>
   )
 }
