@@ -3,7 +3,8 @@ import { useToast } from '@/components/ui/use-toast'
 import { useSignalStore } from '@/store/signalEffect'
 import {
   deleteAssetWallet,
-  updateAssetWalletInformations,
+  tradeAsset,
+  updateAssetIdealAllocation,
 } from '@/services/wallet/walletAssetService'
 import { ClientActive } from '../columns'
 
@@ -18,28 +19,30 @@ export function useWalletActions(
     state.signal,
   ])
 
-  const handleUpdateInformationAssetWallet = async (
+  const handleUpdateInformationAssetWallet = () => {
+    return 'method to be removed'
+  }
+
+  const handleTradeAsset = async (
     quantity: number,
-    idealAllocation: number,
   ) => {
     toast({
       className: 'bg-yellow-500 border-0',
-      title: 'Processing add Asset in organization',
-      description: 'Demo Vault !!',
+      title: 'Processing trade...',
+      description: '',
     })
 
-    const result = await updateAssetWalletInformations(
+    const result = await tradeAsset(
       walletUuid as string,
       rowInfos.id,
       quantity,
-      idealAllocation,
     )
 
     if (result === false) {
       return toast({
         className: 'bg-red-500 border-0',
-        title: 'Failed add Asset in organization',
-        description: 'Demo Vault !!',
+        title: 'Failed at trading asset.',
+        description: '',
       })
     }
 
@@ -48,8 +51,41 @@ export function useWalletActions(
 
     return toast({
       className: 'bg-green-500 border-0',
-      title: 'Success update !!',
-      description: 'Demo Vault !!',
+      title: 'Success on trade!',
+      description: '',
+    })
+  }
+
+  const handleUpdateIdealAllocation = async (
+    idealAllocation: number,
+  ) => {
+    toast({
+      className: 'bg-yellow-500 border-0',
+      title: 'Processing update ideal allocation...',
+      description: '',
+    })
+
+    const result = await updateAssetIdealAllocation(
+      walletUuid as string,
+      rowInfos.id,
+      idealAllocation,
+    )
+
+    if (result === false) {
+      return toast({
+        className: 'bg-red-500 border-0',
+        title: 'Failed to update ideal allocation.',
+        description: '',
+      })
+    }
+
+    setSignal(!signal)
+    fetchData()
+
+    return toast({
+      className: 'bg-green-500 border-0',
+      title: 'Success on update ideal allocation!',
+      description: '',
     })
   }
 
@@ -81,7 +117,9 @@ export function useWalletActions(
   }
 
   return {
-    handleUpdateInformationAssetWallet,
+    handleTradeAsset,
+    handleUpdateIdealAllocation,
     handleDeleteAssetWallet,
+    handleUpdateInformationAssetWallet
   }
 }
