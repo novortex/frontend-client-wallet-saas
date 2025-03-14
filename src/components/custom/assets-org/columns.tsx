@@ -12,6 +12,8 @@ import {
   MoreHorizontal,
   PencilIcon,
   TriangleAlert,
+  ArrowUp,
+  ArrowDown,
 } from 'lucide-react'
 import { Button } from '../../ui/button'
 import {
@@ -24,6 +26,7 @@ import {
   DialogFooter,
   DialogHeader,
 } from '@/components/ui/dialog'
+import { useEffect, useState } from 'react'
 
 export type AssetOrgs = {
   id: string
@@ -39,6 +42,7 @@ export type AssetOrgs = {
   quantStandard: string
   quantHighRisk: string
   quantSHighRisk: string
+  priceChange?: number
 }
 
 export const columnsAssetOrg: ColumnDef<AssetOrgs>[] = [
@@ -61,8 +65,46 @@ export const columnsAssetOrg: ColumnDef<AssetOrgs>[] = [
     header: () => <div className="text-center">Price</div>,
     cell: ({ row }) => {
       const price = row.original.price
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      const [prevPrice, setPrevPrice] = useState(price)
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      const [highlight, setHighlight] = useState<'up' | 'down' | null>(null)
+
+      // Efeito para detectar mudanças de preço e aplicar highlight
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      useEffect(() => {
+        if (price !== prevPrice) {
+          // Determinar se o preço subiu ou desceu
+          setHighlight(price > prevPrice ? 'up' : 'down')
+
+          // Salvar o novo preço como referência
+          setPrevPrice(price)
+
+          // Remover o highlight após 2 segundos
+          const timer = setTimeout(() => {
+            setHighlight(null)
+          }, 2000)
+
+          return () => clearTimeout(timer)
+        }
+      }, [price, prevPrice])
+
       return (
-        <div className="text-center">
+        <div
+          className={`flex items-center justify-center text-center transition-colors duration-500 ${
+            highlight === 'up'
+              ? 'text-green-600 dark:text-green-400'
+              : highlight === 'down'
+                ? 'text-red-600 dark:text-red-400'
+                : ''
+          }`}
+        >
+          {highlight === 'up' && (
+            <ArrowUp className="mr-1 h-4 w-4 text-green-600 dark:text-green-400" />
+          )}
+          {highlight === 'down' && (
+            <ArrowDown className="mr-1 h-4 w-4 text-red-600 dark:text-red-400" />
+          )}
           {price ? `U$ ${price.toFixed(2)}` : 'N/A'}
         </div>
       )

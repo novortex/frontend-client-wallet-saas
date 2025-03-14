@@ -2,8 +2,9 @@
 
 import { ColumnDef } from '@tanstack/react-table'
 import { CellActions } from './cellAction'
-import { ArrowUpDown } from 'lucide-react'
+import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { useEffect, useState } from 'react'
 
 export type ClientActive = {
   id: string
@@ -73,9 +74,47 @@ export const createColumns = (
     header: () => <div className="text-center">Price</div>,
     cell: ({ row }) => {
       const value = Number(row.original.price)
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      const [prevPrice, setPrevPrice] = useState(value)
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      const [highlight, setHighlight] = useState<'up' | 'down' | null>(null)
+
+      // Efeito para detectar mudanças de preço e aplicar highlight
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      useEffect(() => {
+        if (value !== prevPrice) {
+          // Determinar se o preço subiu ou desceu
+          setHighlight(value > prevPrice ? 'up' : 'down')
+
+          // Salvar o novo preço como referência
+          setPrevPrice(value)
+
+          // Remover o highlight após 2 segundos
+          const timer = setTimeout(() => {
+            setHighlight(null)
+          }, 2000)
+
+          return () => clearTimeout(timer)
+        }
+      }, [value, prevPrice])
+
       return (
-        <div className="text-center">
-          {!isNaN(value) ? value.toFixed(2) : 'N/A'}
+        <div
+          className={`flex items-center justify-center text-center transition-colors duration-500 ${
+            highlight === 'up'
+              ? 'text-green-600 dark:text-green-400'
+              : highlight === 'down'
+                ? 'text-red-600 dark:text-red-400'
+                : ''
+          }`}
+        >
+          {highlight === 'up' && (
+            <ArrowUp className="mr-1 h-4 w-4 text-green-600 dark:text-green-400" />
+          )}
+          {highlight === 'down' && (
+            <ArrowDown className="mr-1 h-4 w-4 text-red-600 dark:text-red-400" />
+          )}
+          {value ? `U$ ${value.toFixed(2)}` : 'N/A'}
         </div>
       )
     },
