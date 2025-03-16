@@ -170,22 +170,27 @@ export const createColumns = (
     accessorKey: 'profitLoss',
     header: () => <div className="text-center">P/L</div>,
     cell: ({ row }) => {
-      const value = Number(row.original.profitLoss)
+      const price = Number(row.original.price);
+      const averagePrice = Number(row.original.averagePrice);
+      const assetQuantity = Number(row.original.assetQuantity);
+      const currentAmount = Number(row.original.currentAmount);
+  
+      // Verify that Average Price, Quantity, Invested Amount, and Price are not zero
+      if (price === 0 || averagePrice === 0 || assetQuantity === 0 || currentAmount === 0) {
+        return <div className="text-center text-gray-400">N/A</div>;
+      }
+  
+      const value = ((price - averagePrice) / price) * 100;
       const formattedValue =
-        value > 0
-          ? `+${Number(row.original.profitLoss).toFixed(2)}`
-          : Number(row.original.profitLoss).toFixed(2)
+        value > 0 ? `+${value.toFixed(2)}%` : `${value.toFixed(2)}%`;
       const textColor =
-        isNaN(value) || value === 0
-          ? 'text-gray-400'
-          : value > 0
-            ? 'text-green-400'
-            : 'text-red-500'
+        value > 0 ? 'text-green-400' : value < 0 ? 'text-red-500' : 'text-gray-400';
+  
       return (
         <div className={`text-center ${textColor}`}>
-          {!isNaN(value) ? formattedValue : 'N/A'}
+          {formattedValue}
         </div>
-      )
+      );
     },
   },
   {
