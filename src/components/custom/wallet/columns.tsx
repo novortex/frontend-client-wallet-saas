@@ -180,7 +180,7 @@ export const createColumns = (
         return <div className="text-center text-gray-400">N/A</div>;
       }
   
-      const value = ((price - averagePrice) / price) * 100;
+      const value = ((price - averagePrice) / averagePrice) * 100;
       const formattedValue =
         value > 0 ? `+${value.toFixed(2)}%` : `${value.toFixed(2)}%`;
       const textColor =
