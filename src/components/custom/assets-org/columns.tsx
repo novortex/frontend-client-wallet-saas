@@ -25,6 +25,8 @@ import {
   DialogHeader,
 } from '@/components/ui/dialog'
 
+import Price from './cellAction/price'
+
 export type AssetOrgs = {
   id: string
   asset: {
@@ -39,12 +41,13 @@ export type AssetOrgs = {
   quantStandard: string
   quantHighRisk: string
   quantSHighRisk: string
+  priceChange?: number
 }
 
 export const columnsAssetOrg: ColumnDef<AssetOrgs>[] = [
   {
     accessorKey: 'asset',
-    header: () => <div className="text-left text-center">Asset</div>,
+    header: () => <div className="text-center">Asset</div>,
     cell: ({ row }) => (
       <div className="flex items-center justify-start pl-4">
         <img
@@ -59,14 +62,7 @@ export const columnsAssetOrg: ColumnDef<AssetOrgs>[] = [
   {
     accessorKey: 'price',
     header: () => <div className="text-center">Price</div>,
-    cell: ({ row }) => {
-      const price = row.original.price
-      return (
-        <div className="text-center">
-          {price ? `U$ ${price.toFixed(2)}` : 'N/A'}
-        </div>
-      )
-    },
+    cell: ({ row }) => <Price row={row.original} />,
   },
   {
     accessorKey: 'appearances',

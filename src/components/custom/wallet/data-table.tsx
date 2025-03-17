@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -24,10 +24,28 @@ import filterIcon from '@/assets/icons/filter.svg'
 import exportIcon from '@/assets/icons/export.svg'
 import { AddNewWalletModal } from '../add-new-wallet-modal'
 import { RebalanceModal } from '../rebalanceModal'
+import { useAssetPricesSocket } from '@/hooks/useSocketPrice'
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
+export type ClientActive = {
+  id: string
+  asset: {
+    urlImage: string
+    name: string
+  }
+  currentAmount: number
+  assetQuantity: number
+  price: number
+  allocation: number
+  idealAllocation: number
+  idealAmount: number
+  buyOrSell: number
+  averagePrice: number
+  profitLoss: number
+}
+
+interface DataTableProps<TValue> {
+  columns: ColumnDef<ClientActive, TValue>[]
+  data: ClientActive[]
   walletUuid: string
   fetchData: () => Promise<void>
   calculateRebalance: (rebalanceData: {
@@ -36,12 +54,12 @@ interface DataTableProps<TData, TValue> {
   }) => Promise<unknown[]>
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TValue>({
   columns,
   data,
   walletUuid,
   fetchData,
-}: DataTableProps<TData, TValue>) {
+}: DataTableProps<TValue>) {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [sorting, setSorting] = useState<SortingState>([
     { id: 'investedAmount', desc: true },
@@ -56,8 +74,29 @@ export function DataTable<TData, TValue>({
     setIsModalOpen(false)
   }
 
+  const assetIds = useMemo(() => {
+    return data.map((item) => item.id)
+  }, [data])
+
+  const { assetPrices } = useAssetPricesSocket(assetIds)
+
+  const dataWithUpdatedPrices = useMemo(() => {
+    return data.map((item) => {
+      const assetId = item.id
+
+      if (assetPrices[assetId] !== undefined) {
+        return {
+          ...item,
+          price: assetPrices[assetId],
+        }
+      }
+
+      return item
+    })
+  }, [data, assetPrices])
+
   const table = useReactTable({
-    data,
+    data: dataWithUpdatedPrices,
     columns,
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,

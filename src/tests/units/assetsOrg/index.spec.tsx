@@ -6,19 +6,23 @@ import { columnsAssetOrg } from '../../../components/custom/assets-org/columns'
 import { DataTableAssetOrg } from '../../../components/custom/assets-org/data-table'
 import { ColumnDef } from '@tanstack/react-table'
 
-type AssetOrg = {
+type Asset = {
   id: string
-  asset: { urlImage: string; name: string }
+  asset: {
+    urlImage: string
+    name: string
+  }
   price: number
   appearances: string
   porcentOfApp: string
   quantSLowRisk: string
   quantLowRisk: string
   quantStandard: string
-  averagePrice?: number
+  quantHighRisk: string
+  quantSHighRisk: string
 }
 
-const expectedColumns = columnsAssetOrg as ColumnDef<AssetOrg, unknown>[]
+const expectedColumns = columnsAssetOrg as ColumnDef<Asset, unknown>[]
 
 describe('Asset Organization', () => {
   describe('AddNewAssetModal Component', () => {
@@ -49,7 +53,7 @@ describe('Asset Organization', () => {
   })
 
   describe('DataTableAssetOrg Component', () => {
-    const mockData: AssetOrg[] = [
+    const mockData: Asset[] = [
       {
         id: '1',
         asset: { urlImage: 'bitcoin.png', name: 'Bitcoin' },
@@ -59,7 +63,8 @@ describe('Asset Organization', () => {
         quantSLowRisk: '2 wallets',
         quantLowRisk: '1 wallet',
         quantStandard: '2 wallets',
-        averagePrice: 30000,
+        quantHighRisk: '0 wallets',
+        quantSHighRisk: '0 wallets',
       },
     ]
 
@@ -94,16 +99,18 @@ describe('Asset Organization', () => {
   })
 
   describe('DataTableAssetOrg Component', () => {
-    const mockData: AssetOrg[] = [
+    const mockData: Asset[] = [
       {
         id: '1',
-        asset: { urlImage: '/assets/bitcoin.png', name: 'Bitcoin' },
+        asset: { urlImage: 'bitcoin.png', name: 'Bitcoin' },
         price: 40000,
-        appearances: '5 Wallets',
+        appearances: '5 wallets',
         porcentOfApp: '50%',
-        quantSLowRisk: '2 Wallets',
-        quantLowRisk: '1 Wallet',
-        quantStandard: '2 Wallets',
+        quantSLowRisk: '2 wallets',
+        quantLowRisk: '1 wallet',
+        quantStandard: '2 wallets',
+        quantHighRisk: '0 wallets',
+        quantSHighRisk: '0 wallets',
       },
     ]
 

@@ -4,6 +4,7 @@ import { ColumnDef } from '@tanstack/react-table'
 import { CellActions } from './cellAction'
 import { ArrowUpDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import Price from './cellAction/price'
 
 export type ClientActive = {
   id: string
@@ -71,14 +72,7 @@ export const createColumns = (
   {
     accessorKey: 'price',
     header: () => <div className="text-center">Price</div>,
-    cell: ({ row }) => {
-      const value = Number(row.original.price)
-      return (
-        <div className="text-center">
-          {!isNaN(value) ? value.toFixed(2) : 'N/A'}
-        </div>
-      )
-    },
+    cell: ({ row }) => <Price row={row.original} />,
   },
   {
     accessorKey: 'allocation',
