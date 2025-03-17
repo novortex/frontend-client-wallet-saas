@@ -35,7 +35,6 @@ type Asset = {
   quantSHighRisk: string
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface DataTableProps<TValue> {
   columns: ColumnDef<Asset, TValue>[]
   data: Asset[]

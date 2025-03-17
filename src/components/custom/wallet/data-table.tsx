@@ -43,7 +43,6 @@ export type ClientActive = {
   profitLoss: number
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface DataTableProps<TValue> {
   columns: ColumnDef<ClientActive, TValue>[]
   data: ClientActive[]
