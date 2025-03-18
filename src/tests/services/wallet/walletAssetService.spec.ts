@@ -6,7 +6,8 @@ import {
   getAllAssetsInOrgForAddWalletClient,
   getAllAssetsWalletClient,
   rebalanceWallet,
-  updateAssetWalletInformations,
+  updateAssetIdealAllocation,
+  tradeAsset,
 } from '@/services/wallet/walletAssetService'
 
 jest.mock('@/config/api', () => ({
@@ -41,28 +42,72 @@ describe('walletAssetService', () => {
       ;(instance.get as jest.Mock).mockRejectedValue(new Error('Network error'))
 
       const result = await getAllAssetsWalletClient('123')
-      expect(result).toBeUndefined() // Should not throw, should return undefined
+      expect(result).toBeUndefined()
     })
   })
 
-  describe('updateAssetWalletInformations', () => {
-    it('should update asset wallet information', async () => {
+  describe('updateAssetIdealAllocation', () => {
+    it('should update ideal allocation successfully', async () => {
       const mockData = { success: true }
       ;(instance.put as jest.Mock).mockResolvedValue({ data: mockData })
 
-      const result = await updateAssetWalletInformations('123', '456', 10, 20)
+      const result = await updateAssetIdealAllocation('123', '456', 30)
       expect(result).toEqual(mockData)
-      expect(instance.put).toHaveBeenCalledWith('wallet/123/asset', {
+      expect(instance.put).toHaveBeenCalledWith('wallet/123/idealAllocation', {
         assetUuid: '456',
-        quantity: 10,
-        targetAllocation: 20,
+        idealAllocation: 30,
       })
     })
 
-    it('should return false when updating asset wallet information fails', async () => {
-      ;(instance.put as jest.Mock).mockRejectedValue(new Error('Invalid data'))
+    it('should return false if update fails', async () => {
+      ;(instance.put as jest.Mock).mockRejectedValue(
+        new Error('Invalid allocation'),
+      )
 
-      const result = await updateAssetWalletInformations('123', '456', -10, 200)
+      const result = await updateAssetIdealAllocation('123', '456', -10)
+      expect(result).toBe(false)
+    })
+
+    it('should handle invalid ideal allocation range', async () => {
+      const result = await updateAssetIdealAllocation('123', '456', 150) // Invalid ideal allocation
+      expect(result).toBe(false)
+    })
+  })
+
+  describe('tradeAsset', () => {
+    it('should execute trade successfully (buy)', async () => {
+      const mockData = { success: true }
+      ;(instance.put as jest.Mock).mockResolvedValue({ data: mockData })
+
+      const result = await tradeAsset('123', '456', 10)
+      expect(result).toEqual(mockData)
+      expect(instance.put).toHaveBeenCalledWith('wallet/123/trade', {
+        assetUuid: '456',
+        quantity: 10,
+      })
+    })
+
+    it('should execute trade successfully (sell)', async () => {
+      const mockData = { success: true }
+      ;(instance.put as jest.Mock).mockResolvedValue({ data: mockData })
+
+      const result = await tradeAsset('123', '456', -5)
+      expect(result).toEqual(mockData)
+      expect(instance.put).toHaveBeenCalledWith('wallet/123/trade', {
+        assetUuid: '456',
+        quantity: -5,
+      })
+    })
+
+    it('should return false if trade fails', async () => {
+      ;(instance.put as jest.Mock).mockRejectedValue(new Error('Trade error'))
+
+      const result = await tradeAsset('123', '456', 10)
+      expect(result).toBe(false)
+    })
+
+    it('should return false if quantity is invalid', async () => {
+      const result = await tradeAsset('123', '456', 0) // Invalid quantity
       expect(result).toBe(false)
     })
   })
