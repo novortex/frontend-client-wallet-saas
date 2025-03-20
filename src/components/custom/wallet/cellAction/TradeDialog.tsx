@@ -30,6 +30,7 @@ export function TradeDialog({
   const { handleTradeAsset } = useWalletActions(rowInfos, fetchData)
 
   const handleBuy = () => {
+    const currentQuantity = rowInfos.assetQuantity
     const quantity = parseFloat(quantityRef.current?.value ?? '0')
     if (quantity <= 0) {
       return toast({
@@ -38,7 +39,8 @@ export function TradeDialog({
         description: 'Please provide a valid quantity to buy.',
       })
     }
-    handleTradeAsset(quantity)
+    const tradeQuantity = currentQuantity + quantity
+    handleTradeAsset(tradeQuantity, 'buy')
     onOpenChange(false)
   }
 
@@ -64,7 +66,7 @@ export function TradeDialog({
 
     const tradeQuantity = currentQuantity - quantityToSell
 
-    handleTradeAsset(tradeQuantity)
+    handleTradeAsset(tradeQuantity, 'sell')
     onOpenChange(false)
   }
 

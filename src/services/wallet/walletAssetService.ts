@@ -20,7 +20,7 @@ export async function tradeAsset(
   quantity: number,
 ) {
   try {
-    const result = await instance.put(`wallet/${walletUuid}/trade`, {
+    const result = await instance.put(`wallet/${walletUuid}/newQuantity`, {
       assetUuid,
       quantity,
     })

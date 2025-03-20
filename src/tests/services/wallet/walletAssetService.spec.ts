@@ -69,7 +69,7 @@ describe('walletAssetService', () => {
     })
 
     it('should handle invalid ideal allocation range', async () => {
-      const result = await updateAssetIdealAllocation('123', '456', 150) // Invalid ideal allocation
+      const result = await updateAssetIdealAllocation('123', '456', 150)
       expect(result).toBe(false)
     })
   })
@@ -81,7 +81,7 @@ describe('walletAssetService', () => {
 
       const result = await tradeAsset('123', '456', 10)
       expect(result).toEqual(mockData)
-      expect(instance.put).toHaveBeenCalledWith('wallet/123/trade', {
+      expect(instance.put).toHaveBeenCalledWith('wallet/123/newQuantity', {
         assetUuid: '456',
         quantity: 10,
       })
@@ -93,7 +93,7 @@ describe('walletAssetService', () => {
 
       const result = await tradeAsset('123', '456', -5)
       expect(result).toEqual(mockData)
-      expect(instance.put).toHaveBeenCalledWith('wallet/123/trade', {
+      expect(instance.put).toHaveBeenCalledWith('wallet/123/newQuantity', {
         assetUuid: '456',
         quantity: -5,
       })
@@ -107,7 +107,7 @@ describe('walletAssetService', () => {
     })
 
     it('should return false if quantity is invalid', async () => {
-      const result = await tradeAsset('123', '456', 0) // Invalid quantity
+      const result = await tradeAsset('123', '456', 0)
       expect(result).toBe(false)
     })
   })

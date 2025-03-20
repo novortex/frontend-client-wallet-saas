@@ -19,7 +19,7 @@ export function useWalletActions(
     state.signal,
   ])
 
-  const handleTradeAsset = async (quantity: number) => {
+  const handleTradeAsset = async (quantity: number, action: 'buy' | 'sell') => {
     if (quantity <= 0) {
       return toast({
         className: 'bg-red-500 border-0',
@@ -36,12 +36,11 @@ export function useWalletActions(
       })
     }
 
-    const isBuy = quantity > 0
-    const action = isBuy ? 'Buy' : 'Sell'
+    const actionTitle = action === 'buy' ? 'Buy' : 'Sell'
 
     toast({
       className: 'bg-yellow-500 border-0',
-      title: `Processing ${action}...`,
+      title: `Processing ${actionTitle}...`,
       description: '',
     })
 
@@ -61,7 +60,7 @@ export function useWalletActions(
 
       toast({
         className: 'bg-green-500 border-0',
-        title: `${action} successful!`,
+        title: `${actionTitle} successful!`,
         description: '',
       })
     } catch (error: unknown) {
