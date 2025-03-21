@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -10,25 +10,60 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import filterIcon from '@/assets/icons/filter.svg'
 import exportIcon from '@/assets/icons/export.svg'
 import { AddNewWalletModal } from '../add-new-wallet-modal'
 import { RebalanceModal } from '../rebalanceModal'
+import { useAssetPricesSocket } from '@/hooks/useSocketPrice'
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
-  walletUuid: string
-  fetchData: () => Promise<void>
-  calculateRebalance: (rebalanceData: { minAmount: number; minPercentage: number }) => Promise<unknown[]>
+export type ClientActive = {
+  id: string
+  asset: {
+    urlImage: string
+    name: string
+  }
+  currentAmount: number
+  assetQuantity: number
+  price: number
+  allocation: number
+  idealAllocation: number
+  idealAmount: number
+  buyOrSell: number
+  averagePrice: number
+  profitLoss: number
 }
 
-export function DataTable<TData, TValue>({ columns, data, walletUuid, fetchData }: DataTableProps<TData, TValue>) {
+interface DataTableProps<TValue> {
+  columns: ColumnDef<ClientActive, TValue>[]
+  data: ClientActive[]
+  walletUuid: string
+  fetchData: () => Promise<void>
+  calculateRebalance: (rebalanceData: {
+    minAmount: number
+    minPercentage: number
+  }) => Promise<unknown[]>
+}
+
+export function DataTable<TValue>({
+  columns,
+  data,
+  walletUuid,
+  fetchData,
+}: DataTableProps<TValue>) {
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [sorting, setSorting] = useState<SortingState>([{ id: 'investedAmount', desc: true }])
+  const [sorting, setSorting] = useState<SortingState>([
+    { id: 'investedAmount', desc: true },
+  ])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
 
   const openModal = () => {
@@ -39,8 +74,29 @@ export function DataTable<TData, TValue>({ columns, data, walletUuid, fetchData 
     setIsModalOpen(false)
   }
 
+  const assetIds = useMemo(() => {
+    return data.map((item) => item.id)
+  }, [data])
+
+  const { assetPrices } = useAssetPricesSocket(assetIds)
+
+  const dataWithUpdatedPrices = useMemo(() => {
+    return data.map((item) => {
+      const assetId = item.id
+
+      if (assetPrices[assetId] !== undefined) {
+        return {
+          ...item,
+          price: assetPrices[assetId],
+        }
+      }
+
+      return item
+    })
+  }, [data, assetPrices])
+
   const table = useReactTable({
-    data,
+    data: dataWithUpdatedPrices,
     columns,
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,
@@ -55,24 +111,29 @@ export function DataTable<TData, TValue>({ columns, data, walletUuid, fetchData 
 
   return (
     <div className="rounded-md">
-      <div className="bg-[#171717] rounded-t-lg p-5 flex items-center justify-between w-full">
-        <h1 className="text-xl text-white w-1/3">Assets wallet</h1>
-        <div className="flex gap-5 w-fit">
+      <div className="flex w-full items-center justify-between rounded-t-lg border bg-lightComponent p-5 dark:bg-[#171717]">
+        <h1 className="w-1/3 text-xl dark:text-white">Assets wallet</h1>
+        <div className="flex w-fit gap-5">
           <Input
             placeholder="Filter asset name..."
             value={(table.getColumn('asset')?.getFilterValue() as string) ?? ''}
-            onChange={(event) => table.getColumn('asset')?.setFilterValue(event.target.value)}
-            className="bg-gray-800 text-gray-400 border-transparent h-11"
+            onChange={(event) =>
+              table.getColumn('asset')?.setFilterValue(event.target.value)
+            }
+            className="h-11 border border-transparent bg-gray-300 dark:bg-gray-800 dark:text-gray-400"
           />
 
           <RebalanceModal walletUuid={walletUuid} />
-          <Button className="bg-white text-black flex gap-2 hover:bg-gray-400 w-1/3 p-5">
+          <Button className="flex w-1/3 gap-2 border bg-gray-200 p-5 text-black hover:bg-gray-400 dark:bg-white">
             <img src={filterIcon} alt="" /> Filters
           </Button>
-          <Button className="bg-white text-black flex gap-2 hover:bg-gray-400 w-1/3 p-5">
+          <Button className="flex w-1/3 gap-2 bg-gray-200 p-5 text-black hover:bg-gray-400 dark:bg-white">
             <img src={exportIcon} alt="" /> Export
           </Button>
-          <Button className="bg-[#F2BE38] text-black w-1/2 hover:text-white hover:bg-yellow-600 p-5" onClick={openModal}>
+          <Button
+            className="w-1/2 bg-[#F2BE38] p-5 text-black hover:bg-yellow-600 hover:text-white"
+            onClick={openModal}
+          >
             + Add New
           </Button>
         </div>
@@ -80,21 +141,37 @@ export function DataTable<TData, TValue>({ columns, data, walletUuid, fetchData 
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id} className="bg-[#131313] hover:bg-[#131313]">
+            <TableRow
+              key={headerGroup.id}
+              className="border bg-gray-200 dark:bg-[#131313] dark:hover:bg-[#131313]"
+            >
               {headerGroup.headers.map((header) => (
-                <TableHead key={header.id} className="text-white">
-                  {!header.isPlaceholder && flexRender(header.column.columnDef.header, header.getContext())}
+                <TableHead
+                  key={header.id}
+                  className="text-black dark:text-white"
+                >
+                  {!header.isPlaceholder &&
+                    flexRender(
+                      header.column.columnDef.header,
+                      header.getContext(),
+                    )}
                 </TableHead>
               ))}
             </TableRow>
           ))}
         </TableHeader>
-        <TableBody className="text-[#959CB6] bg-[#171717] hover:bg-[#171717]">
+        <TableBody className="border bg-lightComponent dark:bg-[#171717] dark:text-[#959CB6] dark:hover:bg-[#171717]">
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
-              <TableRow className="hover:bg-[#171717]" key={row.id} data-state={row.getIsSelected() && 'selected'}>
+              <TableRow
+                className="hover:bg-gray-200 dark:hover:bg-[#131313]"
+                key={row.id}
+                data-state={row.getIsSelected() && 'selected'}
+              >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                  <TableCell key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
                 ))}
               </TableRow>
             ))
@@ -107,7 +184,12 @@ export function DataTable<TData, TValue>({ columns, data, walletUuid, fetchData 
           )}
         </TableBody>
       </Table>
-      <AddNewWalletModal isOpen={isModalOpen} onClose={closeModal} walletUuid={walletUuid} fetchData={fetchData} />
+      <AddNewWalletModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        walletUuid={walletUuid}
+        fetchData={fetchData}
+      />
     </div>
   )
 }

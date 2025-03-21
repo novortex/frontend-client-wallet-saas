@@ -1,5 +1,11 @@
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import { Input } from '../ui/input'
 import * as React from 'react'
 // import RelateClientModal from './relate-client-modal'
@@ -13,11 +19,17 @@ interface AddNewClientModalProps {
   onClose: () => void
 }
 
-export default function AddNewClientModal({ isOpen, onClose }: AddNewClientModalProps) {
+export default function AddNewClientModal({
+  isOpen,
+  onClose,
+}: AddNewClientModalProps) {
   const [name, setName] = React.useState('')
   const [email, setEmail] = React.useState('')
   const [phone, setPhone] = React.useState('')
-  const [signal, setSignal] = useSignalStore((state) => [state.signal, state.setSignal])
+  const [signal, setSignal] = useSignalStore((state) => [
+    state.signal,
+    state.setSignal,
+  ])
   const { toast } = useToast()
 
   const handleAddClient = async () => {
@@ -67,26 +79,28 @@ export default function AddNewClientModal({ isOpen, onClose }: AddNewClientModal
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="h-1/3 w-[200%] bg-[#131313] text-[#fff]">
         <DialogHeader>
-          <DialogTitle className="text-3xl text-[#fff]">Register new customer</DialogTitle>
+          <DialogTitle className="text-3xl text-[#fff]">
+            Register new customer
+          </DialogTitle>
         </DialogHeader>
-        <div className="w-full flex flex-col gap-4">
-          <div className="w-full h-1/2 flex flex-row justify-between gap-4 items-center">
+        <div className="flex w-full flex-col gap-4">
+          <div className="flex h-1/2 w-full flex-row items-center justify-between gap-4">
             <Input
-              className="w-1/2 h-full bg-[#272727] border-[#323232] text-[#959CB6]"
+              className="h-full w-1/2 border-[#323232] bg-[#272727] text-[#959CB6]"
               placeholder="Name"
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
             <Input
-              className="w-1/2 h-full bg-[#272727] border-[#323232] text-[#959CB6]"
+              className="h-full w-1/2 border-[#323232] bg-[#272727] text-[#959CB6]"
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
-          <div className="w-full h-1/2 flex flex-row justify-between gap-4 items-center">
+          <div className="flex h-1/2 w-full flex-row items-center justify-between gap-4">
             <Input
-              className="w-1/2 h-full bg-[#272727] border-[#323232] text-[#959CB6]"
+              className="h-full w-1/2 border-[#323232] bg-[#272727] text-[#959CB6]"
               placeholder="Phone Number"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
@@ -94,12 +108,12 @@ export default function AddNewClientModal({ isOpen, onClose }: AddNewClientModal
           </div>
         </div>
         <DialogFooter className="items-center">
-          <div className="font-bold text-yellow-200 flex gap-2 mr-5">
+          <div className="mr-5 flex gap-2 font-bold text-yellow-200">
             <AlertCircle />
             <span>This customer will be assigned to you</span>
           </div>
           <Button
-            className="bg-[#1877F2] w-1/4 hover:bg-blue-600 p-5"
+            className="w-1/4 bg-[#1877F2] p-5 hover:bg-blue-600"
             onClick={() => {
               handleAddClient()
             }}

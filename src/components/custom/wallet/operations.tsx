@@ -1,15 +1,30 @@
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import { StepForwardIcon, HandCoins, Info, CalendarIcon } from 'lucide-react'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Checkbox } from '@/components/ui/checkbox'
 import { useEffect, useState } from 'react'
 import { useToast } from '@/components/ui/use-toast'
 import { useParams } from 'react-router-dom'
 import { useSignalStore } from '@/store/signalEffect'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 import { Calendar } from '@/components/ui/calendar'
 import { getAllFiatCurrencies } from '@/services/managementService'
 import { createDepositWithdrawal } from '@/services/wallet/walletAssetService'
@@ -20,96 +35,99 @@ interface OperationsModalProps {
   fetchData: () => Promise<void>
 }
 
-export default function OperationsModal({ isOpen, onClose, fetchData }: OperationsModalProps) {
+export default function OperationsModal({
+  isOpen,
+  onClose,
+  fetchData,
+}: OperationsModalProps) {
   const [operation, setOperation] = useState('')
   const [amount, setAmount] = useState('')
   const [currency, setCurrency] = useState('')
-
   const [operationError, setOperationError] = useState('')
   const [amountError, setAmountError] = useState('')
   const [currencyError, setCurrencyError] = useState('')
-
+  const [dateError, setDateError] = useState('')
   const [fiatCurrencies, setFiatCurrencies] = useState<string[]>([])
-  const [signal, setSignal] = useSignalStore((state) => [state.signal, state.setSignal])
-
+  const [signal, setSignal] = useSignalStore((state) => [
+    state.signal,
+    state.setSignal,
+  ])
+  const [date, setDate] = useState<Date | null>(null)
   const { walletUuid } = useParams()
-
   const { toast } = useToast()
-
-  // Estado para controlar o checkbox
-  const [isCustomDateEnabled, setIsCustomDateEnabled] = useState(false)
 
   useEffect(() => {
     const fetchFiatCurrencies = async () => {
       try {
         const result = await getAllFiatCurrencies()
-
         const currencyAbbreviations = Object.keys(result.currencies)
-
         setFiatCurrencies(currencyAbbreviations)
       } catch (error) {
         console.error('Error fetching currencies', error)
       }
     }
-
     fetchFiatCurrencies()
   }, [])
+
+  useEffect(() => {
+    if (!isOpen) {
+      setOperation('')
+      setAmount('')
+      setCurrency('')
+      setDate(null)
+      setOperationError('')
+      setAmountError('')
+      setCurrencyError('')
+      setDateError('')
+    }
+  }, [isOpen])
 
   const validateAmount = (amount: string) => {
     const numberPattern = /^\d+(\.\d{1,2})?$/
     if (!numberPattern.test(amount)) {
-      setAmountError('Amount must be a positive number and can only contain numbers and points, with up to two decimal places (e.g., 199.99).')
+      setAmountError(
+        'Amount must be a positive number and can only contain numbers and points, with up to two decimal places (e.g., 199.99).',
+      )
       return false
     }
-
     if (parseFloat(amount) <= 0) {
       setAmountError('Amount must be a positive number.')
       return false
     }
-
     setAmountError('')
     return true
   }
 
-  const [date, setDate] = useState<Date>(new Date())
-
-  const isToday = (dateToCheck: Date) => {
-    const today = new Date()
-    return (
-      dateToCheck.getDate() === today.getDate() && dateToCheck.getMonth() === today.getMonth() && dateToCheck.getFullYear() === today.getFullYear()
-    )
-  }
-
-  const formatDateToISO = (date: Date): string => {
-    return date.toISOString() // Retorna "YYYY-MM-DDTHH:mm:ss.sssZ"
+  const formatDateToISO = (date: Date | null): string => {
+    if (!date) return '-'
+    return date.toISOString()
   }
 
   const sendOperation = async () => {
     let valid = true
-
     if (!operation) {
       setOperationError('Operation is required.')
       valid = false
     } else {
       setOperationError('')
     }
-
     if (!currency) {
       setCurrencyError('Currency is required.')
       valid = false
     } else {
       setCurrencyError('')
     }
-
     if (!validateAmount(amount)) {
       valid = false
     }
-
+    if (!date) {
+      setDateError('Effective date of operation must be provided')
+      valid = false
+    } else {
+      setDateError('')
+    }
     if (!walletUuid) throw new Error('Wallet UUID is required.')
-
     if (!valid) return
-
-    const isWithdrawal = operation === 'Withdrawal'
 
     try {
       toast({
@@ -117,24 +135,21 @@ export default function OperationsModal({ isOpen, onClose, fetchData }: Operatio
         title: 'Operation in progress',
         description: `Operation: ${operation}, Amount: ${amount}, Currency: ${currency}`,
       })
-
       const customDateFormatted = formatDateToISO(date)
-
-      const result = await createDepositWithdrawal(parseFloat(amount), walletUuid, currency, isWithdrawal, customDateFormatted)
-
+      const result = await createDepositWithdrawal(
+        parseFloat(amount),
+        walletUuid,
+        currency,
+        operation === 'Withdrawal',
+        customDateFormatted,
+      )
       fetchData()
-
       toast({
         className: 'bg-green-500 border-0',
         title: 'Operation successful',
         description: `Operation: ${operation}, Amount: ${amount}, Currency: ${currency}`,
       })
-
-      if (!signal) {
-        setSignal(true)
-      } else {
-        setSignal(false)
-      }
+      setSignal(!signal)
       console.log('Operation successful:', result)
     } catch (error) {
       toast({
@@ -142,37 +157,29 @@ export default function OperationsModal({ isOpen, onClose, fetchData }: Operatio
         title: 'Operation failed',
         description: 'Something went wrong. Please try again later.',
       })
-
       console.error('Operation failed:', error)
     }
-
     setOperation('')
     setAmount('')
+    setDate(null)
     onClose()
   }
 
-  useEffect(() => {
-    if (!isOpen) {
-      setIsCustomDateEnabled(false)
-      setDate(new Date())
-    }
-  }, [isOpen])
-
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-[#131313] h-[95%] text-[#fff] border-transparent">
+      <DialogContent className="h-[95%] border-transparent dark:bg-[#131313] dark:text-[#fff]">
         <DialogHeader>
-          <DialogTitle className="flex flex-row gap-4 text-3xl items-center">
+          <DialogTitle className="flex flex-row items-center gap-4 text-2xl">
             Withdrawal / Deposit <HandCoins className="text-[#F2BE38]" />
           </DialogTitle>
         </DialogHeader>
-        <div className="w-full flex justify-center gap-2 flex-col">
+        <div className="flex w-full flex-col justify-center gap-2">
           <Label>Currency</Label>
           <Select onValueChange={(value) => setCurrency(value)}>
-            <SelectTrigger className="bg-[#131313] border-[#323232] text-[#959CB6] w-1/6">
+            <SelectTrigger className="w-1/6 border bg-lightComponent dark:border-[#323232] dark:bg-[#131313] dark:text-[#959CB6]">
               <SelectValue placeholder="" />
             </SelectTrigger>
-            <SelectContent className="max-h-40% scrollbar-thumb-gray-500 bg-[#131313] border-[#323232] text-[#959CB6]">
+            <SelectContent className="max-h-40% scrollbar-thumb-gray-500 border bg-lightComponent dark:border-[#323232] dark:bg-[#131313] dark:text-[#959CB6]">
               {fiatCurrencies.map((currency) => (
                 <SelectItem key={currency} value={currency}>
                   {currency}
@@ -180,73 +187,78 @@ export default function OperationsModal({ isOpen, onClose, fetchData }: Operatio
               ))}
             </SelectContent>
           </Select>
-          {currencyError && <Label className="text-red-500 mt-2">{currencyError}</Label>}
+          {currencyError && (
+            <Label className="mt-2 text-red-500">{currencyError}</Label>
+          )}
         </div>
-        <div className="w-full flex justify-center gap-2 flex-col">
+        <div className="flex w-full flex-col justify-center gap-2">
           <Label>Operation</Label>
           <Select onValueChange={(value) => setOperation(value)}>
-            <SelectTrigger className="bg-[#131313] border-[#323232] text-[#959CB6] w-1/2">
+            <SelectTrigger className="w-1/2 border bg-lightComponent dark:border-[#323232] dark:bg-[#131313] dark:text-[#959CB6]">
               <SelectValue placeholder="Select operation" />
             </SelectTrigger>
-            <SelectContent className="bg-[#131313] border-[#323232] text-[#959CB6]">
+            <SelectContent className="border bg-lightComponent dark:border-[#323232] dark:bg-[#131313] dark:text-[#959CB6]">
               <SelectItem value="Withdrawal">Withdrawal</SelectItem>
               <SelectItem value="Deposit">Deposit</SelectItem>
             </SelectContent>
           </Select>
-          {operationError && <Label className="text-red-500 mt-2">{operationError}</Label>}
+          {operationError && (
+            <Label className="mt-2 text-red-500">{operationError}</Label>
+          )}
         </div>
-        <div className="w-full flex justify-center gap-2 flex-col">
+        <div className="flex w-full flex-col justify-center gap-2">
           <Label>Amount</Label>
           <Input
-            className="w-1/2 bg-[#131313] border-[#323232] text-[#959CB6]"
+            className="w-1/2 border bg-lightComponent dark:border-[#323232] dark:bg-[#131313] dark:text-[#959CB6]"
             placeholder="Ex: 1000"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
           />
-          {amountError && <Label className="text-red-500 mt-2">{amountError}</Label>}
+          {amountError && (
+            <Label className="mt-2 text-red-500">{amountError}</Label>
+          )}
         </div>
-        <div className="w-full flex justify-center gap-4 flex-col">
-          <div className="flex flex-row gap-2 items-center">
-            <Checkbox className="border-gray-500" onCheckedChange={(checked) => setIsCustomDateEnabled(checked === true)} />
-            <Label>Set Deposit or Withdrawal on a different date</Label>
-          </div>
+        <div className="flex w-full flex-col justify-center gap-4">
           <Popover>
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
-                className="w-[50%] bg-[#131313] border-[#323232] text-[#959CB6] justify-between"
-                disabled={!isCustomDateEnabled}
+                className="w-[50%] justify-between border bg-lightComponent dark:border-[#323232] dark:bg-[#131313] dark:text-[#959CB6]"
               >
-                {date.toLocaleDateString()}
+                {date ? date.toLocaleDateString() : 'DD/MM/YYYY'}
                 <CalendarIcon className="h-4 w-4 opacity-50" />
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="start">
               <Calendar
                 mode="single"
-                selected={date}
                 onSelect={(newDate) => newDate && setDate(newDate)}
-                className="bg-[#131313] text-white rounded-md"
+                className="rounded-md dark:bg-[#131313] dark:text-white"
                 classNames={{
-                  day_today: isToday(date)
-                    ? 'bg-white text-black hover:bg-white rounded-md'
-                    : 'bg-transparent text-white hover:bg-white rounded-md text-black',
+                  day_today:
+                    'bg-transparent text-black dark:text-white hover:bg-white hover:text-black rounded-md',
                   day_selected: 'bg-white text-black hover:bg-white rounded-md',
                 }}
-                disabled={!isCustomDateEnabled}
               />
             </PopoverContent>
           </Popover>
+          {dateError && (
+            <Label className="mt-2 text-red-500">{dateError}</Label>
+          )}
         </div>
-        <div className="w-full flex items-center">
+        <div className="flex w-full items-center">
           <Info className="w-[10%] text-blue-600" />
-          <p className="text-[14px] w-[90%]">
-            After clicking to finish this operation, the data will be updated with no way to revert it, so make sure to check the entire operation
+          <p className="w-[90%] text-[14px]">
+            After clicking to finish this operation, the data will be updated
+            with no way to revert it, so make sure to check the entire operation
             before completing it.
           </p>
         </div>
-        <DialogFooter className="flex justify-end items-end">
-          <Button className="bg-[#1877F2] w-1/4 hover:bg-blue-600 p-5 flex items-center justify-center gap-3" onClick={sendOperation}>
+        <DialogFooter className="flex items-end justify-end">
+          <Button
+            className="flex w-1/4 items-center justify-center gap-3 bg-[#1877F2] p-5 hover:bg-blue-600"
+            onClick={sendOperation}
+          >
             <StepForwardIcon />
             Finish
           </Button>

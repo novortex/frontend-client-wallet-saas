@@ -13,18 +13,27 @@ export default function Root() {
       {!shouldHideNavigation && (
         <SideBar alerts={0}>
           <div className="mb-5">
-            <h3 className="text-white font-medium">Admin</h3>
-            <SideBarItem icon={<Wallet2Icon size={20} />} text="Wallets" href="/wallets"></SideBarItem>
-            <SideBarItem icon={<UsersIcon size={20} />} text="Customers" href="/customers"></SideBarItem>
-            <SideBarItem icon={<Coins size={20} />} text="Assets organization" href="/admin/orgs"></SideBarItem>
+            <h3 className="w-full text-center font-medium dark:text-white">
+              Admin
+            </h3>
+            <br />
+            <SideBarItem
+              icon={<Wallet2Icon size={20} />}
+              text="Wallets"
+              href="/wallets"
+            />
+            <SideBarItem
+              icon={<UsersIcon size={20} />}
+              text="Customers"
+              href="/customers"
+            />
+            <SideBarItem
+              icon={<Coins size={20} />}
+              text="Assets organization"
+              href="/admin/orgs"
+            />
           </div>
-          <div className="mb-5">
-            {/* <h3 className="text-white font-semibold">Client</h3> */}
-            {/* <SideBarItem icon={<UsersIcon />} text="Clients" />
-            <SideBarItem icon={<Info />} text="Infos" />
-            <SideBarItem icon={<BarChartBig />} text="Graphics" />
-            <SideBarItem icon={<WalletIcon />} text="Wallet" /> */}
-          </div>
+          <div className="mb-5">{/* Outras seções */}</div>
         </SideBar>
       )}
       <div className="w-screen" id="detail">

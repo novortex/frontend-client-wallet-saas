@@ -19,6 +19,7 @@ import { ApiAuthManager } from '@/auth/apiAuthManager'
 import { UserDataHandler } from './auth/userDataHandler'
 import { ProtectedRouteWrapper } from './auth/protectedRouteWrapper'
 import { setLogoutFunction } from './services/auth'
+import { Loading } from './components/custom/loading'
 
 export function App() {
   const [isMobile, setIsMobile] = useState(false)
@@ -41,7 +42,7 @@ export function App() {
   }, [])
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return <Loading />
   }
 
   return (
@@ -63,7 +64,10 @@ export function App() {
                 <Route path="/admin/orgs" element={<AssetsOrg />} />
                 <Route path="/clients/:walletUuid/infos" element={<Infos />} />
                 <Route path="/wallet/:walletUuid/graphs" element={<Graphs />} />
-                <Route path="/wallet/:walletUuid/history" element={<History />} />
+                <Route
+                  path="/wallet/:walletUuid/history"
+                  element={<History />}
+                />
                 <Route path="*" element={<ErrorPage />} />
               </Route>
             </Route>

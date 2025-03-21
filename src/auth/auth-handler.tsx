@@ -1,3 +1,4 @@
+import { Loading } from '@/components/custom/loading'
 import { useAuth0 } from '@auth0/auth0-react'
 import { useEffect } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
@@ -14,7 +15,7 @@ export const AuthHandler = () => {
           'auth_app_state',
           JSON.stringify({
             returnTo: location.pathname,
-          })
+          }),
         )
 
         await loginWithRedirect({
@@ -27,7 +28,7 @@ export const AuthHandler = () => {
   }, [isLoading, isAuthenticated, loginWithRedirect, location])
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return <Loading />
   }
 
   return isAuthenticated ? <Outlet /> : null

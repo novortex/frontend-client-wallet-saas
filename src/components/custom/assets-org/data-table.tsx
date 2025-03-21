@@ -1,26 +1,77 @@
-import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
-
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import {
+  ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+} from '@tanstack/react-table'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
-
 import filterIcon from '@/assets/icons/filter.svg'
 import exportIcon from '@/assets/icons/export.svg'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import AddNewAssetModal from './add-new-asset-modal'
+import { useAssetPricesSocket } from '@/hooks/useSocketPrice'
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
+type Asset = {
+  id: string
+  asset: {
+    urlImage: string
+    name: string
+  }
+  price: number
+  appearances: string
+  porcentOfApp: string
+  quantSLowRisk: string
+  quantLowRisk: string
+  quantStandard: string
+  quantHighRisk: string
+  quantSHighRisk: string
 }
 
-export function DataTableAssetOrg<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
+interface DataTableProps<TValue> {
+  columns: ColumnDef<Asset, TValue>[]
+  data: Asset[]
+}
+
+export function DataTableAssetOrg<TValue>({
+  columns,
+  data,
+}: DataTableProps<TValue>) {
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const assetIds = useMemo(() => {
+    return data.map((item) => item.id)
+  }, [data])
+
+  const { assetPrices } = useAssetPricesSocket(assetIds)
+
+  const dataWithUpdatedPrices = useMemo(() => {
+    return data.map((item) => {
+      const assetId = item.id
+
+      if (assetPrices[assetId] !== undefined) {
+        return {
+          ...item,
+          price: assetPrices[assetId],
+        }
+      }
+
+      return item
+    })
+  }, [data, assetPrices])
+
   const table = useReactTable({
-    data,
+    data: dataWithUpdatedPrices,
     columns,
     getCoreRowModel: getCoreRowModel(),
   })
-
-  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const openModal = () => {
     setIsModalOpen(true)
@@ -31,19 +82,20 @@ export function DataTableAssetOrg<TData, TValue>({ columns, data }: DataTablePro
   }
 
   return (
-    <div className="rounded-md">
-      <div className="bg-[#171717] rounded-t-lg p-5 flex items-center justify-between">
-        <h1 className="text-xl text-white">Administrator</h1>
+    <div className="rounded-md border">
+      <div className="flex items-center justify-between rounded-t-lg bg-lightComponent p-5 dark:bg-[#171717]">
+        <h1 className="text-xl dark:text-white">Administrator</h1>
         <div className="flex gap-5">
-          <Button className="bg-white text-black flex gap-2 hover:bg-gray-400 w-1/3 p-5">
-            {' '}
+          <Button className="flex w-1/3 gap-2 bg-gray-200 p-5 text-black hover:bg-gray-300 dark:bg-white">
             <img src={filterIcon} alt="" /> Filters
           </Button>
-          <Button className="bg-white text-black flex gap-2 hover:bg-gray-400 w-1/3 p-5">
-            {' '}
+          <Button className="flex w-1/3 gap-2 bg-gray-200 p-5 text-black hover:bg-gray-300 dark:bg-white">
             <img src={exportIcon} alt="" /> Export
           </Button>
-          <Button className="bg-[#F2BE38] w-1/2 text-black hover:text-white hover:bg-yellow-600" onClick={openModal}>
+          <Button
+            className="w-1/2 bg-[#F2BE38] text-black hover:bg-yellow-600 hover:text-white"
+            onClick={openModal}
+          >
             + Add new
           </Button>
         </div>
@@ -51,23 +103,41 @@ export function DataTableAssetOrg<TData, TValue>({ columns, data }: DataTablePro
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id} className="bg-[#131313] hover:bg-[#131313]">
-              {headerGroup.headers.map((header) => {
-                return (
-                  <TableHead key={header.id} className="text-white">
-                    {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                  </TableHead>
-                )
-              })}
+            <TableRow
+              key={headerGroup.id}
+              className="bg-gray-200 hover:bg-gray-300 dark:bg-[#131313] dark:hover:bg-[#101010]"
+            >
+              {headerGroup.headers.map((header, idx) => (
+                <TableHead
+                  key={header.id}
+                  className={`text-black dark:text-white ${idx === 0 ? 'pl-4' : ''}`}
+                >
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext(),
+                      )}
+                </TableHead>
+              ))}
             </TableRow>
           ))}
         </TableHeader>
-        <TableBody className="text-[#959CB6] bg-[#171717] hover:bg-[#171717]">
+        <TableBody className="bg-lightComponent dark:bg-[#171717] dark:text-[#959CB6]">
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
-              <TableRow className="hover:bg-[#171717]" key={row.id} data-state={row.getIsSelected() && 'selected'}>
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+              <TableRow
+                className="hover:bg-gray-200 dark:hover:bg-[#101010] dark:hover:bg-[#171717]"
+                key={row.id}
+                data-state={row.getIsSelected() && 'selected'}
+              >
+                {row.getVisibleCells().map((cell, idx) => (
+                  <TableCell
+                    key={cell.id}
+                    className={`${idx === 0 ? 'pl-4' : ''}`}
+                  >
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
                 ))}
               </TableRow>
             ))
