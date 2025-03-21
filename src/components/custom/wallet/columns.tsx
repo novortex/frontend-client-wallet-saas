@@ -132,7 +132,7 @@ export const createColumns = (
       const value = Number(row.original.buyOrSell)
       const formattedValue =
         value > 0
-          ? `+${Number(row.original.buyOrSell).toFixed(2)}`
+          ? `${Number(row.original.buyOrSell).toFixed(2)}`
           : Number(row.original.buyOrSell).toFixed(2)
       const textColor =
         isNaN(value) || value === 0
