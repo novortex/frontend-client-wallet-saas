@@ -4,6 +4,7 @@ import { ColumnDef } from '@tanstack/react-table'
 import { CellActions } from './cellAction'
 import { ArrowUpDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import Price from './cellAction/price'
 
 export type ClientActive = {
   id: string
@@ -71,14 +72,7 @@ export const createColumns = (
   {
     accessorKey: 'price',
     header: () => <div className="text-center">Price</div>,
-    cell: ({ row }) => {
-      const value = Number(row.original.price)
-      return (
-        <div className="text-center">
-          {!isNaN(value) ? value.toFixed(2) : 'N/A'}
-        </div>
-      )
-    },
+    cell: ({ row }) => <Price row={row.original} />,
   },
   {
     accessorKey: 'allocation',
@@ -170,22 +164,31 @@ export const createColumns = (
     accessorKey: 'profitLoss',
     header: () => <div className="text-center">P/L</div>,
     cell: ({ row }) => {
-      const value = Number(row.original.profitLoss)
+      const price = Number(row.original.price)
+      const averagePrice = Number(row.original.averagePrice)
+      const assetQuantity = Number(row.original.assetQuantity)
+      const currentAmount = Number(row.original.currentAmount)
+
+      if (
+        price === 0 ||
+        averagePrice === 0 ||
+        assetQuantity === 0 ||
+        currentAmount === 0
+      ) {
+        return <div className="text-center text-gray-400">N/A</div>
+      }
+
+      const value = ((price - averagePrice) / averagePrice) * 100
       const formattedValue =
-        value > 0
-          ? `+${Number(row.original.profitLoss).toFixed(2)}`
-          : Number(row.original.profitLoss).toFixed(2)
+        value > 0 ? `+${value.toFixed(2)}%` : `${value.toFixed(2)}%`
       const textColor =
-        isNaN(value) || value === 0
-          ? 'text-gray-400'
-          : value > 0
-            ? 'text-green-400'
-            : 'text-red-500'
-      return (
-        <div className={`text-center ${textColor}`}>
-          {!isNaN(value) ? formattedValue : 'N/A'}
-        </div>
-      )
+        value > 0
+          ? 'text-green-400'
+          : value < 0
+            ? 'text-red-500'
+            : 'text-gray-400'
+
+      return <div className={`text-center ${textColor}`}>{formattedValue}</div>
     },
   },
   {
