@@ -5,10 +5,16 @@ import {
   DropdownMenuTrigger,
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu'
-import { EyeOffIcon, PencilIcon, MoreHorizontal } from 'lucide-react'
+import {
+  EyeOffIcon,
+  DollarSign,
+  MoreHorizontal,
+  ArrowUpDown,
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ClientActive } from '../columns'
-import { EditDialog } from './editDialog'
+import { TradeDialog } from './TradeDialog'
+import { AllocationDialog } from './AllocationDialog'
 import { DisableDialog } from './disableDialog'
 import { useWalletActions } from './useWalletActions'
 
@@ -19,11 +25,11 @@ export function CellActions({
   rowInfos: ClientActive
   fetchData: () => void
 }) {
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
+  const [isTradeDialogOpen, setIsTradeDialogOpen] = useState(false)
+  const [isAllocationDialogOpen, setIsAllocationDialogOpen] = useState(false)
   const [isDisableDialogOpen, setIsDisableDialogOpen] = useState(false)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
-  const { handleUpdateInformationAssetWallet, handleDeleteAssetWallet } =
-    useWalletActions(rowInfos, fetchData)
+  const { handleDeleteAssetWallet } = useWalletActions(rowInfos, fetchData)
 
   const handleClose = () => {
     setIsDropdownOpen(false)
@@ -43,12 +49,22 @@ export function CellActions({
         <DropdownMenuItem
           className="flex cursor-pointer items-center gap-2 px-4 py-2 text-sm text-black transition-colors hover:bg-black hover:text-white focus:bg-black focus:text-white"
           onClick={() => {
-            setIsEditDialogOpen(true)
+            setIsAllocationDialogOpen(true)
             handleClose()
           }}
         >
-          <PencilIcon className="h-4 w-4" />
-          <span>Edit</span>
+          <ArrowUpDown className="h-4 w-4" />
+          <span>Allocation</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          className="flex cursor-pointer items-center gap-2 px-4 py-2 text-sm text-black transition-colors hover:bg-black hover:text-white focus:bg-black focus:text-white"
+          onClick={() => {
+            setIsTradeDialogOpen(true)
+            handleClose()
+          }}
+        >
+          <DollarSign className="h-4 w-4" />
+          <span>Trade</span>
         </DropdownMenuItem>
         <DropdownMenuItem
           className="flex cursor-pointer items-center gap-2 px-4 py-2 text-sm text-black transition-colors hover:bg-black hover:text-white focus:bg-black focus:text-white"
@@ -62,25 +78,28 @@ export function CellActions({
         </DropdownMenuItem>
       </DropdownMenuContent>
 
-      {isEditDialogOpen && (
-        <EditDialog
-          isOpen={isEditDialogOpen}
-          onOpenChange={(open) => {
-            setIsEditDialogOpen(open)
-            if (!open) setIsDropdownOpen(false)
-          }}
+      {isTradeDialogOpen && (
+        <TradeDialog
+          isOpen={isTradeDialogOpen}
+          onOpenChange={setIsTradeDialogOpen}
           rowInfos={rowInfos}
-          onSave={handleUpdateInformationAssetWallet}
+          fetchData={fetchData}
+        />
+      )}
+
+      {isAllocationDialogOpen && (
+        <AllocationDialog
+          isOpen={isAllocationDialogOpen}
+          onOpenChange={setIsAllocationDialogOpen}
+          rowInfos={rowInfos}
+          fetchData={fetchData}
         />
       )}
 
       {isDisableDialogOpen && (
         <DisableDialog
           isOpen={isDisableDialogOpen}
-          onOpenChange={(open) => {
-            setIsDisableDialogOpen(open)
-            if (!open) setIsDropdownOpen(false)
-          }}
+          onOpenChange={setIsDisableDialogOpen}
           rowInfos={rowInfos}
           onDisable={handleDeleteAssetWallet}
         />

@@ -14,17 +14,32 @@ export async function getAllAssetsWalletClient(walletUuid: string) {
   }
 }
 
-export async function updateAssetWalletInformations(
+export async function tradeAsset(
   walletUuid: string,
   assetUuid: string,
   quantity: number,
-  targetAllocation: number,
 ) {
   try {
-    const result = await instance.put(`wallet/${walletUuid}/asset`, {
+    const result = await instance.put(`wallet/${walletUuid}/newQuantity`, {
       assetUuid,
       quantity,
-      targetAllocation,
+    })
+    return result.data
+  } catch (error) {
+    console.log(error)
+    return false
+  }
+}
+
+export async function updateAssetIdealAllocation(
+  walletUuid: string,
+  assetUuid: string,
+  idealAllocation: number,
+) {
+  try {
+    const result = await instance.put(`wallet/${walletUuid}/idealAllocation`, {
+      assetUuid,
+      idealAllocation,
     })
     return result.data
   } catch (error) {
