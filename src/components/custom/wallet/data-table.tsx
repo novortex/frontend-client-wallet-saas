@@ -39,7 +39,7 @@ export type ClientActive = {
   idealAmount: number
   buyOrSell: number
   averagePrice: number
-  profitLoss: number
+  profitLossPercentage: number | null
 }
 
 interface DataTableProps<TValue> {
