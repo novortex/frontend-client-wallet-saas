@@ -20,7 +20,7 @@ export type ClientActive = {
   idealAmount: number
   buyOrSell: number
   averagePrice: number
-  profitLoss: number
+  profitLossPercentage: number | null
 }
 
 export const createColumns = (
@@ -164,27 +164,22 @@ export const createColumns = (
     accessorKey: 'profitLoss',
     header: () => <div className="text-center">P/L</div>,
     cell: ({ row }) => {
-      const price = Number(row.original.price)
-      const averagePrice = Number(row.original.averagePrice)
-      const assetQuantity = Number(row.original.assetQuantity)
-      const currentAmount = Number(row.original.currentAmount)
-
       if (
-        price === 0 ||
-        averagePrice === 0 ||
-        assetQuantity === 0 ||
-        currentAmount === 0
-      ) {
+        !row.original.profitLossPercentage ||
+        isNaN(row.original.profitLossPercentage)
+      )
         return <div className="text-center text-gray-400">N/A</div>
-      }
 
-      const value = ((price - averagePrice) / averagePrice) * 100
+      const profitLoss = Number(row.original.profitLossPercentage)
+
       const formattedValue =
-        value > 0 ? `+${value.toFixed(2)}%` : `${value.toFixed(2)}%`
+        profitLoss > 0
+          ? `${profitLoss.toFixed(2)}%`
+          : `${profitLoss.toFixed(2)}%`
       const textColor =
-        value > 0
+        profitLoss > 0
           ? 'text-green-400'
-          : value < 0
+          : profitLoss < 0
             ? 'text-red-500'
             : 'text-gray-400'
 
