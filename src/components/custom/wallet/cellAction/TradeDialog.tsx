@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input'
 import { ClientActive } from '../columns'
 import { useWalletActions } from './useWalletActions'
 import { toast } from '@/components/ui/use-toast'
+import { TradeType } from '@/types/wallet.type'
 
 interface TradeDialogProps {
   isOpen: boolean
@@ -38,7 +39,7 @@ export function TradeDialog({
         description: 'Please provide a valid quantity to buy.',
       })
     }
-    handleTradeAsset(buyAmount, 'buy')
+    handleTradeAsset(buyAmount, TradeType.BUY)
     onOpenChange(false)
   }
 
@@ -65,7 +66,7 @@ export function TradeDialog({
       })
     }
 
-    handleTradeAsset(sellAmount, 'sell')
+    handleTradeAsset(sellAmount, TradeType.SELL)
     onOpenChange(false)
   }
 

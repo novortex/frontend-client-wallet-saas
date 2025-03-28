@@ -7,6 +7,7 @@ import { useParams } from 'react-router-dom'
 import { ClientActive } from '../columns'
 import { useToast } from '@/components/ui/use-toast'
 import { useSignalStore } from '@/store/signalEffect'
+import { TradeType } from '@/types/wallet.type'
 
 export function useWalletActions(
   rowInfos: ClientActive,
@@ -19,12 +20,12 @@ export function useWalletActions(
     state.signal,
   ])
 
-  const handleTradeAsset = async (quantity: number, action: 'buy' | 'sell') => {
-    if (quantity === 0) {
+  const handleTradeAsset = async (tradeAmount: number, action: TradeType) => {
+    if (tradeAmount === 0) {
       return toast({
         className: 'bg-red-500 border-0',
-        title: 'Invalid quantity',
-        description: 'Please provide a valid quantity for the trade.',
+        title: 'Invalid tradeAmount',
+        description: 'Please provide a valid amount to trade.',
       })
     }
 
@@ -32,15 +33,13 @@ export function useWalletActions(
       return toast({
         className: 'bg-red-500 border-0',
         title: 'Invalid wallet ID.',
-        description: 'Could not find wallet ID.',
+        description: 'Could not find wallet.',
       })
     }
 
-    const actionTitle = action === 'buy' ? 'Buy' : 'Sell'
-
     toast({
       className: 'bg-yellow-500 border-0',
-      title: `Processing ${actionTitle}...`,
+      title: `Processing ${action}...`,
       description: '',
     })
 
@@ -48,7 +47,8 @@ export function useWalletActions(
       const result = await tradeAsset(
         walletUuid as string,
         rowInfos.id,
-        quantity,
+        tradeAmount,
+        action,
       )
 
       if (!result) {
@@ -60,7 +60,7 @@ export function useWalletActions(
 
       toast({
         className: 'bg-green-500 border-0',
-        title: `${actionTitle} successful!`,
+        title: `${action} successful!`,
         description: '',
       })
     } catch (error: unknown) {

@@ -2,6 +2,7 @@ import { instance } from '@/config/api'
 import { AddAssetFunctionResponse } from '@/types/addAsset.type'
 import { AssetsOrganizationForSelectedResponse } from '@/types/asset.type'
 import { WalletDataResponse } from '@/types/response.type'
+import { TradeType } from '@/types/wallet.type'
 
 export async function getAllAssetsWalletClient(walletUuid: string) {
   try {
@@ -17,12 +18,14 @@ export async function getAllAssetsWalletClient(walletUuid: string) {
 export async function tradeAsset(
   walletUuid: string,
   assetUuid: string,
-  quantity: number,
+  tradeAmount: number,
+  type: TradeType,
 ) {
   try {
     const result = await instance.put(`wallet/${walletUuid}/newQuantity`, {
       assetUuid,
-      quantity,
+      tradeAmount,
+      type,
     })
     return result.data
   } catch (error) {
