@@ -28,6 +28,13 @@ const mockRowInfos: CustomersOrganization = {
   emailExchange: null,
   emailPassword: null,
   exchangePassword: null,
+  riskProfile: 'STANDARD' as
+    | 'STANDARD'
+    | 'SUPER_LOW_RISK'
+    | 'LOW_RISK'
+    | 'HIGH_RISK'
+    | 'SUPER_HIGH_RISK'
+    | null,
 }
 
 // Mock props for ProfileTab
@@ -205,6 +212,13 @@ describe('CustomersOrganization', () => {
       emailPassword: 'password123',
       emailExchange: 'exchange@example.com',
       exchangePassword: 'exchangepass123',
+      riskProfile: 'STANDARD' as
+        | 'STANDARD'
+        | 'SUPER_LOW_RISK'
+        | 'LOW_RISK'
+        | 'HIGH_RISK'
+        | 'SUPER_HIGH_RISK'
+        | null,
     },
     ExchangeSelected: 'exchange-1',
     setExchangeSelected: jest.fn(),
@@ -228,6 +242,13 @@ describe('CustomersOrganization', () => {
       { name: 'Manager Two', uuid: 'manager-2' },
     ],
     performanceFee: '10',
+    riskProfile: 'STANDARD' as
+      | 'STANDARD'
+      | 'SUPER_LOW_RISK'
+      | 'LOW_RISK'
+      | 'HIGH_RISK'
+      | 'SUPER_HIGH_RISK',
+    setRiskProfile: jest.fn(),
     setPerformanceFee: jest.fn(),
     contractChecked: true,
     setContractChecked: jest.fn(),
@@ -256,11 +277,20 @@ describe('CustomersOrganization', () => {
       expect(screen.getByText(/save wallet/i)).toBeInTheDocument()
       expect(screen.getByText(/close/i)).toBeInTheDocument()
     })
-
     it('renders a message when isWallet is false', () => {
       const propsWithoutWallet = {
         ...mockWalletTabProps,
-        rowInfos: { ...mockWalletTabProps.rowInfos, isWallet: false },
+        rowInfos: {
+          ...mockWalletTabProps.rowInfos,
+          isWallet: false,
+          riskProfile: 'STANDARD' as
+            | 'STANDARD'
+            | 'SUPER_LOW_RISK'
+            | 'LOW_RISK'
+            | 'HIGH_RISK'
+            | 'SUPER_HIGH_RISK'
+            | null,
+        },
       }
       render(
         <Dialog open={true} onOpenChange={() => {}}>
