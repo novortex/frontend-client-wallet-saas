@@ -30,25 +30,22 @@ export function TradeDialog({
   const { handleTradeAsset } = useWalletActions(rowInfos, fetchData)
 
   const handleBuy = () => {
-    const currentQuantity = rowInfos.assetQuantity
-    const quantity = parseFloat(quantityRef.current?.value ?? '0')
-    if (quantity <= 0) {
+    const buyAmount = parseFloat(quantityRef.current?.value ?? '0')
+    if (buyAmount <= 0) {
       return toast({
         className: 'bg-red-500 border-0',
-        title: 'Invalid quantity for buy',
+        title: 'Error',
         description: 'Please provide a valid quantity to buy.',
       })
     }
-    const tradeQuantity = currentQuantity + quantity
-    handleTradeAsset(tradeQuantity, 'buy')
+    handleTradeAsset(buyAmount, 'buy')
     onOpenChange(false)
   }
 
   const handleSell = () => {
-    const quantityToSell = parseFloat(quantityRef.current?.value ?? '0')
-    const currentQuantity = rowInfos.assetQuantity
+    const input = parseFloat(quantityRef.current?.value ?? '0')
 
-    if (quantityToSell <= 0) {
+    if (input <= 0) {
       return toast({
         className: 'bg-red-500 border-0',
         title: 'Invalid quantity for sell',
@@ -56,17 +53,19 @@ export function TradeDialog({
       })
     }
 
-    if (quantityToSell > currentQuantity) {
+    const sellAmount = (() => {
+      return Number.isNaN(input) ? 0 : -Math.abs(input)
+    })()
+
+    if (rowInfos.assetQuantity + sellAmount < 0) {
       return toast({
         className: 'bg-red-500 border-0',
         title: 'Insufficient quantity',
-        description: `You cannot sell more than your current quantity of ${currentQuantity}.`,
+        description: `You cannot sell more than your current quantity of ${rowInfos.assetQuantity}.`,
       })
     }
 
-    const tradeQuantity = currentQuantity - quantityToSell
-
-    handleTradeAsset(tradeQuantity, 'sell')
+    handleTradeAsset(sellAmount, 'sell')
     onOpenChange(false)
   }
 
@@ -88,8 +87,8 @@ export function TradeDialog({
           </div>
           <span>{rowInfos.asset.name}</span>
         </div>
+        <label className="w-1/2">Balance: {rowInfos.assetQuantity}</label>
         <div className="mt-5 flex w-full gap-5">
-          <label className="w-1/2">Asset Quantity (Ex: 100)</label>
           <Input
             className="h-full w-1/2 dark:border-[#323232] dark:bg-[#131313] dark:text-[#959CB6]"
             placeholder="Quantity"
@@ -99,15 +98,7 @@ export function TradeDialog({
           />
         </div>
         <DialogFooter className="flex items-center justify-between">
-          <DialogClose asChild>
-            <Button
-              className="bg-gray-500 text-white hover:bg-gray-600"
-              onClick={handleClose}
-            >
-              Close
-            </Button>
-          </DialogClose>
-          <div className="flex gap-3">
+          <div className="flex justify-start gap-3">
             <Button
               className="w-28 bg-green-500 text-black hover:bg-green-600"
               onClick={handleBuy}
@@ -121,6 +112,15 @@ export function TradeDialog({
               Sell
             </Button>
           </div>
+
+          <DialogClose asChild>
+            <Button
+              className="bg-gray-500 text-white hover:bg-gray-600"
+              onClick={handleClose}
+            >
+              Cancel
+            </Button>
+          </DialogClose>
         </DialogFooter>
       </DialogContent>
     </Dialog>
