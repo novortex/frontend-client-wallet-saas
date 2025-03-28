@@ -20,7 +20,7 @@ export function useWalletActions(
   ])
 
   const handleTradeAsset = async (quantity: number, action: 'buy' | 'sell') => {
-    if (quantity <= 0) {
+    if (quantity === 0) {
       return toast({
         className: 'bg-red-500 border-0',
         title: 'Invalid quantity',
