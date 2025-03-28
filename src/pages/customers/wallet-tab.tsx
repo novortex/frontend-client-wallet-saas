@@ -30,6 +30,20 @@ interface WalletTabProps {
   initialFeeIsPaid: boolean | null
   setInitialFeeIsPaid: (value: boolean) => void
   handleUpdateWallet: () => Promise<void>
+  setRiskProfile: (
+    value:
+      | 'SUPER_LOW_RISK'
+      | 'LOW_RISK'
+      | 'STANDARD'
+      | 'HIGH_RISK'
+      | 'SUPER_HIGH_RISK',
+  ) => void
+  riskProfile:
+    | 'SUPER_LOW_RISK'
+    | 'LOW_RISK'
+    | 'STANDARD'
+    | 'HIGH_RISK'
+    | 'SUPER_HIGH_RISK'
 }
 
 export function WalletTab({
@@ -50,6 +64,8 @@ export function WalletTab({
   initialFeeIsPaid,
   setInitialFeeIsPaid,
   handleUpdateWallet,
+  setRiskProfile,
+  riskProfile,
 }: WalletTabProps) {
   if (!rowInfos.isWallet) {
     return (
@@ -166,6 +182,29 @@ export function WalletTab({
           placeholder="Enter performance fee"
           required
         />
+      </div>
+      <div className="w-full">
+        <Label className="ml-2" htmlFor="riskProfile">
+          Perfil de Risco
+        </Label>
+        <Select onValueChange={setRiskProfile} value={riskProfile} required>
+          <SelectTrigger className="dark:border-[#323232] dark:bg-[#131313] dark:text-[#959CB6]">
+            <SelectValue>
+              {riskProfile
+                ? riskProfile
+                    .replace(/_/g, ' ')
+                    .replace(/(?:^|\s)\S/g, (match) => match.toUpperCase())
+                : 'Select Risk Profile'}
+            </SelectValue>
+          </SelectTrigger>
+          <SelectContent className="dark:border-[#323232] dark:bg-[#131313] dark:text-[#959CB6]">
+            <SelectItem value="SUPER_LOW_RISK">Super Low Risk</SelectItem>
+            <SelectItem value="LOW_RISK">Low Risk</SelectItem>
+            <SelectItem value="STANDARD">Standard</SelectItem>
+            <SelectItem value="HIGH_RISK">High Risk</SelectItem>
+            <SelectItem value="SUPER_HIGH_RISK">Super High Risk</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="mt-4 w-full">

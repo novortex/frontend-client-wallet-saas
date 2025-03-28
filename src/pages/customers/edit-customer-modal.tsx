@@ -43,6 +43,16 @@ export function EditCustomerModal({
   const [name, setName] = useState(rowInfos.name || '')
   const [email, setEmail] = useState(rowInfos.email || '')
   const [phone, setPhone] = useState(rowInfos.phone || '')
+  const [riskProfile, setRiskProfile] = useState<
+    'SUPER_LOW_RISK' | 'LOW_RISK' | 'STANDARD' | 'HIGH_RISK' | 'SUPER_HIGH_RISK'
+  >(
+    (rowInfos.riskProfile as
+      | 'SUPER_LOW_RISK'
+      | 'LOW_RISK'
+      | 'STANDARD'
+      | 'HIGH_RISK'
+      | 'SUPER_HIGH_RISK') || 'N/A',
+  )
   const [phoneCountry, setPhoneCountry] = useState<CountryData>({
     name: '',
     dialCode: '',
@@ -188,6 +198,7 @@ export function EditCustomerModal({
         initialFeeIsPaid: initialFeeIsPaid ?? false,
         manager,
         performanceFee: parseFloat(String(performanceFee)),
+        riskProfile,
       })
       if (!result) {
         toast({
@@ -219,7 +230,8 @@ export function EditCustomerModal({
   }
 
   useEffect(() => {
-    if (!isOpen) {
+    if (isOpen) {
+      console.log('Risk Profile from rowInfos:', rowInfos.riskProfile) // Verifique o valor de riskProfile
       setContractChecked(!!rowInfos.contract)
       setInitialFeeIsPaid(rowInfos.initialFeePaid)
       setManager(rowInfos.manager?.managerUuid || '')
@@ -230,6 +242,14 @@ export function EditCustomerModal({
       setName(rowInfos.name || '')
       setEmail(rowInfos.email || '')
       setPhone(rowInfos.phone || '')
+      setRiskProfile(
+        (rowInfos.riskProfile as
+          | 'SUPER_LOW_RISK'
+          | 'LOW_RISK'
+          | 'STANDARD'
+          | 'HIGH_RISK'
+          | 'SUPER_HIGH_RISK') || 'N/A',
+      ) // Ajuste aqui para garantir que 'riskProfile' seja atribuído corretamente
       setErrors({ name: '', email: '', phone: '', general: '' })
     }
   }, [isOpen, rowInfos])
@@ -289,6 +309,8 @@ export function EditCustomerModal({
               initialFeeIsPaid={initialFeeIsPaid}
               setInitialFeeIsPaid={setInitialFeeIsPaid}
               handleUpdateWallet={handleUpdateWallet}
+              setRiskProfile={setRiskProfile}
+              riskProfile={riskProfile}
             />
           </TabsContent>
         </Tabs>
