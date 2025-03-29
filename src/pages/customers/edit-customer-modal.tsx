@@ -46,12 +46,12 @@ export function EditCustomerModal({
   const [riskProfile, setRiskProfile] = useState<
     'SUPER_LOW_RISK' | 'LOW_RISK' | 'STANDARD' | 'HIGH_RISK' | 'SUPER_HIGH_RISK'
   >(
-    (rowInfos.riskProfile as
+    rowInfos.riskProfile as
       | 'SUPER_LOW_RISK'
       | 'LOW_RISK'
       | 'STANDARD'
       | 'HIGH_RISK'
-      | 'SUPER_HIGH_RISK') || 'N/A',
+      | 'SUPER_HIGH_RISK',
   )
   const [phoneCountry, setPhoneCountry] = useState<CountryData>({
     name: '',
@@ -231,7 +231,6 @@ export function EditCustomerModal({
 
   useEffect(() => {
     if (isOpen) {
-      console.log('Risk Profile from rowInfos:', rowInfos.riskProfile) // Verifique o valor de riskProfile
       setContractChecked(!!rowInfos.contract)
       setInitialFeeIsPaid(rowInfos.initialFeePaid)
       setManager(rowInfos.manager?.managerUuid || '')
@@ -243,13 +242,13 @@ export function EditCustomerModal({
       setEmail(rowInfos.email || '')
       setPhone(rowInfos.phone || '')
       setRiskProfile(
-        (rowInfos.riskProfile as
+        rowInfos.riskProfile as
           | 'SUPER_LOW_RISK'
           | 'LOW_RISK'
           | 'STANDARD'
           | 'HIGH_RISK'
-          | 'SUPER_HIGH_RISK') || 'N/A',
-      ) // Ajuste aqui para garantir que 'riskProfile' seja atribuído corretamente
+          | 'SUPER_HIGH_RISK',
+      )
       setErrors({ name: '', email: '', phone: '', general: '' })
     }
   }, [isOpen, rowInfos])
