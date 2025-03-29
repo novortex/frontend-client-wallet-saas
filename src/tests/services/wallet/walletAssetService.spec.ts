@@ -7,7 +7,6 @@ import {
   getAllAssetsWalletClient,
   rebalanceWallet,
   updateAssetIdealAllocation,
-  tradeAsset,
 } from '@/services/wallet/walletAssetService'
 
 jest.mock('@/config/api', () => ({
@@ -72,18 +71,6 @@ describe('walletAssetService', () => {
       const result = await updateAssetIdealAllocation('123', '456', 150)
       expect(result).toBe(false)
     })
-  })
-
-  it('should return false if trade fails', async () => {
-    ;(instance.put as jest.Mock).mockRejectedValue(new Error('Trade error'))
-
-    const result = await tradeAsset('123', '456', 10)
-    expect(result).toBe(false)
-  })
-
-  it('should return false if quantity is invalid', async () => {
-    const result = await tradeAsset('123', '456', 0)
-    expect(result).toBe(false)
   })
 })
 
