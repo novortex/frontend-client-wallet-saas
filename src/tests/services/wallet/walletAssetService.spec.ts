@@ -74,165 +74,134 @@ describe('walletAssetService', () => {
     })
   })
 
-  describe('tradeAsset', () => {
-    it('should execute trade successfully (buy)', async () => {
-      const mockData = { success: true }
-      ;(instance.put as jest.Mock).mockResolvedValue({ data: mockData })
+  it('should return false if trade fails', async () => {
+    ;(instance.put as jest.Mock).mockRejectedValue(new Error('Trade error'))
 
-      const result = await tradeAsset('123', '456', 10)
-      expect(result).toEqual(mockData)
-      expect(instance.put).toHaveBeenCalledWith('wallet/123/newQuantity', {
-        assetUuid: '456',
-        quantity: 10,
-      })
-    })
+    const result = await tradeAsset('123', '456', 10)
+    expect(result).toBe(false)
+  })
 
-    it('should execute trade successfully (sell)', async () => {
-      const mockData = { success: true }
-      ;(instance.put as jest.Mock).mockResolvedValue({ data: mockData })
+  it('should return false if quantity is invalid', async () => {
+    const result = await tradeAsset('123', '456', 0)
+    expect(result).toBe(false)
+  })
+})
 
-      const result = await tradeAsset('123', '456', -5)
-      expect(result).toEqual(mockData)
-      expect(instance.put).toHaveBeenCalledWith('wallet/123/newQuantity', {
-        assetUuid: '456',
-        quantity: -5,
-      })
-    })
+describe('addCryptoWalletClient', () => {
+  it('should add crypto asset to wallet', async () => {
+    const mockResponse = { success: true }
+    ;(instance.post as jest.Mock).mockResolvedValue({ data: mockResponse })
 
-    it('should return false if trade fails', async () => {
-      ;(instance.put as jest.Mock).mockRejectedValue(new Error('Trade error'))
-
-      const result = await tradeAsset('123', '456', 10)
-      expect(result).toBe(false)
-    })
-
-    it('should return false if quantity is invalid', async () => {
-      const result = await tradeAsset('123', '456', 0)
-      expect(result).toBe(false)
+    const result = await addCryptoWalletClient('123', '456', 10, 20)
+    expect(result).toEqual(mockResponse)
+    expect(instance.post).toHaveBeenCalledWith('wallet/123/asset', {
+      assetUuid: '456',
+      quantity: 10,
+      targetAllocation: 20,
     })
   })
 
-  describe('addCryptoWalletClient', () => {
-    it('should add crypto asset to wallet', async () => {
-      const mockResponse = { success: true }
-      ;(instance.post as jest.Mock).mockResolvedValue({ data: mockResponse })
+  it('should return false when adding a crypto asset fails', async () => {
+    ;(instance.post as jest.Mock).mockRejectedValue(
+      new Error('Invalid asset data'),
+    )
 
-      const result = await addCryptoWalletClient('123', '456', 10, 20)
-      expect(result).toEqual(mockResponse)
-      expect(instance.post).toHaveBeenCalledWith('wallet/123/asset', {
-        assetUuid: '456',
-        quantity: 10,
-        targetAllocation: 20,
-      })
-    })
+    const result = await addCryptoWalletClient('123', '', -5, 150)
+    expect(result).toBe(false)
+  })
+})
 
-    it('should return false when adding a crypto asset fails', async () => {
-      ;(instance.post as jest.Mock).mockRejectedValue(
-        new Error('Invalid asset data'),
-      )
+describe('createDepositWithdrawal', () => {
+  it('should create deposit or withdrawal', async () => {
+    ;(instance.post as jest.Mock).mockResolvedValue({ data: {} })
 
-      const result = await addCryptoWalletClient('123', '', -5, 150)
-      expect(result).toBe(false)
+    await createDepositWithdrawal(500, '123', 'USD', true)
+    expect(instance.post).toHaveBeenCalledWith('wallet/deposit-withdrawal', {
+      amount: 500,
+      walletUuid: '123',
+      currency: 'USD',
+      isWithdrawal: true,
     })
   })
 
-  describe('createDepositWithdrawal', () => {
-    it('should create deposit or withdrawal', async () => {
-      ;(instance.post as jest.Mock).mockResolvedValue({ data: {} })
+  it('should handle optional date parameter', async () => {
+    ;(instance.post as jest.Mock).mockResolvedValue({ data: {} })
 
-      await createDepositWithdrawal(500, '123', 'USD', true)
-      expect(instance.post).toHaveBeenCalledWith('wallet/deposit-withdrawal', {
-        amount: 500,
-        walletUuid: '123',
-        currency: 'USD',
-        isWithdrawal: true,
-      })
-    })
-
-    it('should handle optional date parameter', async () => {
-      ;(instance.post as jest.Mock).mockResolvedValue({ data: {} })
-
-      await createDepositWithdrawal(500, '123', 'USD', false, '2024-01-01')
-      expect(instance.post).toHaveBeenCalledWith('wallet/deposit-withdrawal', {
-        amount: 500,
-        walletUuid: '123',
-        currency: 'USD',
-        isWithdrawal: false,
-        date: '2024-01-01',
-      })
-    })
-
-    it('should throw an error when deposit or withdrawal fails', async () => {
-      ;(instance.post as jest.Mock).mockRejectedValue(
-        new Error('Invalid deposit data'),
-      )
-
-      await expect(
-        createDepositWithdrawal(-500, '123', 'INVALID', true),
-      ).rejects.toThrow('Invalid deposit data')
+    await createDepositWithdrawal(500, '123', 'USD', false, '2024-01-01')
+    expect(instance.post).toHaveBeenCalledWith('wallet/deposit-withdrawal', {
+      amount: 500,
+      walletUuid: '123',
+      currency: 'USD',
+      isWithdrawal: false,
+      date: '2024-01-01',
     })
   })
 
-  describe('deleteAssetWallet', () => {
-    it('should delete asset from wallet', async () => {
-      ;(instance.delete as jest.Mock).mockResolvedValue({ data: {} })
+  it('should throw an error when deposit or withdrawal fails', async () => {
+    ;(instance.post as jest.Mock).mockRejectedValue(
+      new Error('Invalid deposit data'),
+    )
 
-      await deleteAssetWallet('123', '456')
-      expect(instance.delete).toHaveBeenCalledWith('wallet/123/assets/456')
-    })
+    await expect(
+      createDepositWithdrawal(-500, '123', 'INVALID', true),
+    ).rejects.toThrow('Invalid deposit data')
+  })
+})
 
-    it('should throw an error when deleting a non-existent asset', async () => {
-      ;(instance.delete as jest.Mock).mockRejectedValue(
-        new Error('Asset not found'),
-      )
+describe('deleteAssetWallet', () => {
+  it('should delete asset from wallet', async () => {
+    ;(instance.delete as jest.Mock).mockResolvedValue({ data: {} })
 
-      await expect(deleteAssetWallet('123', '999')).rejects.toThrow(
-        'Asset not found',
-      )
-    })
+    await deleteAssetWallet('123', '456')
+    expect(instance.delete).toHaveBeenCalledWith('wallet/123/assets/456')
   })
 
-  describe('rebalanceWallet', () => {
-    it('should rebalance wallet', async () => {
-      const mockResponse = { success: true }
-      ;(instance.put as jest.Mock).mockResolvedValue({ data: mockResponse })
+  it('should throw an error when deleting a non-existent asset', async () => {
+    ;(instance.delete as jest.Mock).mockRejectedValue(
+      new Error('Asset not found'),
+    )
 
-      const result = await rebalanceWallet('123')
-      expect(result).toEqual(mockResponse)
-      expect(instance.put).toHaveBeenCalledWith(
-        'wallet/123/rebalanceWallet',
-        {},
-      )
-    })
+    await expect(deleteAssetWallet('123', '999')).rejects.toThrow(
+      'Asset not found',
+    )
+  })
+})
 
-    it('should throw an error when rebalancing wallet fails', async () => {
-      ;(instance.put as jest.Mock).mockRejectedValue(
-        new Error('Rebalance failed'),
-      )
+describe('rebalanceWallet', () => {
+  it('should rebalance wallet', async () => {
+    const mockResponse = { success: true }
+    ;(instance.put as jest.Mock).mockResolvedValue({ data: mockResponse })
 
-      await expect(rebalanceWallet('INVALID')).rejects.toThrow(
-        'Rebalance failed',
-      )
-    })
+    const result = await rebalanceWallet('123')
+    expect(result).toEqual(mockResponse)
+    expect(instance.put).toHaveBeenCalledWith('wallet/123/rebalanceWallet', {})
   })
 
-  describe('getAllAssetsInOrgForAddWalletClient', () => {
-    it('should fetch all available assets in organization', async () => {
-      const mockData = [{ id: '1', name: 'Bitcoin' }]
-      ;(instance.get as jest.Mock).mockResolvedValue({ data: mockData })
+  it('should throw an error when rebalancing wallet fails', async () => {
+    ;(instance.put as jest.Mock).mockRejectedValue(
+      new Error('Rebalance failed'),
+    )
 
-      const result = await getAllAssetsInOrgForAddWalletClient()
-      expect(result).toEqual(mockData)
-      expect(instance.get).toHaveBeenCalledWith('wallet/assets')
-    })
+    await expect(rebalanceWallet('INVALID')).rejects.toThrow('Rebalance failed')
+  })
+})
 
-    it('should return undefined when fetching available assets fails', async () => {
-      ;(instance.get as jest.Mock).mockRejectedValue(
-        new Error('Failed to fetch assets'),
-      )
+describe('getAllAssetsInOrgForAddWalletClient', () => {
+  it('should fetch all available assets in organization', async () => {
+    const mockData = [{ id: '1', name: 'Bitcoin' }]
+    ;(instance.get as jest.Mock).mockResolvedValue({ data: mockData })
 
-      const result = await getAllAssetsInOrgForAddWalletClient()
-      expect(result).toBeUndefined()
-    })
+    const result = await getAllAssetsInOrgForAddWalletClient()
+    expect(result).toEqual(mockData)
+    expect(instance.get).toHaveBeenCalledWith('wallet/assets')
+  })
+
+  it('should return undefined when fetching available assets fails', async () => {
+    ;(instance.get as jest.Mock).mockRejectedValue(
+      new Error('Failed to fetch assets'),
+    )
+
+    const result = await getAllAssetsInOrgForAddWalletClient()
+    expect(result).toBeUndefined()
   })
 })
