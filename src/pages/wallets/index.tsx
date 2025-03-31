@@ -20,6 +20,8 @@ export function Clients() {
     selectedManagers: [] as string[],
     selectedWalletTypes: [] as string[],
     selectedAssets: [] as string[],
+    filterHasContract: false,
+    filterHasNoContract: false,
     filterDelayed: false,
     filterUnbalanced: false,
     filterNewest: false,
@@ -67,6 +69,8 @@ export function Clients() {
       selectedManagers,
       selectedWalletTypes,
       selectedAssets,
+      filterHasContract,
+      filterHasNoContract,
       filterUnbalanced,
       filterNewest,
       filterOldest,
@@ -89,6 +93,11 @@ export function Clients() {
         const unbalancedMatches =
           !filterUnbalanced ||
           (client.nextBalance && new Date(client.nextBalance) < new Date())
+
+        const hasContractMatches =
+          (!filterHasContract && !filterHasNoContract) ||
+          (filterHasContract && client.hasContract === true) ||
+          (filterHasNoContract && client.hasContract === false)
 
         const walletTypeMatches =
           selectedWalletTypes.length === 0 ||
@@ -119,6 +128,7 @@ export function Clients() {
         return (
           nameMatches &&
           managerMatches &&
+          hasContractMatches &&
           unbalancedMatches &&
           walletTypeMatches &&
           exchangeMatches &&
