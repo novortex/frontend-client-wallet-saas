@@ -16,7 +16,7 @@ import {
 } from '@/components/custom/customers/columns'
 import { Loading } from '@/components/custom/loading'
 
-type RiskProfile =
+export type RiskProfile =
   | 'STANDARD'
   | 'SUPER_LOW_RISK'
   | 'LOW_RISK'
@@ -51,19 +51,7 @@ export function Customers() {
         }
 
         const dataTable = result.map((item) => {
-          const validRiskProfiles: RiskProfile[] = [
-            'STANDARD',
-            'SUPER_LOW_RISK',
-            'LOW_RISK',
-            'HIGH_RISK',
-            'SUPER_HIGH_RISK',
-            null,
-          ]
-          const riskProfile = validRiskProfiles.includes(
-            item.riskProfile as RiskProfile,
-          )
-            ? (item.riskProfile as (typeof validRiskProfiles)[number])
-            : null
+          const riskProfile: RiskProfile = item.riskProfile ?? null
 
           return {
             id: item.uuid,

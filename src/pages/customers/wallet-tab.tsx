@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/select'
 import { Checkbox } from '@/components/ui/checkbox'
 import { CustomersOrganization } from '@/components/custom/customers/columns'
+import { RiskProfile } from './index'
 
 interface WalletTabProps {
   rowInfos: CustomersOrganization
@@ -30,20 +31,8 @@ interface WalletTabProps {
   initialFeeIsPaid: boolean | null
   setInitialFeeIsPaid: (value: boolean) => void
   handleUpdateWallet: () => Promise<void>
-  setRiskProfile: (
-    value:
-      | 'SUPER_LOW_RISK'
-      | 'LOW_RISK'
-      | 'STANDARD'
-      | 'HIGH_RISK'
-      | 'SUPER_HIGH_RISK',
-  ) => void
-  riskProfile:
-    | 'SUPER_LOW_RISK'
-    | 'LOW_RISK'
-    | 'STANDARD'
-    | 'HIGH_RISK'
-    | 'SUPER_HIGH_RISK'
+  setRiskProfile: (value: RiskProfile) => void
+  riskProfile: RiskProfile
 }
 
 export function WalletTab({
@@ -187,7 +176,11 @@ export function WalletTab({
         <Label className="ml-2" htmlFor="riskProfile">
           Perfil de Risco
         </Label>
-        <Select onValueChange={setRiskProfile} value={riskProfile} required>
+        <Select
+          onValueChange={(value) => setRiskProfile(value as RiskProfile)}
+          value={riskProfile || undefined}
+          required
+        >
           <SelectTrigger className="dark:border-[#323232] dark:bg-[#131313] dark:text-[#959CB6]">
             <SelectValue>
               {riskProfile

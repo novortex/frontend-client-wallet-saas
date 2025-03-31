@@ -63,7 +63,7 @@ describe('walletInfoService', () => {
         investedAmount: 1000,
         initialFee: 10,
         initialFeePaid: true,
-        riskProfile: 'Low',
+        riskProfile: 'STANDARD',
         contract: true,
         performanceFee: 5,
         userUuid: '123',
