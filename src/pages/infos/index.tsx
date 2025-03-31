@@ -141,7 +141,6 @@ export function Infos() {
 
     fetchTimeZone()
   }, [])
-
   return (
     <div className="h-full bg-white p-10 dark:bg-transparent">
       <div className="mb-10 flex items-center justify-between">
@@ -254,6 +253,11 @@ export function Infos() {
                 <p className="text-black dark:text-white">
                   Wallet informations
                 </p>
+                <div className="flex gap-3">
+                  <Badge className="flex gap-2 bg-[#F2BE38] p-2 pl-5 pr-5 text-black hover:bg-[#F2BE38] hover:text-black">
+                    Contract: {walletI.contract ? 'Yes ✅' : 'No ❌'}
+                  </Badge>
+                </div>
               </div>
 
               <Badge className="flex gap-2 bg-[#F2BE38] p-2 pl-5 pr-5 text-black hover:bg-[#F2BE38] hover:text-black">
