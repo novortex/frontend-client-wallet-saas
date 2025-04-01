@@ -7,6 +7,7 @@ import {
   getAllAssetsWalletClient,
   rebalanceWallet,
   updateAssetIdealAllocation,
+  // tradeAsset,
 } from '@/services/wallet/walletAssetService'
 
 jest.mock('@/config/api', () => ({

@@ -34,6 +34,7 @@ export type TClientInfosResponse = {
   nextBalance: string
   benchmark: string
   createAt: string
+  hasContract: boolean
   assetsUuid: string[]
 }
 
