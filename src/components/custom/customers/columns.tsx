@@ -27,6 +27,13 @@ export type CustomersOrganization = {
   performanceFee: number | null
   initialFeePaid: boolean | null
   contract: string | null
+  riskProfile:
+    | 'SUPER_LOW_RISK'
+    | 'LOW_RISK'
+    | 'STANDARD'
+    | 'HIGH_RISK'
+    | 'SUPER_HIGH_RISK'
+    | null
 }
 
 export const columnsCustomerOrg: ColumnDef<CustomersOrganization>[] = [

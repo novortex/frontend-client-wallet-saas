@@ -79,7 +79,7 @@ export function Graphs() {
           idealAmount: item.idealAmountInMoney,
           buyOrSell: item.buyOrSell,
           averagePrice: item.averagePrice,
-          profitLoss: item.profitLoss,
+          profitLossPercentage: item.profitLossPercentage,
         }))
 
         setData(dataTable)

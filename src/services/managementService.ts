@@ -134,6 +134,12 @@ export async function updateWallet(
     emailPassword: string
     accountPassword: string
     performanceFee: number
+    riskProfile:
+      | 'SUPER_LOW_RISK'
+      | 'LOW_RISK'
+      | 'STANDARD'
+      | 'HIGH_RISK'
+      | 'SUPER_HIGH_RISK'
   },
 ) {
   try {

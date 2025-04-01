@@ -2,6 +2,7 @@ import { instance } from '@/config/api'
 import { AddAssetFunctionResponse } from '@/types/addAsset.type'
 import { AssetsOrganizationForSelectedResponse } from '@/types/asset.type'
 import { WalletDataResponse } from '@/types/response.type'
+import { TradeType } from '@/types/wallet.type'
 
 export async function getAllAssetsWalletClient(walletUuid: string) {
   try {
@@ -14,17 +15,34 @@ export async function getAllAssetsWalletClient(walletUuid: string) {
   }
 }
 
-export async function updateAssetWalletInformations(
+export async function tradeAsset(
   walletUuid: string,
   assetUuid: string,
-  quantity: number,
-  targetAllocation: number,
+  tradeAmount: number,
+  type: TradeType,
 ) {
   try {
-    const result = await instance.put(`wallet/${walletUuid}/asset`, {
+    const result = await instance.put(`wallet/${walletUuid}/newQuantity`, {
       assetUuid,
-      quantity,
-      targetAllocation,
+      tradeAmount,
+      type,
+    })
+    return result.data
+  } catch (error) {
+    console.log(error)
+    return false
+  }
+}
+
+export async function updateAssetIdealAllocation(
+  walletUuid: string,
+  assetUuid: string,
+  idealAllocation: number,
+) {
+  try {
+    const result = await instance.put(`wallet/${walletUuid}/idealAllocation`, {
+      assetUuid,
+      idealAllocation,
     })
     return result.data
   } catch (error) {
