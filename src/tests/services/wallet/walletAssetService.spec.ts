@@ -75,45 +75,6 @@ describe('walletAssetService', () => {
   })
 })
 
-
-  // describe('tradeAsset', () => {
-  //   it('should execute trade successfully (buy)', async () => {
-  //     const mockData = { success: true }
-  //     ;(instance.put as jest.Mock).mockResolvedValue({ data: mockData })
-
-  //     const result = await tradeAsset('123', '456', 10)
-  //     expect(result).toEqual(mockData)
-  //     expect(instance.put).toHaveBeenCalledWith('wallet/123/newQuantity', {
-  //       assetUuid: '456',
-  //       quantity: 10,
-  //     })
-  //   })
-
-  //   it('should execute trade successfully (sell)', async () => {
-  //     const mockData = { success: true }
-  //     ;(instance.put as jest.Mock).mockResolvedValue({ data: mockData })
-
-  //     const result = await tradeAsset('123', '456', -5)
-  //     expect(result).toEqual(mockData)
-  //     expect(instance.put).toHaveBeenCalledWith('wallet/123/newQuantity', {
-  //       assetUuid: '456',
-  //       quantity: -5,
-  //     })
-  //   })
-
-  //   it('should return false if trade fails', async () => {
-  //     ;(instance.put as jest.Mock).mockRejectedValue(new Error('Trade error'))
-
-  //     const result = await tradeAsset('123', '456', 10)
-  //     expect(result).toBe(false)
-  //   })
-
-  //   it('should return false if quantity is invalid', async () => {
-  //     const result = await tradeAsset('123', '456', 0)
-  //     expect(result).toBe(false)
-  //   })
-  // })
-
 describe('addCryptoWalletClient', () => {
   it('should add crypto asset to wallet', async () => {
     const mockResponse = { success: true }
