@@ -34,6 +34,7 @@ export type TClientInfosResponse = {
   nextBalance: string
   benchmark: string
   createAt: string
+  hasContract: boolean
   assetsUuid: string[]
 }
 
@@ -59,4 +60,11 @@ export type TCustomersOrganization = {
   performanceFee: number | null
   initialFeePaid: boolean | null
   contract: string | null
+  riskProfile:
+    | 'STANDARD'
+    | 'SUPER_LOW_RISK'
+    | 'LOW_RISK'
+    | 'HIGH_RISK'
+    | 'SUPER_HIGH_RISK'
+    | null
 }

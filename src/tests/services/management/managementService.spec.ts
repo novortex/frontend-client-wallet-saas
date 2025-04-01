@@ -117,6 +117,7 @@ describe('managementService', () => {
         emailPassword: 'password',
         accountPassword: 'password123',
         performanceFee: 5,
+        riskProfile: 'STANDARD',
       })
 
       expect(instance.put).toHaveBeenCalledWith(

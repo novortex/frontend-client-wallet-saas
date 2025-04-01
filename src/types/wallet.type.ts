@@ -143,3 +143,8 @@ export type KpiData = {
     percentagePerformance: string
   }
 }
+
+export enum TradeType {
+  BUY = 'BUY',
+  SELL = 'SELL',
+}

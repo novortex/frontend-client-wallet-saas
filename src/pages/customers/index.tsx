@@ -16,6 +16,14 @@ import {
 } from '@/components/custom/customers/columns'
 import { Loading } from '@/components/custom/loading'
 
+export type RiskProfile =
+  | 'STANDARD'
+  | 'SUPER_LOW_RISK'
+  | 'LOW_RISK'
+  | 'HIGH_RISK'
+  | 'SUPER_HIGH_RISK'
+  | null
+
 export function Customers() {
   const [data, setData] = useState<CustomersOrganization[]>([])
   const [loading, setLoading] = useState(true)
@@ -42,23 +50,28 @@ export function Customers() {
           })
         }
 
-        const dataTable = result.map((item) => ({
-          id: item.uuid,
-          name: item.name,
-          active: item.active,
-          email: item.email,
-          phone: item.phone,
-          isWallet: item.isWallet,
-          walletUuid: item.walletUuid,
-          exchange: item.exchange,
-          emailExchange: item.emailExchange,
-          emailPassword: item.emailPassword,
-          exchangePassword: item.exchangePassword,
-          manager: item.manager,
-          performanceFee: item.performanceFee,
-          initialFeePaid: item.initialFeePaid,
-          contract: item.contract,
-        }))
+        const dataTable = result.map((item) => {
+          const riskProfile: RiskProfile = item.riskProfile ?? null
+
+          return {
+            id: item.uuid,
+            name: item.name,
+            active: item.active,
+            email: item.email,
+            phone: item.phone,
+            isWallet: item.isWallet,
+            walletUuid: item.walletUuid,
+            exchange: item.exchange,
+            emailExchange: item.emailExchange,
+            emailPassword: item.emailPassword,
+            exchangePassword: item.exchangePassword,
+            manager: item.manager,
+            performanceFee: item.performanceFee,
+            initialFeePaid: item.initialFeePaid,
+            contract: item.contract,
+            riskProfile,
+          }
+        })
 
         setDate(dataTable)
         setLoading(false)

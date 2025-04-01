@@ -15,6 +15,7 @@ import { WalletTab } from './wallet-tab'
 import { CustomersOrganization } from '@/components/custom/customers/columns'
 import { CountryData } from 'react-phone-input-2'
 import { CountryCode, parsePhoneNumber } from 'libphonenumber-js'
+import { RiskProfile } from './index'
 
 interface EditCustomerModalProps {
   isOpen: boolean
@@ -43,6 +44,7 @@ export function EditCustomerModal({
   const [name, setName] = useState(rowInfos.name || '')
   const [email, setEmail] = useState(rowInfos.email || '')
   const [phone, setPhone] = useState(rowInfos.phone || '')
+  const [riskProfile, setRiskProfile] = useState<RiskProfile>(null)
   const [phoneCountry, setPhoneCountry] = useState<CountryData>({
     name: '',
     dialCode: '',
@@ -188,6 +190,7 @@ export function EditCustomerModal({
         initialFeeIsPaid: initialFeeIsPaid ?? false,
         manager,
         performanceFee: parseFloat(String(performanceFee)),
+        riskProfile: riskProfile || 'STANDARD',
       })
       if (!result) {
         toast({
@@ -219,7 +222,7 @@ export function EditCustomerModal({
   }
 
   useEffect(() => {
-    if (!isOpen) {
+    if (isOpen) {
       setContractChecked(!!rowInfos.contract)
       setInitialFeeIsPaid(rowInfos.initialFeePaid)
       setManager(rowInfos.manager?.managerUuid || '')
@@ -230,6 +233,7 @@ export function EditCustomerModal({
       setName(rowInfos.name || '')
       setEmail(rowInfos.email || '')
       setPhone(rowInfos.phone || '')
+      setRiskProfile(rowInfos.riskProfile as RiskProfile)
       setErrors({ name: '', email: '', phone: '', general: '' })
     }
   }, [isOpen, rowInfos])
@@ -289,6 +293,8 @@ export function EditCustomerModal({
               initialFeeIsPaid={initialFeeIsPaid}
               setInitialFeeIsPaid={setInitialFeeIsPaid}
               handleUpdateWallet={handleUpdateWallet}
+              setRiskProfile={setRiskProfile}
+              riskProfile={riskProfile}
             />
           </TabsContent>
         </Tabs>

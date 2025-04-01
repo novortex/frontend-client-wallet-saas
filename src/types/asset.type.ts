@@ -1,5 +1,5 @@
 export type TAsset = {
-  profitLoss: number
+  profitLossPercentage: number | null
   averagePrice: number
   currentAmount: number
   uuid: string
