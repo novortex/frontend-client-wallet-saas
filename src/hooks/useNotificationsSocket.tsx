@@ -35,7 +35,6 @@ export const useNotificationsSocket = () => {
 
       socketRef.current = socket
 
-      // Connection established
       socket.on('connect', () => {
         setIsConnected(true)
         setError(null)
@@ -44,12 +43,10 @@ export const useNotificationsSocket = () => {
           socket.id,
         )
 
-        // Register this client with the server
         const userId = localStorage.getItem('userId') || 'anonymous'
         socket.emit('register', { userId })
       })
 
-      // Registration confirmation
       socket.on('registered', (response) => {
         console.log('Registration response:', response)
         if (response.success) {
@@ -60,19 +57,16 @@ export const useNotificationsSocket = () => {
         }
       })
 
-      // Handle disconnections
       socket.on('disconnect', (reason) => {
         setIsConnected(false)
         console.log(`Disconnected from the notifications server: ${reason}`)
       })
 
-      // Handle connection errors
       socket.on('connect_error', (err) => {
         console.error('Socket connection error:', err)
         setError(`Connection error: ${err.message}`)
       })
 
-      // Listen for notifications from the server
       socket.on('notification', (notification: Notification) => {
         console.log('Received notification:', notification)
         setNotifications((prevNotifications) => [
@@ -90,16 +84,13 @@ export const useNotificationsSocket = () => {
     }
   }, [])
 
-  // Initialize socket on component mount
   useEffect(() => {
-    // Ensure we have a userId stored
     if (!localStorage.getItem('userId')) {
       localStorage.setItem('userId', generateUniqueId())
     }
 
     const socket = initializeSocket()
 
-    // Cleanup on unmount
     return () => {
       if (socket) {
         console.log('Disconnecting socket...')
@@ -109,7 +100,6 @@ export const useNotificationsSocket = () => {
     }
   }, [initializeSocket])
 
-  // Function to manually reconnect
   const reconnect = useCallback(() => {
     console.log('Attempting to reconnect...')
     if (socketRef.current) {
