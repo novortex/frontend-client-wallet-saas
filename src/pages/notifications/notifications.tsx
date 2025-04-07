@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useNotificationsSocket } from '@/hooks/useNotificationsSocket'
 import { toast } from '@/components/ui/use-toast'
 import { Button } from '@/components/ui/button'
@@ -21,8 +21,13 @@ interface Notification {
 export function Notifications() {
   const { notifications, isConnected, error, reconnect, registeredUserId } =
     useNotificationsSocket()
+  const isInitialMount = useRef(true)
 
   useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false
+      return
+    }
     if (notifications.length > 0) {
       const latestNotification = notifications[
         notifications.length - 1

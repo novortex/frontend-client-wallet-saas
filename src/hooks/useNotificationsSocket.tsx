@@ -14,7 +14,10 @@ const generateUniqueId = () => {
 export const useNotificationsSocket = () => {
   const socketRef = useRef<Socket | null>(null)
   const [isConnected, setIsConnected] = useState(false)
-  const [notifications, setNotifications] = useState<Notification[]>([])
+  const [notifications, setNotifications] = useState<Notification[]>(() => {
+    const stored = localStorage.getItem('notifications')
+    return stored ? JSON.parse(stored) : []
+  })
   const [error, setError] = useState<string | null>(null)
   const [registeredUserId, setRegisteredUserId] = useState<string | null>(null)
 
@@ -23,7 +26,6 @@ export const useNotificationsSocket = () => {
       if (!localStorage.getItem('userId')) {
         localStorage.setItem('userId', generateUniqueId())
       }
-
       const socketUrl = 'http://localhost:3000'
       const socket = io(socketUrl, {
         reconnection: true,
@@ -32,9 +34,7 @@ export const useNotificationsSocket = () => {
         timeout: 20000,
         transports: ['websocket'],
       })
-
       socketRef.current = socket
-
       socket.on('connect', () => {
         setIsConnected(true)
         setError(null)
@@ -42,11 +42,9 @@ export const useNotificationsSocket = () => {
           'Connected to the notifications server, socket ID:',
           socket.id,
         )
-
         const userId = localStorage.getItem('userId') || 'anonymous'
         socket.emit('register', { userId })
       })
-
       socket.on('registered', (response) => {
         console.log('Registration response:', response)
         if (response.success) {
@@ -56,17 +54,14 @@ export const useNotificationsSocket = () => {
           console.error('Registration failed:', response.message)
         }
       })
-
       socket.on('disconnect', (reason) => {
         setIsConnected(false)
         console.log(`Disconnected from the notifications server: ${reason}`)
       })
-
       socket.on('connect_error', (err) => {
         console.error('Socket connection error:', err)
         setError(`Connection error: ${err.message}`)
       })
-
       socket.on('notification', (notification: Notification) => {
         console.log('Received notification:', notification)
         setNotifications((prevNotifications) => [
@@ -74,7 +69,6 @@ export const useNotificationsSocket = () => {
           notification,
         ])
       })
-
       return socket
     } catch (err) {
       console.error('Error initializing socket:', err)
@@ -88,9 +82,7 @@ export const useNotificationsSocket = () => {
     if (!localStorage.getItem('userId')) {
       localStorage.setItem('userId', generateUniqueId())
     }
-
     const socket = initializeSocket()
-
     return () => {
       if (socket) {
         console.log('Disconnecting socket...')
@@ -99,6 +91,10 @@ export const useNotificationsSocket = () => {
       socketRef.current = null
     }
   }, [initializeSocket])
+
+  useEffect(() => {
+    localStorage.setItem('notifications', JSON.stringify(notifications))
+  }, [notifications])
 
   const reconnect = useCallback(() => {
     console.log('Attempting to reconnect...')
