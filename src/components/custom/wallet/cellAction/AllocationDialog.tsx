@@ -31,7 +31,7 @@ export function AllocationDialog({
 
   const handleSave = () => {
     const idealAllocation = parseFloat(idealAllocationRef.current?.value ?? '0')
-    if (idealAllocation <= 0 || idealAllocation > 100) {
+    if (idealAllocation < 0 || idealAllocation > 100) {
       return toast({
         className: 'bg-red-500 border-0',
         title: 'Invalid ideal allocation',
