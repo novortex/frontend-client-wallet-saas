@@ -20,6 +20,7 @@ import { UserDataHandler } from './auth/userDataHandler'
 import { ProtectedRouteWrapper } from './auth/protectedRouteWrapper'
 import { setLogoutFunction } from './services/auth'
 import { Loading } from './components/custom/loading'
+import { Notifications } from './pages/notifications/notifications'
 
 export function App() {
   const [isMobile, setIsMobile] = useState(false)
@@ -60,6 +61,7 @@ export function App() {
                 <Route path="/" element={<Navigate to="/wallets" replace />} />
                 <Route path="/wallet/:walletUuid/assets" element={<Wallet />} />
                 <Route path="/wallets" element={<Clients />} />
+                <Route path="/notifications" element={<Notifications />} />
                 <Route path="/customers" element={<Customers />} />
                 <Route path="/admin/orgs" element={<AssetsOrg />} />
                 <Route path="/clients/:walletUuid/infos" element={<Infos />} />

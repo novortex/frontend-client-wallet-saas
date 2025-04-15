@@ -33,23 +33,41 @@ export default function HistoryCardStartClose({
   const { data } = data_
 
   const handleExport = async () => {
+    // Função para formatar números com 2 casas decimais
+    const formatNumber = (
+      value: number | string | null | undefined,
+    ): string => {
+      if (value === null || value === undefined) return '0.00'
+      const num = typeof value === 'string' ? parseFloat(value) : value
+      return isNaN(num) ? '0.00' : num.toFixed(2)
+    }
+
     await downloadPdf(
       data.client_name,
       data.start_date,
       data.start_date_formated,
       data.close_date,
       data.close_date_formated,
-      String(data.invested_amount_in_organization_fiat),
+      formatNumber(data.invested_amount_in_organization_fiat),
       data.benchmark,
-      String(data.company_comission),
-      String(data.total_commision),
+      formatNumber(data.wallet_performance_fee),
+      formatNumber(data.company_commission),
+      formatNumber(data.total_commision),
       data.dollar_value,
-      String(data.benchmark_price_start.amount),
-      String(data.benchmark_price_end.amount),
-      String(data.benchmark_value),
-      String(data.close_wallet_value_in_organization_fiat),
-      String(data.benchmark_exceeded_value),
-      data.assets,
+      formatNumber(data.benchmark_price_start),
+      formatNumber(data.benchmark_price_end),
+      formatNumber(data.benchmark_performance),
+      formatNumber(data.benchmark_value),
+      formatNumber(data.close_wallet_value_in_organization_fiat),
+      formatNumber(data.total_wallet_profit_percent),
+      formatNumber(data.benchmark_exceeded_value),
+      data.assets?.map((asset) => ({
+        name: asset.name,
+        allocation:
+          asset.allocation !== null && asset.allocation !== undefined
+            ? parseFloat(asset.allocation.toFixed(2))
+            : 0,
+      })) || [],
     )
   }
 
