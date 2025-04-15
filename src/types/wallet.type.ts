@@ -73,23 +73,16 @@ export type HistoricEntry = {
     organization_fiat: string
     invested_amount_in_organization_fiat: number
     benchmark: string
-    company_comission: number
+    wallet_performance_fee: number
+    company_commission: number
     total_commision: number
     dollar_value: string
-    benchmark_price_start: {
-      cuid: string
-      amount: number
-      createAt: string
-      benchmarkCuid: string
-    }
-    benchmark_price_end: {
-      cuid: string
-      amount: number
-      createAt: string
-      benchmarkCuid: string
-    }
+    benchmark_price_start: number
+    benchmark_price_end: number
+    benchmark_performance: number
     benchmark_value: string
     close_wallet_value_in_organization_fiat: number
+    total_wallet_profit_percent: number
     benchmark_exceeded_value: number
     assets: { name: string; allocation: number }[]
     before: number
