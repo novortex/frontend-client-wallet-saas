@@ -34,9 +34,12 @@ export default function HistoryCardStartClose({
 
   const handleExport = async () => {
     // Função para formatar números com 2 casas decimais
-    const formatNumber = (value: number | string): string => {
+    const formatNumber = (
+      value: number | string | null | undefined,
+    ): string => {
+      if (value === null || value === undefined) return '0.00'
       const num = typeof value === 'string' ? parseFloat(value) : value
-      return isNaN(num) ? String(value) : num.toFixed(2)
+      return isNaN(num) ? '0.00' : num.toFixed(2)
     }
 
     await downloadPdf(
@@ -58,10 +61,13 @@ export default function HistoryCardStartClose({
       formatNumber(data.close_wallet_value_in_organization_fiat),
       formatNumber(data.total_wallet_profit_percent),
       formatNumber(data.benchmark_exceeded_value),
-      data.assets.map((asset) => ({
+      data.assets?.map((asset) => ({
         name: asset.name,
-        allocation: parseFloat(asset.allocation.toFixed(2)),
-      })),
+        allocation:
+          asset.allocation !== null && asset.allocation !== undefined
+            ? parseFloat(asset.allocation.toFixed(2))
+            : 0,
+      })) || [],
     )
   }
 
