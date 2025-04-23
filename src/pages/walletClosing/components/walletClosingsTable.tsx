@@ -207,13 +207,3 @@ export function WalletClosingsTable({
     </>
   )
 }
-
-// Export the pagination data type for reuse
-export type PaginationData = {
-  pageIndex: number
-  pageCount: number
-  canPreviousPage: boolean
-  canNextPage: boolean
-  totalItems: number
-  pageSize: number
-}

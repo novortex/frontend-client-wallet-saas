@@ -21,3 +21,12 @@ export type WalletClosing = {
   closingDate: string | null
   status: string
 }
+
+export type PaginationData = {
+  pageIndex: number
+  pageCount: number
+  canPreviousPage: boolean
+  canNextPage: boolean
+  totalItems: number
+  pageSize: number
+}
