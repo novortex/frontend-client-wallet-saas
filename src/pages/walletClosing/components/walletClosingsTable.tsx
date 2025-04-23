@@ -24,7 +24,7 @@ import { ArrowUpDown } from 'lucide-react'
 import { WalletClosing } from '../types'
 import { StatusBadge } from './statusBadge'
 import { CellActions } from './cellActions'
-import { formatDate } from '../utils/formatters'
+import { formatDate } from '@/utils/formatDate'
 
 // Define a proper type for the table reference
 export interface WalletClosingsTableRef {
@@ -69,21 +69,28 @@ export function WalletClosingsTable({
         </div>
       ),
     },
+    // For the startDate column
     {
       accessorKey: 'startDate',
       header: () => <div className="text-center">Start Date</div>,
       cell: ({ row }) => (
         <div className="whitespace-nowrap text-center">
-          {formatDate(row.original.startDate)}
+          {row.original.startDate !== null
+            ? formatDate(row.original.startDate)
+            : '-'}
         </div>
       ),
     },
+
+    // For the closingDate column
     {
       accessorKey: 'closingDate',
       header: () => <div className="text-center">Closing Date</div>,
       cell: ({ row }) => (
         <div className="whitespace-nowrap text-center">
-          {formatDate(row.original.closingDate)}
+          {row.original.closingDate !== null
+            ? formatDate(row.original.closingDate)
+            : '-'}
         </div>
       ),
     },

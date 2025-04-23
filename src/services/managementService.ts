@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 import { instance } from '@/config/api'
+import { WalletClosing } from '@/pages/walletClosing/types'
 import { BenchmarksProps } from '@/types/asset.type'
 import {
   TCustomersOrganization,
@@ -254,7 +255,7 @@ export async function getBenchmarkOptions(): Promise<BenchmarksProps[]> {
   }
 }
 
-export async function getWalletClosings() {
+export async function getWalletClosings(): Promise<WalletClosing[]> {
   try {
     const result = await instance.get('management/wallet-closings')
     return result.data
