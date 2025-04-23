@@ -1,13 +1,14 @@
 // types/index.ts
 
 // Define filter options type
+// types/index.ts
 export interface FilterOptions {
   status: string[]
   manager: string[]
-  startDateFrom: Date | null
-  startDateTo: Date | null
-  closingDateFrom: Date | null
-  closingDateTo: Date | null
+  startDateFrom: Date | null | undefined
+  startDateTo: Date | null | undefined
+  closingDateFrom: Date | null | undefined
+  closingDateTo: Date | null | undefined
   showClosedWallets: boolean
 }
 
@@ -18,5 +19,5 @@ export type WalletClosing = {
   managerName: string
   startDate: string
   closingDate: string | null
-  status: 'Completed' | 'Pending' | 'Failed' | 'Processing'
+  status: string
 }

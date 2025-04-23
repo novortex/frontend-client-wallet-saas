@@ -1,4 +1,4 @@
-// components/StatusBadge.tsx
+// components/statusBadge.tsx
 import { WalletClosing } from '../types'
 
 interface StatusBadgeProps {
@@ -7,21 +7,18 @@ interface StatusBadgeProps {
 
 export function StatusBadge({ status }: StatusBadgeProps) {
   let bgColor = ''
-  switch (status) {
-    case 'Completed':
-      bgColor = 'bg-green-500'
-      break
-    case 'Pending':
-      bgColor = 'bg-yellow-500'
-      break
-    case 'Failed':
-      bgColor = 'bg-red-500'
-      break
-    case 'Processing':
-      bgColor = 'bg-blue-500'
-      break
-    default:
-      bgColor = 'bg-gray-500'
+
+  // Lógica para determinar a cor com base no status
+  if (status === 'Closed') {
+    bgColor = 'bg-blue-500'
+  } else if (status === 'OK') {
+    bgColor = 'bg-green-500'
+  } else if (typeof status === 'string' && status.includes('days left')) {
+    bgColor = 'bg-yellow-500'
+  } else if (typeof status === 'string' && status.includes('days overdue')) {
+    bgColor = 'bg-red-500'
+  } else {
+    bgColor = 'bg-gray-500'
   }
 
   return (

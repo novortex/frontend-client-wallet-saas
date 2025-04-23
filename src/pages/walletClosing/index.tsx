@@ -18,7 +18,6 @@ export function WalletClosings() {
     handleApplyFilters,
     handleSearch,
     filterCount,
-    activeFilters,
   } = useWalletClosings()
 
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false)
@@ -69,7 +68,6 @@ export function WalletClosings() {
       </div>
 
       <div className="mb-10 rounded-md border">
-        {/* Toolbar da tabela com botões de paginação */}
         <TableToolbar
           onSearch={onSearch}
           onExport={handleExport}
@@ -85,7 +83,6 @@ export function WalletClosings() {
           pageSize={pageInfo.pageSize}
         />
 
-        {/* Tabela de Wallet Closings */}
         <WalletClosingsTable
           data={data}
           onSearch={onSearch}
@@ -93,12 +90,10 @@ export function WalletClosings() {
         />
       </div>
 
-      {/* Modal de Filtro */}
       <FilterModal
         isOpen={isFilterModalOpen}
         onOpenChange={setIsFilterModalOpen}
         onApplyFilter={handleApplyFilters}
-        initialFilters={activeFilters || undefined}
       />
     </div>
   )

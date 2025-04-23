@@ -3,211 +3,10 @@ import { useState, useEffect } from 'react'
 import { useSignalStore } from '@/store/signalEffect'
 import { useToast } from '@/components/ui/use-toast'
 import { WalletClosing, FilterOptions } from '../types'
-
-// Dados mockados para demonstração
-const mockWalletClosings: WalletClosing[] = [
-  {
-    id: '1',
-    clientName: 'André Luiz Barros',
-    managerName: 'Pedro Silva',
-    startDate: '2024-01-15',
-    closingDate: '2024-03-30',
-    status: 'Completed',
-  },
-  {
-    id: '2',
-    clientName: 'Leticia Matos Sá',
-    managerName: 'Arthur Mendes',
-    startDate: '2024-02-20',
-    closingDate: null,
-    status: 'Pending',
-  },
-  {
-    id: '3',
-    clientName: 'Antonio Claudio Pereira Barros',
-    managerName: 'Abner Costa',
-    startDate: '2023-11-05',
-    closingDate: '2024-02-15',
-    status: 'Completed',
-  },
-  {
-    id: '4',
-    clientName: 'Maria Eduarda Limonge Salemi',
-    managerName: 'Pedro Silva',
-    startDate: '2024-03-10',
-    closingDate: null,
-    status: 'Processing',
-  },
-  {
-    id: '5',
-    clientName: 'João Deccache',
-    managerName: 'Arthur Mendes',
-    startDate: '2023-12-01',
-    closingDate: '2024-02-01',
-    status: 'Failed',
-  },
-  {
-    id: '6',
-    clientName: 'Alexandre Machado',
-    managerName: 'Abner Costa',
-    startDate: '2024-02-10',
-    closingDate: null,
-    status: 'Processing',
-  },
-  {
-    id: '7',
-    clientName: 'José Tarcísio',
-    managerName: 'Pedro Silva',
-    startDate: '2023-10-20',
-    closingDate: '2024-01-20',
-    status: 'Completed',
-  },
-  {
-    id: '8',
-    clientName: 'Carlos Jr',
-    managerName: 'Arthur Mendes',
-    startDate: '2024-03-01',
-    closingDate: null,
-    status: 'Pending',
-  },
-  {
-    id: '9',
-    clientName: 'Bruno Ricardo De Castro Prieto',
-    managerName: 'Abner Costa',
-    startDate: '2023-09-15',
-    closingDate: '2023-12-15',
-    status: 'Failed',
-  },
-  {
-    id: '10',
-    clientName: 'Luis Samaia',
-    managerName: 'Pedro Silva',
-    startDate: '2024-01-05',
-    closingDate: '2024-04-05',
-    status: 'Completed',
-  },
-  // Dados adicionais para paginação
-  {
-    id: '11',
-    clientName: 'Marcela Ribeiro',
-    managerName: 'Pedro Silva',
-    startDate: '2024-01-10',
-    closingDate: '2024-03-15',
-    status: 'Completed',
-  },
-  {
-    id: '12',
-    clientName: 'Rafael Moreira',
-    managerName: 'Arthur Mendes',
-    startDate: '2024-02-05',
-    closingDate: null,
-    status: 'Processing',
-  },
-  {
-    id: '13',
-    clientName: 'Carla Santana',
-    managerName: 'Abner Costa',
-    startDate: '2023-12-15',
-    closingDate: '2024-02-28',
-    status: 'Completed',
-  },
-  {
-    id: '14',
-    clientName: 'Thiago Oliveira',
-    managerName: 'Pedro Silva',
-    startDate: '2024-01-20',
-    closingDate: null,
-    status: 'Pending',
-  },
-  {
-    id: '15',
-    clientName: 'Juliana Martins',
-    managerName: 'Arthur Mendes',
-    startDate: '2023-11-30',
-    closingDate: '2024-01-25',
-    status: 'Failed',
-  },
-  {
-    id: '16',
-    clientName: 'Leonardo Alves',
-    managerName: 'Abner Costa',
-    startDate: '2024-02-15',
-    closingDate: null,
-    status: 'Processing',
-  },
-  {
-    id: '17',
-    clientName: 'Paulo Roberto Coelho',
-    managerName: 'Pedro Silva',
-    startDate: '2023-10-10',
-    closingDate: '2024-01-10',
-    status: 'Completed',
-  },
-  {
-    id: '18',
-    clientName: 'Camila Fonseca',
-    managerName: 'Arthur Mendes',
-    startDate: '2024-03-05',
-    closingDate: null,
-    status: 'Pending',
-  },
-  {
-    id: '19',
-    clientName: 'Gustavo Henrique Lima',
-    managerName: 'Abner Costa',
-    startDate: '2023-09-20',
-    closingDate: '2023-12-20',
-    status: 'Failed',
-  },
-  {
-    id: '20',
-    clientName: 'Gabriela Souza',
-    managerName: 'Pedro Silva',
-    startDate: '2024-01-25',
-    closingDate: '2024-04-10',
-    status: 'Completed',
-  },
-  {
-    id: '21',
-    clientName: 'Roberto Carlos Pereira',
-    managerName: 'Arthur Mendes',
-    startDate: '2023-12-05',
-    closingDate: null,
-    status: 'Processing',
-  },
-  {
-    id: '22',
-    clientName: 'Fernanda Costa Silva',
-    managerName: 'Abner Costa',
-    startDate: '2024-02-01',
-    closingDate: '2024-03-20',
-    status: 'Completed',
-  },
-  {
-    id: '23',
-    clientName: 'Diego Almeida',
-    managerName: 'Pedro Silva',
-    startDate: '2023-11-15',
-    closingDate: null,
-    status: 'Pending',
-  },
-  {
-    id: '24',
-    clientName: 'Mariana Ferreira',
-    managerName: 'Arthur Mendes',
-    startDate: '2024-01-30',
-    closingDate: '2024-03-25',
-    status: 'Failed',
-  },
-  {
-    id: '25',
-    clientName: 'Lucas Rodrigues',
-    managerName: 'Abner Costa',
-    startDate: '2023-10-25',
-    closingDate: null,
-    status: 'Processing',
-  },
-]
+import {
+  getWalletClosings,
+  getAllManagersOnOrganization,
+} from '@/services/managementService'
 
 export function useWalletClosings() {
   const [data, setData] = useState<WalletClosing[]>([])
@@ -215,6 +14,7 @@ export function useWalletClosings() {
   const [loading, setLoading] = useState(true)
   const [activeFilters, setActiveFilters] = useState<FilterOptions | null>(null)
   const [filterCount, setFilterCount] = useState(0)
+  const [managers, setManagers] = useState<{ uuid: string; name: string }[]>([])
   const [signal] = useSignalStore((state) => [state.signal])
   const { toast } = useToast()
 
@@ -222,16 +22,24 @@ export function useWalletClosings() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Simulando chamada de API
-        setData(mockWalletClosings)
-        setFilteredData(mockWalletClosings)
+        setLoading(true)
+
+        // Buscar gerentes e dados das carteiras simultaneamente
+        const [walletsResponse, managersResponse] = await Promise.all([
+          getWalletClosings(),
+          getAllManagersOnOrganization(),
+        ])
+
+        setData(walletsResponse.clients)
+        setFilteredData(walletsResponse.clients)
+        setManagers(managersResponse)
         setLoading(false)
       } catch (error) {
         console.error('Error fetching data:', error)
         toast({
           className: 'bg-red-500 border-0 text-white',
           title: 'Failed to get wallet closings',
-          description: 'Demo Vault !!',
+          description: 'Could not fetch wallet closings data from the server.',
         })
         setLoading(false)
       }
@@ -251,42 +59,108 @@ export function useWalletClosings() {
     let filtered = [...data]
     let count = 0
 
-    // Aplicar filtros (código mantido como no original)
     // Filter by status
     if (activeFilters.status.length > 0) {
-      filtered = filtered.filter((item) =>
-        activeFilters.status.includes(item.status),
-      )
-      count++
-    }
-
-    // Filter by manager
-    if (activeFilters.manager.length > 0) {
       filtered = filtered.filter((item) => {
-        const managerId =
-          item.managerName === 'Pedro Silva'
-            ? 'm1'
-            : item.managerName === 'Arthur Mendes'
-              ? 'm2'
-              : item.managerName === 'Abner Costa'
-                ? 'm3'
-                : ''
-        return activeFilters.manager.includes(managerId)
+        // Status específicos exatos (Closed, OK)
+        if (activeFilters.status.includes(item.status)) {
+          return true
+        }
+
+        // Para filtrar status que contêm "days left"
+        if (
+          activeFilters.status.includes('days left') &&
+          typeof item.status === 'string' &&
+          item.status.includes('days left')
+        ) {
+          return true
+        }
+
+        // Para filtrar status que contêm "days overdue"
+        if (
+          activeFilters.status.includes('days overdue') &&
+          typeof item.status === 'string' &&
+          item.status.includes('days overdue')
+        ) {
+          return true
+        }
+
+        return false
       })
       count++
     }
 
-    // Outros filtros como no original...
+    // Filter by manager - usando UUIDs reais
+    if (activeFilters.manager.length > 0) {
+      // Encontrar os nomes dos gerentes baseados nos UUIDs selecionados
+      const selectedManagerNames = activeFilters.manager
+        .map((uuid) => {
+          const manager = managers.find((m) => m.uuid === uuid)
+          return manager ? manager.name : ''
+        })
+        .filter((name) => name !== '')
+
+      filtered = filtered.filter((item) =>
+        selectedManagerNames.includes(item.managerName),
+      )
+      count++
+    }
+
+    // Filter by start date - from
+    if (activeFilters.startDateFrom) {
+      const fromDate = new Date(activeFilters.startDateFrom)
+      filtered = filtered.filter((item) => {
+        const itemDate = new Date(item.startDate)
+        return itemDate >= fromDate
+      })
+      count++
+    }
+
+    // Filter by start date - to
+    if (activeFilters.startDateTo) {
+      const toDate = new Date(activeFilters.startDateTo)
+      toDate.setHours(23, 59, 59) // Set to end of day
+      filtered = filtered.filter((item) => {
+        const itemDate = new Date(item.startDate)
+        return itemDate <= toDate
+      })
+      count++
+    }
+
+    // Filter by closing date - from
+    if (activeFilters.closingDateFrom) {
+      const fromDate = new Date(activeFilters.closingDateFrom)
+      filtered = filtered.filter((item) => {
+        if (!item.closingDate) return false
+        const itemDate = new Date(item.closingDate)
+        return itemDate >= fromDate
+      })
+      count++
+    }
+
+    // Filter by closing date - to
+    if (activeFilters.closingDateTo) {
+      const toDate = new Date(activeFilters.closingDateTo)
+      toDate.setHours(23, 59, 59) // Set to end of day
+      filtered = filtered.filter((item) => {
+        if (!item.closingDate) return false
+        const itemDate = new Date(item.closingDate)
+        return itemDate <= toDate
+      })
+      count++
+    }
 
     // Filter by closed wallets
     if (!activeFilters.showClosedWallets) {
-      filtered = filtered.filter((item) => !item.closingDate)
+      filtered = filtered.filter(
+        (item) => item.status !== 'Closed' && item.status !== 'Completed',
+      )
       count++
     }
 
     setFilteredData(filtered)
     setFilterCount(count)
-  }, [activeFilters, data])
+  }, [activeFilters, data, managers])
 
   // Manipulador de exportação
   const handleExport = () => {
@@ -343,5 +217,6 @@ export function useWalletClosings() {
     handleSearch,
     filterCount,
     activeFilters,
+    managers,
   }
 }

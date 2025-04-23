@@ -8,10 +8,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { WalletClosing } from '../types'
+import { Link } from 'react-router-dom'
 
+// Add rowData prop to the component
 interface CellActionsProps {
-  rowData: WalletClosing
+  rowData: {
+    id: string
+  }
 }
 
 export function CellActions({ rowData }: CellActionsProps) {
@@ -32,19 +35,11 @@ export function CellActions({ rowData }: CellActionsProps) {
         align="end"
         className="w-40 rounded-lg border border-gray-200 bg-white p-0"
       >
-        <DropdownMenuItem className="flex cursor-pointer items-center gap-2 px-4 py-2 text-sm text-black transition-colors hover:bg-black hover:text-white focus:bg-black focus:text-white">
-          <span>View Details</span>
-        </DropdownMenuItem>
-
-        {!rowData.closingDate && (
+        <Link to={`/clients/${rowData.id}/infos`}>
           <DropdownMenuItem className="flex cursor-pointer items-center gap-2 px-4 py-2 text-sm text-black transition-colors hover:bg-black hover:text-white focus:bg-black focus:text-white">
-            <span>Close Wallet</span>
+            <span>View Details</span>
           </DropdownMenuItem>
-        )}
-
-        <DropdownMenuItem className="flex cursor-pointer items-center gap-2 px-4 py-2 text-sm text-black transition-colors hover:bg-black hover:text-white focus:bg-black focus:text-white">
-          <span>Export Report</span>
-        </DropdownMenuItem>
+        </Link>
       </DropdownMenuContent>
     </DropdownMenu>
   )

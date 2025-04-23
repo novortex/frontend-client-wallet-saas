@@ -24,6 +24,7 @@ import {
 } from '@/components/ui/popover'
 import { Calendar } from '@/components/ui/calendar'
 import { format } from 'date-fns'
+import { getAllManagersOnOrganization } from '@/services/managementService'
 
 // Define filter options type
 interface FilterOptions {
@@ -43,14 +44,10 @@ interface FilterModalProps {
   initialFilters?: FilterOptions
 }
 
-// Mock manager data
-const managers = [
-  { id: 'm1', name: 'Pedro Gattai' },
-  { id: 'm2', name: 'Allan Resende' },
-  { id: 'm3', name: 'Marco Aurelio' },
-  { id: 'm4', name: 'Arthur Mendes' },
-  { id: 'm5', name: 'Abner Costa' },
-]
+interface Manager {
+  uuid: string
+  name: string
+}
 
 export function FilterModal({
   isOpen,
@@ -73,6 +70,27 @@ export function FilterModal({
     initialFilters || defaultFilters,
   )
   const [selectedManager, setSelectedManager] = useState<string>('')
+  const [managers, setManagers] = useState<Manager[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+
+  // Carregar os gerentes da API
+  useEffect(() => {
+    const fetchManagers = async () => {
+      if (isOpen) {
+        try {
+          setIsLoading(true)
+          const data = await getAllManagersOnOrganization()
+          setManagers(data)
+        } catch (error) {
+          console.error('Error fetching managers:', error)
+        } finally {
+          setIsLoading(false)
+        }
+      }
+    }
+
+    fetchManagers()
+  }, [isOpen])
 
   // Reset filters
   const handleResetFilters = () => {
@@ -83,17 +101,6 @@ export function FilterModal({
   const handleApplyFilters = () => {
     onApplyFilter(filters)
     onOpenChange(false)
-  }
-
-  // Add manager to selection
-  const handleAddManager = (managerId: string) => {
-    if (managerId && !filters.manager.includes(managerId)) {
-      setFilters((prev) => ({
-        ...prev,
-        manager: [...prev.manager, managerId],
-      }))
-      setSelectedManager('')
-    }
   }
 
   // Remove manager from selection
@@ -129,13 +136,22 @@ export function FilterModal({
 
   // Get manager name from id
   const getManagerName = (managerId: string) => {
-    const manager = managers.find((m) => m.id === managerId)
+    const manager = managers.find((m) => m.uuid === managerId)
     return manager ? manager.name : ''
+  }
+
+  // Configuração comum para todos os calendários
+  const calendarConfig = {
+    className: 'z-[9999] w-auto shadow-md p-0',
+    align: 'center' as const,
+    side: 'bottom' as const,
+    sideOffset: 5,
+    alignOffset: 0,
   }
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[85vh] w-[600px] overflow-y-auto rounded-lg border-transparent dark:bg-[#1C1C1C] dark:text-white">
+      <DialogContent className="max-h-[85vh] w-[650px] overflow-y-visible rounded-lg border-transparent dark:bg-[#1C1C1C] dark:text-white">
         <DialogHeader className="border-b border-gray-200 pb-4 dark:border-gray-700">
           <DialogTitle className="text-2xl">Filter Wallet Closings</DialogTitle>
         </DialogHeader>
@@ -156,13 +172,18 @@ export function FilterModal({
                   }
                   setSelectedManager('')
                 }}
+                disabled={isLoading}
               >
                 <SelectTrigger className="dark:border-[#323232] dark:bg-[#272727] dark:text-white">
-                  <SelectValue placeholder="Select manager" />
+                  <SelectValue
+                    placeholder={
+                      isLoading ? 'Loading managers...' : 'Select manager'
+                    }
+                  />
                 </SelectTrigger>
                 <SelectContent className="dark:border-[#323232] dark:bg-[#272727] dark:text-white">
                   {managers.map((manager) => (
-                    <SelectItem key={manager.id} value={manager.id}>
+                    <SelectItem key={manager.uuid} value={manager.uuid}>
                       {manager.name}
                     </SelectItem>
                   ))}
@@ -193,63 +214,66 @@ export function FilterModal({
             </div>
           </div>
 
-          {/* Status Filter */}
+          {/* Status Filter - Atualizado com os novos status */}
           <div className="space-y-4">
             <Label className="text-lg font-medium">Status</Label>
             <div className="space-y-2">
               <div className="flex items-center space-x-2">
                 <Checkbox
-                  id="status-completed"
-                  checked={filters.status.includes('Completed')}
-                  onCheckedChange={() => toggleStatus('Completed')}
+                  id="status-closed"
+                  checked={filters.status.includes('Closed')}
+                  onCheckedChange={() => toggleStatus('Closed')}
                   className="h-5 w-5 rounded-sm border-gray-300 dark:border-gray-600"
                 />
-                <Label htmlFor="status-completed" className="flex">
-                  <span className="mr-2">Completed</span>
-                  <span className="rounded-full bg-green-500 px-2 py-0.5 text-xs text-white">
-                    Completed
-                  </span>
-                </Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="status-pending"
-                  checked={filters.status.includes('Pending')}
-                  onCheckedChange={() => toggleStatus('Pending')}
-                  className="h-5 w-5 rounded-sm border-gray-300 dark:border-gray-600"
-                />
-                <Label htmlFor="status-pending" className="flex">
-                  <span className="mr-2">Pending</span>
-                  <span className="rounded-full bg-yellow-500 px-2 py-0.5 text-xs text-white">
-                    Pending
-                  </span>
-                </Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="status-failed"
-                  checked={filters.status.includes('Failed')}
-                  onCheckedChange={() => toggleStatus('Failed')}
-                  className="h-5 w-5 rounded-sm border-gray-300 dark:border-gray-600"
-                />
-                <Label htmlFor="status-failed" className="flex">
-                  <span className="mr-2">Failed</span>
-                  <span className="rounded-full bg-red-500 px-2 py-0.5 text-xs text-white">
-                    Failed
-                  </span>
-                </Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="status-processing"
-                  checked={filters.status.includes('Processing')}
-                  onCheckedChange={() => toggleStatus('Processing')}
-                  className="h-5 w-5 rounded-sm border-gray-300 dark:border-gray-600"
-                />
-                <Label htmlFor="status-processing" className="flex">
-                  <span className="mr-2">Processing</span>
+                <Label htmlFor="status-closed" className="flex">
+                  <span className="mr-2">Closed</span>
                   <span className="rounded-full bg-blue-500 px-2 py-0.5 text-xs text-white">
-                    Processing
+                    Closed
+                  </span>
+                </Label>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="status-ok"
+                  checked={filters.status.includes('OK')}
+                  onCheckedChange={() => toggleStatus('OK')}
+                  className="h-5 w-5 rounded-sm border-gray-300 dark:border-gray-600"
+                />
+                <Label htmlFor="status-ok" className="flex">
+                  <span className="mr-2">OK</span>
+                  <span className="rounded-full bg-green-500 px-2 py-0.5 text-xs text-white">
+                    OK
+                  </span>
+                </Label>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="status-days-left"
+                  checked={filters.status.some((s) => s === 'days left')}
+                  onCheckedChange={() => toggleStatus('days left')}
+                  className="h-5 w-5 rounded-sm border-gray-300 dark:border-gray-600"
+                />
+                <Label htmlFor="status-days-left" className="flex">
+                  <span className="mr-2">Days Left</span>
+                  <span className="rounded-full bg-yellow-500 px-2 py-0.5 text-xs text-white">
+                    Days Left
+                  </span>
+                </Label>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="status-days-overdue"
+                  checked={filters.status.some((s) => s === 'days overdue')}
+                  onCheckedChange={() => toggleStatus('days overdue')}
+                  className="h-5 w-5 rounded-sm border-gray-300 dark:border-gray-600"
+                />
+                <Label htmlFor="status-days-overdue" className="flex">
+                  <span className="mr-2">Days Overdue</span>
+                  <span className="rounded-full bg-red-500 px-2 py-0.5 text-xs text-white">
+                    Days Overdue
                   </span>
                 </Label>
               </div>
@@ -264,58 +288,67 @@ export function FilterModal({
               <div className="space-y-2">
                 <div className="space-y-1">
                   <Label>From</Label>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className="w-full justify-between dark:border-gray-600 dark:bg-[#272727] dark:text-gray-200"
-                      >
-                        {filters.startDateFrom
-                          ? formatDate(filters.startDateFrom)
-                          : 'Select date'}
-                        <CalendarIcon className="h-4 w-4 opacity-50" />
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={filters.startDateFrom || undefined}
-                        onSelect={(date) =>
-                          setFilters((prev) => ({
-                            ...prev,
-                            startDateFrom: date,
-                          }))
-                        }
-                        className="rounded-md dark:bg-[#1C1C1C] dark:text-white"
-                      />
-                    </PopoverContent>
-                  </Popover>
+                  <div className="relative">
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className="w-full justify-between dark:border-gray-600 dark:bg-[#272727] dark:text-gray-200"
+                        >
+                          {filters.startDateFrom
+                            ? formatDate(filters.startDateFrom)
+                            : 'Select date'}
+                          <CalendarIcon className="h-4 w-4 opacity-50" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent {...calendarConfig}>
+                        <Calendar
+                          mode="single"
+                          selected={filters.startDateFrom || undefined}
+                          onSelect={(date) => {
+                            setFilters((prev) => ({
+                              ...prev,
+                              startDateFrom: date || null,
+                            }))
+                          }}
+                          className="rounded-md border border-gray-200 dark:border-gray-700 dark:bg-[#1C1C1C] dark:text-white"
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
                 </div>
                 <div className="space-y-1">
                   <Label>To</Label>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className="w-full justify-between dark:border-gray-600 dark:bg-[#272727] dark:text-gray-200"
-                      >
-                        {filters.startDateTo
-                          ? formatDate(filters.startDateTo)
-                          : 'Select date'}
-                        <CalendarIcon className="h-4 w-4 opacity-50" />
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={filters.startDateTo || undefined}
-                        onSelect={(date) =>
-                          setFilters((prev) => ({ ...prev, startDateTo: date }))
-                        }
-                        className="rounded-md dark:bg-[#1C1C1C] dark:text-white"
-                      />
-                    </PopoverContent>
-                  </Popover>
+                  <div className="relative">
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className="w-full justify-between dark:border-gray-600 dark:bg-[#272727] dark:text-gray-200"
+                        >
+                          {filters.startDateTo
+                            ? formatDate(filters.startDateTo)
+                            : 'Select date'}
+                          <CalendarIcon className="h-4 w-4 opacity-50" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent {...calendarConfig}>
+                        <Calendar
+                          mode="single"
+                          selected={filters.startDateTo || undefined}
+                          onSelect={(date) => {
+                            setFilters((prev) => ({
+                              ...prev,
+                              startDateTo: date || null,
+                            }))
+                          }}
+                          className="rounded-md border border-gray-200 dark:border-gray-700 dark:bg-[#1C1C1C] dark:text-white"
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
                 </div>
               </div>
             </div>
@@ -326,61 +359,67 @@ export function FilterModal({
               <div className="space-y-2">
                 <div className="space-y-1">
                   <Label>From</Label>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className="w-full justify-between dark:border-gray-600 dark:bg-[#272727] dark:text-gray-200"
-                      >
-                        {filters.closingDateFrom
-                          ? formatDate(filters.closingDateFrom)
-                          : 'Select date'}
-                        <CalendarIcon className="h-4 w-4 opacity-50" />
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={filters.closingDateFrom || undefined}
-                        onSelect={(date) =>
-                          setFilters((prev) => ({
-                            ...prev,
-                            closingDateFrom: date,
-                          }))
-                        }
-                        className="rounded-md dark:bg-[#1C1C1C] dark:text-white"
-                      />
-                    </PopoverContent>
-                  </Popover>
+                  <div className="relative">
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className="w-full justify-between dark:border-gray-600 dark:bg-[#272727] dark:text-gray-200"
+                        >
+                          {filters.closingDateFrom
+                            ? formatDate(filters.closingDateFrom)
+                            : 'Select date'}
+                          <CalendarIcon className="h-4 w-4 opacity-50" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent {...calendarConfig}>
+                        <Calendar
+                          mode="single"
+                          selected={filters.closingDateFrom || undefined}
+                          onSelect={(date) => {
+                            setFilters((prev) => ({
+                              ...prev,
+                              closingDateFrom: date || null,
+                            }))
+                          }}
+                          className="rounded-md border border-gray-200 dark:border-gray-700 dark:bg-[#1C1C1C] dark:text-white"
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
                 </div>
                 <div className="space-y-1">
                   <Label>To</Label>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className="w-full justify-between dark:border-gray-600 dark:bg-[#272727] dark:text-gray-200"
-                      >
-                        {filters.closingDateTo
-                          ? formatDate(filters.closingDateTo)
-                          : 'Select date'}
-                        <CalendarIcon className="h-4 w-4 opacity-50" />
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={filters.closingDateTo || undefined}
-                        onSelect={(date) =>
-                          setFilters((prev) => ({
-                            ...prev,
-                            closingDateTo: date,
-                          }))
-                        }
-                        className="rounded-md dark:bg-[#1C1C1C] dark:text-white"
-                      />
-                    </PopoverContent>
-                  </Popover>
+                  <div className="relative">
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className="w-full justify-between dark:border-gray-600 dark:bg-[#272727] dark:text-gray-200"
+                        >
+                          {filters.closingDateTo
+                            ? formatDate(filters.closingDateTo)
+                            : 'Select date'}
+                          <CalendarIcon className="h-4 w-4 opacity-50" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent {...calendarConfig}>
+                        <Calendar
+                          mode="single"
+                          selected={filters.closingDateTo || undefined}
+                          onSelect={(date) => {
+                            setFilters((prev) => ({
+                              ...prev,
+                              closingDateTo: date || null,
+                            }))
+                          }}
+                          className="rounded-md border border-gray-200 dark:border-gray-700 dark:bg-[#1C1C1C] dark:text-white"
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
                 </div>
               </div>
             </div>

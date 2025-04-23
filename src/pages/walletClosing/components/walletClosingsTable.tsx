@@ -106,6 +106,7 @@ export function WalletClosingsTable({
         </div>
       ),
     },
+    // In walletClosingsTable.tsx, update the "actions" column definition:
     {
       id: 'actions',
       header: () => <div className="text-center">Actions</div>,
