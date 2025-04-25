@@ -266,6 +266,22 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
       filterNearestRebalancing: false,
       filterFurtherRebalancing: false,
     })
+    handleApplyFilters({
+      selectedAssets: [],
+      selectedManagers: [],
+      selectedWalletTypes: [],
+      selectedExchanges: [],
+      selectedBenchmark: [],
+      selectedCashOptions: [],
+      filterHasContract: false,
+      filterHasNoContract: false,
+      filterDelayed: false,
+      filterUnbalanced: false,
+      filterNewest: false,
+      filterOldest: false,
+      filterNearestRebalancing: false,
+      filterFurtherRebalancing: false,
+    })
   }
 
   return (
@@ -302,7 +318,7 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
         <OrderByFilter
           filters={{
             newest: filters.filterNewest,
-            older: filters.filterOldest,
+            oldest: filters.filterOldest,
             nearestRebalancing: filters.filterNearestRebalancing,
             furtherRebalancing: filters.filterFurtherRebalancing,
           }}

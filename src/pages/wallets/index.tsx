@@ -149,7 +149,6 @@ export function Clients() {
             client.assetsUuid.includes(assetUuid),
           )
 
-        // Check cash filter
         let cashMatches = true
         if (selectedCashOptions.length > 0) {
           const cashValue = walletCashData[client.walletUuid] || 0

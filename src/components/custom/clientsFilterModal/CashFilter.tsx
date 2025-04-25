@@ -33,10 +33,6 @@ export function CashFilter({
               className="border-black dark:border-[#fff]"
               onCheckedChange={() => {
                 const normalizedOption = normalizeOption(option)
-                console.log(
-                  'Selected cash option normalized:',
-                  normalizedOption,
-                )
                 if (selectedCashOptions.includes(normalizedOption)) {
                   handleRemoveCashOption(normalizedOption)
                 } else {
