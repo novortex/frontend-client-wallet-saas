@@ -28,12 +28,11 @@ export function WalletTypeFilter({
       <div className="mb-2 font-bold text-black dark:text-[#959CB6]">
         Wallet Type
       </div>
-      <div className="flex w-full flex-wrap gap-4">
+      <div className="flex w-full flex-wrap gap-10">
         {options.map((option, index) => (
           <div
             key={index}
             className="flex items-center gap-2 text-black dark:text-[#fff]"
-            style={{ flex: '1 0 30%' }}
           >
             <Checkbox
               className="border-black dark:border-[#fff]"

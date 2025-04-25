@@ -30,7 +30,7 @@ export function OrderByFilter({ filters, onFilterChange }: FilterProps) {
       <div className="mb-2 font-bold text-black dark:text-[#959CB6]">
         Order By
       </div>
-      <div className="grid grid-cols-2 gap-4 text-black dark:text-[#fff]">
+      <div className="flex gap-10 text-black dark:text-[#fff]">
         {filterOptions.map(({ name, label }) => (
           <div key={name} className="flex items-center gap-2">
             <Checkbox

@@ -295,7 +295,7 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
           Filters
         </Button>
       </DialogTrigger>
-      <DialogContent className="h-[90vh] max-h-[90vh] overflow-y-auto bg-white dark:bg-[#131313]">
+      <DialogContent className="h-[90vh] max-h-[90vh] w-[50%] max-w-none overflow-y-auto bg-white dark:bg-[#131313]">
         <DialogHeader className="text-black dark:text-[#fff]">
           <DialogTitle className="text-center text-2xl">
             Filter Customer
