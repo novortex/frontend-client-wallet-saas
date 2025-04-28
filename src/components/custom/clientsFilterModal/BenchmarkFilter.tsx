@@ -5,7 +5,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { BadgeCent } from 'lucide-react'
+import { LineChart } from 'lucide-react'
 
 export function BenchmarkFilter({
   benchmarks,
@@ -23,7 +23,7 @@ export function BenchmarkFilter({
       handleSelectBenchmark(benchmarkName)
     }
   }
-
+  const lastBenchmark = selectedBenchmarks.at(-1) ?? ''
   return (
     <div className="flex w-full flex-col gap-2">
       <div className="h-[20%] w-full font-bold dark:text-[#959CB6]">
@@ -31,11 +31,14 @@ export function BenchmarkFilter({
       </div>
       <div className="flex h-[80%] w-full flex-col items-center justify-center gap-4">
         <div className="flex h-full w-[100%] items-center justify-center gap-2">
-          <div className="flex h-full w-[10%] items-center justify-center">
-            <BadgeCent className="text-[#D1AB00]" size="lg" />
+          <div className="flex h-full w-[6%] items-center justify-center">
+            <LineChart className="text-[#D1AB00]" size="ls" />
           </div>
           <div className="flex w-full items-center justify-start">
-            <Select onValueChange={handleBenchmarkSelection}>
+            <Select
+              value={lastBenchmark}
+              onValueChange={handleBenchmarkSelection}
+            >
               <SelectTrigger className="w-full dark:border-[#323232] dark:bg-[#131313] dark:text-[#fff]">
                 <SelectValue placeholder="Select benchmarks" />
               </SelectTrigger>

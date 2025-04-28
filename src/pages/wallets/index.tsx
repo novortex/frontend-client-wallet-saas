@@ -8,6 +8,7 @@ import { TClientInfosResponse } from '@/types/customer.type'
 import CardClient from './card-client'
 import { getWalletOrganization } from '@/services/wallet/walleInfoService'
 import { Loading } from '@/components/custom/loading'
+import { getAllAssetsWalletClient } from '@/services/wallet/walletAssetService'
 
 export function Clients() {
   const [clients, setClients] = useState<TClientInfosResponse[]>([])
@@ -30,7 +31,11 @@ export function Clients() {
     filterFurtherRebalancing: false,
     selectedExchanges: [] as string[],
     selectedBenchmark: [] as string[],
+    selectedCashOptions: [] as string[],
   })
+  const [walletCashData, setWalletCashData] = useState<Record<string, number>>(
+    {},
+  )
 
   const fetchClients = useCallback(async () => {
     setIsLoading(true)
@@ -43,6 +48,24 @@ export function Clients() {
           description: 'Demo Vault !!',
         })
       }
+
+      const cashData: Record<string, number> = {}
+
+      for (const client of result) {
+        try {
+          const walletData = await getAllAssetsWalletClient(client.walletUuid)
+          if (walletData) {
+            cashData[client.walletUuid] = walletData.cash
+          }
+        } catch (err) {
+          console.error(
+            `Error fetching wallet data for ${client.walletUuid}:`,
+            err,
+          )
+        }
+      }
+
+      setWalletCashData(cashData)
       setClients(result)
       setFilteredClients(result)
     } catch (error) {
@@ -78,6 +101,7 @@ export function Clients() {
       filterFurtherRebalancing,
       selectedExchanges,
       selectedBenchmark,
+      selectedCashOptions,
     } = filters
 
     const filtered = clients
@@ -125,6 +149,21 @@ export function Clients() {
             client.assetsUuid.includes(assetUuid),
           )
 
+        let cashMatches = true
+        if (selectedCashOptions.length > 0) {
+          const cashValue = walletCashData[client.walletUuid] || 0
+
+          cashMatches = selectedCashOptions.some((option) => {
+            if (option === '0' && cashValue === 0) return true
+            if (option === '1-a-5' && cashValue > 0 && cashValue <= 5)
+              return true
+            if (option === '5-a-10' && cashValue > 5 && cashValue <= 10)
+              return true
+            if (option === '+10' && cashValue > 10) return true
+            return false
+          })
+        }
+
         return (
           nameMatches &&
           managerMatches &&
@@ -133,7 +172,8 @@ export function Clients() {
           walletTypeMatches &&
           exchangeMatches &&
           benchMarkMatches &&
-          assetsMatch
+          assetsMatch &&
+          cashMatches
         )
       })
       .sort((a, b) => {
@@ -155,11 +195,11 @@ export function Clients() {
       })
 
     setFilteredClients(filtered)
-  }, [clients, filters, searchTerm])
+  }, [clients, filters, searchTerm, walletCashData])
 
   useEffect(() => {
     applyFilters()
-  }, [filters, searchTerm, applyFilters])
+  }, [filters, searchTerm, walletCashData])
 
   const handleApplyFilters = (newFilters: Partial<typeof filters>) => {
     setFilters((prev) => ({ ...prev, ...newFilters }))
