@@ -5,8 +5,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { BadgeCent } from 'lucide-react'
-
+import { Building2 } from 'lucide-react'
 export function ExchangeFilter({
   exchanges,
   selectedExchanges,
@@ -23,6 +22,7 @@ export function ExchangeFilter({
       handleSelectExchange(exchangeName)
     }
   }
+  const lastExchange = selectedExchanges.at(-1) ?? ''
 
   return (
     <div className="flex w-full flex-col gap-2">
@@ -31,12 +31,12 @@ export function ExchangeFilter({
       </div>
       <div className="flex h-[80%] w-full flex-col items-center justify-center gap-4">
         <div className="flex h-full w-[100%] items-center justify-center gap-2">
-          <div className="flex h-full w-[10%] items-center justify-center">
-            <BadgeCent className="text-[#D1AB00]" size="ls" />
+          <div className="flex h-full w-[6%] items-center justify-center">
+            <Building2 className="text-[#D1AB00]" size="ls" />
           </div>
           <div className="flex w-full items-center justify-start">
             <Select
-              value={selectedExchanges.join(', ')}
+              value={lastExchange}
               onValueChange={handleExchangeSelection}
             >
               <SelectTrigger className="w-full dark:border-[#323232] dark:bg-[#131313] dark:text-[#fff]">

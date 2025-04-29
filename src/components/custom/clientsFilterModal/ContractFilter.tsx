@@ -18,7 +18,7 @@ export function ContractFilter({
         Contract
       </div>
       <div className="mt-2 h-[80%] w-full">
-        <div className="flex flex-col gap-2 text-black dark:text-white">
+        <div className="flex gap-10 text-black dark:text-white">
           <div className="flex items-center gap-2">
             <Checkbox
               checked={hasContract}

@@ -24,6 +24,7 @@ export function AssetsFilter({
       handleSelectAsset(asset)
     }
   }
+  const lastAsset = selectedAssets.at(-1) ?? null
 
   return (
     <div className="flex w-full flex-col gap-2">
@@ -32,11 +33,14 @@ export function AssetsFilter({
       </div>
       <div className="flex h-[80%] w-full flex-col items-center justify-center gap-4">
         <div className="flex h-full w-[100%] items-center justify-center gap-2">
-          <div className="flex h-full w-[10%] items-center justify-center">
+          <div className="flex h-full w-[6%] items-center justify-center">
             <BadgeCent className="text-[#D1AB00]" size="lg" />
           </div>
           <div className="flex w-full items-center justify-start">
-            <Select onValueChange={handleAssetSelection}>
+            <Select
+              value={lastAsset ? lastAsset.name : ''}
+              onValueChange={handleAssetSelection}
+            >
               <SelectTrigger className="w-full dark:border-[#323232] dark:bg-[#131313] dark:text-[#fff]">
                 <SelectValue placeholder="Select assets" />
               </SelectTrigger>
