@@ -142,7 +142,6 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
                 assetsMap.set(asset.uuid, {
                   uuid: asset.uuid,
                   name: asset.name,
-                  cash: walletData.cash,
                 })
               }
             }

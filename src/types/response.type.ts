@@ -26,5 +26,4 @@ export type TAssetsOrganizationResponse = {
 export type WalletDataResponse = {
   wallet: TWalletAssetsInfo
   assets: TAsset[]
-  cash: number
 }
