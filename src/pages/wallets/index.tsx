@@ -160,9 +160,9 @@ export function Clients() {
 
           cashMatches = selectedCashOptions.some((option) => {
             if (option === '0' && cashValue < 1) return true
-            if (option === '1-a-5' && cashValue >= 1 && cashValue <= 5)
+            if (option === '1-a-5' && cashValue >= 1 && cashValue < 6)
               return true
-            if (option === '6-a-10' && cashValue > 5 && cashValue <= 10)
+            if (option === '6-a-10' && cashValue >= 6 && cashValue <= 10)
               return true
             if (option === '+10' && cashValue > 10) return true
             return false
