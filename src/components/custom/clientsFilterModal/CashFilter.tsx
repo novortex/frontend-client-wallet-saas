@@ -15,7 +15,7 @@ export function CashFilter({
   handleSelectCashOption,
   handleRemoveCashOption,
 }: CashFilterProps) {
-  const options = ['0%', '1% a 5%', '5% a 10%', '+10%']
+  const options = ['0%', '1% a 5%', '6% a 10%', '+10%']
 
   return (
     <div className="flex w-full flex-col gap-2">
