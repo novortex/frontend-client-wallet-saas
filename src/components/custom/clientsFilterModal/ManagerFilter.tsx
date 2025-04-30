@@ -5,7 +5,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import responsibleIcon from '@/assets/image/responsible-icon.png'
+import { Users } from 'lucide-react'
 
 export function ManagerFilter({
   managers,
@@ -23,6 +23,7 @@ export function ManagerFilter({
       handleSelectManager(managerName)
     }
   }
+  const lastManager = selectedManagers.at(-1) ?? ''
 
   return (
     <div className="flex w-full flex-col gap-2">
@@ -31,11 +32,11 @@ export function ManagerFilter({
       </div>
       <div className="flex h-[80%] w-full flex-col items-center justify-center gap-4">
         <div className="flex h-full w-[100%] items-center justify-center gap-2">
-          <div className="flex h-full w-[10%] items-center justify-center">
-            <img src={responsibleIcon} alt="icon" className="w-12" />
+          <div className="flex h-full w-[6%] items-center justify-center">
+            <Users className="text-[#D1AB00]" size="lg" />
           </div>
           <div className="flex w-full items-center justify-start">
-            <Select onValueChange={handleManagerSelection}>
+            <Select value={lastManager} onValueChange={handleManagerSelection}>
               <SelectTrigger className="w-full dark:border-[#323232] dark:bg-[#131313] dark:text-[#fff]">
                 <SelectValue placeholder="Select managers" />
               </SelectTrigger>

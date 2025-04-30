@@ -19,10 +19,12 @@ import {
   getBenchmarkOptions,
   getExchangesDisposables,
   getAllManagersOnOrganization,
-  getAllAssetsOrg,
 } from '@/services/managementService'
 import { AssetsFilter } from './AssetsFilter'
 import { ContractFilter } from './ContractFilter'
+import { CashFilter } from './CashFilter'
+import { getAllAssetsWalletClient } from '@/services/wallet/walletAssetService'
+import { getWalletOrganization } from '@/services/wallet/walleInfoService'
 
 type ApplyFiltersProps = {
   handleApplyFilters: (filters: {
@@ -35,21 +37,27 @@ type ApplyFiltersProps = {
     filterUnbalanced: boolean
     filterNewest: boolean
     filterOldest: boolean
+    filterNearestRebalancing: boolean
+    filterFurtherRebalancing: boolean
     selectedExchanges: string[]
     selectedBenchmark: string[]
+    selectedCashOptions: string[]
   }) => void
 }
 
 export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
   const [isOpen, setIsOpen] = useState(false)
-  const [assets, setAssets] = useState<{ uuid: string; name: string }[]>([])
+  const [assets, setAssets] = useState<
+    { uuid: string; name: string; cash?: number }[]
+  >([])
   const [selectedAssets, setSelectedAssets] = useState<
-    { uuid: string; name: string }[]
+    { uuid: string; name: string; cash?: number }[]
   >([])
   const [selectedManagers, setSelectedManagers] = useState<string[]>([])
   const [selectedWalletTypes, setSelectedWalletTypes] = useState<string[]>([])
   const [selectedBenchmark, setSelectedBenchmark] = useState<string[]>([])
   const [selectedExchanges, setSelectedExchanges] = useState<string[]>([])
+  const [selectedCashOptions, setSelectedCashOptions] = useState<string[]>([])
   const [managers, setManagers] = useState<{ name: string }[]>([])
   const [benchmarks, setBenchmarks] = useState<{ name: string }[]>([])
   const [availableExchanges, setAvailableExchanges] = useState<
@@ -65,8 +73,8 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
     filterNearestRebalancing: false,
     filterFurtherRebalancing: false,
   })
+  const [isInitialLoad, setIsInitialLoad] = useState(true)
 
-  // Recupera os filtros salvos do localStorage e os aplica automaticamente ao montar o componente
   useEffect(() => {
     const savedFilters = localStorage.getItem('clientsFilters')
     if (savedFilters) {
@@ -76,6 +84,7 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
       setSelectedAssets(parsedFilters.selectedAssets || [])
       setSelectedBenchmark(parsedFilters.selectedBenchmark || [])
       setSelectedExchanges(parsedFilters.selectedExchanges || [])
+      setSelectedCashOptions(parsedFilters.selectedCashOptions || [])
       setFilters(
         parsedFilters.filters || {
           filterHasContract: false,
@@ -88,7 +97,6 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
           filterFurtherRebalancing: false,
         },
       )
-
       handleApplyFilters({
         selectedAssets: (parsedFilters.selectedAssets || []).map(
           (asset: { uuid: string; name: string }) => asset.uuid,
@@ -97,69 +105,99 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
         selectedWalletTypes: parsedFilters.selectedWalletTypes || [],
         selectedExchanges: parsedFilters.selectedExchanges || [],
         selectedBenchmark: parsedFilters.selectedBenchmark || [],
+        selectedCashOptions: parsedFilters.selectedCashOptions || [],
         ...parsedFilters.filters,
       })
     }
+    setIsInitialLoad(false)
   }, [])
 
   useEffect(() => {
-    const fetchBenchmarks = async () => {
-      const result = await getBenchmarkOptions()
-      setBenchmarks(result.map((benchmark) => ({ name: benchmark.name })))
-    }
+    const fetchData = async () => {
+      const [benchmarkResult, managerResult, exchangeResult] =
+        await Promise.all([
+          getBenchmarkOptions(),
+          getAllManagersOnOrganization(),
+          getExchangesDisposables(),
+        ])
 
-    const fetchManagers = async () => {
-      const result = await getAllManagersOnOrganization()
-      setManagers(result.map((item) => ({ name: item.name })))
-    }
+      setBenchmarks(
+        benchmarkResult.map((benchmark) => ({ name: benchmark.name })),
+      )
+      setManagers(managerResult.map((item) => ({ name: item.name })))
+      setAvailableExchanges(
+        exchangeResult?.map((exchange) => ({ name: exchange.name })) || [],
+      )
 
-    const fetchAssets = async () => {
       try {
-        const result = await getAllAssetsOrg()
-        setAssets(result.map((item) => ({ uuid: item.uuid, name: item.name })))
+        const wallets = await getWalletOrganization()
+        const assetsMap = new Map()
+
+        for (const wallet of wallets) {
+          const walletData = await getAllAssetsWalletClient(wallet.walletUuid)
+
+          if (walletData?.assets) {
+            for (const asset of walletData.assets) {
+              if (!assetsMap.has(asset.uuid)) {
+                assetsMap.set(asset.uuid, {
+                  uuid: asset.uuid,
+                  name: asset.name,
+                })
+              }
+            }
+          }
+        }
+
+        setAssets(Array.from(assetsMap.values()))
       } catch (error) {
         console.error('Error fetching assets:', error)
       }
     }
 
-    const fetchExchanges = async () => {
-      const result = await getExchangesDisposables()
-      setAvailableExchanges(
-        result?.map((exchange) => ({ name: exchange.name })) || [],
-      )
-    }
-
-    fetchBenchmarks()
-    fetchManagers()
-    fetchExchanges()
-    fetchAssets()
+    fetchData()
   }, [])
 
-  useEffect(() => {}, [assets])
+  useEffect(() => {
+    if (isInitialLoad) return
 
-  const applyFilters = () => {
-    // Salva os filtros atuais no localStorage
-    const filtersToSave = {
-      selectedAssets,
-      selectedManagers,
-      selectedWalletTypes,
-      selectedExchanges,
-      selectedBenchmark,
-      filters,
-    }
-    localStorage.setItem('clientsFilters', JSON.stringify(filtersToSave))
-
-    // Aplica os filtros utilizando os valores atuais
     handleApplyFilters({
       selectedAssets: selectedAssets.map((asset) => asset.uuid),
       selectedManagers,
       selectedWalletTypes,
       selectedExchanges,
       selectedBenchmark,
-      ...filters,
+      selectedCashOptions,
+      filterHasContract: filters.filterHasContract,
+      filterHasNoContract: filters.filterHasNoContract,
+      filterDelayed: filters.filterDelayed,
+      filterUnbalanced: filters.filterUnbalanced,
+      filterNewest: filters.filterNewest,
+      filterOldest: filters.filterOldest,
+      filterNearestRebalancing: filters.filterNearestRebalancing,
+      filterFurtherRebalancing: filters.filterFurtherRebalancing,
     })
-    setIsOpen(false)
-  }
+
+    const filtersToSave = {
+      selectedAssets,
+      selectedManagers,
+      selectedWalletTypes,
+      selectedExchanges,
+      selectedBenchmark,
+      selectedCashOptions,
+      filters,
+    }
+    localStorage.setItem('clientsFilters', JSON.stringify(filtersToSave))
+  }, [
+    selectedAssets,
+    selectedManagers,
+    selectedWalletTypes,
+    selectedExchanges,
+    selectedBenchmark,
+    selectedCashOptions,
+    filters,
+    handleApplyFilters,
+    isInitialLoad,
+  ])
 
   const updateFilter = (filterName: string, value: boolean) => {
     setFilters((prev) => ({ ...prev, [filterName]: value }))
@@ -176,9 +214,11 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
   const handleSelectManager = (name: string) =>
     setSelectedManagers((prev) => [...prev, name])
 
-  const handleSelectAsset = (asset: { uuid: string; name: string }) => {
-    setSelectedAssets((prev) => [...prev, asset])
-  }
+  const handleSelectAsset = (asset: {
+    uuid: string
+    name: string
+    cash?: number
+  }) => setSelectedAssets((prev) => [...prev, asset])
 
   const handleRemoveAsset = (assetUuid: string) => {
     setSelectedAssets((prev) =>
@@ -189,14 +229,21 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
   const handleRemoveManager = (name: string) =>
     setSelectedManagers((prev) => prev.filter((manager) => manager !== name))
 
-  const handleSelectBenchmark = (name: string) => {
+  const handleSelectBenchmark = (name: string) =>
     setSelectedBenchmark((prev) => [...prev, name])
-  }
 
   const handleRemoveBenchmark = (name: string) => {
     setSelectedBenchmark((prev) =>
       prev.filter((benchmark) => benchmark !== name),
     )
+  }
+
+  const handleSelectCashOption = (option: string) => {
+    setSelectedCashOptions((prev) => [...prev, option])
+  }
+
+  const handleRemoveCashOption = (option: string) => {
+    setSelectedCashOptions((prev) => prev.filter((opt) => opt !== option))
   }
 
   const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1)
@@ -207,7 +254,24 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
     setSelectedBenchmark([])
     setSelectedExchanges([])
     setSelectedAssets([])
+    setSelectedCashOptions([])
     setFilters({
+      filterHasContract: false,
+      filterHasNoContract: false,
+      filterDelayed: false,
+      filterUnbalanced: false,
+      filterNewest: false,
+      filterOldest: false,
+      filterNearestRebalancing: false,
+      filterFurtherRebalancing: false,
+    })
+    handleApplyFilters({
+      selectedAssets: [],
+      selectedManagers: [],
+      selectedWalletTypes: [],
+      selectedExchanges: [],
+      selectedBenchmark: [],
+      selectedCashOptions: [],
       filterHasContract: false,
       filterHasNoContract: false,
       filterDelayed: false,
@@ -230,13 +294,12 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
           Filters
         </Button>
       </DialogTrigger>
-      <DialogContent className="h-[90vh] max-h-[90vh] overflow-y-auto bg-white dark:bg-[#131313]">
+      <DialogContent className="h-[90vh] max-h-[90vh] w-[50%] max-w-none overflow-y-auto bg-white dark:bg-[#131313]">
         <DialogHeader className="text-black dark:text-[#fff]">
           <DialogTitle className="text-center text-2xl">
             Filter Customer
           </DialogTitle>
         </DialogHeader>
-
         <WalletTypeFilter
           selectedWalletTypes={selectedWalletTypes}
           handleSelectWalletType={(type) =>
@@ -246,11 +309,15 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
             setSelectedWalletTypes((prev) => prev.filter((t) => t !== type))
           }
         />
-
+        <CashFilter
+          selectedCashOptions={selectedCashOptions}
+          handleSelectCashOption={handleSelectCashOption}
+          handleRemoveCashOption={handleRemoveCashOption}
+        />
         <OrderByFilter
           filters={{
             newest: filters.filterNewest,
-            older: filters.filterOldest,
+            oldest: filters.filterOldest,
             nearestRebalancing: filters.filterNearestRebalancing,
             furtherRebalancing: filters.filterFurtherRebalancing,
           }}
@@ -258,14 +325,12 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
             updateFilter(`filter${capitalize(name)}`, value)
           }
         />
-
         <UnbalancedWalletFilter
           filterUnbalanced={filters.filterUnbalanced}
           setFilterUnbalanced={(value) =>
             updateFilter('filterUnbalanced', value)
           }
         />
-
         <ContractFilter
           hasContract={filters.filterHasContract}
           hasNoContract={filters.filterHasNoContract}
@@ -274,47 +339,38 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
             updateFilter('filterHasNoContract', value)
           }
         />
-
         <AlertsFilter
           setFilterDelayed={(value) => updateFilter('filterDelayed', value)}
         />
-
         <ManagerFilter
           managers={managers}
           selectedManagers={selectedManagers}
           handleSelectManager={handleSelectManager}
           handleRemoveManager={handleRemoveManager}
         />
-
         <ExchangeFilter
           exchanges={availableExchanges}
           selectedExchanges={selectedExchanges}
           handleSelectExchange={handleSelectExchange}
           handleRemoveExchange={handleRemoveExchange}
         />
-
         <BenchmarkFilter
           benchmarks={benchmarks}
           selectedBenchmarks={selectedBenchmark}
           handleSelectBenchmark={handleSelectBenchmark}
           handleRemoveBenchmark={handleRemoveBenchmark}
         />
-
         <AssetsFilter
           assets={assets}
           selectedAssets={selectedAssets}
           handleSelectAsset={handleSelectAsset}
           handleRemoveAsset={handleRemoveAsset}
         />
-
         <DialogFooter>
           <Button
             className="bg-[#F2BE38] text-black hover:bg-yellow-600 hover:text-white"
-            onClick={applyFilters}
+            onClick={resetFilters}
           >
-            Apply
-          </Button>
-          <Button variant="outline" onClick={resetFilters}>
             Clear
           </Button>
         </DialogFooter>

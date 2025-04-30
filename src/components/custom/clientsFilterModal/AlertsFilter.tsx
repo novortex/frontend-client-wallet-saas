@@ -30,7 +30,7 @@ export function AlertsFilter({ setFilterDelayed }: FilterProps) {
       <div className="mb-2 font-bold text-black dark:text-[#959CB6]">
         Number of alerts
       </div>
-      <div className="text:black grid grid-cols-2 gap-4 dark:text-[#fff]">
+      <div className="text:black flex gap-10 dark:text-[#fff]">
         <div className="flex items-center gap-2">
           <Checkbox
             checked={filters.alerts1to2}

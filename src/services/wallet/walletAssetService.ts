@@ -15,6 +15,22 @@ export async function getAllAssetsWalletClient(walletUuid: string) {
   }
 }
 
+export async function getWalletsCash(walletsUuids: string[]) {
+  try {
+    const result = await instance.post<Record<string, number | null>>(
+      `wallet/cash`,
+      {
+        walletsUuids,
+      },
+    )
+    console.log(result.data)
+    return result.data
+  } catch (error) {
+    console.log(error)
+    return {}
+  }
+}
+
 export async function tradeAsset(
   walletUuid: string,
   assetUuid: string,

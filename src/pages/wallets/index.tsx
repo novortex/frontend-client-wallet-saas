@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { SwitchTheme } from '@/components/custom/switch-theme'
 import { Input } from '@/components/ui/input'
 import { ClientsFilterModal } from '@/components/custom/clientsFilterModal/index'
@@ -8,6 +8,7 @@ import { TClientInfosResponse } from '@/types/customer.type'
 import CardClient from './card-client'
 import { getWalletOrganization } from '@/services/wallet/walleInfoService'
 import { Loading } from '@/components/custom/loading'
+import { getWalletsCash } from '@/services/wallet/walletAssetService'
 
 export function Clients() {
   const [clients, setClients] = useState<TClientInfosResponse[]>([])
@@ -30,21 +31,51 @@ export function Clients() {
     filterFurtherRebalancing: false,
     selectedExchanges: [] as string[],
     selectedBenchmark: [] as string[],
+    selectedCashOptions: [] as string[],
   })
+  const [walletCashData, setWalletCashData] = useState<
+    Record<string, number | null>
+  >({})
+
+  const normalizeRiskProfile = useCallback((riskProfile: string) => {
+    return riskProfile.toLowerCase().replace(/_/g, '-')
+  }, [])
 
   const fetchClients = useCallback(async () => {
     setIsLoading(true)
     try {
       const result = await getWalletOrganization()
-      if (!result) {
+      if (!result || result.length === 0) {
+        setIsLoading(false)
         return toast({
           className: 'bg-red-500 border-0 text-black dark:text-white',
           title: 'Failed to get clients :(',
           description: 'Demo Vault !!',
         })
       }
+
+      const walletsUuids = result.map((client) => client.walletUuid)
+
+      const walletsCashResult = await getWalletsCash(walletsUuids)
+
+      let cashData: Record<string, number | null> = {}
+
+      if (
+        walletsCashResult &&
+        typeof walletsCashResult === 'object' &&
+        !Array.isArray(walletsCashResult)
+      ) {
+        cashData = walletsCashResult
+      } else {
+        walletsUuids.forEach((uuid) => {
+          cashData[uuid] = null
+        })
+      }
+
+      setWalletCashData(cashData)
       setClients(result)
       setFilteredClients(result)
+      setIsLoading(false)
     } catch (error) {
       console.error('Error fetching clients:', error)
       toast({
@@ -52,19 +83,16 @@ export function Clients() {
         title: 'Error',
         description: 'Failed to fetch clients. Please try again.',
       })
-    } finally {
       setIsLoading(false)
     }
   }, [])
 
   useEffect(() => {
     fetchClients()
-  }, [fetchClients])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
-  const normalizeRiskProfile = (riskProfile: string) =>
-    riskProfile.toLowerCase().replace(/_/g, '-')
-
-  const applyFilters = useCallback(() => {
+  const memoizedFilteredClients = useMemo(() => {
     const {
       selectedManagers,
       selectedWalletTypes,
@@ -78,9 +106,10 @@ export function Clients() {
       filterFurtherRebalancing,
       selectedExchanges,
       selectedBenchmark,
+      selectedCashOptions,
     } = filters
 
-    const filtered = clients
+    return clients
       .filter((client) => {
         const nameMatches = client.infosClient.name
           .toLowerCase()
@@ -125,6 +154,21 @@ export function Clients() {
             client.assetsUuid.includes(assetUuid),
           )
 
+        let cashMatches = true
+        if (selectedCashOptions.length > 0) {
+          const cashValue = walletCashData[client.walletUuid] || 0
+
+          cashMatches = selectedCashOptions.some((option) => {
+            if (option === '0' && cashValue < 1) return true
+            if (option === '1-a-5' && cashValue >= 1 && cashValue < 6)
+              return true
+            if (option === '6-a-10' && cashValue >= 6 && cashValue <= 10)
+              return true
+            if (option === '+10' && cashValue > 10) return true
+            return false
+          })
+        }
+
         return (
           nameMatches &&
           managerMatches &&
@@ -133,7 +177,8 @@ export function Clients() {
           walletTypeMatches &&
           exchangeMatches &&
           benchMarkMatches &&
-          assetsMatch
+          assetsMatch &&
+          cashMatches
         )
       })
       .sort((a, b) => {
@@ -141,29 +186,31 @@ export function Clients() {
           return new Date(b.createAt).getTime() - new Date(a.createAt).getTime()
         if (filterOldest)
           return new Date(a.createAt).getTime() - new Date(b.createAt).getTime()
-        if (filterNearestRebalancing)
+        if (filterNearestRebalancing && a.nextBalance && b.nextBalance)
           return (
             new Date(a.nextBalance).getTime() -
             new Date(b.nextBalance).getTime()
           )
-        if (filterFurtherRebalancing)
+        if (filterFurtherRebalancing && a.nextBalance && b.nextBalance)
           return (
             new Date(b.nextBalance).getTime() -
             new Date(a.nextBalance).getTime()
           )
         return 0
       })
+  }, [clients, filters, searchTerm, walletCashData, normalizeRiskProfile])
 
-    setFilteredClients(filtered)
-  }, [clients, filters, searchTerm])
-
+  // Atualizar o estado filteredClients quando memoizedFilteredClients mudar
   useEffect(() => {
-    applyFilters()
-  }, [filters, searchTerm, applyFilters])
+    setFilteredClients(memoizedFilteredClients)
+  }, [memoizedFilteredClients])
 
-  const handleApplyFilters = (newFilters: Partial<typeof filters>) => {
-    setFilters((prev) => ({ ...prev, ...newFilters }))
-  }
+  const handleApplyFilters = useCallback(
+    (newFilters: Partial<typeof filters>) => {
+      setFilters((prev) => ({ ...prev, ...newFilters }))
+    },
+    [],
+  )
 
   if (isLoading) {
     return <Loading />
