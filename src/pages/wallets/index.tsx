@@ -159,10 +159,10 @@ export function Clients() {
           const cashValue = walletCashData[client.walletUuid] || 0
 
           cashMatches = selectedCashOptions.some((option) => {
-            if (option === '0' && cashValue < 1) return true
-            if (option === '1-a-5' && cashValue >= 1 && cashValue < 5)
+            if (option === '0' && cashValue === 0) return true
+            if (option === '1-a-5' && cashValue > 0 && cashValue <= 5)
               return true
-            if (option === '5-a-10' && cashValue >= 5 && cashValue <= 10)
+            if (option === '5-a-10' && cashValue > 5 && cashValue <= 10)
               return true
             if (option === '+10' && cashValue > 10) return true
             return false
