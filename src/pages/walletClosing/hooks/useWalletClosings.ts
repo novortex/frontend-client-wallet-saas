@@ -1,6 +1,5 @@
 // hooks/useWalletClosings.ts
 import { useState, useEffect, useRef } from 'react'
-import { useSignalStore } from '@/store/signalEffect'
 import { useToast } from '@/components/ui/use-toast'
 import { WalletClosing, FilterOptions } from '../types'
 import {
@@ -15,7 +14,6 @@ export function useWalletClosings() {
   const [activeFilters, setActiveFilters] = useState<FilterOptions | null>(null)
   const [filterCount, setFilterCount] = useState(0)
   const [managers, setManagers] = useState<{ uuid: string; name: string }[]>([])
-  const [signal] = useSignalStore((state) => [state.signal])
   const { toast } = useToast()
   const toastRef = useRef(toast) // Use ref to prevent unnecessary rerenders
 
@@ -54,7 +52,7 @@ export function useWalletClosings() {
     }
 
     fetchData()
-  }, [signal]) // Remove toast from dependencies
+  }, [])
 
   // Apply filters to data
   useEffect(() => {

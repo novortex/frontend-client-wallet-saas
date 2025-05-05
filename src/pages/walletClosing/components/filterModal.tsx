@@ -90,7 +90,7 @@ export function FilterModal({
     }
 
     fetchManagers()
-  }, [isOpen])
+  })
 
   // Reset filters
   const handleResetFilters = () => {
