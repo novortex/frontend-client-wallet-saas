@@ -1,10 +1,11 @@
+// user.ts (zustand store)
+
+import { TUser } from '@/types/userType'
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 
-interface User {
-  name: string
-  email: string
-  role: string
+// Extenda o tipo TUser com campos adicionais se necessário
+interface User extends TUser {
   picture?: string
 }
 
