@@ -1,5 +1,5 @@
 // index.tsx - Componente WalletClosings principal
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { SwitchTheme } from '@/components/custom/switch-theme'
 import { Loading } from '@/components/custom/loading'
 import { FilterModal } from './components/filterModal'
@@ -25,6 +25,30 @@ export function WalletClosings() {
   // Use a properly typed ref instead of 'any'
   const tableRef = useRef<WalletClosingsTableRef>(null)
 
+  // Adicionar estado para armazenar informações de paginação
+  const [pageInfo, setPageInfo] = useState({
+    pageIndex: 0,
+    pageCount: 1,
+    canPreviousPage: false,
+    canNextPage: false,
+    totalItems: data.length,
+    pageSize: 10,
+  })
+
+  // Atualizar pageInfo quando a tabela é renderizada ou dados mudam
+  useEffect(() => {
+    if (tableRef.current) {
+      setPageInfo({
+        pageIndex: tableRef.current.getState().pagination.pageIndex,
+        pageCount: tableRef.current.getPageCount(),
+        canPreviousPage: tableRef.current.getCanPreviousPage(),
+        canNextPage: tableRef.current.getCanNextPage(),
+        totalItems: data.length,
+        pageSize: tableRef.current.getState().pagination.pageSize,
+      })
+    }
+  }, [data.length])
+
   // Handle filter function
   const handleOpenFilterModal = () => {
     setIsFilterModalOpen(true)
@@ -38,25 +62,6 @@ export function WalletClosings() {
   if (loading) {
     return <Loading />
   }
-
-  // Informações de paginação para o toolbar
-  const pageInfo = tableRef.current
-    ? {
-        pageIndex: tableRef.current.getState().pagination.pageIndex,
-        pageCount: tableRef.current.getPageCount(),
-        canPreviousPage: tableRef.current.getCanPreviousPage(),
-        canNextPage: tableRef.current.getCanNextPage(),
-        totalItems: data.length,
-        pageSize: tableRef.current.getState().pagination.pageSize,
-      }
-    : {
-        pageIndex: 0,
-        pageCount: 1,
-        canPreviousPage: false,
-        canNextPage: false,
-        totalItems: data.length,
-        pageSize: 10,
-      }
 
   return (
     <div className="h-full bg-white p-10 dark:bg-transparent">

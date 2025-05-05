@@ -258,7 +258,7 @@ export async function getBenchmarkOptions(): Promise<BenchmarksProps[]> {
 export async function getWalletClosings(): Promise<WalletClosing[]> {
   try {
     const result = await instance.get('management/wallet-closings')
-    return result.data
+    return result.data.clients
   } catch (error) {
     console.error('Error fetching wallet closings:', error)
     throw error

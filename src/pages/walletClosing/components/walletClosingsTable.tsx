@@ -1,5 +1,5 @@
 // components/WalletClosingsTable.tsx
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   ColumnDef,
   flexRender,
@@ -149,16 +149,18 @@ export function WalletClosingsTable({
   })
 
   // Store the table methods in the ref
-  if (tableRef && tableRef.current) {
-    Object.assign(tableRef.current, {
-      getState: () => table.getState(),
-      getPageCount: () => table.getPageCount(),
-      getCanPreviousPage: () => table.getCanPreviousPage(),
-      getCanNextPage: () => table.getCanNextPage(),
-      previousPage: () => table.previousPage(),
-      nextPage: () => table.nextPage(),
-    })
-  }
+  useEffect(() => {
+    if (tableRef && tableRef.current) {
+      Object.assign(tableRef.current, {
+        getState: () => table.getState(),
+        getPageCount: () => table.getPageCount(),
+        getCanPreviousPage: () => table.getCanPreviousPage(),
+        getCanNextPage: () => table.getCanNextPage(),
+        previousPage: () => table.previousPage(),
+        nextPage: () => table.nextPage(),
+      })
+    }
+  }, [table, tableRef])
 
   return (
     <>

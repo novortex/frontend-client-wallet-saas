@@ -12,12 +12,11 @@ export interface FilterOptions {
   showClosedWallets: boolean
 }
 
-// Tipo da carteira
-export type WalletClosing = {
+export interface WalletClosing {
   id: string
   clientName: string
   managerName: string
-  startDate: string
+  startDate: string | null
   closingDate: string | null
   status: string
 }
