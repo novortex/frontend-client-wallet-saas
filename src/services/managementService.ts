@@ -8,6 +8,19 @@ import {
 } from '@/types/customer.type'
 import { TAssetsOrganizationResponse } from '@/types/response.type'
 
+export async function deleteCustomer(customerUuid: string) {
+  try {
+    const response = await instance.delete(
+      `/management/customer/${customerUuid}`,
+    )
+
+    return response.data
+  } catch (error) {
+    console.error('Erro ao deletar customer:', error)
+    throw error
+  }
+}
+
 export async function getAllAssetsOrg() {
   try {
     const result =
