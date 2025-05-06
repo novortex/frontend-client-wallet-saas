@@ -23,24 +23,19 @@ export const setLogoutFunction = (fn: LogoutFunction): void => {
  */
 const cleanLocalStorageData = (): void => {
   try {
-    console.log('Iniciando limpeza de dados locais')
-
     // Limpar dados do Zustand store
     if (typeof window !== 'undefined' && useUserStore?.getState) {
-      console.log('Limpando Zustand store')
       useUserStore.getState().clearUser()
     }
 
     // Limpar explicitamente todos os itens que contenham auth0 no nome
     if (typeof window !== 'undefined' && window.localStorage) {
-      console.log('Procurando itens no localStorage para limpar')
       Object.keys(localStorage).forEach((key) => {
         if (
           key.includes('auth0') ||
           key.includes('user') ||
           key.includes('token')
         ) {
-          console.log('Removendo do localStorage:', key)
           localStorage.removeItem(key)
         }
       })
@@ -48,14 +43,12 @@ const cleanLocalStorageData = (): void => {
 
     // Tentar limpar sessionStorage também
     if (typeof window !== 'undefined' && window.sessionStorage) {
-      console.log('Procurando itens no sessionStorage para limpar')
       Object.keys(sessionStorage).forEach((key) => {
         if (
           key.includes('auth0') ||
           key.includes('user') ||
           key.includes('token')
         ) {
-          console.log('Removendo do sessionStorage:', key)
           sessionStorage.removeItem(key)
         }
       })
@@ -84,17 +77,13 @@ const cleanLocalStorageData = (): void => {
 
     // Limpar cookies relacionados à autenticação
     if (typeof document !== 'undefined' && document.cookie) {
-      console.log('Limpando cookies de autenticação')
       document.cookie.split(';').forEach((cookie) => {
         const [name] = cookie.trim().split('=')
         if (name.includes('auth0') || name.includes('token')) {
-          console.log('Removendo cookie:', name)
           document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`
         }
       })
     }
-
-    console.log('Limpeza de dados locais concluída')
   } catch (error) {
     console.error('Erro ao limpar dados de autenticação:', error)
   }
@@ -112,15 +101,13 @@ export const handleLogout = async (returnUrl?: string): Promise<void> => {
   try {
     const token = localStorage.getItem('auth_token')
     if (token) {
-      const response = await fetch('/api/auth/clear-cache', {
+      await fetch('/auth/clear-cache', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
       })
-
-      console.log('Resposta da limpeza de cache:', await response.json())
     }
   } catch (error) {
     console.warn('Erro ao limpar cache no servidor:', error)
@@ -146,8 +133,6 @@ export const handleLogout = async (returnUrl?: string): Promise<void> => {
  * e redirecionando para o logout do Auth0
  */
 export const handleCompleteClearLogout = async (): Promise<void> => {
-  console.log('Iniciando logout completo e agressivo')
-
   // Limpar todos os dados locais
   cleanLocalStorageData()
 
@@ -155,22 +140,17 @@ export const handleCompleteClearLogout = async (): Promise<void> => {
   try {
     const token = localStorage.getItem('auth_token')
     if (token) {
-      const response = await fetch('/api/auth/clear-cache', {
+      await fetch('/auth/clear-cache', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
       })
-
-      console.log('Resposta da limpeza de cache:', await response.json())
     }
   } catch (error) {
     console.warn('Erro ao limpar cache no servidor:', error)
   }
-
-  // Redirecionar para o logout do Auth0
-  console.log('Redirecionando para logout do Auth0')
 
   if (typeof window !== 'undefined') {
     const auth0Domain = import.meta.env.VITE_AUTH0_DOMAIN
