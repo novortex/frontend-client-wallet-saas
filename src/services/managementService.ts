@@ -4,6 +4,7 @@ import { BenchmarksProps } from '@/types/asset.type'
 import {
   TCustomersOrganization,
   TNewCustomerResponse,
+  TSendContractIdRequest,
 } from '@/types/customer.type'
 import { TAssetsOrganizationResponse } from '@/types/response.type'
 
@@ -154,9 +155,9 @@ export async function updateWallet(
 export async function downloadPdf(
   client_name: string,
   start_date: string,
-  start_date_formated: string,
+  start_date_formatted: string,
   end_date: string,
-  end_date_formated: string,
+  end_date_formatted: string,
   invested_amount_in_organization_fiat: string,
   benchmark_name: string,
   wallet_performance_fee: string,
@@ -175,9 +176,9 @@ export async function downloadPdf(
   const pdfData = {
     client_name,
     start_date,
-    start_date_formated,
+    start_date_formatted,
     end_date,
-    end_date_formated,
+    end_date_formatted,
     invested_amount_in_organization_fiat,
     benchmark_name,
     wallet_performance_fee,
@@ -250,6 +251,19 @@ export async function getBenchmarkOptions(): Promise<BenchmarksProps[]> {
     return result.data
   } catch (error) {
     console.log(error)
+    throw error
+  }
+}
+
+export async function sendContractId(
+  data: TSendContractIdRequest,
+): Promise<any> {
+  try {
+    const response = await instance.post('/d4sign', data)
+    console.log('enviou')
+    return response.data
+  } catch (error) {
+    console.error('Error sending contract ID:', error)
     throw error
   }
 }

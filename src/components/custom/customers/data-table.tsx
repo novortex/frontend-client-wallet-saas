@@ -1,3 +1,5 @@
+import { useState } from 'react'
+import { Button } from '@/components/ui/button'
 import {
   ColumnDef,
   flexRender,
@@ -19,12 +21,14 @@ import {
   TableRow,
 } from '@/components/ui/table'
 
-import { Button } from '@/components/ui/button'
+import { FileText } from 'lucide-react'
+
 import { Input } from '@/components/ui/input'
 
 import exportIcon from '@/assets/icons/export.svg'
-import { useState } from 'react'
 import RegisterCustomerModal from '@/pages/customers/register-customer-modal'
+import { SendContractIdModal } from '@/pages/customers/send-contract-modal'
+import { sendContractId } from '@/services/managementService'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -38,6 +42,7 @@ export function DataTableCustomers<TData, TValue>({
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isSendIdModalOpen, setIsSendIdModalOpen] = useState(false) // State for Send ID Modal
 
   const table = useReactTable({
     data,
@@ -60,6 +65,28 @@ export function DataTableCustomers<TData, TValue>({
 
   const closeModal = () => {
     setIsModalOpen(false)
+  }
+
+  const openSendIdModal = () => {
+    setIsSendIdModalOpen(true)
+  }
+
+  const closeSendIdModal = () => {
+    setIsSendIdModalOpen(false)
+  }
+
+  const handleSendContractId = async (contractId: string) => {
+    try {
+      const response = await sendContractId({
+        uuid_documento_gerado: contractId,
+      })
+      if (response) {
+        alert('Contract ID sent successfully!')
+        setIsSendIdModalOpen(false)
+      }
+    } catch (error) {
+      console.error('Error sending contract ID:', error)
+    }
   }
 
   return (
@@ -87,6 +114,12 @@ export function DataTableCustomers<TData, TValue>({
             className="w-1/2 bg-[#F2BE38] text-black hover:bg-yellow-600 hover:text-white"
           >
             + Add new
+          </Button>
+          <Button
+            onClick={openSendIdModal} // Open the Send ID modal
+            className="w-1/2 bg-[#F2BE38] text-black hover:bg-yellow-600 hover:text-white"
+          >
+            <FileText /> Send ID
           </Button>
           <div className="flex items-center justify-end space-x-2 border-l-2 border-gray-300 py-4 pl-5 dark:border-gray-600">
             <Button
@@ -159,6 +192,11 @@ export function DataTableCustomers<TData, TValue>({
       </Table>
 
       <RegisterCustomerModal isOpen={isModalOpen} onClose={closeModal} />
+      <SendContractIdModal
+        isOpen={isSendIdModalOpen} // Open SendContractIdModal
+        onClose={closeSendIdModal}
+        handleSendContractId={handleSendContractId} // Pass the handler here
+      />
     </div>
   )
 }

@@ -68,3 +68,7 @@ export type TCustomersOrganization = {
     | 'SUPER_HIGH_RISK'
     | null
 }
+
+export type TSendContractIdRequest = {
+  uuid_documento_gerado: string
+}
