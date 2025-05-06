@@ -5,7 +5,6 @@ import {
   CardTitle,
   CardFooter,
 } from '@/components/ui/card'
-import { Button } from '../ui/button'
 
 interface HistoryCardDepositWithdrawalProps {
   quantity: number
@@ -27,11 +26,6 @@ export default function HistoryCardDepositWithdrawal({
             ? `${quantity} ${fiatCurrency}`
             : `+ ${quantity} ${fiatCurrency}`}
         </CardTitle>
-        {operation && (
-          <Button className="w-2/6 bg-[#1877F2] p-5 hover:bg-blue-600">
-            Detail
-          </Button>
-        )}
       </CardContent>
       <CardFooter></CardFooter>
     </Card>

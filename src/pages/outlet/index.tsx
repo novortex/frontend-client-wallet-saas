@@ -1,5 +1,5 @@
 import { SideBar, SideBarItem } from '@/components/custom/sidebar'
-import { UsersIcon, Coins, Wallet2Icon } from 'lucide-react'
+import { UsersIcon, Coins, Wallet2Icon, FileCheck } from 'lucide-react'
 import { Outlet, useLocation } from 'react-router-dom'
 
 // TODO: colocar a verificação da pagina para não aparecer a navegação no login
@@ -26,6 +26,11 @@ export default function Root() {
               icon={<UsersIcon size={20} />}
               text="Customers"
               href="/customers"
+            />
+            <SideBarItem
+              icon={<FileCheck size={20} />}
+              text="Wallet Closings"
+              href="/wallet-closings"
             />
             <SideBarItem
               icon={<Coins size={20} />}

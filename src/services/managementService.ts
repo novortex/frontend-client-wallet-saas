@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 import { instance } from '@/config/api'
+import { WalletClosing } from '@/pages/walletClosing/types'
 import { BenchmarksProps } from '@/types/asset.type'
 import {
   TCustomersOrganization,
@@ -264,6 +265,15 @@ export async function sendContractId(
     return response.data
   } catch (error) {
     console.error('Error sending contract ID:', error)
+  }
+}
+
+export async function getWalletClosings(): Promise<WalletClosing[]> {
+  try {
+    const result = await instance.get('management/wallet-closings')
+    return result.data.clients
+  } catch (error) {
+    console.error('Error fetching wallet closings:', error)
     throw error
   }
 }

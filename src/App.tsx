@@ -21,6 +21,7 @@ import { ProtectedRouteWrapper } from './auth/protectedRouteWrapper'
 import { setLogoutFunction } from './services/auth'
 import { Loading } from './components/custom/loading'
 import { Notifications } from './pages/notifications/notifications'
+import { WalletClosings } from './pages/walletClosing'
 
 export function App() {
   const [isMobile, setIsMobile] = useState(false)
@@ -70,6 +71,7 @@ export function App() {
                   path="/wallet/:walletUuid/history"
                   element={<History />}
                 />
+                <Route path="/wallet-closings" element={<WalletClosings />} />
                 <Route path="*" element={<ErrorPage />} />
               </Route>
             </Route>
