@@ -29,6 +29,7 @@ import exportIcon from '@/assets/icons/export.svg'
 import RegisterCustomerModal from '@/pages/customers/register-customer-modal'
 import { SendContractIdModal } from '@/pages/customers/send-contract-modal'
 import { sendContractId } from '@/services/managementService'
+import { useToast } from '@/components/ui/use-toast'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -42,7 +43,8 @@ export function DataTableCustomers<TData, TValue>({
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [isSendIdModalOpen, setIsSendIdModalOpen] = useState(false) // State for Send ID Modal
+  const [isSendIdModalOpen, setIsSendIdModalOpen] = useState(false)
+  const { toast } = useToast()
 
   const table = useReactTable({
     data,
@@ -81,11 +83,20 @@ export function DataTableCustomers<TData, TValue>({
         uuid_documento_gerado: contractId,
       })
       if (response) {
-        alert('Contract ID sent successfully!')
+        toast({
+          title: 'Success!',
+          description: 'Contract ID sent successfully!',
+          className: 'bg-green-500 text-white',
+        })
         setIsSendIdModalOpen(false)
       }
     } catch (error) {
       console.error('Error sending contract ID:', error)
+      toast({
+        title: 'Error',
+        description: 'Failed to send Contract ID.',
+        className: 'bg-red-500 text-white',
+      })
     }
   }
 
@@ -116,7 +127,7 @@ export function DataTableCustomers<TData, TValue>({
             + Add new
           </Button>
           <Button
-            onClick={openSendIdModal} // Open the Send ID modal
+            onClick={openSendIdModal}
             className="w-1/2 bg-[#F2BE38] text-black hover:bg-yellow-600 hover:text-white"
           >
             <FileText /> Send ID
@@ -193,9 +204,9 @@ export function DataTableCustomers<TData, TValue>({
 
       <RegisterCustomerModal isOpen={isModalOpen} onClose={closeModal} />
       <SendContractIdModal
-        isOpen={isSendIdModalOpen} // Open SendContractIdModal
+        isOpen={isSendIdModalOpen}
         onClose={closeSendIdModal}
-        handleSendContractId={handleSendContractId} // Pass the handler here
+        handleSendContractId={handleSendContractId}
       />
     </div>
   )
