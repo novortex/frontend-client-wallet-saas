@@ -227,7 +227,14 @@ export default function Dashboard() {
                 <Legend />
                 <Bar dataKey="total" fill="#8884d8">
                   {assetsDetails.map((_, index) => (
-                    <Cell key={`cell-${index}`} fill="#ffffff" />
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={
+                        COLORS_PERFORMANCE[
+                          index % COLORS_PERFORMANCE.length
+                        ]
+                      }
+                    />
                   ))}
                 </Bar>
               </BarChart>
@@ -254,7 +261,7 @@ export default function Dashboard() {
                         `${name}: ${(percent * 100).toFixed(1)}%`
                       }
                     >
-                      {performanceData.map((entry, index) => (
+                      {performanceData.map((_, index) => (
                         <Cell
                           key={`cell-${index}`}
                           fill={
@@ -291,7 +298,7 @@ export default function Dashboard() {
                         `${name}: ${(percent * 100).toFixed(0)}%`
                       }
                     >
-                      {benchmarkComparisonData.map((entry, index) => (
+                      {benchmarkComparisonData.map((_, index) => (
                         <Cell
                           key={`cell-${index}`}
                           fill={
