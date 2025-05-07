@@ -6,7 +6,8 @@ import {
   TCustomersOrganization,
   TNewCustomerResponse,
 } from '@/types/customer.type'
-import { TAssetsOrganizationResponse } from '@/types/response.type'
+import { Portifolio } from '@/types/response.type'
+import { RevenueProjectionDashboardData } from '@/types/revenueProjectionDashboardData.type'
 
 export async function deleteCustomer(customerUuid: string) {
   try {
@@ -21,10 +22,21 @@ export async function deleteCustomer(customerUuid: string) {
   }
 }
 
-export async function getAllAssetsOrg() {
+export async function getRevenueProjection() {
   try {
     const result =
-      await instance.get<TAssetsOrganizationResponse[]>('management/assets')
+      await instance.get<RevenueProjectionDashboardData>('management/revenue')
+
+    return result.data
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
+}
+
+export async function getAllAssetsOrg() {
+  try {
+    const result = await instance.get<Portifolio>('management/assets')
 
     return result.data
   } catch (error) {
