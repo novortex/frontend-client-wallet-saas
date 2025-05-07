@@ -1,6 +1,6 @@
-import { Portfolio } from '@/types/assetsDetails.type'
+import { Portifolio } from '@/types/response.type'
 
-export const getAssetsByProfile = (data: Portfolio) => {
+export const getAssetsByProfile = (data: Portifolio) => {
   return data
     .filter((item) => item.qntInWallet > 0)
     .map((asset) => ({
