@@ -1,10 +1,9 @@
 // user.ts (zustand store)
-
 import { TUser } from '@/types/userType'
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 
-// Extenda o tipo TUser com campos adicionais se necessário
+// Extensão do tipo TUser com campos adicionais se necessário
 interface User extends TUser {
   picture?: string
 }
@@ -26,7 +25,19 @@ export const useUserStore = create<UserStore>()(
           console.error('Storage error:', error)
         }
       },
-      clearUser: () => set({ user: null }),
+      clearUser: () => {
+        try {
+          // Limpar o estado do usuário
+          set({ user: null })
+
+          // Limpar explicitamente o localStorage
+          if (typeof window !== 'undefined') {
+            localStorage.removeItem('user-storage')
+          }
+        } catch (error) {
+          console.error('Error clearing user data:', error)
+        }
+      },
     }),
     {
       name: 'user-storage',
@@ -44,6 +55,13 @@ export const useUserStore = create<UserStore>()(
             }
           }
         }
+      }),
+      // Adicionar blacklist para excluir items sensíveis da persistência (opcional)
+      partialize: (state) => ({
+        user: {
+          ...state.user,
+          // omita dados sensíveis que não devem ser persistidos
+        },
       }),
     },
   ),
