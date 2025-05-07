@@ -57,7 +57,7 @@ export function DisableCustomerModal({
     }
   }
 
-  if (loading) return <Loading />
+  if (loading) return <Loading data-testid="loading-component" />
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -65,7 +65,10 @@ export function DisableCustomerModal({
         <DialogHeader>
           <DialogTitle className="mb-5 flex items-center gap-5">
             Disabled Customer{' '}
-            <TriangleAlert className="w-5 text-red-600 dark:text-yellow-400" />
+            <TriangleAlert 
+              className="w-5 text-red-600 dark:text-yellow-400" 
+              data-testid="triangle-alert-icon"
+            />
           </DialogTitle>
           <DialogDescription>
             <p className="m-4 rounded bg-gray-300 p-4 font-bold text-red-600 dark:bg-transparent dark:text-yellow-200">
@@ -77,13 +80,17 @@ export function DisableCustomerModal({
         </DialogHeader>
         <DialogFooter>
           <DialogClose asChild>
-            <Button className="bg-gray-200 text-black hover:bg-gray-100 hover:text-black">
+            <Button 
+              className="bg-gray-200 text-black hover:bg-gray-100 hover:text-black"
+              data-testid="modal-close-button"
+            >
               Close
             </Button>
           </DialogClose>
           <Button
             onClick={() => handleDisableCustomer()}
             className="bg-blue-500 text-black hover:bg-blue-600"
+            data-testid="confirm-disable-button"
           >
             Confirm disabling
           </Button>
