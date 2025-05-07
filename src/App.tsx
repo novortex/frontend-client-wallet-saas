@@ -22,6 +22,7 @@ import { setLogoutFunction } from './services/auth'
 import { Loading } from './components/custom/loading'
 import { Notifications } from './pages/notifications/notifications'
 import { WalletClosings } from './pages/walletClosing'
+import Dashboard from './pages/dashboard'
 
 export function App() {
   const [isMobile, setIsMobile] = useState(false)
@@ -84,6 +85,8 @@ export function App() {
                   element={<History />}
                 />
                 <Route path="/wallet-closings" element={<WalletClosings />} />
+                <Route path="/dashboards" element={<Dashboard />} />
+
                 <Route path="*" element={<ErrorPage />} />
               </Route>
             </Route>

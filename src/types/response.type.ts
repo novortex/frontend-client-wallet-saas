@@ -19,9 +19,11 @@ export type TAssetsOrganizationResponse = {
   name: string
   price: number
   qntInWallet: number
-  presencePercentage: string
+  presencePercentage: number
   riskProfileCounts: TRiskProfileCounts
 }
+
+export type Portifolio = TAssetsOrganizationResponse[]
 
 export type WalletDataResponse = {
   wallet: TWalletAssetsInfo
