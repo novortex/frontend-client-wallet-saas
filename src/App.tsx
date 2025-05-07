@@ -21,6 +21,7 @@ import { ProtectedRouteWrapper } from './auth/protectedRouteWrapper'
 import { setLogoutFunction } from './services/auth'
 import { Loading } from './components/custom/loading'
 import { Notifications } from './pages/notifications/notifications'
+import { WalletClosings } from './pages/walletClosing'
 
 export function App() {
   const [isMobile, setIsMobile] = useState(false)
@@ -28,7 +29,19 @@ export function App() {
   const { logout } = useAuth0()
 
   useEffect(() => {
+    // Use a função melhorada de setLogoutFunction em vez da simples atribuição
     setLogoutFunction(logout)
+
+    // Se quiser adicionar um evento para detectar quando a página for fechada
+    const handleBeforeUnload = () => {
+      // Opcional: limpar dados sensíveis ao fechar a página
+      sessionStorage.removeItem('logout_reason')
+    }
+
+    window.addEventListener('beforeunload', handleBeforeUnload)
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload)
+    }
   }, [logout])
 
   useEffect(() => {
@@ -70,6 +83,7 @@ export function App() {
                   path="/wallet/:walletUuid/history"
                   element={<History />}
                 />
+                <Route path="/wallet-closings" element={<WalletClosings />} />
                 <Route path="*" element={<ErrorPage />} />
               </Route>
             </Route>

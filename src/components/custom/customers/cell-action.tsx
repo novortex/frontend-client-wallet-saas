@@ -99,6 +99,7 @@ export default function CellActions({
           setIsDisableDialogOpen(open)
           if (!open) setIsDropdownOpen(false)
         }}
+        customerUuid={rowInfos.id}
       />
 
       <CreateWalletModal
