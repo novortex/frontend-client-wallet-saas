@@ -118,7 +118,7 @@ export default function Dashboard() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="mb-2 font-semibold text-white">
-                    Número de carteiras
+                    Número de carteiras abertas
                   </p>
                   <p className="text-lg font-bold text-white">{totalWallets}</p>
                 </div>
@@ -166,22 +166,27 @@ export default function Dashboard() {
 
           {/* Gráficos principais */}
           <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
-            <div className="rounded-lg bg-black p-4 shadow">
-              <h2 className="mb-4 text-lg font-semibold">
-                Contagem de carteiras por benchmark
-              </h2>
-              <ResponsiveContainer width="100%" height="90%">
-                <BarChart
-                  data={walletsByBenchmark}
-                  margin={{ top: 16, right: 30, left: 0, bottom: 16 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis allowDecimals={false} />
-                  <Tooltip />
-                  <Bar dataKey="count" fill="#8884d8" />
-                </BarChart>
-              </ResponsiveContainer>
+            <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
+              <div className="rounded-lg bg-black p-4 shadow">
+                <h2 className="mb-4 text-lg font-semibold">
+                  Contagem de carteiras por benchmark
+                </h2>
+                <ResponsiveContainer width="100%" height="90%">
+                  {/* Mudando para BarChart layout="vertical" */}
+                  <BarChart
+                    layout="vertical"
+                    data={walletsByBenchmark}
+                    margin={{ top: 16, right: 30, left: 50, bottom: 16 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    {/* Invertendo os eixos X e Y */}
+                    <XAxis type="number" />
+                    <YAxis dataKey="name" type="category" width={120} />
+                    <Tooltip />
+                    <Bar dataKey="count" fill="#8884d8" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
             </div>
 
             <div className="rounded-lg bg-black p-4 shadow">
@@ -207,19 +212,22 @@ export default function Dashboard() {
             <h2 className="mb-4 text-lg font-semibold">Alocação por ativo</h2>
             <ResponsiveContainer width="100%" height={400}>
               <BarChart
+                layout="vertical"
                 data={assetsDetails}
-                margin={{ top: 20, right: 30, left: 20, bottom: 10 }}
+                margin={{ top: 20, right: 30, left: 120, bottom: 10 }}
               >
+                {/* Invertendo os eixos X e Y */}
                 <XAxis
-                  dataKey="name"
-                  interval={0}
-                  angle={-25}
-                  textAnchor="end"
-                />
-                <YAxis
+                  type="number"
                   tickFormatter={(value) =>
                     `$ ${value.toLocaleString('pt-BR')}`
                   }
+                />
+                <YAxis
+                  dataKey="name"
+                  type="category"
+                  width={110}
+                  interval={0}
                 />
                 <Tooltip
                   formatter={(value: number) => `R$ ${value.toFixed(2)}`}
@@ -230,9 +238,7 @@ export default function Dashboard() {
                     <Cell
                       key={`cell-${index}`}
                       fill={
-                        COLORS_PERFORMANCE[
-                          index % COLORS_PERFORMANCE.length
-                        ]
+                        COLORS_PERFORMANCE[index % COLORS_PERFORMANCE.length]
                       }
                     />
                   ))}
@@ -353,31 +359,6 @@ export default function Dashboard() {
               </div>
             </div>
           </div>
-
-          {/* Segundo Gráfico */}
-          <div className="mb-6 grid w-full grid-cols-1 gap-6">
-            <div className="w-full rounded-lg bg-black p-4 shadow">
-              <h2 className="mb-4 text-lg font-semibold text-white">
-                Alocação dos ativos por perfil de risco
-              </h2>
-              <div className="overflow-x-auto">
-                <ResponsiveContainer width="100%" height={400}>
-                  <BarChart data={assetsByRiskprofile}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="superLowRisk" fill="#00C49F" />
-                    <Bar dataKey="lowRisk" fill="#FFBB28" />
-                    <Bar dataKey="standard" fill="#0088FE" />
-                    <Bar dataKey="highRisk" fill="#FF8042" />
-                    <Bar dataKey="superHighRisk" fill="#FF3B30" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-          </div>
         </div>
       )}
 
@@ -392,14 +373,17 @@ export default function Dashboard() {
               <div className="h-96">
                 <ResponsiveContainer width="100%" height={300}>
                   <BarChart
+                    layout="vertical"
                     data={aumByBenchmark}
-                    margin={{ top: 16, right: 30, left: 20, bottom: 16 }} // aumenta o espaço esquerdo
+                    margin={{ top: 16, right: 30, left: 120, bottom: 16 }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis
+                    {/* Invertendo os eixos X e Y */}
+                    <XAxis
+                      type="number"
                       tickFormatter={(v) => `${(v / 1_000_000).toFixed(1)}M`}
                     />
+                    <YAxis dataKey="name" type="category" width={110} />
                     <Tooltip
                       formatter={(v: number) =>
                         v.toLocaleString('pt-BR', {
