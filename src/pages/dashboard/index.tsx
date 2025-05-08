@@ -20,7 +20,6 @@ import { getWalletsByRiskProfile } from './utils/getWalletsByRiskprofile'
 import { getAUMByRiskProfile } from './utils/getAUMByRiskprofile'
 import { getAUMByBenchmark } from './utils/getAUMByBenchmark'
 import { prepareAUMByAssets } from './utils/getAUMByAsset'
-import { getAssetsByProfile } from './utils/getAssetsByRiskprofile'
 import { formatRealCurrency } from '@/utils/formatRealCurrency'
 import { RevenueProjectionDashboardData } from '@/types/revenueProjectionDashboardData.type'
 import { Portifolio } from '@/types/response.type'
@@ -62,7 +61,6 @@ export default function Dashboard() {
   const aumByRiskprofile = getAUMByRiskProfile(revenueProjection)
   const aumByBenchmark = getAUMByBenchmark(revenueProjection)
   const assetsDetails = prepareAUMByAssets(assetsDetailsData)
-  const assetsByRiskprofile = getAssetsByProfile(assetsDetailsData)
 
   const performanceData = preparePerformanceData(
     revenueProjection,
