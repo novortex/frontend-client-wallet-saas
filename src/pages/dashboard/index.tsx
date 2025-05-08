@@ -12,7 +12,6 @@ import {
   ResponsiveContainer,
   Cell,
 } from 'recharts'
-import { getTotalWallets } from './utils/getTotalWallets'
 import { preparePerformanceData } from './utils/prepareWalletsPerformanceComparison'
 import { prepareBenchmarkComparisonData } from './utils/prepareBenchmarkComparison'
 import { getWalletsByBenchmark } from './utils/getWalletsByBenchmark'
@@ -20,7 +19,6 @@ import { getWalletsByRiskProfile } from './utils/getWalletsByRiskprofile'
 import { getAUMByRiskProfile } from './utils/getAUMByRiskprofile'
 import { getAUMByBenchmark } from './utils/getAUMByBenchmark'
 import { prepareAUMByAssets } from './utils/getAUMByAsset'
-import { getAssetsByProfile } from './utils/getAssetsByRiskprofile'
 import { formatRealCurrency } from '@/utils/formatRealCurrency'
 import { RevenueProjectionDashboardData } from '@/types/revenueProjectionDashboardData.type'
 import { Portifolio } from '@/types/response.type'
@@ -30,6 +28,24 @@ import {
 } from '@/services/managementService'
 
 const COLORS_PERFORMANCE = ['#32CD32', '#B22222']
+
+const COLORS_BARCHART = [
+  '#800000', // vermelho muito escuro
+  '#8B0000',
+  '#A52A2A',
+  '#B22222',
+  '#DC143C',
+  '#E74C3C',
+  '#FF6347',
+  '#FFA07A', // laranja claro
+  '#FFD700', // amarelo forte (neutro/limite)
+  '#ADFF2F', // amarelo esverdeado
+  '#7CFC00',
+  '#32CD32',
+  '#2E8B57',
+  '#228B22',
+  '#006400', // verde escuro
+]
 
 export default function Dashboard() {
   const [assetsDetailsData, setAssetsDetailsData] = useState<Portifolio>([])
@@ -56,21 +72,19 @@ export default function Dashboard() {
 
   if (!revenueProjection) return <p>Carregando dados...</p>
 
-  const totalWallets = getTotalWallets(revenueProjection)
   const walletsByBenchmark = getWalletsByBenchmark(revenueProjection)
   const walletsByRiskprofile = getWalletsByRiskProfile(revenueProjection)
   const aumByRiskprofile = getAUMByRiskProfile(revenueProjection)
   const aumByBenchmark = getAUMByBenchmark(revenueProjection)
   const assetsDetails = prepareAUMByAssets(assetsDetailsData)
-  const assetsByRiskprofile = getAssetsByProfile(assetsDetailsData)
 
   const performanceData = preparePerformanceData(
     revenueProjection,
-    totalWallets,
+    revenueProjection.summary.openWallets,
   )
   const benchmarkComparisonData = prepareBenchmarkComparisonData(
     revenueProjection,
-    totalWallets,
+    revenueProjection.summary.openWallets,
   )
 
   return (
@@ -118,9 +132,11 @@ export default function Dashboard() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="mb-2 font-semibold text-white">
-                    Número de carteiras
+                    Número de carteiras abertas
                   </p>
-                  <p className="text-lg font-bold text-white">{totalWallets}</p>
+                  <p className="text-lg font-bold text-white">
+                    {revenueProjection.summary.openWallets}
+                  </p>
                 </div>
               </div>
             </div>
@@ -170,14 +186,17 @@ export default function Dashboard() {
               <h2 className="mb-4 text-lg font-semibold">
                 Contagem de carteiras por benchmark
               </h2>
-              <ResponsiveContainer width="100%" height="90%">
+              <ResponsiveContainer width="100%" height="95%">
+                {/* Mudando para BarChart layout="vertical" */}
                 <BarChart
+                  layout="vertical"
                   data={walletsByBenchmark}
-                  margin={{ top: 16, right: 30, left: 0, bottom: 16 }}
+                  margin={{ top: 16, right: 10, left: 10, bottom: 16 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis allowDecimals={false} />
+                  {/* Invertendo os eixos X e Y */}
+                  <XAxis type="number" />
+                  <YAxis dataKey="name" type="category" width={120} />
                   <Tooltip />
                   <Bar dataKey="count" fill="#8884d8" />
                 </BarChart>
@@ -204,23 +223,25 @@ export default function Dashboard() {
           </div>
 
           <div className="mb-6 rounded-lg bg-black p-4 shadow">
-            <h2 className="mb-4 text-lg font-semibold">Alocação por ativo</h2>
-            <ResponsiveContainer width="100%" height={400}>
+            <h2 className="mb-4 text-lg font-semibold text-white">
+              Alocação por ativo (Escala Log)
+            </h2>
+            <ResponsiveContainer width="100%" height={650}>
               <BarChart
+                layout="vertical"
                 data={assetsDetails}
-                margin={{ top: 20, right: 30, left: 20, bottom: 10 }}
+                margin={{ top: 20, right: 30, left: 10, bottom: 10 }}
               >
+                {/* Escala logarítmica no eixo X */}
                 <XAxis
-                  dataKey="name"
-                  interval={0}
-                  angle={-25}
-                  textAnchor="end"
-                />
-                <YAxis
+                  type="number"
+                  scale="log"
+                  domain={['auto', 'auto']}
                   tickFormatter={(value) =>
                     `$ ${value.toLocaleString('pt-BR')}`
                   }
                 />
+                <YAxis dataKey="name" type="category" width={110} />
                 <Tooltip
                   formatter={(value: number) => `R$ ${value.toFixed(2)}`}
                 />
@@ -229,11 +250,7 @@ export default function Dashboard() {
                   {assetsDetails.map((_, index) => (
                     <Cell
                       key={`cell-${index}`}
-                      fill={
-                        COLORS_PERFORMANCE[
-                          index % COLORS_PERFORMANCE.length
-                        ]
-                      }
+                      fill={COLORS_BARCHART[index % COLORS_BARCHART.length]}
                     />
                   ))}
                 </Bar>
@@ -247,7 +264,7 @@ export default function Dashboard() {
                 <h2 className="mb-4 text-lg font-semibold text-white">
                   Comparação Lucro x Prejuízo
                 </h2>
-                <ResponsiveContainer width={600} height="100%">
+                <ResponsiveContainer width={700} height="100%">
                   <PieChart>
                     <Pie
                       data={performanceData}
@@ -353,31 +370,6 @@ export default function Dashboard() {
               </div>
             </div>
           </div>
-
-          {/* Segundo Gráfico */}
-          <div className="mb-6 grid w-full grid-cols-1 gap-6">
-            <div className="w-full rounded-lg bg-black p-4 shadow">
-              <h2 className="mb-4 text-lg font-semibold text-white">
-                Alocação dos ativos por perfil de risco
-              </h2>
-              <div className="overflow-x-auto">
-                <ResponsiveContainer width="100%" height={400}>
-                  <BarChart data={assetsByRiskprofile}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="superLowRisk" fill="#00C49F" />
-                    <Bar dataKey="lowRisk" fill="#FFBB28" />
-                    <Bar dataKey="standard" fill="#0088FE" />
-                    <Bar dataKey="highRisk" fill="#FF8042" />
-                    <Bar dataKey="superHighRisk" fill="#FF3B30" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-          </div>
         </div>
       )}
 
@@ -386,32 +378,22 @@ export default function Dashboard() {
         <div>
           <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
             <div className="rounded-lg bg-black p-4 shadow">
-              <h2 className="mb-4 text-lg font-semibold text-white">
-                Distribuição de AUM por Benchmark
+              <h2 className="mb-4 text-lg font-semibold">
+                Distribuição de AUM por benchmark
               </h2>
-              <div className="h-96">
-                <ResponsiveContainer width="100%" height={300}>
-                  <BarChart
-                    data={aumByBenchmark}
-                    margin={{ top: 16, right: 30, left: 20, bottom: 16 }} // aumenta o espaço esquerdo
-                  >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis
-                      tickFormatter={(v) => `${(v / 1_000_000).toFixed(1)}M`}
-                    />
-                    <Tooltip
-                      formatter={(v: number) =>
-                        v.toLocaleString('pt-BR', {
-                          style: 'currency',
-                          currency: 'BRL',
-                        })
-                      }
-                    />
-                    <Bar dataKey="aum" fill="#8884d8" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
+              <ResponsiveContainer width="100%" height="95%">
+                <BarChart
+                  layout="vertical"
+                  data={aumByBenchmark}
+                  margin={{ top: 16, right: 10, left: 10, bottom: 16 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis type="number" />
+                  <YAxis dataKey="name" type="category" width={120} />
+                  <Tooltip />
+                  <Bar dataKey="aum" fill="#8884d8" />
+                </BarChart>
+              </ResponsiveContainer>
             </div>
           </div>
         </div>
