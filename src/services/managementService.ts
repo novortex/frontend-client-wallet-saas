@@ -1,16 +1,42 @@
 /* eslint-disable camelcase */
 import { instance } from '@/config/api'
+import { WalletClosing } from '@/pages/walletClosing/types'
 import { BenchmarksProps } from '@/types/asset.type'
 import {
   TCustomersOrganization,
   TNewCustomerResponse,
 } from '@/types/customer.type'
-import { TAssetsOrganizationResponse } from '@/types/response.type'
+import { Portifolio } from '@/types/response.type'
+import { RevenueProjectionDashboardData } from '@/types/revenueProjectionDashboardData.type'
+
+export async function deleteCustomer(customerUuid: string) {
+  try {
+    const response = await instance.delete(
+      `/management/customer/${customerUuid}`,
+    )
+
+    return response.data
+  } catch (error) {
+    console.error('Erro ao deletar customer:', error)
+    throw error
+  }
+}
+
+export async function getRevenueProjection() {
+  try {
+    const result =
+      await instance.get<RevenueProjectionDashboardData>('management/revenue')
+
+    return result.data
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
+}
 
 export async function getAllAssetsOrg() {
   try {
-    const result =
-      await instance.get<TAssetsOrganizationResponse[]>('management/assets')
+    const result = await instance.get<Portifolio>('management/assets')
 
     return result.data
   } catch (error) {
@@ -250,6 +276,16 @@ export async function getBenchmarkOptions(): Promise<BenchmarksProps[]> {
     return result.data
   } catch (error) {
     console.log(error)
+    throw error
+  }
+}
+
+export async function getWalletClosings(): Promise<WalletClosing[]> {
+  try {
+    const result = await instance.get('management/wallet-closings')
+    return result.data.clients
+  } catch (error) {
+    console.error('Error fetching wallet closings:', error)
     throw error
   }
 }
