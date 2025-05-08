@@ -19,6 +19,7 @@ export type TWallet = {
   monthCloseDate: string // or Date
   contract: boolean
   performanceFee: number
+  joinedAsClient: Date | null
   user: {
     name: string
     email: string
