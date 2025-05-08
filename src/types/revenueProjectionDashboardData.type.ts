@@ -1,5 +1,6 @@
 export type RevenueProjectionDashboardData = {
   summary: {
+    openWallets: number
     totalRevenue: number
     totalInvestedCapital: number
     totalAUM: number
