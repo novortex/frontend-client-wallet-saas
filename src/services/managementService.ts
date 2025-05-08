@@ -261,7 +261,6 @@ export async function sendContractId(
 ): Promise<any> {
   try {
     const response = await instance.post('/d4sign', data)
-    console.log('enviou')
     return response.data
   } catch (error) {
     console.error('Error sending contract ID:', error)
