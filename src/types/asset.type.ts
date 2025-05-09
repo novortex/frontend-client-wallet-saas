@@ -24,3 +24,8 @@ export type BenchmarksProps = {
   cuid: string
   name: string
 }
+
+export type AllocationByAsset = {
+  name: string
+  total: number
+}[]

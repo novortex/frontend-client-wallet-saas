@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 import { instance } from '@/config/api'
 import { WalletClosing } from '@/pages/walletClosing/types'
-import { BenchmarksProps } from '@/types/asset.type'
+import { AllocationByAsset, BenchmarksProps } from '@/types/asset.type'
 import {
   TCustomersOrganization,
   TNewCustomerResponse,
@@ -27,6 +27,19 @@ export async function getRevenueProjection() {
   try {
     const result =
       await instance.get<RevenueProjectionDashboardData>('management/revenue')
+
+    return result.data
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
+}
+
+export async function getAllocationByAsset() {
+  try {
+    const result = await instance.get<AllocationByAsset>(
+      'management/allocation',
+    )
 
     return result.data
   } catch (error) {
