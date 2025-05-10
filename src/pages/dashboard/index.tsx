@@ -240,7 +240,7 @@ export default function Dashboard() {
             <h2 className="mb-4 text-lg font-semibold text-white">
               Alocação por ativo (Escala Log)
             </h2>
-            <ResponsiveContainer width="100%" height={800}>
+            <ResponsiveContainer width="100%" height={1200}>
               <BarChart
                 layout="vertical"
                 data={allocationArray}
