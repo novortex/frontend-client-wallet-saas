@@ -78,7 +78,7 @@ export default function Dashboard() {
 
   if (!revenueProjection)
     return (
-      <p className="align-center text-md flex justify-center font-bold text-white">
+      <p className="text-md flex items-center justify-center font-bold text-white">
         Error fetching dashboard data
       </p>
     )
