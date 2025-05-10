@@ -26,6 +26,7 @@ import {
 } from '@/services/managementService'
 import { AllocationByAsset } from '@/types/asset.type'
 import { Loading } from '@/components/custom/loading'
+import { formatDolarCurrency } from '@/utils/formatDolarCurrency'
 
 const COLORS_PERFORMANCE = ['#32CD32', '#B22222']
 
@@ -242,7 +243,7 @@ export default function Dashboard() {
             </h2>
             <ResponsiveContainer
               width="100%"
-              height={allocationArray.length * 50}
+              height={allocationArray.length * 40}
             >
               <BarChart
                 layout="vertical"
@@ -253,13 +254,11 @@ export default function Dashboard() {
                   type="number"
                   scale="log"
                   domain={['auto', 'auto']}
-                  tickFormatter={(value) => `$ ${formatRealCurrency(value)}`}
+                  tickFormatter={(value) => `${formatDolarCurrency(value)}`}
                 />
                 <YAxis dataKey="name" type="category" width={110} />
                 <Tooltip
-                  formatter={(value: number) =>
-                    `$ ${formatRealCurrency(value)}`
-                  }
+                  formatter={(value: number) => `${formatDolarCurrency(value)}`}
                 />
                 <Legend />
                 <Bar dataKey="total" fill="#8884d8">
