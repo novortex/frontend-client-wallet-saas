@@ -18,14 +18,14 @@ import { getWalletsByBenchmark } from './utils/getWalletsByBenchmark'
 import { getWalletsByRiskProfile } from './utils/getWalletsByRiskprofile'
 import { getAUMByRiskProfile } from './utils/getAUMByRiskprofile'
 import { getAUMByBenchmark } from './utils/getAUMByBenchmark'
-import { prepareAUMByAssets } from './utils/getAUMByAsset'
 import { formatRealCurrency } from '@/utils/formatRealCurrency'
 import { RevenueProjectionDashboardData } from '@/types/revenueProjectionDashboardData.type'
-import { Portifolio } from '@/types/response.type'
 import {
-  getAllAssetsOrg,
+  getAllocationByAsset,
   getRevenueProjection,
 } from '@/services/managementService'
+import { AllocationByAsset } from '@/types/asset.type'
+import { Loading } from '@/components/custom/loading'
 
 const COLORS_PERFORMANCE = ['#32CD32', '#B22222']
 
@@ -48,35 +48,41 @@ const COLORS_BARCHART = [
 ]
 
 export default function Dashboard() {
-  const [assetsDetailsData, setAssetsDetailsData] = useState<Portifolio>([])
+  const [allocationByAsset, setAllocationByAsset] = useState<AllocationByAsset>(
+    {},
+  )
   const [revenueProjection, setRevenueProjection] =
     useState<RevenueProjectionDashboardData>()
 
   const fetchDashboardData = async () => {
     try {
-      const [assetsDetailResponse, revenueProjectionResponse] =
-        await Promise.all([getAllAssetsOrg(), getRevenueProjection()])
+      const [allocationByAssetResponse, revenueProjectionResponse] =
+        await Promise.all([getAllocationByAsset(), getRevenueProjection()])
 
-      setAssetsDetailsData(assetsDetailResponse)
+      setAllocationByAsset(allocationByAssetResponse)
       setRevenueProjection(revenueProjectionResponse)
     } catch (error) {
       console.error('Erro ao buscar dados do dashboard:', error)
     }
   }
-
   useEffect(() => {
     fetchDashboardData()
   }, [])
 
   const [activeTab, setActiveTab] = useState('overview')
 
-  if (!revenueProjection) return <p>Carregando dados...</p>
+  if (!revenueProjection) return <Loading />
 
   const walletsByBenchmark = getWalletsByBenchmark(revenueProjection)
   const walletsByRiskprofile = getWalletsByRiskProfile(revenueProjection)
   const aumByRiskprofile = getAUMByRiskProfile(revenueProjection)
   const aumByBenchmark = getAUMByBenchmark(revenueProjection)
-  const assetsDetails = prepareAUMByAssets(assetsDetailsData)
+  const allocationArray = Object.entries(allocationByAsset)
+    .map(([name, total]) => ({ name, total }))
+    .filter(({ total }) => total > 0)
+    .sort((a, b) => b.total - a.total)
+
+  console.log(allocationArray)
 
   const performanceData = preparePerformanceData(
     revenueProjection,
@@ -119,7 +125,7 @@ export default function Dashboard() {
       </div>
 
       <p className="text-md mb-4 ml-2 font-bold text-gray-400">
-        Missing wallets by missing data:{' '}
+        Carteiras que não entraram na conta por falta de dados:{' '}
         {revenueProjection.summary.missingInformationAboutPerformanceOrWallet}
       </p>
 
@@ -226,28 +232,27 @@ export default function Dashboard() {
             <h2 className="mb-4 text-lg font-semibold text-white">
               Alocação por ativo (Escala Log)
             </h2>
-            <ResponsiveContainer width="100%" height={650}>
+            <ResponsiveContainer width="100%" height={800}>
               <BarChart
                 layout="vertical"
-                data={assetsDetails}
+                data={allocationArray}
                 margin={{ top: 20, right: 30, left: 10, bottom: 10 }}
               >
-                {/* Escala logarítmica no eixo X */}
                 <XAxis
                   type="number"
                   scale="log"
                   domain={['auto', 'auto']}
-                  tickFormatter={(value) =>
-                    `$ ${value.toLocaleString('pt-BR')}`
-                  }
+                  tickFormatter={(value) => `R$ ${formatRealCurrency(value)}`}
                 />
                 <YAxis dataKey="name" type="category" width={110} />
                 <Tooltip
-                  formatter={(value: number) => `R$ ${value.toFixed(2)}`}
+                  formatter={(value: number) =>
+                    `$ ${formatRealCurrency(value)}`
+                  }
                 />
                 <Legend />
                 <Bar dataKey="total" fill="#8884d8">
-                  {assetsDetails.map((_, index) => (
+                  {allocationArray.map((_, index) => (
                     <Cell
                       key={`cell-${index}`}
                       fill={COLORS_BARCHART[index % COLORS_BARCHART.length]}
@@ -339,6 +344,28 @@ export default function Dashboard() {
       {/* Conteúdo do Perfil de Risco */}
       {activeTab === 'risk' && (
         <div className="w-full">
+          <div className="mb-6 flex flex-wrap gap-4">
+            {Object.entries(revenueProjection.byRiskProfile).map(
+              ([riskProfile, values]) => (
+                <div
+                  key={riskProfile}
+                  className="w-[180px] rounded-lg bg-black p-3 text-sm shadow"
+                >
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="mb-1 font-semibold text-white">
+                        {riskProfile}
+                      </p>
+                      <p className="text-xs text-white">RECEITA</p>
+                      <p className="text-lg font-bold text-white">
+                        {formatRealCurrency(values.revenue)}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ),
+            )}
+          </div>
           {/* Primeiro Gráfico */}
           <div className="mb-6 grid w-full grid-cols-1 gap-6">
             <div className="w-full rounded-lg bg-black p-4 shadow">
@@ -376,6 +403,29 @@ export default function Dashboard() {
       {/* Conteúdo da Análise por Benchmark */}
       {activeTab === 'benchmark' && (
         <div>
+          <div className="mb-6 flex flex-wrap gap-4">
+            {Object.entries(revenueProjection.byBenchmark).map(
+              ([benchmark, values]) => (
+                <div
+                  key={benchmark}
+                  className="w-[180px] rounded-lg bg-black p-3 text-sm shadow"
+                >
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="mb-1 font-semibold text-white">
+                        {benchmark}
+                      </p>
+                      <p className="text-xs text-white">RECEITA</p>
+                      <p className="text-lg font-bold text-white">
+                        {formatRealCurrency(values.revenue)}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ),
+            )}
+          </div>
+
           <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
             <div className="rounded-lg bg-black p-4 shadow">
               <h2 className="mb-4 text-lg font-semibold">

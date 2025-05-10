@@ -24,3 +24,5 @@ export type BenchmarksProps = {
   cuid: string
   name: string
 }
+
+export type AllocationByAsset = Record<string, number>
