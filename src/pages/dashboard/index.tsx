@@ -247,7 +247,7 @@ export default function Dashboard() {
                 <YAxis dataKey="name" type="category" width={110} />
                 <Tooltip
                   formatter={(value: number) =>
-                    `R$ ${formatRealCurrency(value)}`
+                    `$ ${formatRealCurrency(value)}`
                   }
                 />
                 <Legend />
