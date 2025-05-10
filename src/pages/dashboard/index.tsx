@@ -53,9 +53,11 @@ export default function Dashboard() {
   )
   const [revenueProjection, setRevenueProjection] =
     useState<RevenueProjectionDashboardData>()
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const fetchDashboardData = async () => {
     try {
+      setIsLoading(true)
       const [allocationByAssetResponse, revenueProjectionResponse] =
         await Promise.all([getAllocationByAsset(), getRevenueProjection()])
 
@@ -63,6 +65,8 @@ export default function Dashboard() {
       setRevenueProjection(revenueProjectionResponse)
     } catch (error) {
       console.error('Erro ao buscar dados do dashboard:', error)
+    } finally {
+      setIsLoading(false)
     }
   }
   useEffect(() => {
@@ -70,8 +74,14 @@ export default function Dashboard() {
   }, [])
 
   const [activeTab, setActiveTab] = useState('overview')
+  if (isLoading) return <Loading />
 
-  if (!revenueProjection) return <Loading />
+  if (!revenueProjection)
+    return (
+      <p className="align-center text-md flex justify-center font-bold text-white">
+        Error fetching dashboard data
+      </p>
+    )
 
   const walletsByBenchmark = getWalletsByBenchmark(revenueProjection)
   const walletsByRiskprofile = getWalletsByRiskProfile(revenueProjection)
@@ -81,8 +91,6 @@ export default function Dashboard() {
     .map(([name, total]) => ({ name, total }))
     .filter(({ total }) => total > 0)
     .sort((a, b) => b.total - a.total)
-
-  console.log(allocationArray)
 
   const performanceData = preparePerformanceData(
     revenueProjection,
