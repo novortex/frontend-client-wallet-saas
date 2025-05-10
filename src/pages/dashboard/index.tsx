@@ -250,7 +250,7 @@ export default function Dashboard() {
                   type="number"
                   scale="log"
                   domain={['auto', 'auto']}
-                  tickFormatter={(value) => `R$ ${formatRealCurrency(value)}`}
+                  tickFormatter={(value) => `$ ${formatRealCurrency(value)}`}
                 />
                 <YAxis dataKey="name" type="category" width={110} />
                 <Tooltip
