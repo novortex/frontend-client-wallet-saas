@@ -49,7 +49,7 @@ const COLORS_BARCHART = [
 
 export default function Dashboard() {
   const [allocationByAsset, setAllocationByAsset] = useState<AllocationByAsset>(
-    [],
+    {},
   )
   const [revenueProjection, setRevenueProjection] =
     useState<RevenueProjectionDashboardData>()
@@ -77,12 +77,12 @@ export default function Dashboard() {
   const walletsByRiskprofile = getWalletsByRiskProfile(revenueProjection)
   const aumByRiskprofile = getAUMByRiskProfile(revenueProjection)
   const aumByBenchmark = getAUMByBenchmark(revenueProjection)
-  const allocationByAssetArray = Object.entries(allocationByAsset).map(
-    ([name, total]) => ({ name, total }),
-  )
+  const allocationArray = Object.entries(allocationByAsset)
+    .map(([name, total]) => ({ name, total }))
+    .filter(({ total }) => total > 0)
+    .sort((a, b) => b.total - a.total)
 
-  //  const assetsDetails = prepareAllocationByAssetData(allocationByAsset)
-  // const revenueByBenchmark = prepareBenchmarkRevenueData(revenueProjection)
+  console.log(allocationArray)
 
   const performanceData = preparePerformanceData(
     revenueProjection,
@@ -232,27 +232,27 @@ export default function Dashboard() {
             <h2 className="mb-4 text-lg font-semibold text-white">
               Alocação por ativo (Escala Log)
             </h2>
-            <ResponsiveContainer width="100%" height={650}>
+            <ResponsiveContainer width="100%" height={800}>
               <BarChart
                 layout="vertical"
-                data={allocationByAssetArray}
+                data={allocationArray}
                 margin={{ top: 20, right: 30, left: 10, bottom: 10 }}
               >
                 <XAxis
                   type="number"
                   scale="log"
                   domain={['auto', 'auto']}
-                  tickFormatter={(value) =>
-                    `$ ${value.toLocaleString('pt-BR')}`
-                  }
+                  tickFormatter={(value) => `R$ ${formatRealCurrency(value)}`}
                 />
                 <YAxis dataKey="name" type="category" width={110} />
                 <Tooltip
-                  formatter={(value: number) => `R$ ${value.toFixed(2)}`}
+                  formatter={(value: number) =>
+                    `R$ ${formatRealCurrency(value)}`
+                  }
                 />
                 <Legend />
                 <Bar dataKey="total" fill="#8884d8">
-                  {allocationByAssetArray.map((_, index) => (
+                  {allocationArray.map((_, index) => (
                     <Cell
                       key={`cell-${index}`}
                       fill={COLORS_BARCHART[index % COLORS_BARCHART.length]}

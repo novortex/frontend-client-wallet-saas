@@ -25,7 +25,4 @@ export type BenchmarksProps = {
   name: string
 }
 
-export type AllocationByAsset = {
-  name: string
-  total: number
-}[]
+export type AllocationByAsset = Record<string, number>
