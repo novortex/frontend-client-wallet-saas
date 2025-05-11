@@ -435,7 +435,14 @@ export default function Dashboard() {
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis type="number" />
                   <YAxis dataKey="name" type="category" width={120} />
-                  <Tooltip />
+                  <Tooltip
+                    formatter={(v: number) =>
+                      v.toLocaleString('pt-BR', {
+                        style: 'currency',
+                        currency: 'BRL',
+                      })
+                    }
+                  />{' '}
                   <Bar dataKey="aum" fill="#8884d8" />
                 </BarChart>
               </ResponsiveContainer>
