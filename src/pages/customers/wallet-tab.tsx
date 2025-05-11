@@ -174,7 +174,7 @@ export function WalletTab({
       </div>
       <div className="w-full">
         <Label className="ml-2" htmlFor="riskProfile">
-          Perfil de Risco
+          Risk Profile
         </Label>
         <Select
           onValueChange={(value) => setRiskProfile(value as RiskProfile)}

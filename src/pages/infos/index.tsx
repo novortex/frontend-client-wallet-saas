@@ -61,6 +61,7 @@ export function Infos() {
     monthCloseDate: '',
     contract: false,
     performanceFee: 0,
+    joinedAsClient: null,
     benchmark: { name: '' },
     currentValueBenchmark: 0,
     lastRebalance: null,
@@ -255,7 +256,7 @@ export function Infos() {
                 </p>
                 <div className="flex gap-3">
                   <Badge className="flex gap-2 bg-[#F2BE38] p-2 pl-5 pr-5 text-black hover:bg-[#F2BE38] hover:text-black">
-                    Contract: {walletI.contract ? 'Yes ✅' : 'No ❌'}
+                    Contract: {walletI.contract ? 'Yes' : 'No'}
                   </Badge>
                 </div>
               </div>
@@ -368,8 +369,16 @@ export function Infos() {
               <div className="flex gap-3">
                 <Calendar className="text-[#F2BE38]" />
                 <p className="text-black dark:text-white">
-                  Initial fee was paid or not (checker):{' '}
-                  {walletI.initialFeePaid ? '✅' : '❌'}
+                  Initial fee was paid: {walletI.initialFeePaid ? '✅' : '❌'}
+                </p>
+              </div>
+              <div className="flex gap-3">
+                <Calendar className="text-[#F2BE38]" />
+                <p className="text-black dark:text-white">
+                  Joined as a client:{' '}
+                  {walletI.joinedAsClient !== null
+                    ? formatDate(walletI.joinedAsClient?.toString())
+                    : 'n/a'}
                 </p>
               </div>
             </div>
