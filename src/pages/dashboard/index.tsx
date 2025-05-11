@@ -27,26 +27,9 @@ import {
 import { AllocationByAsset } from '@/types/asset.type'
 import { Loading } from '@/components/custom/loading'
 import { formatDolarCurrency } from '@/utils/formatDolarCurrency'
+import { gerarCores } from './utils/generateBarchartColors'
 
 const COLORS_PERFORMANCE = ['#32CD32', '#B22222']
-
-const COLORS_BARCHART = [
-  '#800000', // vermelho muito escuro
-  '#8B0000',
-  '#A52A2A',
-  '#B22222',
-  '#DC143C',
-  '#E74C3C',
-  '#FF6347',
-  '#FFA07A', // laranja claro
-  '#FFD700', // amarelo forte (neutro/limite)
-  '#ADFF2F', // amarelo esverdeado
-  '#7CFC00',
-  '#32CD32',
-  '#2E8B57',
-  '#228B22',
-  '#006400', // verde escuro
-]
 
 export default function Dashboard() {
   const [allocationByAsset, setAllocationByAsset] = useState<AllocationByAsset>(
@@ -92,6 +75,8 @@ export default function Dashboard() {
     .map(([name, total]) => ({ name, total }))
     .filter(({ total }) => total > 0)
     .sort((a, b) => b.total - a.total)
+
+  const colors = gerarCores(allocationArray.length)
 
   const performanceData = preparePerformanceData(
     revenueProjection,
@@ -265,7 +250,7 @@ export default function Dashboard() {
                   {allocationArray.map((_, index) => (
                     <Cell
                       key={`cell-${index}`}
-                      fill={COLORS_BARCHART[index % COLORS_BARCHART.length]}
+                      fill={colors[index % colors.length]}
                     />
                   ))}
                 </Bar>
