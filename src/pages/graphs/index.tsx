@@ -23,6 +23,7 @@ import {
 import { getAllAssetsWalletClient } from '@/services/wallet/walletAssetService'
 import { ClientActive } from '@/components/custom/wallet/columns'
 import { Loading } from '@/components/custom/loading'
+import { formatRealCurrency } from '@/utils/formatRealCurrency'
 
 interface graphDataEntry {
   cuid: string
@@ -36,6 +37,7 @@ interface graphDataEntry {
 export function Graphs() {
   const [, setData] = useState<ClientActive[]>([])
   const [infosWallet, setInfosWallet] = useState<TWalletAssetsInfo>()
+  const [revenue, setRevenue] = useState<number | string>('')
   const [loading, setLoading] = useState(true)
   const [graphData, setGraphData] = useState<graphDataEntry[]>([])
   const { walletUuid } = useParams()
@@ -64,6 +66,7 @@ export function Graphs() {
         }
 
         setInfosWallet(result.wallet)
+        setRevenue(result.revenue)
 
         const dataTable: ClientActive[] = result.assets.map((item) => ({
           id: item.uuid,
@@ -233,7 +236,12 @@ export function Graphs() {
               : '-'
           }
         />
-        <CardDashboard title="Current value ideal portfolio" data="-" />
+        <CardDashboard
+          title="Revenue coming from wallet today"
+          data={
+            typeof revenue === 'number' ? formatRealCurrency(revenue) : revenue
+          }
+        />
       </div>
       <div className="h-1/3 w-full">
         <WalletGraph />

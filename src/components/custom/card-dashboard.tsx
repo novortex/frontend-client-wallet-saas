@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 // create a type for props
 type TCardDashboard = {
   title: string
-  data: string
+  data: string | number
 }
 export function CardDashboard({ title, data }: TCardDashboard) {
   return (
