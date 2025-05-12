@@ -28,4 +28,5 @@ export type Portifolio = TAssetsOrganizationResponse[]
 export type WalletDataResponse = {
   wallet: TWalletAssetsInfo
   assets: TAsset[]
+  revenue: number | string
 }
