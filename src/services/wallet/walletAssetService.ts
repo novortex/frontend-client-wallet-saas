@@ -1,4 +1,5 @@
 import { instance } from '@/config/api'
+import { PerformanceWallets } from '@/pages/performance_view'
 import { AddAssetFunctionResponse } from '@/types/addAsset.type'
 import { AssetsOrganizationForSelectedResponse } from '@/types/asset.type'
 import { WalletDataResponse } from '@/types/response.type'
@@ -23,6 +24,20 @@ export async function getWalletsCash(walletsUuids: string[]) {
         walletsUuids,
       },
     )
+    console.log(result.data)
+    return result.data
+  } catch (error) {
+    console.log(error)
+    return {}
+  }
+}
+
+export async function getPerformanceWallets() {
+  try {
+    const result =
+      await instance.get<Record<string, PerformanceWallets>>(
+        `wallet/performance`,
+      )
     console.log(result.data)
     return result.data
   } catch (error) {
