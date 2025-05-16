@@ -13,7 +13,7 @@ export type PerformanceWallets = {
   manager: string
   benchmark: string
   investedAmount: number
-  currentAmount: number
+  currentAmount: string
   performance: number
 }
 
@@ -65,7 +65,7 @@ export const PerformanceView: React.FC = () => {
         accessorKey: 'investedAmount',
         header: 'Valor Investido',
         cell: (info) => (
-          <span className="text-slate-300">
+          <span className="">
             {new Intl.NumberFormat('pt-BR', {
               style: 'currency',
               currency: 'BRL',
@@ -76,14 +76,28 @@ export const PerformanceView: React.FC = () => {
       {
         accessorKey: 'currentAmount',
         header: 'AUM',
-        cell: (info) => (
-          <span className="font-medium">
-            {new Intl.NumberFormat('pt-BR', {
-              style: 'currency',
-              currency: 'BRL',
-            }).format(info.getValue<number>())}
-          </span>
-        ),
+        cell: (info) => {
+          const value = info.getValue<string>()
+
+          // Extrai o valor numérico da string (remove símbolos de moeda)
+          const numericValue = parseFloat(value.replace(/[^\d.-]/g, ''))
+
+          // Determina o símbolo da moeda
+          const currencySymbol = value.trim().startsWith('R$') ? 'R$ ' : '$ '
+
+          // Formata o valor como moeda (com separador de milhares e 2 casas decimais)
+          const formattedValue = numericValue.toLocaleString('pt-BR', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })
+
+          return (
+            <span>
+              {currencySymbol}
+              {formattedValue}
+            </span>
+          )
+        },
       },
       {
         accessorKey: 'performance',
@@ -156,12 +170,12 @@ export const PerformanceView: React.FC = () => {
               {table.getRowModel().rows.map((row) => (
                 <tr
                   key={row.id}
-                  className="transition-colors duration-150 hover:bg-neutral-700/60"
+                  className="text-center transition-colors duration-150 hover:bg-neutral-700/60"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <td
                       key={cell.id}
-                      className="whitespace-nowrap px-4 py-3 text-sm text-slate-200 sm:px-6 sm:py-4"
+                      className="whitespace-nowrap px-4 py-3 text-center text-xl text-slate-200 sm:px-6 sm:py-4"
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
