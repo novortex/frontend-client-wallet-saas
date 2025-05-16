@@ -142,7 +142,7 @@ export const PerformanceView: React.FC = () => {
         Performance das carteiras
       </h2>
       <main>
-        <div className="items-center overflow-x-auto rounded-lg border border-neutral-700 shadow-lg">
+        <div className="items-center overflow-x-auto border border-neutral-700 shadow-lg">
           {' '}
           {/* Container para scroll horizontal em telas pequenas e borda/sombra */}
           <table className="min-w-full divide-y divide-neutral-700">
