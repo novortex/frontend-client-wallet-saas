@@ -23,6 +23,7 @@ import { Loading } from './components/custom/loading'
 import { Notifications } from './pages/notifications/notifications'
 import { WalletClosings } from './pages/walletClosing'
 import Dashboard from './pages/dashboard'
+import { PerformanceView } from './pages/performance_view'
 
 export function App() {
   const [isMobile, setIsMobile] = useState(false)
@@ -80,6 +81,7 @@ export function App() {
                 <Route path="/admin/orgs" element={<AssetsOrg />} />
                 <Route path="/clients/:walletUuid/infos" element={<Infos />} />
                 <Route path="/wallet/:walletUuid/graphs" element={<Graphs />} />
+                <Route path="/performance" element={<PerformanceView />} />
                 <Route
                   path="/wallet/:walletUuid/history"
                   element={<History />}

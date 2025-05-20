@@ -142,9 +142,23 @@ export default function CreateWalletModal({
       try {
         const result = await getAllFiatCurrencies()
 
-        const currencyAbbreviations = Object.keys(result.currencies)
+        // Verificar o tipo de resposta e processar adequadamente
+        let currencyList = []
 
-        setFiatCurrencies(currencyAbbreviations)
+        if (Array.isArray(result)) {
+          // Se for um array, use diretamente
+          currencyList = result
+        } else if (result && typeof result === 'object') {
+          // Se for um objeto com a propriedade currencies
+          if (result.currencies) {
+            currencyList = Object.keys(result.currencies)
+          } else {
+            // Tente usar as chaves do objeto diretamente
+            currencyList = Object.keys(result)
+          }
+        }
+
+        setFiatCurrencies(currencyList)
       } catch (error) {
         console.error('Error fetching currencies', error)
       }
