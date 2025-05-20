@@ -1,5 +1,4 @@
-// index.tsx - Componente WalletClosings principal
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import { SwitchTheme } from '@/components/custom/switch-theme'
 import { Loading } from '@/components/custom/loading'
 import { FilterModal } from './components/filterModal'
@@ -22,32 +21,17 @@ export function WalletClosings() {
 
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false)
 
-  // Use a properly typed ref instead of 'any'
+  // Referência para a tabela
   const tableRef = useRef<WalletClosingsTableRef>(null)
 
-  // Adicionar estado para armazenar informações de paginação
-  const [pageInfo, setPageInfo] = useState({
-    pageIndex: 0,
-    pageCount: 1,
-    canPreviousPage: false,
-    canNextPage: false,
-    totalItems: data.length,
-    pageSize: 10,
-  })
+  // Estado de paginação simplificado
+  const [currentPage, setCurrentPage] = useState(0)
 
-  // Atualizar pageInfo quando a tabela é renderizada ou dados mudam
-  useEffect(() => {
-    if (tableRef.current) {
-      setPageInfo({
-        pageIndex: tableRef.current.getState().pagination.pageIndex,
-        pageCount: tableRef.current.getPageCount(),
-        canPreviousPage: tableRef.current.getCanPreviousPage(),
-        canNextPage: tableRef.current.getCanNextPage(),
-        totalItems: data.length,
-        pageSize: tableRef.current.getState().pagination.pageSize,
-      })
-    }
-  }, [data.length])
+  // Itens por página
+  const pageSize = 10
+
+  // Calcular número total de páginas quando os dados mudam
+  const totalPageCount = Math.ceil(data.length / pageSize)
 
   // Handle filter function
   const handleOpenFilterModal = () => {
@@ -57,6 +41,38 @@ export function WalletClosings() {
   // Handle search
   const onSearch = (value: string) => {
     handleSearch(value)
+    // Resetar para a primeira página após uma busca
+    setCurrentPage(0)
+  }
+
+  // Funções de navegação de página simplificadas
+  const handlePreviousPage = () => {
+    if (currentPage > 0) {
+      const newPage = currentPage - 1
+      setCurrentPage(newPage)
+
+      // Se a referência da tabela estiver disponível, navegar usando o método dela
+      if (tableRef.current) {
+        tableRef.current.previousPage()
+      }
+    }
+  }
+
+  const handleNextPage = () => {
+    if (currentPage < totalPageCount - 1) {
+      const newPage = currentPage + 1
+      setCurrentPage(newPage)
+
+      // Se a referência da tabela estiver disponível, navegar usando o método dela
+      if (tableRef.current) {
+        tableRef.current.nextPage()
+      }
+    }
+  }
+
+  // Callback para atualizar o estado de paginação a partir da tabela
+  const handleTablePaginationChange = (pageIndex: number) => {
+    setCurrentPage(pageIndex)
   }
 
   if (loading) {
@@ -78,20 +94,21 @@ export function WalletClosings() {
           onExport={handleExport}
           onOpenFilter={handleOpenFilterModal}
           filterCount={filterCount}
-          pageIndex={pageInfo.pageIndex}
-          pageCount={pageInfo.pageCount}
-          onPreviousPage={() => tableRef.current?.previousPage()}
-          onNextPage={() => tableRef.current?.nextPage()}
-          canPreviousPage={pageInfo.canPreviousPage}
-          canNextPage={pageInfo.canNextPage}
-          totalItems={pageInfo.totalItems}
-          pageSize={pageInfo.pageSize}
+          pageIndex={currentPage}
+          pageCount={totalPageCount}
+          onPreviousPage={handlePreviousPage}
+          onNextPage={handleNextPage}
+          canPreviousPage={currentPage > 0}
+          canNextPage={currentPage < totalPageCount - 1}
         />
 
         <WalletClosingsTable
           data={data}
           onSearch={onSearch}
           tableRef={tableRef}
+          currentPage={currentPage}
+          pageSize={pageSize}
+          onPaginationChange={handleTablePaginationChange}
         />
       </div>
 

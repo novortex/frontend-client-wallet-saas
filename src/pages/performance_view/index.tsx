@@ -170,12 +170,12 @@ export const PerformanceView: React.FC = () => {
               {table.getRowModel().rows.map((row) => (
                 <tr
                   key={row.id}
-                  className="text-center transition-colors duration-150 hover:bg-neutral-700/60"
+                  className="transition-colors duration-150 hover:bg-neutral-700/60"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <td
                       key={cell.id}
-                      className="whitespace-nowrap px-4 py-3 text-center text-xl text-slate-200 sm:px-6 sm:py-4"
+                      className="whitespace-nowrap px-4 py-3 text-xl text-slate-200 sm:px-6 sm:py-4"
                     >
                       {flexRender(
                         cell.column.columnDef.cell,

@@ -1,4 +1,3 @@
-// components/WalletClosingsTable.tsx
 import { useState, useEffect } from 'react'
 import {
   ColumnDef,
@@ -26,25 +25,27 @@ import { StatusBadge } from './statusBadge'
 import { CellActions } from './cellActions'
 import { formatDate } from '@/utils/formatDate'
 
-// Define a proper type for the table reference
+// Interface simplificada para a referência da tabela
 export interface WalletClosingsTableRef {
-  getState: () => { pagination: { pageIndex: number; pageSize: number } }
-  getPageCount: () => number
-  getCanPreviousPage: () => boolean
-  getCanNextPage: () => boolean
-  previousPage: () => void
   nextPage: () => void
+  previousPage: () => void
 }
 
 interface WalletClosingsTableProps {
   data: WalletClosing[]
   onSearch: (value: string) => void
   tableRef: React.RefObject<WalletClosingsTableRef>
+  currentPage: number
+  pageSize: number
+  onPaginationChange: (pageIndex: number, pageCount: number) => void
 }
 
 export function WalletClosingsTable({
   data,
   tableRef,
+  currentPage,
+  pageSize,
+  onPaginationChange,
 }: WalletClosingsTableProps) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
@@ -113,7 +114,6 @@ export function WalletClosingsTable({
         </div>
       ),
     },
-    // In walletClosingsTable.tsx, update the "actions" column definition:
     {
       id: 'actions',
       header: () => <div className="text-center">Actions</div>,
@@ -138,81 +138,80 @@ export function WalletClosingsTable({
     state: {
       sorting,
       columnFilters,
-    },
-    // Configuração de paginação
-    initialState: {
       pagination: {
-        pageIndex: 0,
-        pageSize: 10, // 10 itens por página
+        pageIndex: currentPage,
+        pageSize,
       },
     },
+    manualPagination: false,
+    pageCount: Math.ceil(data.length / pageSize),
   })
 
-  // Store the table methods in the ref
+  // Atualizar a página no TanStack Table quando currentPage mudar
+  useEffect(() => {
+    table.setPageIndex(currentPage)
+  }, [currentPage, table])
+
+  // Notificar o componente pai sobre mudanças de paginação na tabela
+  useEffect(() => {
+    onPaginationChange(
+      table.getState().pagination.pageIndex,
+      table.getPageCount(),
+    )
+  }, [table, onPaginationChange])
+
+  // Atribuir métodos de navegação à ref
   useEffect(() => {
     if (tableRef && tableRef.current) {
-      Object.assign(tableRef.current, {
-        getState: () => table.getState(),
-        getPageCount: () => table.getPageCount(),
-        getCanPreviousPage: () => table.getCanPreviousPage(),
-        getCanNextPage: () => table.getCanNextPage(),
-        previousPage: () => table.previousPage(),
-        nextPage: () => table.nextPage(),
-      })
+      tableRef.current.nextPage = () => table.nextPage()
+      tableRef.current.previousPage = () => table.previousPage()
     }
   }, [table, tableRef])
 
   return (
-    <>
-      <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
+    <Table>
+      <TableHeader>
+        {table.getHeaderGroups().map((headerGroup) => (
+          <TableRow
+            key={headerGroup.id}
+            className="bg-gray-200 hover:bg-gray-300 dark:bg-[#131313] dark:hover:bg-[#101010]"
+          >
+            {headerGroup.headers.map((header) => (
+              <TableHead key={header.id} className="text-black dark:text-white">
+                {header.isPlaceholder
+                  ? null
+                  : flexRender(
+                      header.column.columnDef.header,
+                      header.getContext(),
+                    )}
+              </TableHead>
+            ))}
+          </TableRow>
+        ))}
+      </TableHeader>
+      <TableBody className="bg-lightComponent dark:bg-[#171717] dark:text-[#959CB6]">
+        {table.getRowModel().rows?.length ? (
+          table.getRowModel().rows.map((row) => (
             <TableRow
-              key={headerGroup.id}
-              className="bg-gray-200 hover:bg-gray-300 dark:bg-[#131313] dark:hover:bg-[#101010]"
+              className="hover:bg-gray-200 dark:hover:bg-[#101010]"
+              key={row.id}
+              data-state={row.getIsSelected() && 'selected'}
             >
-              {headerGroup.headers.map((header) => {
-                return (
-                  <TableHead
-                    key={header.id}
-                    className="text-black dark:text-white"
-                  >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                  </TableHead>
-                )
-              })}
+              {row.getVisibleCells().map((cell) => (
+                <TableCell key={cell.id}>
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </TableCell>
+              ))}
             </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody className="bg-lightComponent dark:bg-[#171717] dark:text-[#959CB6]">
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow
-                className="hover:bg-gray-200 dark:hover:bg-[#101010] dark:hover:bg-[#171717]"
-                key={row.id}
-                data-state={row.getIsSelected() && 'selected'}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    </>
+          ))
+        ) : (
+          <TableRow>
+            <TableCell colSpan={columns.length} className="h-24 text-center">
+              No results.
+            </TableCell>
+          </TableRow>
+        )}
+      </TableBody>
+    </Table>
   )
 }

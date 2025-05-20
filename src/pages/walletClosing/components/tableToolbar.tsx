@@ -1,4 +1,3 @@
-// components/TableToolbar.tsx
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -15,8 +14,6 @@ interface TableToolbarProps {
   onNextPage: () => void
   canPreviousPage: boolean
   canNextPage: boolean
-  totalItems: number
-  pageSize: number
 }
 
 export function TableToolbar({
@@ -24,6 +21,8 @@ export function TableToolbar({
   onExport,
   onOpenFilter,
   filterCount,
+  pageIndex,
+  pageCount,
   onPreviousPage,
   onNextPage,
   canPreviousPage,
@@ -104,7 +103,7 @@ export function TableToolbar({
           )}
         </div>
 
-        {/* Pagination controls - como na imagem de referência */}
+        {/* Pagination controls simplificados */}
         <div className="ml-2 flex items-center space-x-2 border-l border-gray-300 pl-2 dark:border-gray-600">
           <Button
             size="sm"
@@ -114,6 +113,12 @@ export function TableToolbar({
           >
             Previous
           </Button>
+
+          {/* Página atual / total */}
+          <span className="mx-2 text-sm dark:text-white">
+            Page {pageIndex + 1} of {pageCount || 1}
+          </span>
+
           <Button
             size="sm"
             onClick={onNextPage}

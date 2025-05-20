@@ -48,6 +48,11 @@ export default function Root() {
               text="Assets organization"
               href="/admin/orgs"
             />
+            <SideBarItem
+              icon={<BarChart2 size={20} />}
+              text="Performance customers"
+              href="/performance"
+            />
           </div>
           <div className="mb-5">{/* Outras seções */}</div>
         </SideBar>
