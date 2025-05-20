@@ -26,26 +26,10 @@ import {
 } from '@/services/managementService'
 import { AllocationByAsset } from '@/types/asset.type'
 import { Loading } from '@/components/custom/loading'
+import { formatDolarCurrency } from '@/utils/formatDolarCurrency'
+import { gerarCores } from './utils/generateBarchartColors'
 
 const COLORS_PERFORMANCE = ['#32CD32', '#B22222']
-
-const COLORS_BARCHART = [
-  '#800000', // vermelho muito escuro
-  '#8B0000',
-  '#A52A2A',
-  '#B22222',
-  '#DC143C',
-  '#E74C3C',
-  '#FF6347',
-  '#FFA07A', // laranja claro
-  '#FFD700', // amarelo forte (neutro/limite)
-  '#ADFF2F', // amarelo esverdeado
-  '#7CFC00',
-  '#32CD32',
-  '#2E8B57',
-  '#228B22',
-  '#006400', // verde escuro
-]
 
 export default function Dashboard() {
   const [allocationByAsset, setAllocationByAsset] = useState<AllocationByAsset>(
@@ -78,7 +62,7 @@ export default function Dashboard() {
 
   if (!revenueProjection)
     return (
-      <p className="align-center text-md flex justify-center font-bold text-white">
+      <p className="text-md flex items-center justify-center font-bold text-white">
         Error fetching dashboard data
       </p>
     )
@@ -91,6 +75,8 @@ export default function Dashboard() {
     .map(([name, total]) => ({ name, total }))
     .filter(({ total }) => total > 0)
     .sort((a, b) => b.total - a.total)
+
+  const colors = gerarCores(allocationArray.length)
 
   const performanceData = preparePerformanceData(
     revenueProjection,
@@ -240,7 +226,10 @@ export default function Dashboard() {
             <h2 className="mb-4 text-lg font-semibold text-white">
               Alocação por ativo (Escala Log)
             </h2>
-            <ResponsiveContainer width="100%" height={800}>
+            <ResponsiveContainer
+              width="100%"
+              height={allocationArray.length * 40}
+            >
               <BarChart
                 layout="vertical"
                 data={allocationArray}
@@ -250,20 +239,18 @@ export default function Dashboard() {
                   type="number"
                   scale="log"
                   domain={['auto', 'auto']}
-                  tickFormatter={(value) => `R$ ${formatRealCurrency(value)}`}
+                  tickFormatter={(value) => `${formatDolarCurrency(value)}`}
                 />
                 <YAxis dataKey="name" type="category" width={110} />
                 <Tooltip
-                  formatter={(value: number) =>
-                    `$ ${formatRealCurrency(value)}`
-                  }
+                  formatter={(value: number) => `${formatDolarCurrency(value)}`}
                 />
                 <Legend />
                 <Bar dataKey="total" fill="#8884d8">
                   {allocationArray.map((_, index) => (
                     <Cell
                       key={`cell-${index}`}
-                      fill={COLORS_BARCHART[index % COLORS_BARCHART.length]}
+                      fill={colors[index % colors.length]}
                     />
                   ))}
                 </Bar>
@@ -448,7 +435,14 @@ export default function Dashboard() {
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis type="number" />
                   <YAxis dataKey="name" type="category" width={120} />
-                  <Tooltip />
+                  <Tooltip
+                    formatter={(v: number) =>
+                      v.toLocaleString('pt-BR', {
+                        style: 'currency',
+                        currency: 'BRL',
+                      })
+                    }
+                  />{' '}
                   <Bar dataKey="aum" fill="#8884d8" />
                 </BarChart>
               </ResponsiveContainer>

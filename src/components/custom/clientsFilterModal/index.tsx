@@ -19,12 +19,11 @@ import {
   getBenchmarkOptions,
   getExchangesDisposables,
   getAllManagersOnOrganization,
+  getAllAssetsOrg,
 } from '@/services/managementService'
 import { AssetsFilter } from './AssetsFilter'
 import { ContractFilter } from './ContractFilter'
 import { CashFilter } from './CashFilter'
-import { getAllAssetsWalletClient } from '@/services/wallet/walletAssetService'
-import { getWalletOrganization } from '@/services/wallet/walleInfoService'
 
 type ApplyFiltersProps = {
   handleApplyFilters: (filters: {
@@ -47,9 +46,7 @@ type ApplyFiltersProps = {
 
 export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
   const [isOpen, setIsOpen] = useState(false)
-  const [assets, setAssets] = useState<
-    { uuid: string; name: string; cash?: number }[]
-  >([])
+  const [assets, setAssets] = useState<{ uuid: string; name: string }[]>([])
   const [selectedAssets, setSelectedAssets] = useState<
     { uuid: string; name: string; cash?: number }[]
   >([])
@@ -114,11 +111,12 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
 
   useEffect(() => {
     const fetchData = async () => {
-      const [benchmarkResult, managerResult, exchangeResult] =
+      const [benchmarkResult, managerResult, exchangeResult, assetsOrg] =
         await Promise.all([
           getBenchmarkOptions(),
           getAllManagersOnOrganization(),
           getExchangesDisposables(),
+          getAllAssetsOrg(),
         ])
 
       setBenchmarks(
@@ -128,30 +126,12 @@ export function ClientsFilterModal({ handleApplyFilters }: ApplyFiltersProps) {
       setAvailableExchanges(
         exchangeResult?.map((exchange) => ({ name: exchange.name })) || [],
       )
-
-      try {
-        const wallets = await getWalletOrganization()
-        const assetsMap = new Map()
-
-        for (const wallet of wallets) {
-          const walletData = await getAllAssetsWalletClient(wallet.walletUuid)
-
-          if (walletData?.assets) {
-            for (const asset of walletData.assets) {
-              if (!assetsMap.has(asset.uuid)) {
-                assetsMap.set(asset.uuid, {
-                  uuid: asset.uuid,
-                  name: asset.name,
-                })
-              }
-            }
-          }
-        }
-
-        setAssets(Array.from(assetsMap.values()))
-      } catch (error) {
-        console.error('Error fetching assets:', error)
-      }
+      setAssets(
+        assetsOrg.map((asset) => ({
+          uuid: asset.uuid,
+          name: asset.name,
+        })),
+      )
     }
 
     fetchData()
