@@ -104,12 +104,11 @@ export const PerformanceView: React.FC = () => {
         header: 'Performance',
         cell: (info) => {
           const value = info.getValue<number>()
-          const formattedPerformance = (value * 100).toFixed(2)
           const textColor = value >= 0 ? 'text-green-400' : 'text-red-400'
           return (
             <span className={`font-semibold ${textColor}`}>
               {value >= 0 ? '+' : ''}
-              {formattedPerformance}%
+              {value}%
             </span>
           )
         },
