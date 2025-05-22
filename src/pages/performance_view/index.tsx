@@ -4,10 +4,12 @@ import {
   getCoreRowModel,
   flexRender,
   ColumnDef,
+  getSortedRowModel,
+  SortingState,
 } from '@tanstack/react-table'
 import { getPerformanceWallets } from '@/services/wallet/walletAssetService'
+import { Loading } from '@/components/custom/loading'
 
-// Define the data type
 export type PerformanceWallets = {
   user: string
   manager: string
@@ -17,35 +19,28 @@ export type PerformanceWallets = {
   performance: number
 }
 
-// Função de busca de dados ajustada
 async function fetchPerformanceData(): Promise<
   Record<string, PerformanceWallets>
 > {
-  try {
-    const result = await getPerformanceWallets()
-    if (!result) {
-      throw new Error('Nenhum dado de performance foi retornado pela API.')
-    }
-
-    return result
-  } catch (error) {
-    console.error(
-      'Erro ao buscar dados de performance em fetchPerformanceData:',
-      error,
-    )
-    throw error
-  }
+  const result = await getPerformanceWallets()
+  if (!result)
+    throw new Error('Nenhum dado de performance foi retornado pela API.')
+  return result
 }
 
 export const PerformanceView: React.FC = () => {
   const [data, setData] = useState<PerformanceWallets[]>([])
-  const [loading, setLoading] = useState<boolean>(true) // Estado de loading
+  const [loading, setLoading] = useState<boolean>(true)
+  const [managerFilter, setManagerFilter] = useState<string>('')
+  const [benchmarkFilter, setBenchmarkFilter] = useState<string>('')
+  const [sorting, setSorting] = useState<SortingState>([])
 
   useEffect(() => {
     setLoading(true)
     fetchPerformanceData()
       .then((res) => {
         const dataArray = Array.isArray(res) ? res : Object.values(res)
+
         const sortedData = dataArray.sort(
           (a, b) => a.performance - b.performance,
         )
@@ -55,21 +50,36 @@ export const PerformanceView: React.FC = () => {
       .finally(() => setLoading(false))
   }, [])
 
+  // Filtros
+  const filteredData = useMemo(() => {
+    return data.filter((item) => {
+      const managerMatch = managerFilter ? item.manager === managerFilter : true
+      const benchmarkMatch = benchmarkFilter
+        ? item.benchmark === benchmarkFilter
+        : true
+      return managerMatch && benchmarkMatch
+    })
+  }, [data, managerFilter, benchmarkFilter])
+
+  // Listas únicas para os selects
+  const managers = useMemo(
+    () => Array.from(new Set(data.map((d) => d.manager))),
+    [data],
+  )
+  const benchmarks = useMemo(
+    () => Array.from(new Set(data.map((d) => d.benchmark))),
+    [data],
+  )
+
   const columns = useMemo<ColumnDef<PerformanceWallets>[]>(
     () => [
-      {
-        accessorKey: 'user',
-        header: 'Cliente',
-      },
-      {
-        accessorKey: 'manager',
-        header: 'Manager',
-      },
+      { accessorKey: 'user', header: 'Cliente' },
+      { accessorKey: 'manager', header: 'Manager' },
       {
         accessorKey: 'investedAmount',
         header: 'Valor Investido',
         cell: (info) => (
-          <span className="">
+          <span>
             {new Intl.NumberFormat('pt-BR', {
               style: 'currency',
               currency: 'BRL',
@@ -81,7 +91,12 @@ export const PerformanceView: React.FC = () => {
         accessorKey: 'currentAmount',
         header: 'AUM',
         cell: (info) => {
-          const value = info.getValue<string>()
+          let value = info.getValue<string | number>()
+
+          // Garante que value é string
+          if (typeof value !== 'string') {
+            value = String(value ?? '')
+          }
 
           // Extrai o valor numérico da string (remove símbolos de moeda)
           const numericValue = parseFloat(value.replace(/[^\d.-]/g, ''))
@@ -102,6 +117,10 @@ export const PerformanceView: React.FC = () => {
             </span>
           )
         },
+        // Para ordenar corretamente, precisamos de um accessorFn numérico
+        accessorFn: (row) =>
+          parseFloat(row.currentAmount.replace(/[^\d.-]/g, '')),
+        sortingFn: 'basic',
       },
       {
         accessorKey: 'performance',
@@ -117,37 +136,56 @@ export const PerformanceView: React.FC = () => {
           )
         },
       },
-      {
-        accessorKey: 'benchmark',
-        header: 'Benchmark',
-      },
+      { accessorKey: 'benchmark', header: 'Benchmark' },
     ],
     [],
   )
 
   const table = useReactTable({
-    data,
+    data: filteredData,
     columns,
+    state: { sorting },
+    onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
   })
 
-  if (loading) {
-    return (
-      <div className="p-4 text-center text-slate-400 sm:p-6">
-        Carregando dados da tabela...
-      </div>
-    )
-  }
+  if (loading) return <Loading />
 
   return (
     <div className="flex min-h-screen flex-col items-center bg-neutral-900 p-4 text-slate-100 sm:p-6">
       <h2 className="mb-6 text-2xl font-bold text-slate-100 sm:text-3xl">
         Performance das carteiras
       </h2>
+      {/* Filtros */}
+      <div className="mb-4 flex flex-wrap gap-4">
+        <select
+          className="rounded bg-neutral-800 px-3 py-2 text-slate-100"
+          value={managerFilter}
+          onChange={(e) => setManagerFilter(e.target.value)}
+        >
+          <option value="">Todos os Managers</option>
+          {managers.map((manager) => (
+            <option key={manager} value={manager}>
+              {manager}
+            </option>
+          ))}
+        </select>
+        <select
+          className="rounded bg-neutral-800 px-3 py-2 text-slate-100"
+          value={benchmarkFilter}
+          onChange={(e) => setBenchmarkFilter(e.target.value)}
+        >
+          <option value="">Todos os Benchmarks</option>
+          {benchmarks.map((benchmark) => (
+            <option key={benchmark} value={benchmark}>
+              {benchmark}
+            </option>
+          ))}
+        </select>
+      </div>
       <main>
         <div className="items-center overflow-x-auto border border-neutral-700 shadow-lg">
-          {' '}
-          {/* Container para scroll horizontal em telas pequenas e borda/sombra */}
           <table className="min-w-full divide-y divide-neutral-700">
             <thead className="bg-neutral-800">
               {table.getHeaderGroups().map((headerGroup) => (
@@ -155,8 +193,9 @@ export const PerformanceView: React.FC = () => {
                   {headerGroup.headers.map((header) => (
                     <th
                       key={header.id}
-                      scope="col" // Adicionado para acessibilidade
-                      className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-300 sm:px-6 sm:py-3.5 sm:text-sm"
+                      scope="col"
+                      className={`cursor-pointer select-none px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-300 sm:px-6 sm:py-3.5 sm:text-sm ${['investedAmount', 'currentAmount', 'performance'].includes(header.column.id) ? 'relative' : ''} `}
+                      onClick={header.column.getToggleSortingHandler()}
                     >
                       {header.isPlaceholder
                         ? null
@@ -164,6 +203,26 @@ export const PerformanceView: React.FC = () => {
                             header.column.columnDef.header,
                             header.getContext(),
                           )}
+
+                      {/* Seta de ordenação */}
+                      {[
+                        'investedAmount',
+                        'currentAmount',
+                        'performance',
+                      ].includes(header.column.id) && (
+                        <span
+                          className={`ml-1 inline-block transition-colors ${
+                            header.column.getIsSorted()
+                              ? 'font-bold text-blue-400'
+                              : 'text-slate-500'
+                          } `}
+                        >
+                          {header.column.getIsSorted() === 'asc' && '▲'}
+                          {header.column.getIsSorted() === 'desc' && '▼'}
+                          {!header.column.getIsSorted() && '▲'}{' '}
+                          {/* Sempre mostra a seta, mas apagadinha */}
+                        </span>
+                      )}
                     </th>
                   ))}
                 </tr>
@@ -191,7 +250,7 @@ export const PerformanceView: React.FC = () => {
             </tbody>
           </table>
         </div>
-        {data.length === 0 && !loading && (
+        {filteredData.length === 0 && !loading && (
           <p className="mt-6 text-center text-slate-500">
             Nenhum dado de performance encontrado.
           </p>
