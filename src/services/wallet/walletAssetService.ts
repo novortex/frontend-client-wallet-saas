@@ -38,7 +38,6 @@ export async function getPerformanceWallets() {
       await instance.get<Record<string, PerformanceWallets>>(
         `wallet/performance`,
       )
-    console.log(result.data)
     return result.data
   } catch (error) {
     console.log(error)
