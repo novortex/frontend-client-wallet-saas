@@ -8,6 +8,7 @@ import {
   SortingState,
 } from '@tanstack/react-table'
 import { getPerformanceWallets } from '@/services/wallet/walletAssetService'
+import { Loading } from '@/components/custom/loading'
 
 export type PerformanceWallets = {
   user: string
@@ -145,13 +146,7 @@ export const PerformanceView: React.FC = () => {
     getSortedRowModel: getSortedRowModel(),
   })
 
-  if (loading) {
-    return (
-      <div className="p-4 text-center text-slate-400 sm:p-6">
-        Carregando dados da tabela...
-      </div>
-    )
-  }
+  if (loading) return <Loading />
 
   return (
     <div className="flex min-h-screen flex-col items-center bg-neutral-900 p-4 text-slate-100 sm:p-6">
