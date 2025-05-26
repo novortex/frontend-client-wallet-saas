@@ -296,6 +296,7 @@ export async function getBenchmarkOptions(): Promise<BenchmarksProps[]> {
 
 export async function sendContractId(
   data: TSendContractIdRequest,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): Promise<any> {
   try {
     const response = await instance.post('/d4sign', data)
@@ -307,10 +308,39 @@ export async function sendContractId(
 
 export async function getWalletClosings(): Promise<WalletClosing[]> {
   try {
-    const result = await instance.get('management/wallet-closings')
+    const result = await instance.get('/management/wallet-closings')
     return result.data.clients
   } catch (error) {
     console.error('Error fetching wallet closings:', error)
     throw error
+  }
+}
+
+export async function disableAssetOrg(assetUuid: string) {
+  try {
+    const result = await instance.delete('/management/asset', {
+      data: { assetUuid },
+    })
+    return result.data
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    console.error('Error disabling asset:', error)
+
+    if (error.response?.status === 404) {
+      throw new Error('Asset does not exist in organization')
+    }
+
+    if (error.response?.status === 409) {
+      throw new Error(
+        error.response.data.message ||
+          'Asset is currently being used by wallets',
+      )
+    }
+
+    if (error.response?.status === 400) {
+      throw new Error('Asset is already disabled')
+    }
+
+    throw new Error(error.response?.data?.message || 'Failed to disable asset')
   }
 }
