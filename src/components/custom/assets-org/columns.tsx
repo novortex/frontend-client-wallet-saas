@@ -24,6 +24,10 @@ import {
   DialogFooter,
   DialogHeader,
 } from '@/components/ui/dialog'
+import { useState } from 'react'
+import { useToast } from '@/components/ui/use-toast'
+import { disableAssetOrg } from '@/services/managementService'
+import { useSignalStore } from '@/store/signalEffect'
 
 import Price from './cellAction/price'
 
@@ -42,6 +46,104 @@ export type AssetOrgs = {
   quantHighRisk: string
   quantSHighRisk: string
   priceChange?: number
+}
+
+// Componente para o botão de desabilitar
+function DisableAssetButton({ assetData }: { assetData: AssetOrgs }) {
+  const [isLoading, setIsLoading] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
+  const { toast } = useToast()
+  const [signal, setSignal] = useSignalStore((state) => [
+    state.signal,
+    state.setSignal,
+  ])
+
+  const handleDisableAsset = async () => {
+    setIsLoading(true)
+    try {
+      await disableAssetOrg(assetData.id)
+
+      toast({
+        className: 'bg-green-500 border-0 text-white',
+        title: 'Asset disabled successfully!',
+        description: `${assetData.asset.name} has been disabled for the organization.`,
+      })
+
+      // Atualizar a lista de ativos - triggering uma nova busca
+      setSignal(!signal)
+      setIsOpen(false)
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Please try again later.'
+
+      toast({
+        className: 'bg-red-500 border-0 text-white',
+        title: 'Cannot disable asset',
+        description: errorMessage,
+        duration: 5000, // Mostrar por mais tempo
+      })
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  return (
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
+        <Button className="flex justify-center gap-3 bg-white text-black hover:bg-black hover:text-white">
+          <EyeOffIcon className="w-5" /> Disable
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="border-0 text-black dark:bg-[#1C1C1C] dark:text-white">
+        <DialogHeader>
+          <DialogTitle className="mb-5 flex items-center gap-5">
+            Disable asset{' '}
+            <TriangleAlert className="w-5 text-red-600 dark:text-yellow-400" />
+          </DialogTitle>
+          <DialogDescription>
+            Disable the{' '}
+            <span className="font-bold text-black dark:text-white">
+              {assetData.asset.name}
+            </span>{' '}
+            for your organization
+            <div className="mt-4 rounded bg-yellow-100 p-4 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
+              <p className="mb-2 font-semibold">⚠️ Warning:</p>
+              <p className="text-sm">
+                You are about to disable this crypto asset from your
+                organization. This action will:
+              </p>
+              <ul className="mt-2 list-inside list-disc space-y-1 text-sm">
+                <li>Remove the asset from available assets list</li>
+                <li>Prevent new wallets from using this asset</li>
+                <li>Keep existing wallet data intact</li>
+              </ul>
+              <p className="mt-2 text-sm font-medium">
+                Note: This asset cannot be disabled if it&apos;s currently being
+                used by any wallets.
+              </p>
+            </div>
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button
+              className="bg-gray-200 text-black hover:bg-gray-100 hover:text-black"
+              disabled={isLoading}
+            >
+              Cancel
+            </Button>
+          </DialogClose>
+          <Button
+            onClick={handleDisableAsset}
+            disabled={isLoading}
+            className="bg-red-600 text-white hover:bg-red-700"
+          >
+            {isLoading ? 'Disabling...' : 'Disable Asset'}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
 }
 
 export const columnsAssetOrg: ColumnDef<AssetOrgs>[] = [
@@ -207,47 +309,7 @@ export const columnsAssetOrg: ColumnDef<AssetOrgs>[] = [
                     </DialogFooter>
                   </DialogContent>
                 </Dialog>
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button className="flex justify-center gap-3 bg-white text-black hover:bg-black hover:text-white">
-                      <EyeOffIcon className="w-5" /> Disable
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="border-0 text-black dark:bg-[#1C1C1C] dark:text-white">
-                    <DialogHeader>
-                      <DialogTitle className="mb-5 flex items-center gap-5">
-                        Disabled asset{' '}
-                        <TriangleAlert className="w-5 text-red-600 dark:text-yellow-400" />
-                      </DialogTitle>
-                      <DialogDescription>
-                        Disabled the{' '}
-                        <span className="font-bold text-black dark:text-white">
-                          {uuidAssetOrganization.asset.name}
-                        </span>{' '}
-                        for all wallets
-                        <p className="m-4 rounded bg-gray-300 p-4 font-bold text-red-600 dark:bg-transparent dark:text-yellow-200">
-                          Warning: You are about to disable this crypto asset
-                          for all wallets. This action is irreversible and will
-                          affect all users holding this asset. Please confirm
-                          that you want to proceed with this operation.
-                        </p>
-                      </DialogDescription>
-                    </DialogHeader>
-                    <DialogFooter>
-                      <DialogClose asChild>
-                        <Button className="bg-gray-200 text-black hover:bg-gray-100 hover:text-black">
-                          Close
-                        </Button>
-                      </DialogClose>
-                      <Button
-                        disabled
-                        className="bg-red-600 text-white hover:bg-red-700"
-                      >
-                        Disable Asset
-                      </Button>
-                    </DialogFooter>
-                  </DialogContent>
-                </Dialog>
+                <DisableAssetButton assetData={uuidAssetOrganization} />
               </div>
             </DropdownMenuContent>
           </DropdownMenu>
