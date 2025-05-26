@@ -40,7 +40,11 @@ export const PerformanceView: React.FC = () => {
     fetchPerformanceData()
       .then((res) => {
         const dataArray = Array.isArray(res) ? res : Object.values(res)
-        setData(dataArray)
+
+        const sortedData = dataArray.sort(
+          (a, b) => a.performance - b.performance,
+        )
+        setData(sortedData)
       })
       .catch(console.error)
       .finally(() => setLoading(false))
