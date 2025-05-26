@@ -3,6 +3,8 @@ import {
   flexRender,
   getCoreRowModel,
   useReactTable,
+  getSortedRowModel,
+  SortingState,
 } from '@tanstack/react-table'
 import {
   Table,
@@ -45,6 +47,7 @@ export function DataTableAssetOrg<TValue>({
   data,
 }: DataTableProps<TValue>) {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [sorting, setSorting] = useState<SortingState>([])
 
   const assetIds = useMemo(() => {
     return data.map((item) => item.id)
@@ -71,6 +74,11 @@ export function DataTableAssetOrg<TValue>({
     data: dataWithUpdatedPrices,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    onSortingChange: setSorting,
+    state: {
+      sorting,
+    },
   })
 
   const openModal = () => {
