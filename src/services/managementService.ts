@@ -308,7 +308,7 @@ export async function sendContractId(
 
 export async function getWalletClosings(): Promise<WalletClosing[]> {
   try {
-    const result = await instance.get('management/wallet-closings')
+    const result = await instance.get('/management/wallet-closings')
     return result.data.clients
   } catch (error) {
     console.error('Error fetching wallet closings:', error)
@@ -318,7 +318,7 @@ export async function getWalletClosings(): Promise<WalletClosing[]> {
 
 export async function disableAssetOrg(assetUuid: string) {
   try {
-    const result = await instance.delete('management/asset', {
+    const result = await instance.delete('/management/asset', {
       data: { assetUuid },
     })
     return result.data
