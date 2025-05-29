@@ -157,7 +157,6 @@ export default function HistoryThread({
           <div className="flex flex-row gap-1.5">
             <p className="font-bold">{user}</p> registered a deposit on {date} (
             {hour}).
-            <p className="">Deposit made on: {effective_date}</p>
           </div>
         )
       case 'WITHDRAWAL':
@@ -165,7 +164,6 @@ export default function HistoryThread({
           <div className="flex flex-row gap-1.5">
             <p className="font-bold">{user}</p> registered a withdrawal on{' '}
             {date} ({hour}).
-            <p className="">Withdrawal made on: {effective_date}</p>
           </div>
         )
       case 'START_WALLET':
@@ -250,6 +248,7 @@ export default function HistoryThread({
             fiatCurrency={fiat_currency}
             quantity={depositValue ?? 0}
             operation={false}
+            effectiveDate={effective_date} // Adicionada a prop effectiveDate
           />
         )
       case 'WITHDRAWAL':
@@ -258,6 +257,7 @@ export default function HistoryThread({
             fiatCurrency={fiat_currency}
             quantity={withdrawalValue ?? 0}
             operation={true}
+            effectiveDate={effective_date} // Adicionada a prop effectiveDate
           />
         )
       case 'START_WALLET':
