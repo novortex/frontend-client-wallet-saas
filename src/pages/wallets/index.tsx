@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react'
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { SwitchTheme } from '@/components/custom/switch-theme'
 import { Input } from '@/components/ui/input'
 import { ClientsFilterModal } from '@/components/custom/clientsFilterModal/index'
@@ -10,11 +10,18 @@ import { getWalletOrganization } from '@/services/wallet/walleInfoService'
 import { Loading } from '@/components/custom/loading'
 import { getWalletsCash } from '@/services/wallet/walletAssetService'
 
+const ITEMS_PER_PAGE = 12
+
 export function Clients() {
   const [clients, setClients] = useState<TClientInfosResponse[]>([])
   const [filteredClients, setFilteredClients] = useState<
     TClientInfosResponse[]
   >([])
+  const [displayedClients, setDisplayedClients] = useState<
+    TClientInfosResponse[]
+  >([])
+  const [currentPage, setCurrentPage] = useState(1)
+  const [isLoadingMore, setIsLoadingMore] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [isLoading, setIsLoading] = useState(true)
   const [filters, setFilters] = useState({
@@ -36,6 +43,9 @@ export function Clients() {
   const [walletCashData, setWalletCashData] = useState<
     Record<string, number | null>
   >({})
+
+  const observerRef = useRef<IntersectionObserver | null>(null)
+  const loadingTriggerRef = useRef<HTMLDivElement | null>(null)
 
   const normalizeRiskProfile = useCallback((riskProfile: string) => {
     return riskProfile.toLowerCase().replace(/_/g, '-')
@@ -75,6 +85,7 @@ export function Clients() {
       setWalletCashData(cashData)
       setClients(result)
       setFilteredClients(result)
+      setCurrentPage(1)
       setIsLoading(false)
     } catch (error) {
       console.error('Error fetching clients:', error)
@@ -203,7 +214,69 @@ export function Clients() {
   // Atualizar o estado filteredClients quando memoizedFilteredClients mudar
   useEffect(() => {
     setFilteredClients(memoizedFilteredClients)
+    setCurrentPage(1) // Reset pagination when filters change
   }, [memoizedFilteredClients])
+
+  // Update displayed clients when filteredClients or currentPage changes
+  useEffect(() => {
+    const startIndex = 0
+    const endIndex = currentPage * ITEMS_PER_PAGE
+    setDisplayedClients(filteredClients.slice(startIndex, endIndex))
+  }, [filteredClients, currentPage])
+
+  // Load more items
+  const loadMore = useCallback(() => {
+    if (isLoadingMore) return
+
+    const totalItems = filteredClients.length
+    const currentItems = currentPage * ITEMS_PER_PAGE
+
+    if (currentItems >= totalItems) return
+
+    setIsLoadingMore(true)
+
+    // Simulate loading delay (remove this in production if not needed)
+    setTimeout(() => {
+      setCurrentPage((prev) => prev + 1)
+      setIsLoadingMore(false)
+    }, 300)
+  }, [filteredClients.length, currentPage, isLoadingMore])
+
+  // Setup intersection observer for infinite scroll
+  useEffect(() => {
+    // Check if IntersectionObserver is available (for test environment compatibility)
+    if (typeof IntersectionObserver === 'undefined') {
+      return
+    }
+
+    const currentTriggerRef = loadingTriggerRef.current
+
+    if (observerRef.current) {
+      observerRef.current.disconnect()
+    }
+
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries
+        if (entry.isIntersecting && !isLoadingMore && !isLoading) {
+          loadMore()
+        }
+      },
+      {
+        rootMargin: '100px', // Start loading 100px before the trigger comes into view
+      },
+    )
+
+    if (currentTriggerRef) {
+      observerRef.current.observe(currentTriggerRef)
+    }
+
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect()
+      }
+    }
+  }, [loadMore, isLoadingMore, isLoading])
 
   const handleApplyFilters = useCallback(
     (newFilters: Partial<typeof filters>) => {
@@ -211,6 +284,8 @@ export function Clients() {
     },
     [],
   )
+
+  const hasMoreItems = displayedClients.length < filteredClients.length
 
   if (isLoading) {
     return <Loading />
@@ -237,36 +312,69 @@ export function Clients() {
         <ClientsFilterModal handleApplyFilters={handleApplyFilters} />
       </div>
 
+      {/* Results counter */}
+      <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
+        Showing {displayedClients.length} of {filteredClients.length} wallets
+        {filteredClients.length !== clients.length &&
+          ` (${clients.length} total)`}
+      </div>
+
       {clients.length === 0 ? (
         <div className="text-center text-black dark:text-white">
           No wallets found
         </div>
-      ) : (
-        <div className="grid w-full grid-cols-3 gap-7">
-          {filteredClients.map((client) => (
-            <CardClient
-              key={client.walletUuid}
-              walletUuid={client.walletUuid}
-              name={client.infosClient.name}
-              email={client.infosClient.email}
-              phone={client.infosClient.phone}
-              alerts={0}
-              responsible={client.managerName}
-              lastRebalancing={
-                client.lastBalance
-                  ? formatDate(client.lastBalance.toString())
-                  : '-'
-              }
-              nextRebalancing={
-                client.nextBalance
-                  ? formatDate(client.nextBalance.toString())
-                  : '-'
-              }
-            />
-          ))}
+      ) : filteredClients.length === 0 ? (
+        <div className="text-center text-black dark:text-white">
+          No wallets match your current filters
         </div>
+      ) : (
+        <>
+          <div className="grid w-full grid-cols-3 gap-7">
+            {displayedClients.map((client) => (
+              <CardClient
+                key={client.walletUuid}
+                walletUuid={client.walletUuid}
+                name={client.infosClient.name}
+                email={client.infosClient.email}
+                phone={client.infosClient.phone}
+                alerts={0}
+                responsible={client.managerName}
+                lastRebalancing={
+                  client.lastBalance
+                    ? formatDate(client.lastBalance.toString())
+                    : '-'
+                }
+                nextRebalancing={
+                  client.nextBalance
+                    ? formatDate(client.nextBalance.toString())
+                    : '-'
+                }
+              />
+            ))}
+          </div>
+
+          {/* Loading trigger for infinite scroll */}
+          {hasMoreItems && (
+            <div ref={loadingTriggerRef} className="mt-8 flex justify-center">
+              {isLoadingMore && (
+                <div className="flex items-center gap-2 text-black dark:text-white">
+                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-gray-600 dark:border-gray-600 dark:border-t-gray-300"></div>
+                  <span>Loading more wallets...</span>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* End of results indicator */}
+          {!hasMoreItems && displayedClients.length > ITEMS_PER_PAGE && (
+            <div className="mt-8 text-center text-sm text-gray-500 dark:text-gray-400">
+              You&apos;ve reached the end of the results
+            </div>
+          )}
+        </>
       )}
     </div>
   )
 }
+
 export { Clients as Wallets }
