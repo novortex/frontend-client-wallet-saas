@@ -19,8 +19,14 @@ export const useAddAsset = (onClose: () => void) => {
       title: 'Processing add Asset in organization',
       description: 'Demo Vault !!',
     })
-
-    const result = await addCryptoOrg([Number(assetId)])
+    if (!assetId) {
+      return toast({
+        className: 'bg-red-500 border-0',
+        title: 'Asset ID is required',
+        description: 'Demo Vault !!',
+      })
+    }
+    const result = await addCryptoOrg(Number(assetId))
 
     if (result === false) {
       setAssetId('')

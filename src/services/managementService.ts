@@ -59,7 +59,7 @@ export async function getAllAssetsOrg() {
   }
 }
 
-export async function addCryptoOrg(idCmc: number[]) {
+export async function addCryptoOrg(idCmc: number) {
   try {
     const result = await instance.post('management/asset', { idCmc })
     return result.data
