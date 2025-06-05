@@ -53,10 +53,10 @@ describe('managementService', () => {
       const mockResponse = { success: true }
       ;(instance.post as jest.Mock).mockResolvedValue({ data: mockResponse })
 
-      const result = await addCryptoOrg([1, 2])
+      const result = await addCryptoOrg(1)
       expect(result).toEqual(mockResponse)
       expect(instance.post).toHaveBeenCalledWith('management/asset', {
-        idCmc: [1, 2],
+        idCmc: 1,
       })
     })
 
@@ -65,7 +65,7 @@ describe('managementService', () => {
         new Error('Invalid asset data'),
       )
 
-      await expect(addCryptoOrg([])).rejects.toThrow('Invalid asset data')
+      await expect(addCryptoOrg(0)).rejects.toThrow('Invalid asset data')
     })
   })
 
