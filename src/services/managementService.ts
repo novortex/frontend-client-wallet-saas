@@ -63,9 +63,16 @@ export async function addCryptoOrg(idCmc: number) {
   try {
     const result = await instance.post('management/asset', { idCmc })
     return result.data
-  } catch (error) {
-    console.log(error)
-    throw error
+  } catch (error: any) {
+    console.error('Erro ao adicionar ativo:', error)
+
+    if (error.response?.status === 400) {
+      throw new Error(error.response.data.message || 'Asset already exists')
+    }
+
+    throw new Error(
+      error.response?.data?.message || 'Erro inesperado ao adicionar ativo',
+    )
   }
 }
 
