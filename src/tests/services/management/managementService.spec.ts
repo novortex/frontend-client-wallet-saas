@@ -62,10 +62,12 @@ describe('managementService', () => {
 
     it('should handle error when adding a crypto asset', async () => {
       ;(instance.post as jest.Mock).mockRejectedValue(
-        new Error('Invalid asset data'),
+        new Error('Erro inesperado ao adicionar ativo'),
       )
 
-      await expect(addCryptoOrg(0)).rejects.toThrow('Invalid asset data')
+      await expect(addCryptoOrg(0)).rejects.toThrow(
+        'Erro inesperado ao adicionar ativo',
+      )
     })
   })
 
