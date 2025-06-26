@@ -76,7 +76,7 @@ export type HistoricEntry = {
     benchmark: string
     wallet_performance_fee: number
     company_commission: number
-    total_commision: number
+    total_commission: number
     dollar_value: string
     benchmark_price_start: number
     benchmark_price_end: number

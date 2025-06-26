@@ -59,13 +59,20 @@ export async function getAllAssetsOrg() {
   }
 }
 
-export async function addCryptoOrg(idCmc: number[]) {
+export async function addCryptoOrg(idCmc: number) {
   try {
     const result = await instance.post('management/asset', { idCmc })
     return result.data
-  } catch (error) {
-    console.log(error)
-    throw error
+  } catch (error: any) {
+    console.error('Erro ao adicionar ativo:', error)
+
+    if (error.response?.status === 400) {
+      throw new Error(error.response.data.message || 'Asset already exists')
+    }
+
+    throw new Error(
+      error.response?.data?.message || 'Erro inesperado ao adicionar ativo',
+    )
   }
 }
 
@@ -194,9 +201,9 @@ export async function updateWallet(
 export async function downloadPdf(
   client_name: string,
   start_date: string,
-  start_date_formatted: string,
+  start_date_formated: string,
   end_date: string,
-  end_date_formatted: string,
+  end_date_formated: string,
   invested_amount_in_organization_fiat: string,
   benchmark_name: string,
   wallet_performance_fee: string,
@@ -215,9 +222,9 @@ export async function downloadPdf(
   const pdfData = {
     client_name,
     start_date,
-    start_date_formatted,
+    start_date_formated,
     end_date,
-    end_date_formatted,
+    end_date_formated,
     invested_amount_in_organization_fiat,
     benchmark_name,
     wallet_performance_fee,

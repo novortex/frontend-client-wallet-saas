@@ -14,36 +14,45 @@ export const useAddAsset = (onClose: () => void) => {
   const handleAddAsset = async () => {
     onClose()
 
+    if (!assetId) {
+      return toast({
+        className: 'bg-red-500 border-0',
+        title: 'Asset ID is required',
+        description: 'Demo Vault !!',
+      })
+    }
+
     toast({
       className: 'bg-yellow-500 border-0',
       title: 'Processing add Asset in organization',
       description: 'Demo Vault !!',
     })
 
-    const result = await addCryptoOrg([Number(assetId)])
+    try {
+      await addCryptoOrg(Number(assetId))
 
-    if (result === false) {
       setAssetId('')
-      return toast({
-        className: 'bg-red-500 border-0',
-        title: 'Failed add Asset in organization',
+      setSignal(!signal)
+
+      toast({
+        className: 'bg-green-500 border-0',
+        title: 'Success !! new Asset in organization',
         description: 'Demo Vault !!',
       })
-    }
+    } catch (error: any) {
+      setAssetId('')
 
-    setAssetId('')
-    setSignal(!signal)
-    toast({
-      className: 'bg-green-500 border-0',
-      title: 'Success !! new Asset in organization',
-      description: 'Demo Vault !!',
-    })
+      toast({
+        className: 'bg-red-500 border-0',
+        title: 'Failed to add asset',
+        description: error?.message || 'Unexpected error while adding asset',
+      })
+    }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     if (/^\d*$/.test(value)) {
-      // Permite apenas dígitos
       setAssetId(value)
     }
   }
