@@ -201,9 +201,9 @@ export async function updateWallet(
 export async function downloadPdf(
   client_name: string,
   start_date: string,
-  start_date_formatted: string,
+  start_date_formated: string,
   end_date: string,
-  end_date_formatted: string,
+  end_date_formated: string,
   invested_amount_in_organization_fiat: string,
   benchmark_name: string,
   wallet_performance_fee: string,
@@ -222,9 +222,9 @@ export async function downloadPdf(
   const pdfData = {
     client_name,
     start_date,
-    start_date_formatted,
+    start_date_formated,
     end_date,
-    end_date_formatted,
+    end_date_formated,
     invested_amount_in_organization_fiat,
     benchmark_name,
     wallet_performance_fee,
