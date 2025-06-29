@@ -24,6 +24,7 @@ import { Notifications } from './pages/notifications/notifications'
 import { WalletClosings } from './pages/walletClosing'
 import Dashboard from './pages/dashboard'
 import { PerformanceView } from './pages/performance_view'
+import CallMonitoring from './pages/mensalContact'
 
 export function App() {
   const [isMobile, setIsMobile] = useState(false)
@@ -88,7 +89,7 @@ export function App() {
                 />
                 <Route path="/wallet-closings" element={<WalletClosings />} />
                 <Route path="/dashboards" element={<Dashboard />} />
-
+                <Route path="/call-monitoring" element={<CallMonitoring />} />
                 <Route path="*" element={<ErrorPage />} />
               </Route>
             </Route>
