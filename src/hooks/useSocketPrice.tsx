@@ -78,7 +78,6 @@ export const useAssetPricesSocket = (assetIds: string[] = []) => {
 
     return () => {
       if (socket) {
-        console.log('Desconectando socket...')
         socket.disconnect()
       }
       socketRef.current = null
