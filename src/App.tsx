@@ -11,7 +11,7 @@ import { Customers } from '@/pages/customers'
 import { AssetsOrg } from '@/pages/assets-org'
 import { ErrorPage } from '@/pages/404/index'
 import { AdviceToTeam } from './pages/AdviceToTeam'
-import Root from './pages/outlet'
+import Root from './pages/navbar'
 import { AuthHandler } from './auth/auth-handler'
 import { Auth0Callback } from './auth/auth0-callback'
 import { AuthProvider } from '@/contexts/authContext'
@@ -24,6 +24,7 @@ import { Notifications } from './pages/notifications/notifications'
 import { WalletClosings } from './pages/walletClosing'
 import Dashboard from './pages/dashboard'
 import { PerformanceView } from './pages/performance_view'
+import CallMonitoring from './pages/mensalContact'
 
 export function App() {
   const [isMobile, setIsMobile] = useState(false)
@@ -88,7 +89,7 @@ export function App() {
                 />
                 <Route path="/wallet-closings" element={<WalletClosings />} />
                 <Route path="/dashboards" element={<Dashboard />} />
-
+                <Route path="/call-monitoring" element={<CallMonitoring />} />
                 <Route path="*" element={<ErrorPage />} />
               </Route>
             </Route>
