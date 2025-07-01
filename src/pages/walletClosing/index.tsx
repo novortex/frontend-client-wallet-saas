@@ -33,6 +33,30 @@ export function WalletClosings() {
   // Calcular número total de páginas quando os dados mudam
   const totalPageCount = Math.ceil(data.length / pageSize)
 
+  // Estatísticas dos status
+  const stats = data.reduce(
+    (acc, item) => {
+      if (!item.status || item.status === 'Closed') {
+        acc.no_call++
+      } else if (item.status === 'OK') {
+        acc.ok++
+      } else if (
+        typeof item.status === 'string' &&
+        item.status.includes('days left')
+      ) {
+        acc.days_left++
+      } else if (
+        typeof item.status === 'string' &&
+        item.status.includes('days overdue')
+      ) {
+        acc.overdue++
+      }
+      acc.total++
+      return acc
+    },
+    { ok: 0, days_left: 0, overdue: 0, no_call: 0, total: 0 },
+  )
+
   // Handle filter function
   const handleOpenFilterModal = () => {
     setIsFilterModalOpen(true)
@@ -86,6 +110,44 @@ export function WalletClosings() {
           Wallet Closings
         </h1>
         <SwitchTheme />
+      </div>
+
+      {/* Cards de estatísticas */}
+      <div className="mb-10 grid grid-cols-1 gap-4 md:grid-cols-5">
+        <div className="rounded-lg bg-green-100 p-4 dark:bg-green-900">
+          <div className="text-sm text-green-600 dark:text-green-300">
+            On time
+          </div>
+          <div className="text-2xl font-bold text-green-800 dark:text-green-100">
+            {stats.ok}
+          </div>
+        </div>
+        <div className="rounded-lg bg-yellow-100 p-4 dark:bg-yellow-900">
+          <div className="text-sm text-yellow-600 dark:text-yellow-300">
+            Due soon
+          </div>
+          <div className="text-2xl font-bold text-yellow-800 dark:text-yellow-100">
+            {stats.days_left}
+          </div>
+        </div>
+        <div className="rounded-lg bg-red-100 p-4 dark:bg-red-900">
+          <div className="text-sm text-red-600 dark:text-red-300">Overdue</div>
+          <div className="text-2xl font-bold text-red-800 dark:text-red-100">
+            {stats.overdue}
+          </div>
+        </div>
+        <div className="rounded-lg bg-muted p-4">
+          <div className="text-sm text-muted-foreground">Closed</div>
+          <div className="text-2xl font-bold text-foreground">
+            {stats.no_call}
+          </div>
+        </div>
+        <div className="rounded-lg bg-secondary p-4">
+          <div className="text-sm text-secondary-foreground">Total</div>
+          <div className="text-2xl font-bold text-secondary-foreground">
+            {stats.total}
+          </div>
+        </div>
       </div>
 
       <div className="mb-10 rounded-md border">

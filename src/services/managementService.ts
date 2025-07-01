@@ -351,3 +351,13 @@ export async function disableAssetOrg(assetUuid: string) {
     throw new Error(error.response?.data?.message || 'Failed to disable asset')
   }
 }
+
+export async function getCallMonitoring() {
+  try {
+    const result = await instance.get('/management/call-monitoring')
+    return result.data
+  } catch (error) {
+    console.error('Error fetching call monitoring:', error)
+    throw error
+  }
+}
