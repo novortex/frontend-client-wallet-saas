@@ -187,10 +187,9 @@ export function Infos() {
               <h1 className="text-3xl text-black dark:text-white">
                 {walletI.user.name || '-'}
               </h1>
-              {walletInfos.lastContactAt == null ||
-              (timeZone &&
-                walletI.monthCloseDate &&
-                new Date(timeZone) > new Date(walletI.monthCloseDate)) ? (
+              {timeZone &&
+              walletI.monthCloseDate &&
+              new Date(timeZone) > new Date(walletI.monthCloseDate) ? (
                 <Badge className="flex h-10 gap-2 bg-red-500 text-white hover:bg-red-500">
                   <Check className="w-5" /> Not registered
                 </Badge>
