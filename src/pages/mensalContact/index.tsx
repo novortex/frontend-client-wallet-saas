@@ -212,7 +212,7 @@ const CallMonitoring = () => {
                   <td className="whitespace-nowrap px-6 py-4 text-sm text-muted-foreground">
                     {call.monthCloseDate
                       ? new Date(call.monthCloseDate).toLocaleDateString(
-                          'en-US',
+                          'pt-BR',
                         )
                       : '-'}
                   </td>
