@@ -1,5 +1,5 @@
 import { instance } from '@/config/api'
-import { PerformanceWallets } from '@/pages/performance_view'
+import { PerformanceWallets } from '@/pages/performance_view/types/performanceWallets'
 import { AddAssetFunctionResponse } from '@/types/addAsset.type'
 import { AssetsOrganizationForSelectedResponse } from '@/types/asset.type'
 import { WalletDataResponse } from '@/types/response.type'
