@@ -9,16 +9,9 @@ import {
 } from '@tanstack/react-table'
 import { getPerformanceWallets } from '@/services/wallet/walletAssetService'
 import { Loading } from '@/components/custom/loading'
-import PerformanceChart from '@/pages/performance_view/barGraph'
-
-export type PerformanceWallets = {
-  user: string
-  manager: string
-  benchmark: string
-  investedAmount: number
-  currentAmount: string
-  performance: number
-}
+import PerformanceChart from './components/PerformanceChart'
+import { PerformanceWallets } from './types/performanceWallets'
+import { SwitchTheme } from '@/components/custom/switch-theme'
 
 async function fetchPerformanceData(): Promise<
   Record<string, PerformanceWallets>
@@ -287,20 +280,25 @@ export const PerformanceView: React.FC = () => {
   if (loading) return <Loading />
 
   return (
-    <div className="flex min-h-screen flex-col bg-neutral-900 p-4 text-slate-100 sm:p-6">
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold text-slate-100 sm:text-3xl">
+    <div className="flex min-h-screen flex-col bg-white p-4 text-black dark:bg-transparent dark:text-white sm:p-6">
+      <div className="mb-6 flex items-center justify-between">
+        <h2 className="text-2xl font-bold text-black dark:text-white sm:text-3xl">
           Performance das Carteiras
         </h2>
+        <SwitchTheme />
+      </div>
+      <div className="mb-6">
         {/* Estatísticas dos filtros aplicados */}
         {(managerFilter ||
           benchmarkFilter ||
           performanceFilter ||
           isCustomFilter) && (
-          <div className="mt-2 flex flex-wrap gap-4 text-sm text-slate-400">
+          <div className="mt-2 flex flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-400">
             <span>
               Resultados:{' '}
-              <strong className="text-slate-200">{filteredStats.total}</strong>{' '}
+              <strong className="text-black dark:text-white">
+                {filteredStats.total}
+              </strong>{' '}
               carteiras
             </span>
             <span className="text-green-400">
@@ -311,7 +309,7 @@ export const PerformanceView: React.FC = () => {
             </span>
             <span>
               Média:{' '}
-              <strong className="text-slate-200">
+              <strong className="text-black dark:text-white">
                 {filteredStats.average.toFixed(2)}%
               </strong>
             </span>
@@ -332,15 +330,15 @@ export const PerformanceView: React.FC = () => {
       </div>
 
       {/* Abas de navegação */}
-      <div className="mb-6 flex border-b">
+      <div className="mb-6 flex border-b border-gray-300 dark:border-gray-600">
         <button
-          className={`px-4 py-2 ${activeTab === 'table' ? 'border-b-2 border-yellow-500 text-yellow-600' : 'text-white'}`}
+          className={`px-4 py-2 ${activeTab === 'table' ? 'border-b-2 border-yellow-500 text-yellow-600' : 'text-black dark:text-white'}`}
           onClick={() => setActiveTab('table')}
         >
           Tabela de Performance
         </button>
         <button
-          className={`px-4 py-2 ${activeTab === 'chart' ? 'border-b-2 border-yellow-500 text-yellow-600' : 'text-white'}`}
+          className={`px-4 py-2 ${activeTab === 'chart' ? 'border-b-2 border-yellow-500 text-yellow-600' : 'text-black dark:text-white'}`}
           onClick={() => setActiveTab('chart')}
         >
           Gráfico de Barras
@@ -352,7 +350,7 @@ export const PerformanceView: React.FC = () => {
         {/* Filtros básicos */}
         <div className="flex flex-wrap gap-4">
           <select
-            className="rounded bg-neutral-800 px-3 py-2 text-slate-100"
+            className="rounded border bg-lightComponent px-3 py-2 text-black dark:border-[#323232] dark:bg-[#131313] dark:text-[#959CB6]"
             value={managerFilter}
             onChange={(e) => setManagerFilter(e.target.value)}
           >
@@ -365,7 +363,7 @@ export const PerformanceView: React.FC = () => {
           </select>
 
           <select
-            className="rounded bg-neutral-800 px-3 py-2 text-slate-100"
+            className="rounded border bg-lightComponent px-3 py-2 text-black dark:border-[#323232] dark:bg-[#131313] dark:text-[#959CB6]"
             value={benchmarkFilter}
             onChange={(e) => setBenchmarkFilter(e.target.value)}
           >
@@ -392,8 +390,8 @@ export const PerformanceView: React.FC = () => {
         </div>
 
         {/* Filtros de Performance */}
-        <div className="rounded-lg border border-neutral-700 bg-neutral-800/30 p-4">
-          <h3 className="mb-3 font-semibold text-slate-200">
+        <div className="rounded-lg border border-gray-300 bg-lightComponent p-4 dark:border-[#272727] dark:bg-[#171717]">
+          <h3 className="mb-3 font-semibold text-black dark:text-white">
             Filtro de Performance
           </h3>
 
@@ -407,7 +405,9 @@ export const PerformanceView: React.FC = () => {
                 onChange={() => handleFilterTypeChange(false)}
                 className="text-yellow-500"
               />
-              <span className="text-slate-300">Filtros Predefinidos</span>
+              <span className="text-black dark:text-white">
+                Filtros Predefinidos
+              </span>
             </label>
             <label className="flex cursor-pointer items-center gap-2">
               <input
@@ -417,14 +417,16 @@ export const PerformanceView: React.FC = () => {
                 onChange={() => handleFilterTypeChange(true)}
                 className="text-yellow-500"
               />
-              <span className="text-slate-300">Filtro Customizado</span>
+              <span className="text-black dark:text-white">
+                Filtro Customizado
+              </span>
             </label>
           </div>
 
           {/* Filtros predefinidos */}
           {!isCustomFilter && (
             <select
-              className="w-full max-w-md rounded bg-neutral-800 px-3 py-2 text-slate-100"
+              className="w-full max-w-md rounded border bg-lightComponent px-3 py-2 text-black dark:border-[#323232] dark:bg-[#131313] dark:text-[#959CB6]"
               value={performanceFilter}
               onChange={(e) => setPerformanceFilter(e.target.value)}
             >
@@ -457,32 +459,32 @@ export const PerformanceView: React.FC = () => {
           {isCustomFilter && (
             <div className="flex flex-wrap items-center gap-4">
               <div className="flex items-center gap-2">
-                <label className="text-slate-300">De:</label>
+                <label className="text-black dark:text-white">De:</label>
                 <input
                   type="number"
                   step="0.01"
                   placeholder="Min %"
-                  className="w-24 rounded bg-neutral-800 px-3 py-2 text-slate-100"
+                  className="w-24 rounded border bg-lightComponent px-3 py-2 text-black dark:border-[#323232] dark:bg-[#131313] dark:text-[#959CB6]"
                   value={customMinPerformance}
                   onChange={(e) => setCustomMinPerformance(e.target.value)}
                 />
-                <span className="text-slate-400">%</span>
+                <span className="text-gray-600 dark:text-gray-400">%</span>
               </div>
 
               <div className="flex items-center gap-2">
-                <label className="text-slate-300">Até:</label>
+                <label className="text-black dark:text-white">Até:</label>
                 <input
                   type="number"
                   step="0.01"
                   placeholder="Max %"
-                  className="w-24 rounded bg-neutral-800 px-3 py-2 text-slate-100"
+                  className="w-24 rounded border bg-lightComponent px-3 py-2 text-black dark:border-[#323232] dark:bg-[#131313] dark:text-[#959CB6]"
                   value={customMaxPerformance}
                   onChange={(e) => setCustomMaxPerformance(e.target.value)}
                 />
-                <span className="text-slate-400">%</span>
+                <span className="text-gray-600 dark:text-gray-400">%</span>
               </div>
 
-              <div className="text-xs text-slate-400">
+              <div className="text-xs text-gray-600 dark:text-gray-400">
                 {customMinPerformance !== '' || customMaxPerformance !== '' ? (
                   <span>
                     Filtro ativo: {customMinPerformance || '-∞'}% até{' '}
@@ -501,16 +503,16 @@ export const PerformanceView: React.FC = () => {
       {activeTab === 'table' && (
         <div className="flex flex-col">
           <main>
-            <div className="items-center overflow-x-auto border border-neutral-700 shadow-lg">
-              <table className="min-w-full divide-y divide-neutral-700">
-                <thead className="bg-neutral-800">
+            <div className="items-center overflow-x-auto border border-gray-300 shadow-lg dark:border-gray-600">
+              <table className="min-w-full divide-y divide-gray-300 dark:divide-gray-600">
+                <thead className="bg-gray-200 dark:bg-[#131313]">
                   {table.getHeaderGroups().map((headerGroup) => (
                     <tr key={headerGroup.id}>
                       {headerGroup.headers.map((header) => (
                         <th
                           key={header.id}
                           scope="col"
-                          className={`cursor-pointer select-none px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-300 sm:px-6 sm:py-3.5 sm:text-sm ${['investedAmount', 'currentAmount', 'performance'].includes(header.column.id) ? 'relative' : ''} `}
+                          className={`cursor-pointer select-none px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-black dark:text-white sm:px-6 sm:py-3.5 sm:text-sm ${['investedAmount', 'currentAmount', 'performance'].includes(header.column.id) ? 'relative' : ''} `}
                           onClick={header.column.getToggleSortingHandler()}
                         >
                           {header.isPlaceholder
@@ -530,7 +532,7 @@ export const PerformanceView: React.FC = () => {
                               className={`ml-1 inline-block transition-colors ${
                                 header.column.getIsSorted()
                                   ? 'font-bold text-blue-400'
-                                  : 'text-slate-500'
+                                  : 'text-gray-500 dark:text-gray-400'
                               } `}
                             >
                               {header.column.getIsSorted() === 'asc' && '▲'}
@@ -543,16 +545,16 @@ export const PerformanceView: React.FC = () => {
                     </tr>
                   ))}
                 </thead>
-                <tbody className="divide-y divide-neutral-700 bg-neutral-800/50">
+                <tbody className="divide-y divide-gray-300 bg-lightComponent dark:divide-gray-600 dark:bg-[#171717] dark:text-[#959CB6]">
                   {table.getRowModel().rows.map((row) => (
                     <tr
                       key={row.id}
-                      className="transition-colors duration-150 hover:bg-neutral-700/60"
+                      className="transition-colors duration-150 hover:bg-gray-200 dark:hover:bg-[#101010]"
                     >
                       {row.getVisibleCells().map((cell) => (
                         <td
                           key={cell.id}
-                          className="whitespace-nowrap px-4 py-3 text-xl text-slate-200 sm:px-6 sm:py-4"
+                          className="whitespace-nowrap px-4 py-3 text-xl text-black dark:text-white sm:px-6 sm:py-4"
                         >
                           {flexRender(
                             cell.column.columnDef.cell,
@@ -566,7 +568,7 @@ export const PerformanceView: React.FC = () => {
               </table>
             </div>
             {filteredData.length === 0 && !loading && (
-              <p className="mt-6 text-center text-slate-500">
+              <p className="mt-6 text-center text-gray-600 dark:text-gray-400">
                 {managerFilter ||
                 benchmarkFilter ||
                 performanceFilter ||
