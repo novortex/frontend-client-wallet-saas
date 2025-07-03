@@ -10,6 +10,13 @@ import {
   Cell,
 } from 'recharts'
 import { PerformanceWallets } from '@/pages/performance_view'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 interface PerformanceChartProps {
   data: PerformanceWallets[]
@@ -28,23 +35,128 @@ const PerformanceChart: React.FC<PerformanceChartProps> = ({ data }) => {
   const [tooltipData, setTooltipData] = useState<any>(null)
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 })
   const [isInteracting, setIsInteracting] = useState(false)
+  const [rangeSize, setRangeSize] = useState(5) // Padrão de 5%
   const timeoutRef = useRef<NodeJS.Timeout>()
   const chartRef = useRef<HTMLDivElement>(null)
 
   const chartData = useMemo(() => {
-    // Ranges de performance de 5 em 5%
-    const ranges = [
-      { min: -Infinity, max: -20, label: '< -20%', color: '#dc2626' },
-      { min: -20, max: -15, label: '-20% a -15%', color: '#ea580c' },
-      { min: -15, max: -10, label: '-15% a -10%', color: '#f59e0b' },
-      { min: -10, max: -5, label: '-10% a -5%', color: '#fbbf24' },
-      { min: -5, max: 0, label: '-5% a 0%', color: '#fde047' },
-      { min: 0, max: 5, label: '0% a 5%', color: '#84cc16' },
-      { min: 5, max: 10, label: '5% a 10%', color: '#22c55e' },
-      { min: 10, max: 15, label: '10% a 15%', color: '#16a34a' },
-      { min: 15, max: 20, label: '15% a 20%', color: '#15803d' },
-      { min: 20, max: Infinity, label: '> 20%', color: '#166534' },
+    if (data.length === 0) return []
+
+    // Encontra o min e max dos dados com verificação de segurança
+    const performances = data
+      .map((d) => d.performance)
+      .filter((p) => !isNaN(p) && isFinite(p))
+
+    if (performances.length === 0) return []
+
+    const minPerformance =
+      Math.floor(Math.min(...performances) / rangeSize) * rangeSize
+    const maxPerformance =
+      Math.ceil(Math.max(...performances) / rangeSize) * rangeSize
+
+    // Verificação de segurança para evitar loops infinitos
+    if (minPerformance === maxPerformance) {
+      return [
+        {
+          range: `${minPerformance}% a ${minPerformance + rangeSize}%`,
+          rangeStart: minPerformance + rangeSize / 2,
+          rangeEnd: minPerformance + rangeSize,
+          count: data.length,
+          clients: data.map((client) => client.user),
+          color: '#22c55e',
+        },
+      ]
+    }
+
+    // Gera ranges dinamicamente baseado nos dados
+    const ranges = []
+
+    // Cores para ranges negativos (vermelho/laranja claro para escuro)
+    const negativeColors = [
+      '#fef2f2', // vermelho muito claro
+      '#fecaca', // vermelho claro
+      '#fca5a5', // vermelho médio claro
+      '#f87171', // vermelho médio
+      '#ef4444', // vermelho
+      '#dc2626', // vermelho escuro
+      '#b91c1c', // vermelho mais escuro
+      '#991b1b', // vermelho muito escuro
+      '#7f1d1d', // vermelho extremamente escuro
     ]
+
+    // Cores para ranges positivos (verde claro para escuro)
+    const positiveColors = [
+      '#f0fdf4', // verde muito claro
+      '#dcfce7', // verde claro
+      '#bbf7d0', // verde médio claro
+      '#86efac', // verde médio
+      '#4ade80', // verde
+      '#22c55e', // verde escuro
+      '#16a34a', // verde mais escuro
+      '#15803d', // verde muito escuro
+      '#166534', // verde extremamente escuro
+      '#14532d', // verde ainda mais escuro
+      '#134e4a', // verde azulado escuro
+      '#0f766e', // teal escuro
+      '#0d9488', // teal mais escuro
+      '#14b8a6', // teal muito escuro
+      '#2dd4bf', // teal extremamente escuro
+    ]
+
+    // Gera ranges negativos (cores mais escuras para valores mais negativos)
+    for (let i = minPerformance; i < 0; i += rangeSize) {
+      const colorIndex = Math.abs(i / rangeSize) - 1
+      const color =
+        negativeColors[Math.min(colorIndex, negativeColors.length - 1)]
+
+      ranges.push({
+        min: i,
+        max: i + rangeSize,
+        label: `${i}% a ${i + rangeSize}%`,
+        color,
+      })
+    }
+
+    // Range de 0%
+    ranges.push({
+      min: 0,
+      max: rangeSize,
+      label: `0% a ${rangeSize}%`,
+      color: positiveColors[0],
+    })
+
+    // Gera ranges positivos (cores mais escuras para valores mais positivos)
+    for (let i = rangeSize; i <= maxPerformance; i += rangeSize) {
+      const colorIndex = Math.floor(i / rangeSize) - 1
+      const color =
+        positiveColors[Math.min(colorIndex, positiveColors.length - 1)]
+
+      ranges.push({
+        min: i,
+        max: i + rangeSize,
+        label: `${i}% a ${i + rangeSize}%`,
+        color,
+      })
+    }
+
+    // Adiciona ranges extremos se necessário
+    if (minPerformance < -20) {
+      ranges.unshift({
+        min: -Infinity,
+        max: minPerformance,
+        label: `< ${minPerformance}%`,
+        color: '#dc2626',
+      })
+    }
+
+    if (maxPerformance > 50) {
+      ranges.push({
+        min: maxPerformance,
+        max: Infinity,
+        label: `> ${maxPerformance}%`,
+        color: positiveColors[positiveColors.length - 1],
+      })
+    }
 
     // Agrupa os clientes por range
     const rangeData: RangeData[] = ranges.map((range) => {
@@ -56,8 +168,10 @@ const PerformanceChart: React.FC<PerformanceChartProps> = ({ data }) => {
       return {
         range: range.label,
         rangeStart:
-          range.min === -Infinity ? -22.5 : (range.min + range.max) / 2,
-        rangeEnd: range.max === Infinity ? 22.5 : range.max,
+          range.min === -Infinity
+            ? minPerformance - 2.5
+            : (range.min + range.max) / 2,
+        rangeEnd: range.max === Infinity ? maxPerformance + 2.5 : range.max,
         count: clientsInRange.length,
         clients: clientsInRange.map((client) => client.user),
         color: range.color,
@@ -65,7 +179,7 @@ const PerformanceChart: React.FC<PerformanceChartProps> = ({ data }) => {
     })
 
     return rangeData
-  }, [data])
+  }, [data, rangeSize])
 
   const clearTooltip = useCallback(() => {
     setTooltipData(null)
@@ -150,16 +264,40 @@ const PerformanceChart: React.FC<PerformanceChartProps> = ({ data }) => {
 
   return (
     <div className="relative w-full rounded-lg border border-neutral-700 bg-neutral-800/50 p-6">
-      <h3 className="mb-4 text-xl font-bold text-slate-100">
-        Distribuição de Performance dos Clientes
-      </h3>
+      <div className="mb-4 flex items-center justify-between">
+        <h3 className="text-xl font-bold text-slate-100">
+          Distribuição de Performance dos Clientes
+        </h3>
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-slate-300">Tamanho do Range:</span>
+          <Select
+            value={rangeSize.toString()}
+            onValueChange={(value) => setRangeSize(Number(value))}
+          >
+            <SelectTrigger className="w-24 bg-neutral-700 text-slate-100">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent className="bg-neutral-700 text-slate-100">
+              <SelectItem value="1">1%</SelectItem>
+              <SelectItem value="2">2%</SelectItem>
+              <SelectItem value="5">5%</SelectItem>
+              <SelectItem value="10">10%</SelectItem>
+              <SelectItem value="15">15%</SelectItem>
+              <SelectItem value="20">20%</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
 
       <div
         ref={chartRef}
         className="relative"
         style={{ pointerEvents: isInteracting ? 'none' : 'auto' }}
       >
-        <ResponsiveContainer width="100%" height={400}>
+        <ResponsiveContainer
+          width="100%"
+          height={Math.max(400, chartData.length * 30)}
+        >
           <BarChart
             data={chartData}
             margin={{
