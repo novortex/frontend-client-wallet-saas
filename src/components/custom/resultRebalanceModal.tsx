@@ -17,7 +17,6 @@ type RebalanceItem = RebalanceReturn & {
   selected: boolean
   customAmount: string
   originalAmount: number
-  calculatedAmount: number // Valor exato calculado (com decimais)
 }
 
 type ResultRebalanceModalProps = {
@@ -35,176 +34,155 @@ export function ResultRebalanceModal({
 }: ResultRebalanceModalProps) {
   const [rebalanceItems, setRebalanceItems] = useState<RebalanceItem[]>([])
 
-  // Inicializa os itens quando o modal abrir
+  // Function to automatically adjust values so the balance is zero
+  const adjustForZeroBalance = (items: RebalanceItem[]): RebalanceItem[] => {
+    const selectedItems = items.filter((item) => item.selected)
+    if (selectedItems.length === 0) return items
+
+    // Calculate current totals
+    const selectedBuyItems = selectedItems.filter(
+      (item) => item.action === 'buy',
+    )
+    const selectedSellItems = selectedItems.filter(
+      (item) => item.action === 'sell',
+    )
+
+    const totalBuy = selectedBuyItems.reduce(
+      (sum, item) => sum + Number(item.customAmount || 0),
+      0,
+    )
+    const totalSell = selectedSellItems.reduce(
+      (sum, item) => sum + Number(item.customAmount || 0),
+      0,
+    )
+
+    const difference = totalSell - totalBuy
+
+    // If already balanced, do nothing
+    if (Math.abs(difference) < 1) return items
+
+    const adjustedItems = [...items]
+
+    // Determine which group needs to be adjusted and by how much
+    let itemsToAdjust: RebalanceItem[]
+    let adjustmentAmount: number
+
+    if (difference > 0) {
+      // Excess in sell, need to increase buys
+      itemsToAdjust = selectedBuyItems
+      adjustmentAmount = difference
+    } else {
+      // Excess in buy, need to increase sells
+      itemsToAdjust = selectedSellItems
+      adjustmentAmount = Math.abs(difference)
+    }
+
+    if (itemsToAdjust.length === 0) return adjustedItems
+
+    // Distribute the adjustment simply: add 1 to each item until balanced
+    let remainingAdjustment = Math.round(adjustmentAmount)
+    let itemIndex = 0
+
+    while (remainingAdjustment > 0 && itemsToAdjust.length > 0) {
+      const currentItem = itemsToAdjust[itemIndex % itemsToAdjust.length]
+      const globalIndex = adjustedItems.findIndex(
+        (item) =>
+          item.assetName === currentItem.assetName &&
+          item.action === currentItem.action,
+      )
+
+      if (globalIndex !== -1) {
+        const currentAmount = Number(
+          adjustedItems[globalIndex].customAmount || 0,
+        )
+        adjustedItems[globalIndex] = {
+          ...adjustedItems[globalIndex],
+          customAmount: (currentAmount + 1).toString(),
+        }
+        remainingAdjustment -= 1
+      }
+
+      itemIndex++
+    }
+
+    return adjustedItems
+  }
+
+  // Initialize items when the modal opens
   useEffect(() => {
     if (open && rebalanceResults.length > 0) {
-      const items = rebalanceResults.map((result) => ({
-        ...result,
-        selected: true,
-        customAmount: Math.floor(Number(result.amount)).toString(),
-        originalAmount: Number(result.amount),
-        calculatedAmount: Number(result.amount), // Mantém valor exato
+      const items = rebalanceResults.map((result) => {
+        const roundedAmount = Math.round(Number(result.amount))
+        return {
+          ...result,
+          selected: true,
+          customAmount: roundedAmount.toString(),
+          originalAmount: roundedAmount,
+        }
+      })
+
+      // Adjust values to ensure zero balance
+      const adjustedItems = adjustForZeroBalance(items)
+
+      // Update original values to match adjusted values
+      const finalItems = adjustedItems.map((item) => ({
+        ...item,
+        originalAmount: Number(item.customAmount),
       }))
-      setRebalanceItems(items)
+
+      setRebalanceItems(finalItems)
     }
   }, [open, rebalanceResults])
 
-  // Função para recalcular o rebalanceamento
-  const recalculateRebalance = (items: RebalanceItem[]) => {
-    const selectedBuyItems = items.filter(
-      (item) => item.selected && item.action === 'buy',
-    )
-    const selectedSellItems = items.filter(
-      (item) => item.selected && item.action === 'sell',
-    )
-    const unselectedBuyItems = items.filter(
-      (item) => !item.selected && item.action === 'buy',
-    )
-    const unselectedSellItems = items.filter(
-      (item) => !item.selected && item.action === 'sell',
-    )
-
-    // Calcula o total que precisa ser redistribuído
-    const totalUnselectedBuyAmount = unselectedBuyItems.reduce(
-      (sum, item) => sum + item.originalAmount,
-      0,
-    )
-    const totalUnselectedSellAmount = unselectedSellItems.reduce(
-      (sum, item) => sum + item.originalAmount,
-      0,
-    )
-
-    // Redistribui proporcionalmente entre os itens selecionados
-    const redistributeAmount = (
-      items: RebalanceItem[],
-      totalToRedistribute: number,
-    ) => {
-      if (items.length === 0) return items
-
-      // Se não há nada para redistribuir, retorna os valores originais
-      if (totalToRedistribute === 0) {
-        return items.map((item) => ({
-          ...item,
-          customAmount: Math.floor(item.originalAmount).toString(),
-          calculatedAmount: item.originalAmount,
-        }))
-      }
-
-      const totalOriginalSelected = items.reduce(
-        (sum, item) => sum + item.originalAmount,
-        0,
-      )
-
-      // Evita divisão por zero
-      if (totalOriginalSelected === 0) return items
-
-      return items.map((item) => {
-        const proportion = item.originalAmount / totalOriginalSelected
-        const additionalAmount = totalToRedistribute * proportion
-        const newAmountExact = item.originalAmount + additionalAmount // Valor exato
-        const newAmountFloor = Math.floor(newAmountExact) // Valor que pode ser digitado
-
-        return {
-          ...item,
-          customAmount: newAmountFloor.toString(),
-          calculatedAmount: newAmountExact, // Mantém valor exato para comparação
-        }
-      })
-    }
-
-    // Aplica a redistribuição para buy e sell separadamente
-    const updatedBuyItems = redistributeAmount(
-      selectedBuyItems,
-      totalUnselectedBuyAmount,
-    )
-    const updatedSellItems = redistributeAmount(
-      selectedSellItems,
-      totalUnselectedSellAmount,
-    )
-
-    // Atualiza os itens com os novos valores
-    return items.map((item) => {
-      if (!item.selected) {
-        // Itens não selecionados mantêm seus valores originais
-        return {
-          ...item,
-          customAmount: Math.floor(item.originalAmount).toString(),
-          calculatedAmount: item.originalAmount,
-        }
-      }
-
-      if (item.action === 'buy') {
-        return (
-          updatedBuyItems.find(
-            (updated) => updated.assetName === item.assetName,
-          ) || item
-        )
-      }
-
-      if (item.action === 'sell') {
-        return (
-          updatedSellItems.find(
-            (updated) => updated.assetName === item.assetName,
-          ) || item
-        )
-      }
-
-      return item
-    })
-  }
-
+  // Handle selection toggle for an item
   const handleItemToggle = (index: number, checked: boolean) => {
-    setRebalanceItems((prev) => {
-      const updatedItems = prev.map((item, i) =>
-        i === index ? { ...item, selected: checked } : item,
-      )
+    const newItems = rebalanceItems.map((item, i) =>
+      i === index ? { ...item, selected: checked } : item,
+    )
 
-      // sempre recalcula quando há mudança de seleção
-      return recalculateRebalance(updatedItems)
-    })
+    // Readjust values after selection change
+    const adjustedItems = adjustForZeroBalance(newItems)
+    setRebalanceItems(adjustedItems)
   }
 
+  // Handle manual amount change for an item
   const handleAmountChange = (index: number, value: string) => {
-    // Só permite números
+    // Allow numbers and empty field
     if (value === '' || /^\d+$/.test(value)) {
-      const numericValue = Number(value)
-      const item = rebalanceItems[index]
-      const maxAllowed = Math.floor(item.calculatedAmount) // Usa floor para validação
+      const newItems = rebalanceItems.map((item, i) =>
+        i === index ? { ...item, customAmount: value } : item,
+      )
 
-      // Valida se o valor não é maior que o permitido
-      if (numericValue <= maxAllowed || value === '') {
-        setRebalanceItems((prev) =>
-          prev.map((item, i) =>
-            i === index ? { ...item, customAmount: value } : item,
-          ),
-        )
-      }
+      // Readjust values after manual change
+      const adjustedItems = adjustForZeroBalance(newItems)
+      setRebalanceItems(adjustedItems)
     }
   }
 
+  // Handle confirm button click
   const handleConfirm = () => {
     const selectedItems = rebalanceItems.filter((item) => item.selected)
     onConfirm?.(selectedItems)
     onOpenChange(false)
   }
 
-  // Botão para resetar todos os cálculos
+  // Button to reset all calculations to original
   const handleResetCalculation = () => {
-    setRebalanceItems((prev) => {
-      const resetItems = prev.map((item) => ({
-        ...item,
-        selected: true,
-        customAmount: Math.floor(item.originalAmount).toString(),
-        calculatedAmount: item.originalAmount,
-      }))
-      return resetItems
-    })
+    const resetItems = rebalanceItems.map((item) => ({
+      ...item,
+      selected: true,
+      customAmount: item.originalAmount.toString(),
+    }))
+
+    // Only adjust after reset if necessary
+    const adjustedItems = adjustForZeroBalance(resetItems)
+    setRebalanceItems(adjustedItems)
   }
 
   const buyResults = rebalanceItems.filter((item) => item.action === 'buy')
   const sellResults = rebalanceItems.filter((item) => item.action === 'sell')
 
-  // Calcula totais para exibição
+  // Calculate totals for display
   const totalBuySelected = buyResults
     .filter((item) => item.selected)
     .reduce((sum, item) => sum + Number(item.customAmount || 0), 0)
@@ -213,6 +191,7 @@ export function ResultRebalanceModal({
     .filter((item) => item.selected)
     .reduce((sum, item) => sum + Number(item.customAmount || 0), 0)
 
+  // Render section for buy or sell items
   const renderRebalanceSection = (
     items: RebalanceItem[],
     title: string,
@@ -235,8 +214,6 @@ export function ResultRebalanceModal({
               item.action === result.action,
           )
 
-          const maxAllowed = Math.floor(result.calculatedAmount)
-
           return (
             <div
               key={`${result.assetName}-${result.action}-${index}`}
@@ -246,7 +223,7 @@ export function ResultRebalanceModal({
                   : 'bg-gray-400 opacity-60 dark:bg-[#2A2A2A]'
               }`}
             >
-              {/* Header com checkbox e asset info */}
+              {/* Header with checkbox and asset info */}
               <div className="flex w-full items-center gap-2">
                 <Checkbox
                   checked={result.selected}
@@ -265,12 +242,12 @@ export function ResultRebalanceModal({
                     {result.assetName}
                   </p>
                   <p className="text-[12px] text-gray-500 dark:text-gray-400">
-                    Max: ${maxAllowed.toLocaleString()}
+                    Original: ${result.originalAmount.toLocaleString()}
                   </p>
                 </div>
               </div>
 
-              {/* Input de quantidade */}
+              {/* Amount input */}
               {result.selected && (
                 <div className="flex items-center gap-2">
                   <p
@@ -284,13 +261,8 @@ export function ResultRebalanceModal({
                     onChange={(e) =>
                       handleAmountChange(originalIndex, e.target.value)
                     }
-                    className={`h-8 flex-1 text-[14px] ${
-                      Number(result.customAmount) > maxAllowed
-                        ? 'border-red-500 focus:border-red-500'
-                        : ''
-                    }`}
+                    className="h-8 flex-1 text-[14px]"
                     placeholder="Amount"
-                    max={maxAllowed}
                   />
                   <p className="flex-shrink-0 text-[12px] dark:text-white">
                     USD
@@ -323,7 +295,7 @@ export function ResultRebalanceModal({
         </DialogHeader>
 
         <div className="flex w-full flex-1 flex-col items-center gap-4 overflow-hidden">
-          {/* Informações de balanço */}
+          {/* Balance information */}
           <div className="flex w-full justify-center gap-6 py-2">
             <div className="text-center">
               <p className="text-[12px] text-gray-500 dark:text-gray-400">
@@ -345,22 +317,13 @@ export function ResultRebalanceModal({
               <p className="text-[12px] text-gray-500 dark:text-gray-400">
                 Balance
               </p>
-              <p
-                className={`text-[16px] font-bold ${
-                  Math.abs(totalBuySelected - totalSellSelected) < 1
-                    ? 'text-green-600 dark:text-[#8BF067]'
-                    : 'text-yellow-600 dark:text-[#F2BE38]'
-                }`}
-              >
-                $
-                {Math.abs(
-                  totalBuySelected - totalSellSelected,
-                ).toLocaleString()}
+              <p className="text-[16px] font-bold text-green-600 dark:text-[#8BF067]">
+                ${(totalSellSelected - totalBuySelected).toLocaleString()}
               </p>
             </div>
           </div>
 
-          {/* Botão de reset */}
+          {/* Reset button */}
           <Button
             onClick={handleResetCalculation}
             variant="outline"
