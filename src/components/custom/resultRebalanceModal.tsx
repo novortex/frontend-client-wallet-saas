@@ -17,6 +17,7 @@ type RebalanceItem = RebalanceReturn & {
   selected: boolean
   customAmount: string
   originalAmount: number
+  isCustomAmount: boolean
 }
 
 type ResultRebalanceModalProps = {
@@ -39,19 +40,27 @@ export function ResultRebalanceModal({
     const selectedItems = items.filter((item) => item.selected)
     if (selectedItems.length === 0) return items
 
-    // Calculate current totals
+    // Não ajusta itens que foram editados manualmente
     const selectedBuyItems = selectedItems.filter(
-      (item) => item.action === 'buy',
+      (item) => item.action === 'buy' && !item.isCustomAmount,
     )
     const selectedSellItems = selectedItems.filter(
+      (item) => item.action === 'sell' && !item.isCustomAmount,
+    )
+
+    // Calcula totais incluindo itens editados manualmente
+    const allSelectedBuyItems = selectedItems.filter(
+      (item) => item.action === 'buy',
+    )
+    const allSelectedSellItems = selectedItems.filter(
       (item) => item.action === 'sell',
     )
 
-    const totalBuy = selectedBuyItems.reduce(
+    const totalBuy = allSelectedBuyItems.reduce(
       (sum, item) => sum + Number(item.customAmount || 0),
       0,
     )
-    const totalSell = selectedSellItems.reduce(
+    const totalSell = allSelectedSellItems.reduce(
       (sum, item) => sum + Number(item.customAmount || 0),
       0,
     )
@@ -118,6 +127,7 @@ export function ResultRebalanceModal({
           selected: true,
           customAmount: roundedAmount.toString(),
           originalAmount: roundedAmount,
+          isCustomAmount: false,
         }
       })
 
@@ -137,7 +147,9 @@ export function ResultRebalanceModal({
   // Handle selection toggle for an item
   const handleItemToggle = (index: number, checked: boolean) => {
     const newItems = rebalanceItems.map((item, i) =>
-      i === index ? { ...item, selected: checked } : item,
+      i === index
+        ? { ...item, selected: checked, isCustomAmount: false } // Reset custom amount flag
+        : item,
     )
 
     // Readjust values after selection change
@@ -149,13 +161,13 @@ export function ResultRebalanceModal({
   const handleAmountChange = (index: number, value: string) => {
     // Allow numbers and empty field
     if (value === '' || /^\d+$/.test(value)) {
-      const newItems = rebalanceItems.map((item, i) =>
-        i === index ? { ...item, customAmount: value } : item,
+      setRebalanceItems((prev) =>
+        prev.map((item, i) =>
+          i === index
+            ? { ...item, customAmount: value, isCustomAmount: true } // Mark as custom amount
+            : item,
+        ),
       )
-
-      // Readjust values after manual change
-      const adjustedItems = adjustForZeroBalance(newItems)
-      setRebalanceItems(adjustedItems)
     }
   }
 
@@ -172,6 +184,7 @@ export function ResultRebalanceModal({
       ...item,
       selected: true,
       customAmount: item.originalAmount.toString(),
+      isCustomAmount: false, // Reset custom amount flag
     }))
 
     // Only adjust after reset if necessary
@@ -243,6 +256,9 @@ export function ResultRebalanceModal({
                   </p>
                   <p className="text-[12px] text-gray-500 dark:text-gray-400">
                     Original: ${result.originalAmount.toLocaleString()}
+                    {result.isCustomAmount && (
+                      <span className="ml-1 text-yellow-500">• Custom</span>
+                    )}
                   </p>
                 </div>
               </div>
@@ -261,7 +277,9 @@ export function ResultRebalanceModal({
                     onChange={(e) =>
                       handleAmountChange(originalIndex, e.target.value)
                     }
-                    className="h-8 flex-1 text-[14px]"
+                    className={`h-8 flex-1 text-[14px] ${
+                      result.isCustomAmount ? 'border-yellow-500' : ''
+                    }`}
                     placeholder="Amount"
                   />
                   <p className="flex-shrink-0 text-[12px] dark:text-white">
@@ -317,7 +335,13 @@ export function ResultRebalanceModal({
               <p className="text-[12px] text-gray-500 dark:text-gray-400">
                 Balance
               </p>
-              <p className="text-[16px] font-bold text-green-600 dark:text-[#8BF067]">
+              <p
+                className={`text-[16px] font-bold ${
+                  totalSellSelected - totalBuySelected < 1
+                    ? 'text-yellow-600 dark:text-[#F2BE38]'
+                    : 'text-green-600 dark:text-[#8BF067]'
+                }`}
+              >
                 ${(totalSellSelected - totalBuySelected).toLocaleString()}
               </p>
             </div>
