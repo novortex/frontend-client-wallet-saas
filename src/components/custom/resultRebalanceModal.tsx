@@ -40,7 +40,7 @@ export function ResultRebalanceModal({
     const selectedItems = items.filter((item) => item.selected)
     if (selectedItems.length === 0) return items
 
-    // Não ajusta itens que foram editados manualmente
+    // Do not adjust items that were manually edited
     const selectedBuyItems = selectedItems.filter(
       (item) => item.action === 'buy' && !item.isCustomAmount,
     )
@@ -48,7 +48,7 @@ export function ResultRebalanceModal({
       (item) => item.action === 'sell' && !item.isCustomAmount,
     )
 
-    // Calcula totais incluindo itens editados manualmente
+    // Calculate totals including manually edited items
     const allSelectedBuyItems = selectedItems.filter(
       (item) => item.action === 'buy',
     )
@@ -160,7 +160,7 @@ export function ResultRebalanceModal({
   // Handle manual amount change for an item
   const handleAmountChange = (index: number, value: string) => {
     // Allow numbers and empty field
-    if (value === '' || /^\d+$/.test(value)) {
+    if (value === '' || /^\d+(\.\d{0,2})?$/.test(value)) {
       setRebalanceItems((prev) =>
         prev.map((item, i) =>
           i === index
@@ -204,6 +204,10 @@ export function ResultRebalanceModal({
     .filter((item) => item.selected)
     .reduce((sum, item) => sum + Number(item.customAmount || 0), 0)
 
+  // Calculate balance values
+  const balanceValue = Math.abs(totalSellSelected - totalBuySelected)
+  const isBalanced = balanceValue < 1
+
   // Render section for buy or sell items
   const renderRebalanceSection = (
     items: RebalanceItem[],
@@ -244,6 +248,7 @@ export function ResultRebalanceModal({
                     handleItemToggle(originalIndex, checked as boolean)
                   }
                   className="flex-shrink-0"
+                  data-testid="checkbox"
                 />
                 <img
                   src={result.assetIcon}
@@ -281,6 +286,7 @@ export function ResultRebalanceModal({
                       result.isCustomAmount ? 'border-yellow-500' : ''
                     }`}
                     placeholder="Amount"
+                    data-testid="input"
                   />
                   <p className="flex-shrink-0 text-[12px] dark:text-white">
                     USD
@@ -302,19 +308,29 @@ export function ResultRebalanceModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="mx-auto flex h-[650px] w-full max-w-[800px] flex-col border-none p-6 dark:bg-[#1C1C1C]">
+      <DialogContent
+        className="mx-auto flex h-[650px] w-full max-w-[800px] flex-col border-none p-6 dark:bg-[#1C1C1C]"
+        aria-describedby="rebalance-description"
+      >
         <DialogHeader>
           <DialogTitle className="text-center text-[24px] dark:text-[#F2BE38]">
             Rebalancing Parameters
           </DialogTitle>
-          <p className="text-center text-[14px] text-gray-600 dark:text-gray-400">
+          <p
+            id="rebalance-description"
+            className="text-center text-[14px] text-gray-600 dark:text-gray-400"
+          >
             Select assets and adjust amounts for rebalancing
           </p>
         </DialogHeader>
 
         <div className="flex w-full flex-1 flex-col items-center gap-4 overflow-hidden">
           {/* Balance information */}
-          <div className="flex w-full justify-center gap-6 py-2">
+          <div
+            className="flex w-full justify-center gap-6 py-2"
+            role="status"
+            aria-live="polite"
+          >
             <div className="text-center">
               <p className="text-[12px] text-gray-500 dark:text-gray-400">
                 Total Buy
@@ -337,12 +353,17 @@ export function ResultRebalanceModal({
               </p>
               <p
                 className={`text-[16px] font-bold ${
-                  totalSellSelected - totalBuySelected < 1
-                    ? 'text-yellow-600 dark:text-[#F2BE38]'
-                    : 'text-green-600 dark:text-[#8BF067]'
+                  isBalanced
+                    ? 'text-green-600 dark:text-[#8BF067]'
+                    : 'text-yellow-600 dark:text-[#F2BE38]'
                 }`}
               >
-                ${(totalSellSelected - totalBuySelected).toLocaleString()}
+                ${balanceValue.toLocaleString()}
+                {isBalanced && (
+                  <span className="ml-1 text-[12px]" aria-label="Balanced">
+                    ✓
+                  </span>
+                )}
               </p>
             </div>
           </div>
