@@ -26,32 +26,17 @@ const PerformanceChart: React.FC<PerformanceChartProps> = ({ data }) => {
   const [tooltipData, setTooltipData] = useState<TooltipData | null>(null)
   const [isTooltipVisible, setIsTooltipVisible] = useState(false)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
-  const [isMouseOverTooltip, setIsMouseOverTooltip] = useState(false)
 
   const handleMouseEnter = (data: TooltipData) => {
     setTooltipData(data)
     setIsTooltipVisible(true)
   }
 
-  const handleMouseLeave = () => {
-    setTimeout(() => {
-      if (!isMouseOverTooltip) {
-        setIsTooltipVisible(false)
-        setTooltipData(null)
-      }
-    }, 100)
-  }
-
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
     setMousePosition({ x: event.clientX, y: event.clientY })
   }
 
-  const handleTooltipMouseEnter = () => {
-    setIsMouseOverTooltip(true)
-  }
-
   const handleTooltipMouseLeave = () => {
-    setIsMouseOverTooltip(false)
     setIsTooltipVisible(false)
     setTooltipData(null)
   }
@@ -181,7 +166,6 @@ const PerformanceChart: React.FC<PerformanceChartProps> = ({ data }) => {
             <BarChart
               data={chartData}
               margin={{ top: 20, right: 30, bottom: 60, left: 60 }}
-              onMouseLeave={handleMouseLeave}
             >
               <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
               <XAxis
@@ -227,16 +211,15 @@ const PerformanceChart: React.FC<PerformanceChartProps> = ({ data }) => {
           </ResponsiveContainer>
         </div>
 
-        {/* Tooltip fixo que não suma */}
+        {/* Tooltip simples */}
         {isTooltipVisible && tooltipData && (
           <div
             className="fixed z-50 w-80 max-w-sm rounded-lg border border-gray-300 bg-white p-3 shadow-2xl dark:border-gray-600 dark:bg-gray-800"
             style={{
-              left: Math.min(mousePosition.x + 20, window.innerWidth - 340), // 340 = tooltip width + margin
-              top: Math.max(mousePosition.y - 100, 20), // 20px from top, 100px above mouse
+              left: mousePosition.x + 10,
+              top: mousePosition.y + 10,
               pointerEvents: 'auto',
             }}
-            onMouseEnter={handleTooltipMouseEnter}
             onMouseLeave={handleTooltipMouseLeave}
           >
             <div className="mb-2 flex items-center gap-2">
