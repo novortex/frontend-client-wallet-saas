@@ -254,7 +254,7 @@ const PerformanceChart: React.FC<PerformanceChartProps> = ({ data }) => {
                 <p className="mb-2 text-xs text-gray-600 dark:text-gray-400">
                   Clientes neste range:
                 </p>
-                <div className="scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-700 max-h-32 overflow-y-auto">
+                <div className="scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-700 max-h-32 overflow-y-auto rounded border border-gray-200 bg-gray-50 p-2 dark:border-gray-600 dark:bg-gray-700/50">
                   {tooltipData.clients.map(
                     (
                       client: { name: string; performance: number },
