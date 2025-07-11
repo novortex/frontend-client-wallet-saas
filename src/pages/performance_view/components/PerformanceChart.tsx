@@ -26,14 +26,23 @@ const PerformanceChart: React.FC<PerformanceChartProps> = ({ data }) => {
   const [tooltipData, setTooltipData] = useState<TooltipData | null>(null)
   const [isTooltipVisible, setIsTooltipVisible] = useState(false)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  const [fixedTooltipPosition, setFixedTooltipPosition] = useState({
+    x: 0,
+    y: 0,
+  })
 
   const handleMouseEnter = (data: TooltipData) => {
     setTooltipData(data)
     setIsTooltipVisible(true)
+    // Fixar posição quando o tooltip aparece
+    setFixedTooltipPosition({ x: mousePosition.x, y: mousePosition.y })
   }
 
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
-    setMousePosition({ x: event.clientX, y: event.clientY })
+    // Só atualiza posição se tooltip não estiver visível
+    if (!isTooltipVisible) {
+      setMousePosition({ x: event.clientX, y: event.clientY })
+    }
   }
 
   const handleTooltipMouseLeave = () => {
@@ -216,8 +225,8 @@ const PerformanceChart: React.FC<PerformanceChartProps> = ({ data }) => {
           <div
             className="fixed z-50 w-80 max-w-sm rounded-lg border border-gray-300 bg-white p-3 shadow-2xl dark:border-gray-600 dark:bg-gray-800"
             style={{
-              left: mousePosition.x + 10,
-              top: mousePosition.y + 10,
+              left: fixedTooltipPosition.x + 10,
+              top: fixedTooltipPosition.y + 10,
               pointerEvents: 'auto',
             }}
             onMouseLeave={handleTooltipMouseLeave}
