@@ -34,10 +34,12 @@ const PerformanceChart: React.FC<PerformanceChartProps> = ({ data }) => {
   }
 
   const handleMouseLeave = () => {
-    if (!isMouseOverTooltip) {
-      setIsTooltipVisible(false)
-      setTooltipData(null)
-    }
+    setTimeout(() => {
+      if (!isMouseOverTooltip) {
+        setIsTooltipVisible(false)
+        setTooltipData(null)
+      }
+    }, 100)
   }
 
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
