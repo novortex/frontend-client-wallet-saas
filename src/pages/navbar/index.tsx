@@ -11,7 +11,6 @@ import {
 } from 'lucide-react'
 import { Outlet as RouterOutlet, useLocation } from 'react-router-dom'
 
-// TODO: colocar a verificação da pagina para não aparecer a navegação no login
 export default function Navbar() {
   const location = useLocation()
   const hideNavigationRoutes = ['/']
@@ -74,7 +73,6 @@ export default function Navbar() {
               href="/admin/orgs"
             />
           </div>
-          <div className="mb-5">{/* Outras seções */}</div>
         </SideBar>
       )}
       <div className="w-screen" id="detail">
