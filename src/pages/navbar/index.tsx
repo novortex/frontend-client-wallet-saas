@@ -7,6 +7,7 @@ import {
   BarChart2,
   Phone,
   LineChart,
+  Eye,
 } from 'lucide-react'
 import { Outlet as RouterOutlet, useLocation } from 'react-router-dom'
 
@@ -41,10 +42,22 @@ export default function Navbar() {
               href="/wallet-closings"
             />
             <SideBarItem
-              icon={<Phone size={20} />}
-              text="Call Monitoring"
-              href="/call-monitoring"
-            />
+              icon={<Eye size={20} />}
+              text="Monitoring"
+              isDropdown={true}
+              href="#"
+            >
+              <SideBarItem
+                icon={<Phone size={18} />}
+                text="Call Monitoring"
+                href="/call-monitoring"
+              />
+              <SideBarItem
+                icon={<Wallet2Icon size={18} />}
+                text="Wallet Monitoring"
+                href="/wallet-monitoring"
+              />
+            </SideBarItem>
             <SideBarItem
               icon={<BarChart2 size={20} />}
               text="Dashboards"

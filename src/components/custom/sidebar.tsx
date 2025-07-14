@@ -1,4 +1,4 @@
-import { MoreVertical, Bell, LogOut } from 'lucide-react'
+import { MoreVertical, Bell, LogOut, ChevronDown } from 'lucide-react'
 import LogoOrg from '../../assets/image/vault-logo.png'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
@@ -206,14 +206,19 @@ export function SideBarItem({
   text,
   active,
   alert,
+  isDropdown = false,
   href,
+  children,
 }: {
   icon: ReactNode
   text: string
   active?: boolean
   alert?: boolean
+  isDropdown?: boolean
   href: string
+  children?: ReactNode
 }) {
+  const [open, setOpen] = useState(false)
   const navigate = useNavigate()
   const context = useContext(SideBarContext)
 
@@ -222,6 +227,29 @@ export function SideBarItem({
   }
 
   const { expanded } = context
+
+  if (isDropdown) {
+    return (
+      <div>
+        <li
+          onClick={() => setOpen(!open)}
+          className={`group relative my-1 flex cursor-pointer items-center rounded-md px-3 py-2 font-medium text-black transition-colors hover:bg-[#F2BE38] hover:text-black dark:text-[#959CB6] dark:hover:text-black ${!expanded ? 'justify-center' : ''}`}
+        >
+          {icon}
+          <span
+            className={`overflow-hidden transition-all ${expanded ? 'ml-3 w-52' : 'w-0'}`}
+          >
+            {text}
+          </span>
+          <ChevronDown
+            className={`transition-transform ${expanded ? 'ml-auto' : 'w-0'} ${open ? 'rotate-180' : ''}`}
+            size={16}
+          />
+        </li>
+        {open && expanded && <div className="ml-6">{children}</div>}
+      </div>
+    )
+  }
 
   return (
     <li
