@@ -59,7 +59,10 @@ export default function WalletMonitoring() {
       </div>
 
       {/* Cards de estatísticas */}
-      <div className="mb-10 grid grid-cols-1 gap-4 md:grid-cols-5">
+      <div
+        data-testid="stats-cards-container"
+        className="mb-10 grid grid-cols-1 gap-4 md:grid-cols-5"
+      >
         <div className="rounded-lg bg-green-100 p-4 dark:bg-green-900">
           <div className="text-sm text-green-600 dark:text-green-300">
             Perfect (100%)
