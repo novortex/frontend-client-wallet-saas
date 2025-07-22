@@ -136,7 +136,6 @@ export function MonthlyStandardizationModal({
   const handleApply = async () => {
     setLoading(true)
     try {
-      // Buscar todas as carteiras do mês selecionado
       const wallets: TClientInfosResponse[] = await getWalletOrganization()
       const walletsToUpdate: string[] = []
 
@@ -161,45 +160,48 @@ export function MonthlyStandardizationModal({
         }
       }
 
-      // Aplicar as alocações para cada carteira e cada ativo
-      const updatePromises: Promise<unknown>[] = []
+      // Aplicar mudanças uma carteira por vez
       for (const walletUuid of walletsToUpdate) {
-        // Buscar os ativos existentes na carteira
         const walletAssetsResp = await getAllAssetsWalletClient(walletUuid)
         const existingAssets = walletAssetsResp?.assets || []
         const existingAssetUuids = existingAssets.map((asset) => asset.uuid)
 
+        // Primeiro: Zerar todas as alocações existentes
+        for (const existingAsset of existingAssets) {
+          try {
+            await updateAssetIdealAllocation(walletUuid, existingAsset.uuid, 0)
+          } catch (error) {
+            console.error(`Erro ao zerar ativo ${existingAsset.uuid}:`, error)
+          }
+        }
+
+        // Segundo: Aplicar as novas alocações
         for (const asset of assets) {
           const targetAllocation = allocations[asset.uuid] || 0
           if (targetAllocation > 0) {
             const assetExists = existingAssetUuids.includes(asset.uuid)
 
-            if (assetExists) {
-              // Se o ativo já existe, atualiza a alocação ideal
-              updatePromises.push(
-                updateAssetIdealAllocation(
+            try {
+              if (assetExists) {
+                await updateAssetIdealAllocation(
                   walletUuid,
                   asset.uuid,
                   targetAllocation,
-                ),
-              )
-            } else {
-              // Se o ativo não existe, adiciona à carteira
-              updatePromises.push(
-                addCryptoWalletClient(
+                )
+              } else {
+                await addCryptoWalletClient(
                   walletUuid,
                   asset.uuid,
-                  0, // quantidade inicial zero
+                  0,
                   targetAllocation,
-                ),
-              )
+                )
+              }
+            } catch (error) {
+              console.error(`Erro ao atualizar ativo ${asset.name}:`, error)
             }
           }
         }
       }
-
-      // Executar todas as atualizações em paralelo
-      await Promise.all(updatePromises)
 
       toast({
         title: 'Padronização aplicada!',
