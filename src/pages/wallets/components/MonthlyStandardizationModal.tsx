@@ -113,6 +113,21 @@ async function processWalletChanges(
   }
 }
 
+// Helper function to process promises in batches
+const processInBatches = async <T, R>(
+  items: T[],
+  batchSize: number,
+  callback: (item: T) => Promise<R>,
+): Promise<R[]> => {
+  const results: R[] = []
+  for (let i = 0; i < items.length; i += batchSize) {
+    const batch = items.slice(i, i + batchSize)
+    const batchResults = await Promise.all(batch.map(callback))
+    results.push(...batchResults)
+  }
+  return results
+}
+
 export function MonthlyStandardizationModal({
   open,
   onOpenChange,
@@ -227,21 +242,6 @@ export function MonthlyStandardizationModal({
       }
 
       const result: PreviewWallet[] = []
-
-      // Helper function to process promises in batches
-      const processInBatches = async <T, R>(
-        items: T[],
-        batchSize: number,
-        callback: (item: T) => Promise<R>,
-      ): Promise<R[]> => {
-        const results: R[] = []
-        for (let i = 0; i < items.length; i += batchSize) {
-          const batch = items.slice(i, i + batchSize)
-          const batchResults = await Promise.all(batch.map(callback))
-          results.push(...batchResults)
-        }
-        return results
-      }
 
       // Fetch data for all wallets in batches of 5
       const walletDetailsResults = await processInBatches(
