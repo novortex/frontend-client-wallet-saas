@@ -16,7 +16,10 @@ import {
 } from '@/services/wallet/walletAssetService'
 import { getWalletOrganization } from '@/services/wallet/walleInfoService'
 import { Loading } from '@/components/custom/loading'
-import { AssetsOrganizationForSelectedResponse } from '@/types/asset.type'
+import {
+  AssetsOrganizationForSelectedResponse,
+  TAsset,
+} from '@/types/asset.type'
 import { Progress } from '@/components/ui/progress'
 import { Badge } from '@/components/ui/badge'
 
@@ -61,6 +64,53 @@ const getMonthFromDate = (startDate: string | Date | null): string => {
   if (isNaN(date.getTime())) return ''
 
   return MONTHS[date.getMonth()]
+}
+
+// Function to process changes in a strategic order
+async function processWalletChanges(
+  walletData: PreviewWallet,
+  allocations: Record<string, number>,
+  existingAssets: TAsset[],
+) {
+  const changes = walletData.changes.sort((a, b) => {
+    if (a.action === 'remove' && b.action !== 'remove') return -1
+    if (b.action === 'remove' && a.action !== 'remove') return 1
+    if (a.diff < 0 && b.diff >= 0) return -1
+    if (b.diff < 0 && a.diff >= 0) return 1
+    if (a.action === 'add' && b.action !== 'add') return 1
+    if (b.action === 'add' && a.action !== 'add') return -1
+    return 0
+  })
+
+  for (const change of changes) {
+    const allocation = allocations[change.assetUuid] || 0
+    const currentAsset = existingAssets.find((a) => a.uuid === change.assetUuid)
+
+    try {
+      if (currentAsset) {
+        await updateAssetIdealAllocation(
+          walletData.walletUuid,
+          change.assetUuid,
+          allocation,
+        )
+      } else {
+        if (allocation > 0) {
+          await addCryptoWalletClient(
+            walletData.walletUuid,
+            change.assetUuid,
+            0,
+            allocation,
+          )
+        }
+      }
+    } catch (error) {
+      console.error(
+        `Error processing ${change.assetName} in wallet ${walletData.client}:`,
+        error,
+      )
+      // Continue with next assets even if one fails
+    }
+  }
 }
 
 export function MonthlyStandardizationModal({
@@ -311,57 +361,8 @@ export function MonthlyStandardizationModal({
         )
         const existingAssets = walletAssetsResp?.assets || []
 
-        // Process in strategic order
-        // 1st: Remove/zero assets first
-        // 2nd: Decrease allocations
-        // 3rd: Increase allocations
-        // 4th: Add new assets
-
-        const changes = walletData.changes.sort((a, b) => {
-          // Priority order:
-          if (a.action === 'remove' && b.action !== 'remove') return -1
-          if (b.action === 'remove' && a.action !== 'remove') return 1
-          if (a.diff < 0 && b.diff >= 0) return -1
-          if (b.diff < 0 && a.diff >= 0) return 1
-          if (a.action === 'add' && b.action !== 'add') return 1
-          if (b.action === 'add' && a.action !== 'add') return -1
-          return 0
-        })
-
-        // Process changes in strategic order
-        for (const change of changes) {
-          const allocation = allocations[change.assetUuid] || 0
-          const currentAsset = existingAssets.find(
-            (a) => a.uuid === change.assetUuid,
-          )
-
-          try {
-            if (currentAsset) {
-              // Update allocation
-              await updateAssetIdealAllocation(
-                walletData.walletUuid,
-                change.assetUuid,
-                allocation,
-              )
-            } else {
-              if (allocation > 0) {
-                // Add new asset
-                await addCryptoWalletClient(
-                  walletData.walletUuid,
-                  change.assetUuid,
-                  0,
-                  allocation,
-                )
-              }
-            }
-          } catch (error) {
-            console.error(
-              `Error processing ${change.assetName} in wallet ${walletData.client}:`,
-              error,
-            )
-            // Continue with next assets even if one fails
-          }
-        }
+        // Call the strategic function
+        await processWalletChanges(walletData, allocations, existingAssets)
 
         setProgress(((idx + 1) / walletsWithChanges.length) * 100)
       }
