@@ -3,8 +3,6 @@ import { SwitchTheme } from '@/components/custom/switch-theme'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { ClientsFilterModal } from '@/components/custom/clientsFilterModal/index'
-import { MonthlyRebalanceModal } from './monthly-rebalance-modal'
-import { OrganizationAssetsModal } from './components/OrganizationAssetsModal'
 import { MonthlyStandardizationModal } from './components/MonthlyStandardizationModal'
 import { toast } from '@/components/ui/use-toast'
 import { formatDate } from '@/utils'
@@ -47,9 +45,6 @@ export function Clients() {
   const [walletCashData, setWalletCashData] = useState<
     Record<string, number | null>
   >({})
-  const [isMonthlyRebalanceOpen, setIsMonthlyRebalanceOpen] = useState(false)
-  const [isOrganizationAssetsOpen, setIsOrganizationAssetsOpen] =
-    useState(false)
   const [isMonthlyStandardizationOpen, setIsMonthlyStandardizationOpen] =
     useState(false)
 
@@ -393,14 +388,6 @@ export function Clients() {
         </>
       )}
 
-      <MonthlyRebalanceModal
-        open={isMonthlyRebalanceOpen}
-        onOpenChange={setIsMonthlyRebalanceOpen}
-      />
-      <OrganizationAssetsModal
-        open={isOrganizationAssetsOpen}
-        onOpenChange={setIsOrganizationAssetsOpen}
-      />
       <MonthlyStandardizationModal
         open={isMonthlyStandardizationOpen}
         onOpenChange={setIsMonthlyStandardizationOpen}
