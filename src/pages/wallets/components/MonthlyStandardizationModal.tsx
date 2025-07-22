@@ -228,31 +228,48 @@ export function MonthlyStandardizationModal({
 
       const result: PreviewWallet[] = []
 
-      // Fetch data for all wallets in parallel
-      const walletDetailsPromises = wallets.map(async (wallet) => {
-        try {
-          const walletAssetsResp = await getAllAssetsWalletClient(
-            wallet.walletUuid,
-          )
-          return {
-            wallet,
-            walletInfo: walletAssetsResp?.wallet,
-            walletAssets: walletAssetsResp?.assets || [],
-          }
-        } catch (error) {
-          console.error(
-            `Error fetching wallet data ${wallet.walletUuid}:`,
-            error,
-          )
-          return {
-            wallet,
-            walletInfo: null,
-            walletAssets: [],
-          }
+      // Helper function to process promises in batches
+      const processInBatches = async <T, R>(
+        items: T[],
+        batchSize: number,
+        callback: (item: T) => Promise<R>,
+      ): Promise<R[]> => {
+        const results: R[] = []
+        for (let i = 0; i < items.length; i += batchSize) {
+          const batch = items.slice(i, i + batchSize)
+          const batchResults = await Promise.all(batch.map(callback))
+          results.push(...batchResults)
         }
-      })
+        return results
+      }
 
-      const walletDetailsResults = await Promise.all(walletDetailsPromises)
+      // Fetch data for all wallets in batches of 5
+      const walletDetailsResults = await processInBatches(
+        wallets,
+        5,
+        async (wallet) => {
+          try {
+            const walletAssetsResp = await getAllAssetsWalletClient(
+              wallet.walletUuid,
+            )
+            return {
+              wallet,
+              walletInfo: walletAssetsResp?.wallet,
+              walletAssets: walletAssetsResp?.assets || [],
+            }
+          } catch (error) {
+            console.error(
+              `Error fetching wallet data ${wallet.walletUuid}:`,
+              error,
+            )
+            return {
+              wallet,
+              walletInfo: null,
+              walletAssets: [],
+            }
+          }
+        },
+      )
 
       // Filter and process wallets for selected months
       for (const { wallet, walletInfo, walletAssets } of walletDetailsResults) {
