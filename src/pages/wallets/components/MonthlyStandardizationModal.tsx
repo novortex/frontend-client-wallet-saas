@@ -385,23 +385,6 @@ export function MonthlyStandardizationModal({
     }
   }
 
-  const autoAdjustTo100 = () => {
-    const nonZeroAssets = assets.filter(
-      (asset) => (allocations[asset.uuid] || 0) > 0,
-    )
-
-    if (nonZeroAssets.length === 0) return
-
-    const equalAllocation = 100 / nonZeroAssets.length
-    const newAllocations: Record<string, number> = { ...allocations }
-
-    nonZeroAssets.forEach((asset) => {
-      newAllocations[asset.uuid] = Number(equalAllocation.toFixed(2))
-    })
-
-    setAllocations(newAllocations)
-  }
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="h-[90vh] max-w-4xl overflow-y-auto">
@@ -509,15 +492,6 @@ export function MonthlyStandardizationModal({
                   >
                     Total: {total.toFixed(2)}%
                   </Badge>
-                  {!isValid && total > 0 && (
-                    <Button
-                      size="sm"
-                      onClick={autoAdjustTo100}
-                      className="bg-blue-600 text-white hover:bg-blue-700"
-                    >
-                      Auto-adjust to 100%
-                    </Button>
-                  )}
                 </div>
               </div>
 
