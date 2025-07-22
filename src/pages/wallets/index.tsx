@@ -4,6 +4,8 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { ClientsFilterModal } from '@/components/custom/clientsFilterModal/index'
 import { MonthlyRebalanceModal } from './monthly-rebalance-modal'
+import { OrganizationAssetsModal } from './components/OrganizationAssetsModal'
+import { MonthlyStandardizationModal } from './components/MonthlyStandardizationModal'
 import { toast } from '@/components/ui/use-toast'
 import { formatDate } from '@/utils'
 import { TClientInfosResponse } from '@/types/customer.type'
@@ -46,6 +48,10 @@ export function Clients() {
     Record<string, number | null>
   >({})
   const [isMonthlyRebalanceOpen, setIsMonthlyRebalanceOpen] = useState(false)
+  const [isOrganizationAssetsOpen, setIsOrganizationAssetsOpen] =
+    useState(false)
+  const [isMonthlyStandardizationOpen, setIsMonthlyStandardizationOpen] =
+    useState(false)
 
   const observerRef = useRef<IntersectionObserver | null>(null)
   const loadingTriggerRef = useRef<HTMLDivElement | null>(null)
@@ -324,7 +330,7 @@ export function Clients() {
         </div>
         <div className="flex gap-4">
           <Button
-            onClick={() => setIsMonthlyRebalanceOpen(true)}
+            onClick={() => setIsMonthlyStandardizationOpen(true)}
             className="bg-[#F2BE38] text-black hover:bg-yellow-600 hover:text-white"
           >
             Monthly Rebalancing
@@ -390,6 +396,14 @@ export function Clients() {
       <MonthlyRebalanceModal
         open={isMonthlyRebalanceOpen}
         onOpenChange={setIsMonthlyRebalanceOpen}
+      />
+      <OrganizationAssetsModal
+        open={isOrganizationAssetsOpen}
+        onOpenChange={setIsOrganizationAssetsOpen}
+      />
+      <MonthlyStandardizationModal
+        open={isMonthlyStandardizationOpen}
+        onOpenChange={setIsMonthlyStandardizationOpen}
       />
     </div>
   )
