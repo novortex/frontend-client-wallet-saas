@@ -35,7 +35,7 @@ export default function WalletMonitoring() {
   const [searchValue, setSearchValue] = useState('')
   const [isFilterOpen, setIsFilterOpen] = useState(false)
 
-  // Estado para controlar a aba ativa
+  // State to control the active tab
   const [activeTab, setActiveTab] = useState<'balance' | 'standardization'>(
     'balance',
   )
@@ -69,7 +69,7 @@ export default function WalletMonitoring() {
         <SwitchTheme />
       </div>
 
-      {/* Abas de navegação */}
+      {/* Navigation tabs */}
       <div className="mb-6 flex border-b border-gray-300 dark:border-gray-600">
         <button
           className={`px-4 py-2 ${
@@ -93,10 +93,10 @@ export default function WalletMonitoring() {
         </button>
       </div>
 
-      {/* Conteúdo da aba Balance Monitoring */}
+      {/* Balance Monitoring tab content */}
       {activeTab === 'balance' && (
         <>
-          {/* Cards de estatísticas */}
+          {/* Statistics cards */}
           <div
             data-testid="stats-cards-container"
             className="mb-10 grid grid-cols-1 gap-4 md:grid-cols-5"
@@ -143,7 +143,7 @@ export default function WalletMonitoring() {
             </div>
           </div>
 
-          {/* Barra superior da tabela */}
+          {/* Table top bar */}
           <div className="mb-10 rounded-md border">
             <div className="flex items-center justify-between rounded-t-lg bg-lightComponent p-5 dark:bg-[#171717]">
               <h1 className="text-xl dark:text-white">
@@ -221,7 +221,7 @@ export default function WalletMonitoring() {
               </div>
             </div>
 
-            {/* Tabela */}
+            {/* Table */}
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
@@ -300,10 +300,10 @@ export default function WalletMonitoring() {
         </>
       )}
 
-      {/* Conteúdo da aba FRC Monitoring */}
+      {/* FRC Monitoring tab content */}
       {activeTab === 'standardization' && (
         <>
-          {/* Cards de estatísticas FRC */}
+          {/* FRC statistics cards */}
           <div className="mb-10 grid grid-cols-1 gap-4 md:grid-cols-4">
             <div className="rounded-lg bg-red-100 p-4 dark:bg-red-900">
               <div className="text-sm text-red-600 dark:text-red-300">
@@ -376,7 +376,7 @@ export default function WalletMonitoring() {
             </div>
           </div>
 
-          {/* Barra superior da tabela de FRC */}
+          {/* FRC table top bar */}
           <div className="mb-10 rounded-md border">
             <div className="flex items-center justify-between rounded-t-lg bg-lightComponent p-5 dark:bg-[#171717]">
               <h1 className="text-xl dark:text-white">
@@ -459,7 +459,7 @@ export default function WalletMonitoring() {
               </div>
             </div>
 
-            {/* Tabela de FRC por assessor */}
+            {/* FRC table by manager */}
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
@@ -514,7 +514,7 @@ export default function WalletMonitoring() {
                         colSpan={5}
                         className="py-8 text-center text-muted-foreground"
                       >
-                        Nenhum dado de FRC encontrado.
+                        No FRC data found.
                       </td>
                     </tr>
                   )}
