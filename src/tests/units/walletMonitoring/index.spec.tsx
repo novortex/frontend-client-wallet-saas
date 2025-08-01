@@ -94,7 +94,6 @@ jest.mock('lucide-react', () => ({
 const mockManagersData = [
   {
     managerName: 'John Manager',
-    managerUuid: 'manager-1',
     totalWallets: 10,
     balancedWallets: 8,
     delayedWallets: 2,
@@ -102,7 +101,6 @@ const mockManagersData = [
   },
   {
     managerName: 'Jane Manager',
-    managerUuid: 'manager-2',
     totalWallets: 5,
     balancedWallets: 5,
     delayedWallets: 0,
@@ -110,7 +108,6 @@ const mockManagersData = [
   },
   {
     managerName: 'Bob Manager',
-    managerUuid: 'manager-3',
     totalWallets: 8,
     delayedWallets: 5,
     balancedWallets: 3,
@@ -126,13 +123,96 @@ const mockStats = {
   criticalManagers: 1,
 }
 
+const mockStandardizationStats = {
+  standardizedWallets: 8,
+  nonStandardizedWallets: 2,
+  totalWallets: 10,
+  standardizationPercentage: 80.0,
+}
+
+const mockStandardizedWalletsData = [
+  {
+    walletUuid: 'wallet-1',
+    clientName: 'Client A',
+    managerName: 'John Manager',
+    lastRebalance: '2024-01-15',
+    nextRebalance: '2024-02-15',
+    daysSinceLastRebalance: 30,
+    isWithinStandardInterval: true,
+    isStandardized: true,
+    statusDescription: 'Within standard interval',
+  },
+  {
+    walletUuid: 'wallet-2',
+    clientName: 'Client B',
+    managerName: 'Jane Manager',
+    lastRebalance: '2024-01-01',
+    nextRebalance: '2024-02-01',
+    daysSinceLastRebalance: 44,
+    isWithinStandardInterval: false,
+    isStandardized: false,
+    statusDescription: 'Delayed rebalancement',
+  },
+]
+
+const mockProcessedManagers = [
+  {
+    managerName: 'John Manager',
+    totalWallets: 10,
+    balancedWallets: 8,
+    delayedWallets: 2,
+    percentage: 80.0,
+    frcData: {
+      managerName: 'John Manager',
+      managerUuid: 'manager-1',
+      totalClients: 40,
+      frc0Count: 24,
+      frc1Count: 10,
+      frcMoreThan1Count: 6,
+      frc0Percent: 60.0,
+      frc1Percent: 25.0,
+      frcMoreThan1Percent: 15.0,
+      period: '2024-01',
+    },
+  },
+  {
+    managerName: 'Jane Manager',
+    totalWallets: 5,
+    balancedWallets: 5,
+    delayedWallets: 0,
+    percentage: 100.0,
+    frcData: {
+      managerName: 'Jane Manager',
+      managerUuid: 'manager-2',
+      totalClients: 30,
+      frc0Count: 18,
+      frc1Count: 8,
+      frcMoreThan1Count: 4,
+      frc0Percent: 60.0,
+      frc1Percent: 26.7,
+      frcMoreThan1Percent: 13.3,
+      period: '2024-01',
+    },
+  },
+  {
+    managerName: 'Bob Manager',
+    totalWallets: 8,
+    delayedWallets: 5,
+    balancedWallets: 3,
+    percentage: 37.5,
+  },
+]
+
 const mockUniqueManagers = [
-  { uuid: 'manager-1', name: 'John Manager' },
-  { uuid: 'manager-2', name: 'Jane Manager' },
-  { uuid: 'manager-3', name: 'Bob Manager' },
+  { name: 'John Manager' },
+  { name: 'Jane Manager' },
+  { name: 'Bob Manager' },
 ]
 
 const mockFilters = {
+  managersSelected: [],
+  dateFrom: '',
+  dateTo: '',
   manager: [],
   status: [],
   searchTerm: '',
@@ -152,7 +232,14 @@ const defaultMockHookReturn = {
   filters: mockFilters,
   setFilters: jest.fn(),
   uniqueManagers: mockUniqueManagers,
-  totalItems: 3,
+  standardizationStats: mockStandardizationStats,
+  standardizedWallets: mockStandardizedWalletsData,
+  standardizationCurrentPage: 1,
+  setStandardizationCurrentPage: jest.fn(),
+  canStandardizationPreviousPage: false,
+  canStandardizationNextPage: true,
+  standardizationTotalPages: 1,
+  processedManagers: mockProcessedManagers,
 }
 
 describe('WalletMonitoring Component', () => {
@@ -177,7 +264,7 @@ describe('WalletMonitoring Component', () => {
     it('should render the component correctly', () => {
       render(<WalletMonitoring />)
 
-      expect(screen.getByText('Wallet Balance Monitoring')).toBeInTheDocument()
+      expect(screen.getByText('Wallet Monitoring')).toBeInTheDocument()
       expect(screen.getByTestId('switch-theme')).toBeInTheDocument()
       expect(
         screen.getByText('Manager Performance Overview'),
@@ -593,7 +680,6 @@ describe('WalletMonitoring Component', () => {
     it('should handle managers with incomplete data', () => {
       const incompleteManager = {
         managerName: 'Incomplete Manager',
-        managerUuid: 'incomplete-1',
         totalWallets: 0,
         balancedWallets: 0,
         delayedWallets: 0,
@@ -656,7 +742,7 @@ describe('WalletMonitoring Component', () => {
     it('should apply dark theme classes correctly', () => {
       render(<WalletMonitoring />)
 
-      const title = screen.getByText('Wallet Balance Monitoring')
+      const title = screen.getByText('Wallet Monitoring')
       expect(title).toHaveClass('dark:text-white')
 
       const tableHeader = screen.getByText('Manager Performance Overview')
