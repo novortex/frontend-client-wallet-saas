@@ -28,7 +28,7 @@ export default function WalletMonitoring() {
     canStandardizationPreviousPage,
     canStandardizationNextPage,
     standardizationTotalPages,
-    frcStats,
+    processedManagers,
   } = useWalletMonitoring()
 
   const [isSearchOpen, setIsSearchOpen] = useState(false)
@@ -89,7 +89,7 @@ export default function WalletMonitoring() {
           }`}
           onClick={() => setActiveTab('standardization')}
         >
-          Standardization Monitoring
+          FRC Monitoring
         </button>
       </div>
 
@@ -300,21 +300,133 @@ export default function WalletMonitoring() {
         </>
       )}
 
-      {/* Conteúdo da aba Standardization Monitoring */}
+      {/* Conteúdo da aba FRC Monitoring */}
       {activeTab === 'standardization' && (
         <>
-          {/* Barra superior da tabela de padronização */}
+          {/* Cards de estatísticas FRC */}
+          <div className="mb-10 grid grid-cols-1 gap-4 md:grid-cols-4">
+            <div className="rounded-lg bg-red-100 p-4 dark:bg-red-900">
+              <div className="text-sm text-red-600 dark:text-red-300">
+                FRC = 0 (Média)
+              </div>
+              <div className="text-2xl font-bold text-red-800 dark:text-red-100">
+                {processedManagers.filter((m) => m.frcData).length > 0
+                  ? (
+                      processedManagers
+                        .filter((m) => m.frcData)
+                        .reduce(
+                          (acc, manager) =>
+                            acc + (manager.frcData?.frc0Percent || 0),
+                          0,
+                        ) / processedManagers.filter((m) => m.frcData).length
+                    ).toFixed(1)
+                  : '0.0'}
+                %
+              </div>
+            </div>
+            <div className="rounded-lg bg-yellow-100 p-4 dark:bg-yellow-900">
+              <div className="text-sm text-yellow-600 dark:text-yellow-300">
+                FRC = 1 (Média)
+              </div>
+              <div className="text-2xl font-bold text-yellow-800 dark:text-yellow-100">
+                {processedManagers.filter((m) => m.frcData).length > 0
+                  ? (
+                      processedManagers
+                        .filter((m) => m.frcData)
+                        .reduce(
+                          (acc, manager) =>
+                            acc + (manager.frcData?.frc1Percent || 0),
+                          0,
+                        ) / processedManagers.filter((m) => m.frcData).length
+                    ).toFixed(1)
+                  : '0.0'}
+                %
+              </div>
+            </div>
+            <div className="rounded-lg bg-green-100 p-4 dark:bg-green-900">
+              <div className="text-sm text-green-600 dark:text-green-300">
+                FRC &gt; 1 (Média)
+              </div>
+              <div className="text-2xl font-bold text-green-800 dark:text-green-100">
+                {processedManagers.filter((m) => m.frcData).length > 0
+                  ? (
+                      processedManagers
+                        .filter((m) => m.frcData)
+                        .reduce(
+                          (acc, manager) =>
+                            acc + (manager.frcData?.frcMoreThan1Percent || 0),
+                          0,
+                        ) / processedManagers.filter((m) => m.frcData).length
+                    ).toFixed(1)
+                  : '0.0'}
+                %
+              </div>
+            </div>
+            <div className="rounded-lg bg-muted p-4">
+              <div className="text-sm text-muted-foreground">
+                Total Clientes
+              </div>
+              <div className="text-2xl font-bold text-foreground">
+                {processedManagers
+                  .filter((m) => m.frcData)
+                  .reduce(
+                    (acc, manager) =>
+                      acc + (manager.frcData?.totalClients || 0),
+                    0,
+                  )}
+              </div>
+            </div>
+          </div>
+
+          {/* Barra superior da tabela de FRC */}
           <div className="mb-10 rounded-md border">
             <div className="flex items-center justify-between rounded-t-lg bg-lightComponent p-5 dark:bg-[#171717]">
               <h1 className="text-xl dark:text-white">
-                Wallet Standardization Overview
+                FRC Statistics by Manager
               </h1>
               <div className="flex items-center gap-3">
+                {isSearchOpen ? (
+                  <div className="flex w-64 items-center">
+                    <Input
+                      placeholder="Search for a manager..."
+                      value={searchValue}
+                      onChange={handleSearchChange}
+                      className="h-10 border-gray-300 bg-white text-black dark:border-[#323232] dark:bg-[#131313] dark:text-white"
+                      autoFocus
+                      onBlur={() => {
+                        if (!searchValue.trim()) {
+                          setIsSearchOpen(false)
+                        }
+                      }}
+                    />
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="ml-1 h-8 w-8 p-0"
+                      onClick={handleClearSearch}
+                    >
+                      ✕
+                    </Button>
+                  </div>
+                ) : (
+                  <Button
+                    className="flex items-center gap-2 rounded-lg bg-white p-2 text-black hover:bg-gray-100 dark:bg-[#272727] dark:text-white dark:hover:bg-[#323232]"
+                    onClick={() => setIsSearchOpen(true)}
+                  >
+                    <Search className="h-4 w-4" />
+                  </Button>
+                )}
                 <Button
                   className="flex items-center gap-2 rounded-lg bg-white p-2 text-black hover:bg-gray-100 dark:bg-[#272727] dark:text-white dark:hover:bg-[#323232]"
                   onClick={handleExport}
                 >
                   <Download className="h-4 w-4" />
+                </Button>
+                <Button
+                  className="flex items-center gap-2 rounded-lg bg-white p-2 text-black hover:bg-gray-100 dark:bg-[#272727] dark:text-white dark:hover:bg-[#323232]"
+                  onClick={() => setIsFilterOpen(true)}
+                >
+                  <SlidersHorizontal className="h-4 w-4" />
                 </Button>
                 <div className="ml-2 flex items-center space-x-2 border-l border-gray-300 pl-2 dark:border-gray-600">
                   <Button
@@ -358,13 +470,13 @@ export default function WalletMonitoring() {
                       Assessor
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">
-                      % FRC = 0
+                      FRC = 0
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">
-                      % FRC = 1
+                      FRC = 1
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">
-                      % FRC &gt; 1
+                      FRC &gt; 1
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">
                       Total Clientes
@@ -372,25 +484,29 @@ export default function WalletMonitoring() {
                   </tr>
                 </thead>
                 <tbody className="bg-lightComponent dark:bg-[#171717] dark:text-[#959CB6]">
-                  {/* Substitua frcStats pelo array de estatísticas de FRC calculado no hook */}
-                  {Array.isArray(frcStats) && frcStats.length > 0 ? (
-                    frcStats.map((stat) => (
+                  {Array.isArray(processedManagers) &&
+                  processedManagers.length > 0 ? (
+                    processedManagers.map((manager) => (
                       <tr
-                        key={stat.managerName}
+                        key={manager.managerName}
                         className="border-b border-gray-200 hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-[#1a1a1a]"
                       >
                         <td className="px-6 py-4 text-sm font-medium text-gray-900 dark:text-white">
-                          {stat.managerName}
+                          {manager.managerName}
                         </td>
                         <td className="px-6 py-4 text-sm">
-                          {stat.frc0Percent.toFixed(2)}%
+                          {manager.frcData?.frc0Percent?.toFixed(2) ?? '--'}%
                         </td>
                         <td className="px-6 py-4 text-sm">
-                          {stat.frc1Percent.toFixed(2)}%
+                          {manager.frcData?.frc1Percent?.toFixed(2) ?? '--'}%
                         </td>
-                        <td className="px-6 py-4 text-sm">0.00%</td>
                         <td className="px-6 py-4 text-sm">
-                          {stat.totalClients}
+                          {manager.frcData?.frcMoreThan1Percent?.toFixed(2) ??
+                            '--'}
+                          %
+                        </td>
+                        <td className="px-6 py-4 text-sm">
+                          {manager.frcData?.totalClients ?? '--'}
                         </td>
                       </tr>
                     ))

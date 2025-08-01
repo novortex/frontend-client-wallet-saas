@@ -1,6 +1,10 @@
 import { useState, useEffect, useMemo, useCallback } from 'react'
-import { getWalletOrganization } from '@/services/wallet/walleInfoService'
+import {
+  getWalletOrganization,
+  getFrcStatistics,
+} from '@/services/wallet/walleInfoService'
 import { TClientInfosResponse } from '@/types/customer.type'
+import { FrcStats } from '@/types/wallet.type'
 
 // Tipos existentes
 interface WalletRecord {
@@ -9,6 +13,7 @@ interface WalletRecord {
   managerName: string
   nextRebalancing: string | null
   isDelayedRebalancing: boolean
+  rebalanceHistory?: string[] // datas ISO dos rebalanceamentos
 }
 
 interface ManagerStats {
@@ -19,7 +24,10 @@ interface ManagerStats {
   percentage: number
 }
 
-interface FilterOptions {
+export interface FilterOptions {
+  managersSelected: string[]
+  dateFrom: string
+  dateTo: string
   manager: string[]
   status: string[]
   searchTerm: string
@@ -35,6 +43,7 @@ interface StandardizedWalletRecord {
   isWithinStandardInterval: boolean
   isStandardized: boolean
   statusDescription: string
+  rebalanceHistory?: string[]
 }
 
 interface StandardizationStats {
@@ -50,116 +59,33 @@ export function useWalletMonitoring() {
   const [standardizedWallets, setStandardizedWallets] = useState<
     StandardizedWalletRecord[]
   >([])
+  const [processedManagers, setProcessedManagers] = useState<
+    (ManagerStats & { frcData?: FrcStats })[]
+  >([])
   const [currentPage, setCurrentPage] = useState(1)
   const [standardizationCurrentPage, setStandardizationCurrentPage] =
     useState(1)
   const [filters, setFilters] = useState<FilterOptions>({
+    managersSelected: [],
+    dateFrom: '',
+    dateTo: '',
     manager: [],
     status: [],
     searchTerm: '',
   })
-  // FRC stats: [{ managerName, frc0Percent, frc1Percent, totalClients }]
-  // Nova lógica FRC: 1 rebalanceamento por mês, se passou nextBalance e não rebalanceou, FRC=0
-  const frcStats = useMemo(() => {
-    const managerMap: Record<
-      string,
-      { frc0: number; frc1: number; total: number }
-    > = {}
-    const now = new Date()
-    standardizedWallets.forEach((wallet) => {
-      const manager = wallet.managerName
-      if (!managerMap[manager]) {
-        managerMap[manager] = { frc0: 0, frc1: 0, total: 0 }
-      }
-      // Preparado para FRC > 1: se no futuro houver wallet.rebalanceHistory (array de datas ISO)
-      let frc = 0
-      // @ts-expect-error: rebalanceHistory pode não existir ainda
-      const history: string[] | undefined = wallet.rebalanceHistory
-      if (history && Array.isArray(history)) {
-        // Conta quantos rebalanceamentos no mês atual
-        const currentMonth = now.getMonth()
-        const currentYear = now.getFullYear()
-        const count = history.filter((dateStr) => {
-          const d = new Date(dateStr)
-          return (
-            d.getMonth() === currentMonth && d.getFullYear() === currentYear
-          )
-        }).length
-        frc = count
-      } else {
-        // Lógica fallback: só FRC 0 ou 1
-        if (!wallet.lastRebalance) {
-          frc = 0 // Nunca rebalanceou
-        } else {
-          const last = new Date(wallet.lastRebalance)
-          const next = wallet.nextRebalance
-            ? new Date(wallet.nextRebalance)
-            : null
-          const isThisMonth =
-            last.getMonth() === now.getMonth() &&
-            last.getFullYear() === now.getFullYear()
-          // Se já passou nextBalance e não rebalanceou neste mês, FRC=0
-          if (next && now > next && !isThisMonth) {
-            frc = 0
-          } else if (isThisMonth) {
-            frc = 1
-          } else {
-            frc = 0
-          }
-        }
-      }
-      // Contabiliza nos buckets
-      if (frc === 0) {
-        managerMap[manager].frc0++
-      } else if (frc === 1) {
-        managerMap[manager].frc1++
-      } else if (frc > 1) {
-        // No futuro, se houver FRC > 1, pode adicionar um campo frcMoreThan1
-        // managerMap[manager].frcMoreThan1 = (managerMap[manager].frcMoreThan1 || 0) + 1
-      }
-      managerMap[manager].total++
-    })
-    return Object.entries(managerMap).map(
-      ([managerName, { frc0, frc1, total }]) => ({
-        managerName,
-        frc0Percent: total > 0 ? (frc0 / total) * 100 : 0,
-        frc1Percent: total > 0 ? (frc1 / total) * 100 : 0,
-        totalClients: total,
-      }),
-    )
-  }, [standardizedWallets])
-  const [searchTerm, setSearchTerm] = useState('')
 
-  // Constantes de paginação
-  const ITEMS_PER_PAGE = 10
-  const STANDARDIZATION_TOLERANCE_DAYS = 7 // ±7 dias de tolerância
-
-  // Função para determinar se uma carteira está com rebalanceamento atrasado
-  const calculateRebalancingStatus = (
-    nextRebalancing: string | null,
-  ): boolean => {
-    if (!nextRebalancing) return false
-
-    const rebalanceDate = new Date(nextRebalancing)
-    const currentDate = new Date()
-
-    rebalanceDate.setHours(0, 0, 0, 0)
-    currentDate.setHours(0, 0, 0, 0)
-
-    return rebalanceDate < currentDate
-  }
+  // States para FRC do backend - remover estados separados
+  // const [frcStats, setFrcStats] = useState<FrcStats[]>([])
+  // const [frcLoading, setFrcLoading] = useState(false)
 
   // Função para calcular dias desde o último rebalanceamento
   const calculateDaysSinceLastRebalance = (
-    lastRebalance: string | null,
+    lastBalance?: string,
   ): number | null => {
-    if (!lastRebalance) return null
+    if (!lastBalance) return null
 
-    const lastRebalanceDate = new Date(lastRebalance)
+    const lastRebalanceDate = new Date(lastBalance)
     const currentDate = new Date()
-
-    lastRebalanceDate.setHours(0, 0, 0, 0)
-    currentDate.setHours(0, 0, 0, 0)
 
     const diffTime = currentDate.getTime() - lastRebalanceDate.getTime()
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
@@ -180,35 +106,30 @@ export function useWalletMonitoring() {
       let isStandardized = false
 
       if (lastRebalance && nextRebalance && daysSinceLastRebalance !== null) {
-        // Calcula quantos dias faltam para o próximo rebalanceamento
-        const nextRebalanceDate = new Date(nextRebalance)
+        const lastDate = new Date(lastRebalance)
+        const nextDate = new Date(nextRebalance)
         const currentDate = new Date()
 
-        nextRebalanceDate.setHours(0, 0, 0, 0)
-        currentDate.setHours(0, 0, 0, 0)
-
-        const daysUntilNextRebalance = Math.ceil(
-          (nextRebalanceDate.getTime() - currentDate.getTime()) /
-            (1000 * 60 * 60 * 24),
+        const daysUntilNext = Math.ceil(
+          (nextDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24),
         )
 
-        // Considera padronizada se está dentro do prazo (não atrasada)
-        isWithinStandardInterval =
-          daysUntilNextRebalance >= -STANDARDIZATION_TOLERANCE_DAYS
-        isStandardized = isWithinStandardInterval
+        const daysFromLastToNext = Math.ceil(
+          (nextDate.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24),
+        )
 
-        if (daysUntilNextRebalance > 0) {
-          statusDescription = `Next rebalance in ${daysUntilNextRebalance} days`
-        } else if (daysUntilNextRebalance === 0) {
-          statusDescription = 'Rebalance due today'
+        const STANDARDIZATION_TOLERANCE_DAYS = 7
+        isWithinStandardInterval =
+          Math.abs(daysFromLastToNext - 30) <= STANDARDIZATION_TOLERANCE_DAYS
+        isStandardized = isWithinStandardInterval && daysUntilNext > 0
+
+        if (isStandardized) {
+          statusDescription = `Standardized (${daysUntilNext} days until rebalance)`
+        } else if (daysUntilNext <= 0) {
+          statusDescription = `Overdue (${Math.abs(daysUntilNext)} days)`
         } else {
-          const daysOverdue = Math.abs(daysUntilNextRebalance)
-          statusDescription = `Overdue by ${daysOverdue} days`
+          statusDescription = `Non-standard interval (${daysFromLastToNext} days)`
         }
-      } else if (!lastRebalance) {
-        statusDescription = 'Never rebalanced'
-      } else if (!nextRebalance) {
-        statusDescription = 'No next rebalance scheduled'
       }
 
       return {
@@ -221,71 +142,121 @@ export function useWalletMonitoring() {
         isWithinStandardInterval,
         isStandardized,
         statusDescription,
+        rebalanceHistory:
+          (wallet as TClientInfosResponse & { rebalanceHistory?: string[] })
+            .rebalanceHistory || [],
       }
     },
     [],
   )
 
-  // Buscar dados das carteiras
-  const fetchWallets = useCallback(async () => {
+  // Buscar dados consolidados (wallets + FRC)
+  const fetchWalletsAndFrc = useCallback(async () => {
     try {
       setLoading(true)
-      const response = await getWalletOrganization()
-      console.log('Wallets fetched:', response)
 
-      if (response && Array.isArray(response)) {
-        // Dados para balanceamento (já existente)
-        const walletRecords: WalletRecord[] = response.map((wallet) => ({
+      // Buscar ambos os dados em paralelo
+      const [walletsResponse, frcStatsResponse] = await Promise.all([
+        getWalletOrganization(),
+        getFrcStatistics(),
+      ])
+
+      if (walletsResponse && Array.isArray(walletsResponse)) {
+        const walletRecords: WalletRecord[] = walletsResponse.map((wallet) => ({
           walletUuid: wallet.walletUuid,
           clientName: wallet.infosClient?.name || 'N/A',
           managerName: wallet.managerName || 'N/A',
           nextRebalancing: wallet.nextBalance,
           isDelayedRebalancing: calculateRebalancingStatus(wallet.nextBalance),
+          rebalanceHistory:
+            (wallet as TClientInfosResponse & { rebalanceHistory?: string[] })
+              .rebalanceHistory || [],
         }))
 
         setWallets(walletRecords)
 
-        // Dados para padronização (novo)
-        const standardizationResults = response.map((wallet) =>
+        // Dados para padronização
+        const standardizationResults = walletsResponse.map((wallet) =>
           checkWalletStandardization(wallet),
         )
         setStandardizedWallets(standardizationResults)
+
+        // Criar um Map dos dados FRC por manager para facilitar o merge
+        const frcByManagerName = new Map<string, FrcStats>()
+        if (frcStatsResponse && Array.isArray(frcStatsResponse)) {
+          frcStatsResponse.forEach((frc) => {
+            frcByManagerName.set(frc.managerName, frc)
+          })
+        }
+
+        // Calcular estatísticas de managers com dados FRC integrados
+        const managerMap = new Map<
+          string,
+          ManagerStats & { frcData?: FrcStats }
+        >()
+
+        walletRecords.forEach((wallet) => {
+          const existing = managerMap.get(wallet.managerName) || {
+            managerName: wallet.managerName,
+            balancedWallets: 0,
+            delayedWallets: 0,
+            totalWallets: 0,
+            percentage: 0,
+            frcData: undefined,
+          }
+
+          existing.totalWallets++
+          if (wallet.isDelayedRebalancing) {
+            existing.delayedWallets++
+          } else {
+            existing.balancedWallets++
+          }
+
+          existing.percentage =
+            (existing.balancedWallets / existing.totalWallets) * 100
+
+          // Adicionar dados FRC se disponíveis para este manager
+          if (!existing.frcData) {
+            existing.frcData = frcByManagerName.get(wallet.managerName)
+          }
+
+          managerMap.set(wallet.managerName, existing)
+        })
+
+        // Salvar os managers processados (com ou sem dados FRC)
+        const processedManagersArray = Array.from(managerMap.values())
+
+        setProcessedManagers(processedManagersArray)
       }
     } catch (error) {
-      console.error('Error fetching wallets:', error)
+      console.error('Error fetching wallet and FRC data:', error)
     } finally {
       setLoading(false)
     }
   }, [checkWalletStandardization])
 
-  // Agrupar dados por manager e calcular estatísticas (balanceamento)
-  const managerStats = useMemo(() => {
-    const managerMap = new Map<string, ManagerStats>()
+  const [searchTerm, setSearchTerm] = useState('')
 
-    wallets.forEach((wallet) => {
-      const existing = managerMap.get(wallet.managerName) || {
-        managerName: wallet.managerName,
-        balancedWallets: 0,
-        delayedWallets: 0,
-        totalWallets: 0,
-        percentage: 0,
-      }
+  // Constantes de paginação
+  const ITEMS_PER_PAGE = 10
 
-      existing.totalWallets++
-      if (wallet.isDelayedRebalancing) {
-        existing.delayedWallets++
-      } else {
-        existing.balancedWallets++
-      }
+  // Função para determinar se uma carteira está com rebalanceamento atrasado
+  const calculateRebalancingStatus = (
+    nextRebalancing: string | null,
+  ): boolean => {
+    if (!nextRebalancing) return false
 
-      existing.percentage =
-        (existing.balancedWallets / existing.totalWallets) * 100
+    const rebalanceDate = new Date(nextRebalancing)
+    const currentDate = new Date()
 
-      managerMap.set(wallet.managerName, existing)
-    })
+    rebalanceDate.setHours(0, 0, 0, 0)
+    currentDate.setHours(0, 0, 0, 0)
 
-    return Array.from(managerMap.values())
-  }, [wallets])
+    return rebalanceDate < currentDate
+  }
+
+  // Usar dados processados (com FRC integrado) em vez de managerStats separado
+  const managerStats = processedManagers
 
   // Calcular estatísticas gerais (balanceamento)
   const stats = useMemo(() => {
@@ -426,8 +397,8 @@ export function useWalletMonitoring() {
   }, [wallets])
 
   useEffect(() => {
-    fetchWallets()
-  }, [fetchWallets])
+    fetchWalletsAndFrc()
+  }, [fetchWalletsAndFrc])
 
   return {
     loading,
@@ -451,6 +422,6 @@ export function useWalletMonitoring() {
     canStandardizationPreviousPage,
     canStandardizationNextPage,
     standardizationTotalPages,
-    frcStats,
+    processedManagers,
   }
 }

@@ -51,6 +51,9 @@ export function FilterModal({
 
   const handleApply = () => {
     onApplyFilter({
+      managersSelected: selectedManagers,
+      dateFrom: initialFilters.dateFrom || '',
+      dateTo: initialFilters.dateTo || '',
       manager: selectedManagers,
       status: selectedStatus,
       searchTerm: initialFilters.searchTerm,
@@ -62,6 +65,9 @@ export function FilterModal({
     setSelectedManagers([])
     setSelectedStatus([])
     onApplyFilter({
+      managersSelected: [],
+      dateFrom: '',
+      dateTo: '',
       manager: [],
       status: [],
       searchTerm: '',
