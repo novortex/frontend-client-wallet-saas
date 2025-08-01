@@ -6,14 +6,14 @@ import {
 import { TClientInfosResponse } from '@/types/customer.type'
 import { FrcStats } from '@/types/wallet.type'
 
-// Tipos existentes
+// Existing types
 interface WalletRecord {
   walletUuid: string
   clientName: string
   managerName: string
   nextRebalancing: string | null
   isDelayedRebalancing: boolean
-  rebalanceHistory?: string[] // datas ISO dos rebalanceamentos
+  rebalanceHistory?: string[] // ISO dates of rebalancing
 }
 
 interface ManagerStats {
@@ -74,11 +74,11 @@ export function useWalletMonitoring() {
     searchTerm: '',
   })
 
-  // States para FRC do backend - remover estados separados
+  // States for FRC from backend - remove separate states
   // const [frcStats, setFrcStats] = useState<FrcStats[]>([])
   // const [frcLoading, setFrcLoading] = useState(false)
 
-  // Função para calcular dias desde o último rebalanceamento
+  // Function to calculate days since last rebalancing
   const calculateDaysSinceLastRebalance = (
     lastBalance?: string,
   ): number | null => {
@@ -93,7 +93,7 @@ export function useWalletMonitoring() {
     return diffDays
   }
 
-  // Função para verificar se uma carteira está padronizada (baseado em datas)
+  // Function to check if a wallet is standardized (based on dates)
   const checkWalletStandardization = useCallback(
     (wallet: TClientInfosResponse): StandardizedWalletRecord => {
       const lastRebalance = wallet.lastBalance
@@ -150,12 +150,12 @@ export function useWalletMonitoring() {
     [],
   )
 
-  // Buscar dados consolidados (wallets + FRC)
+  // Fetch consolidated data (wallets + FRC)
   const fetchWalletsAndFrc = useCallback(async () => {
     try {
       setLoading(true)
 
-      // Buscar ambos os dados em paralelo
+      // Fetch both data in parallel
       const [walletsResponse, frcStatsResponse] = await Promise.all([
         getWalletOrganization(),
         getFrcStatistics(),
@@ -175,13 +175,13 @@ export function useWalletMonitoring() {
 
         setWallets(walletRecords)
 
-        // Dados para padronização
+        // Data for standardization
         const standardizationResults = walletsResponse.map((wallet) =>
           checkWalletStandardization(wallet),
         )
         setStandardizedWallets(standardizationResults)
 
-        // Criar um Map dos dados FRC por manager para facilitar o merge
+        // Create a Map of FRC data by manager for easier merging
         const frcByManagerName = new Map<string, FrcStats>()
         if (frcStatsResponse && Array.isArray(frcStatsResponse)) {
           frcStatsResponse.forEach((frc) => {
@@ -189,7 +189,7 @@ export function useWalletMonitoring() {
           })
         }
 
-        // Calcular estatísticas de managers com dados FRC integrados
+        // Calculate manager stats with integrated FRC data
         const managerMap = new Map<
           string,
           ManagerStats & { frcData?: FrcStats }
@@ -215,7 +215,7 @@ export function useWalletMonitoring() {
           existing.percentage =
             (existing.balancedWallets / existing.totalWallets) * 100
 
-          // Adicionar dados FRC se disponíveis para este manager
+          // Add FRC data if available for this manager
           if (!existing.frcData) {
             existing.frcData = frcByManagerName.get(wallet.managerName)
           }
@@ -223,7 +223,7 @@ export function useWalletMonitoring() {
           managerMap.set(wallet.managerName, existing)
         })
 
-        // Salvar os managers processados (com ou sem dados FRC)
+        // Save processed managers (with or without FRC data)
         const processedManagersArray = Array.from(managerMap.values())
 
         setProcessedManagers(processedManagersArray)
@@ -237,10 +237,10 @@ export function useWalletMonitoring() {
 
   const [searchTerm, setSearchTerm] = useState('')
 
-  // Constantes de paginação
+  // Pagination constants
   const ITEMS_PER_PAGE = 10
 
-  // Função para determinar se uma carteira está com rebalanceamento atrasado
+  // Function to determine if a wallet has overdue rebalancing
   const calculateRebalancingStatus = (
     nextRebalancing: string | null,
   ): boolean => {
@@ -255,10 +255,10 @@ export function useWalletMonitoring() {
     return rebalanceDate < currentDate
   }
 
-  // Usar dados processados (com FRC integrado) em vez de managerStats separado
+  // Use processed data (with integrated FRC) instead of separate managerStats
   const managerStats = processedManagers
 
-  // Calcular estatísticas gerais (balanceamento)
+  // Calculate overall statistics (balancing)
   const stats = useMemo(() => {
     const perfectManagers = managerStats.filter(
       (m) => m.percentage === 100,
@@ -282,7 +282,7 @@ export function useWalletMonitoring() {
     }
   }, [managerStats])
 
-  // Calcular estatísticas de padronização
+  // Calculate standardization statistics
   const standardizationStats = useMemo((): StandardizationStats => {
     const standardizedCount = standardizedWallets.filter(
       (w) => w.isStandardized,
@@ -301,7 +301,7 @@ export function useWalletMonitoring() {
     }
   }, [standardizedWallets])
 
-  // Aplicar filtros e busca
+  // Apply filters and search
   const filteredManagers = useMemo(() => {
     let filtered = managerStats
 
@@ -342,7 +342,7 @@ export function useWalletMonitoring() {
     return filtered
   }, [managerStats, filters, searchTerm])
 
-  // Aplicar filtros para padronização
+  // Apply filters for standardization
   const filteredStandardizedWallets = useMemo(() => {
     let filtered = standardizedWallets
 
@@ -363,13 +363,13 @@ export function useWalletMonitoring() {
     return filtered
   }, [standardizedWallets, filters, searchTerm])
 
-  // Paginação para balanceamento
+  // Pagination for balancing
   const paginatedManagers = useMemo(() => {
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE
     return filteredManagers.slice(startIndex, startIndex + ITEMS_PER_PAGE)
   }, [filteredManagers, currentPage])
 
-  // Paginação para padronização
+  // Pagination for standardization
   const paginatedStandardizedWallets = useMemo(() => {
     const startIndex = (standardizationCurrentPage - 1) * ITEMS_PER_PAGE
     return filteredStandardizedWallets.slice(
@@ -378,7 +378,7 @@ export function useWalletMonitoring() {
     )
   }, [filteredStandardizedWallets, standardizationCurrentPage])
 
-  // Calcular informações de paginação
+  // Calculate pagination info
   const totalPages = Math.ceil(filteredManagers.length / ITEMS_PER_PAGE)
   const standardizationTotalPages = Math.ceil(
     filteredStandardizedWallets.length / ITEMS_PER_PAGE,
@@ -389,7 +389,7 @@ export function useWalletMonitoring() {
   const canStandardizationNextPage =
     standardizationCurrentPage < standardizationTotalPages
 
-  // Managers únicos para filtros
+  // Unique managers for filters
   const uniqueManagers = useMemo(() => {
     return Array.from(new Set(wallets.map((w) => w.managerName))).map(
       (manager) => ({ name: manager }),
@@ -414,7 +414,7 @@ export function useWalletMonitoring() {
     filters,
     setFilters,
     uniqueManagers,
-    // Novos retornos para padronização
+    // New returns for standardization
     standardizationStats,
     standardizedWallets: paginatedStandardizedWallets,
     standardizationCurrentPage,
