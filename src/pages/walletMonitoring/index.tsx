@@ -307,7 +307,7 @@ export default function WalletMonitoring() {
           <div className="mb-10 grid grid-cols-1 gap-4 md:grid-cols-4">
             <div className="rounded-lg bg-red-100 p-4 dark:bg-red-900">
               <div className="text-sm text-red-600 dark:text-red-300">
-                FRC = 0 (Média)
+                FRC = 0
               </div>
               <div className="text-2xl font-bold text-red-800 dark:text-red-100">
                 {processedManagers.filter((m) => m.frcData).length > 0
@@ -324,11 +324,11 @@ export default function WalletMonitoring() {
                 %
               </div>
             </div>
-            <div className="rounded-lg bg-yellow-100 p-4 dark:bg-yellow-900">
-              <div className="text-sm text-yellow-600 dark:text-yellow-300">
-                FRC = 1 (Média)
+            <div className="rounded-lg bg-green-100 p-4 dark:bg-green-900">
+              <div className="text-sm text-green-600 dark:text-green-300">
+                FRC = 1
               </div>
-              <div className="text-2xl font-bold text-yellow-800 dark:text-yellow-100">
+              <div className="text-2xl font-bold text-green-800 dark:text-green-100">
                 {processedManagers.filter((m) => m.frcData).length > 0
                   ? (
                       processedManagers
@@ -343,9 +343,9 @@ export default function WalletMonitoring() {
                 %
               </div>
             </div>
-            <div className="rounded-lg bg-green-100 p-4 dark:bg-green-900">
-              <div className="text-sm text-green-600 dark:text-green-300">
-                FRC &gt; 1 (Média)
+            <div className="rounded-lg bg-yellow-100 p-4 dark:bg-yellow-900">
+              <div className="text-sm text-yellow-600 dark:text-yellow-300">
+                FRC &gt; 1
               </div>
               <div className="text-2xl font-bold text-green-800 dark:text-green-100">
                 {processedManagers.filter((m) => m.frcData).length > 0
@@ -363,9 +363,7 @@ export default function WalletMonitoring() {
               </div>
             </div>
             <div className="rounded-lg bg-muted p-4">
-              <div className="text-sm text-muted-foreground">
-                Total Clientes
-              </div>
+              <div className="text-sm text-muted-foreground">Total Clients</div>
               <div className="text-2xl font-bold text-foreground">
                 {processedManagers
                   .filter((m) => m.frcData)
