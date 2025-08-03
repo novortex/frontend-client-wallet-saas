@@ -1,7 +1,9 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { SwitchTheme } from '@/components/custom/switch-theme'
 import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 import { ClientsFilterModal } from '@/components/custom/clientsFilterModal/index'
+import { MonthlyStandardizationModal } from './components/MonthlyStandardizationModal'
 import { toast } from '@/components/ui/use-toast'
 import { formatDate } from '@/utils'
 import { TClientInfosResponse } from '@/types/customer.type'
@@ -43,6 +45,8 @@ export function Clients() {
   const [walletCashData, setWalletCashData] = useState<
     Record<string, number | null>
   >({})
+  const [isMonthlyStandardizationOpen, setIsMonthlyStandardizationOpen] =
+    useState(false)
 
   const observerRef = useRef<IntersectionObserver | null>(null)
   const loadingTriggerRef = useRef<HTMLDivElement | null>(null)
@@ -313,10 +317,20 @@ export function Clients() {
       </div>
 
       {/* Results counter */}
-      <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
-        Showing {displayedClients.length} of {filteredClients.length} wallets
-        {filteredClients.length !== clients.length &&
-          ` (${clients.length} total)`}
+      <div className="mb-4 flex justify-between text-sm text-gray-600 dark:text-gray-400">
+        <div className="flex items-end">
+          Showing {displayedClients.length} of {filteredClients.length} wallets
+          {filteredClients.length !== clients.length &&
+            ` (${clients.length} total)`}
+        </div>
+        <div className="flex gap-4">
+          <Button
+            onClick={() => setIsMonthlyStandardizationOpen(true)}
+            className="bg-[#F2BE38] text-black hover:bg-yellow-600 hover:text-white"
+          >
+            Monthly Rebalancing
+          </Button>
+        </div>
       </div>
 
       {clients.length === 0 ? (
@@ -373,6 +387,11 @@ export function Clients() {
           )}
         </>
       )}
+
+      <MonthlyStandardizationModal
+        open={isMonthlyStandardizationOpen}
+        onOpenChange={setIsMonthlyStandardizationOpen}
+      />
     </div>
   )
 }
