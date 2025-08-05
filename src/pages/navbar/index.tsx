@@ -7,10 +7,10 @@ import {
   BarChart2,
   Phone,
   LineChart,
+  Eye,
 } from 'lucide-react'
 import { Outlet as RouterOutlet, useLocation } from 'react-router-dom'
 
-// TODO: colocar a verificação da pagina para não aparecer a navegação no login
 export default function Navbar() {
   const location = useLocation()
   const hideNavigationRoutes = ['/']
@@ -41,10 +41,22 @@ export default function Navbar() {
               href="/wallet-closings"
             />
             <SideBarItem
-              icon={<Phone size={20} />}
-              text="Call Monitoring"
-              href="/call-monitoring"
-            />
+              icon={<Eye size={20} />}
+              text="Monitoring"
+              isDropdown={true}
+              href="#"
+            >
+              <SideBarItem
+                icon={<Phone size={18} />}
+                text="Call Monitoring"
+                href="/call-monitoring"
+              />
+              <SideBarItem
+                icon={<Wallet2Icon size={18} />}
+                text="Wallet Monitoring"
+                href="/wallet-monitoring"
+              />
+            </SideBarItem>
             <SideBarItem
               icon={<BarChart2 size={20} />}
               text="Dashboards"
@@ -61,7 +73,6 @@ export default function Navbar() {
               href="/admin/orgs"
             />
           </div>
-          <div className="mb-5">{/* Outras seções */}</div>
         </SideBar>
       )}
       <div className="w-screen" id="detail">
