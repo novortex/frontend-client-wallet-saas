@@ -165,7 +165,7 @@ export function TradeDialog({
                   <span className="text-red-500">Vendendo:</span>
                 )}{' '}
                 <span className="text-lg text-white">
-                  {Math.abs(tradeAmount)} Un.
+                  {Math.abs(tradeAmount).toFixed(6)} Un.
                 </span>
               </label>
             </div>
