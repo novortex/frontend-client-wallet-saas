@@ -30,7 +30,9 @@ export function TradeDialog({
   rowInfos,
   fetchData,
 }: TradeDialogProps) {
-  const [inputQuantity, setInputQuantity] = useState<string>('0')
+  const [inputQuantity, setInputQuantity] = useState<string>(() =>
+    String(rowInfos.assetQuantity),
+  )
   const [tradeAmount, setTradeAmount] = useState(0)
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false)
   const [pendingTradeType, setPendingTradeType] = useState<TradeType | null>(
@@ -53,11 +55,12 @@ export function TradeDialog({
   // Reset o state quando o dialog abre
   useEffect(() => {
     if (isOpen) {
-      setInputQuantity('0')
-      setTradeAmount(0)
+      const current = String(rowInfos.assetQuantity)
+      setInputQuantity(current)
+      setTradeAmount(0) // current - current
       setPendingTradeType(null)
     }
-  }, [isOpen])
+  }, [isOpen, rowInfos.assetQuantity])
 
   const handleBuy = () => {
     const buyAmount = Math.abs(tradeAmount)
@@ -152,6 +155,7 @@ export function TradeDialog({
                 className="h-10 w-full dark:border-[#323232] dark:bg-[#131313] dark:text-[#959CB6]"
                 placeholder="Quantity"
                 type="number"
+                min={0}
                 value={inputQuantity}
                 onChange={handleQuantityChange}
               />
@@ -159,7 +163,9 @@ export function TradeDialog({
 
             <div className="rounded-md bg-gray-800 p-3">
               <label className="font-medium">
-                {tradeAmount < 0 ? (
+                {tradeAmount === 0 ? (
+                  <span className="text-yellow-400">Sem alteração:</span>
+                ) : tradeAmount < 0 ? (
                   <span className="text-green-500">Comprando:</span>
                 ) : (
                   <span className="text-red-500">Vendendo:</span>
