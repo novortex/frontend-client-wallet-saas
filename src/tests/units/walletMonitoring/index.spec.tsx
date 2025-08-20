@@ -240,6 +240,14 @@ const defaultMockHookReturn = {
   canStandardizationNextPage: true,
   standardizationTotalPages: 1,
   processedManagers: mockProcessedManagers,
+  frcPage: 1,
+  setFrcPage: jest.fn(),
+  frcTotalPages: 1,
+  canFrcPrevious: false,
+  canFrcNext: false,
+  paginatedFrcManagers: mockProcessedManagers,
+  frcSelectedManagers: [],
+  setFrcSelectedManagers: jest.fn(),
 }
 
 describe('WalletMonitoring Component', () => {
