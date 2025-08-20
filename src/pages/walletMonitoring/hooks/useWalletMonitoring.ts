@@ -62,6 +62,9 @@ export function useWalletMonitoring() {
   const [currentPage, setCurrentPage] = useState(1)
   const [standardizationCurrentPage, setStandardizationCurrentPage] =
     useState(1)
+  // FRC specific pagination & filters (separate from balance/standardization)
+  const [frcPage, setFrcPage] = useState(1)
+  const [frcSelectedManagers, setFrcSelectedManagers] = useState<string[]>([])
   const [filters, setFilters] = useState<FilterOptions>({
     managersSelected: [],
     dateFrom: '',
@@ -70,10 +73,6 @@ export function useWalletMonitoring() {
     status: [],
     searchTerm: '',
   })
-
-  // States for FRC from backend - remove separate states
-  // const [frcStats, setFrcStats] = useState<FrcStats[]>([])
-  // const [frcLoading, setFrcLoading] = useState(false)
 
   // Function to calculate days since last rebalancing
   const calculateDaysSinceLastRebalance = (
@@ -346,7 +345,6 @@ export function useWalletMonitoring() {
     return rebalanceDate < currentDate
   }
 
-  // Use processed data (with integrated FRC) instead of separate managerStats
   const managerStats = processedManagers
 
   // Calculate overall statistics (balancing)
@@ -487,6 +485,33 @@ export function useWalletMonitoring() {
     )
   }, [wallets])
 
+  // FRC filtered managers
+  const frcManagersFiltered = useMemo(() => {
+    let list = processedManagers
+    if (frcSelectedManagers.length > 0) {
+      list = list.filter((m) => frcSelectedManagers.includes(m.managerName))
+    }
+    if (searchTerm) {
+      list = list.filter((m) =>
+        m.managerName.toLowerCase().includes(searchTerm.toLowerCase()),
+      )
+    }
+    return list
+  }, [processedManagers, frcSelectedManagers, searchTerm])
+
+  useEffect(() => {
+    setFrcPage(1)
+  }, [frcSelectedManagers, searchTerm, processedManagers])
+
+  const frcTotalPages =
+    Math.ceil(frcManagersFiltered.length / ITEMS_PER_PAGE) || 1
+  const canFrcPrevious = frcPage > 1
+  const canFrcNext = frcPage < frcTotalPages
+  const paginatedFrcManagers = useMemo(() => {
+    const start = (frcPage - 1) * ITEMS_PER_PAGE
+    return frcManagersFiltered.slice(start, start + ITEMS_PER_PAGE)
+  }, [frcManagersFiltered, frcPage])
+
   useEffect(() => {
     fetchWalletsAndFrc()
   }, [fetchWalletsAndFrc])
@@ -514,5 +539,13 @@ export function useWalletMonitoring() {
     canStandardizationNextPage,
     standardizationTotalPages,
     processedManagers,
+    frcPage,
+    setFrcPage,
+    frcTotalPages,
+    canFrcPrevious,
+    canFrcNext,
+    paginatedFrcManagers,
+    frcSelectedManagers,
+    setFrcSelectedManagers,
   }
 }
