@@ -7,6 +7,7 @@ import { SwitchTheme } from '@/components/custom/switch-theme'
 import { useWalletMonitoring } from './hooks/useWalletMonitoring'
 import { FilterModal } from './components/filterModal'
 import { PerformanceBadge } from './components/statusBadge'
+import { FrcFilterModal } from './components/frcFilterModal'
 
 export default function WalletMonitoring() {
   const {
@@ -23,17 +24,21 @@ export default function WalletMonitoring() {
     filters,
     setFilters,
     uniqueManagers,
-    standardizationCurrentPage,
-    setStandardizationCurrentPage,
-    canStandardizationPreviousPage,
-    canStandardizationNextPage,
-    standardizationTotalPages,
     processedManagers,
+    frcPage,
+    setFrcPage,
+    frcTotalPages,
+    canFrcPrevious,
+    canFrcNext,
+    paginatedFrcManagers,
+    frcSelectedManagers,
+    setFrcSelectedManagers,
   } = useWalletMonitoring()
 
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [searchValue, setSearchValue] = useState('')
   const [isFilterOpen, setIsFilterOpen] = useState(false)
+  const [isFrcFilterOpen, setIsFrcFilterOpen] = useState(false)
 
   // State to control the active tab
   const [activeTab, setActiveTab] = useState<'balance' | 'standardization'>(
@@ -422,35 +427,28 @@ export default function WalletMonitoring() {
                 </Button>
                 <Button
                   className="flex items-center gap-2 rounded-lg bg-white p-2 text-black hover:bg-gray-100 dark:bg-[#272727] dark:text-white dark:hover:bg-[#323232]"
-                  onClick={() => setIsFilterOpen(true)}
+                  onClick={() => setIsFrcFilterOpen(true)}
                 >
                   <SlidersHorizontal className="h-4 w-4" />
                 </Button>
                 <div className="ml-2 flex items-center space-x-2 border-l border-gray-300 pl-2 dark:border-gray-600">
                   <Button
                     size="sm"
-                    onClick={() =>
-                      setStandardizationCurrentPage((prev) =>
-                        Math.max(prev - 1, 1),
-                      )
-                    }
-                    disabled={!canStandardizationPreviousPage}
+                    onClick={() => setFrcPage((p) => Math.max(p - 1, 1))}
+                    disabled={!canFrcPrevious}
                     className="bg-white text-black hover:bg-gray-200 dark:bg-[#323232] dark:text-white dark:hover:bg-[#3a3a3a]"
                   >
                     Previous
                   </Button>
                   <span className="mx-2 text-sm dark:text-white">
-                    Page {standardizationCurrentPage} of{' '}
-                    {standardizationTotalPages || 1}
+                    Page {frcPage} of {frcTotalPages}
                   </span>
                   <Button
                     size="sm"
                     onClick={() =>
-                      setStandardizationCurrentPage((prev) =>
-                        Math.min(prev + 1, standardizationTotalPages),
-                      )
+                      setFrcPage((p) => Math.min(p + 1, frcTotalPages))
                     }
-                    disabled={!canStandardizationNextPage}
+                    disabled={!canFrcNext}
                     className="bg-[#F2BE38] text-black hover:bg-yellow-600 hover:text-white"
                   >
                     Next
@@ -482,9 +480,9 @@ export default function WalletMonitoring() {
                   </tr>
                 </thead>
                 <tbody className="bg-lightComponent dark:bg-[#171717] dark:text-[#959CB6]">
-                  {Array.isArray(processedManagers) &&
-                  processedManagers.length > 0 ? (
-                    processedManagers.map((manager) => (
+                  {Array.isArray(paginatedFrcManagers) &&
+                  paginatedFrcManagers.length > 0 ? (
+                    paginatedFrcManagers.map((manager) => (
                       <tr
                         key={manager.managerName}
                         className="border-b border-gray-200 hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-[#1a1a1a]"
@@ -531,6 +529,13 @@ export default function WalletMonitoring() {
         onApplyFilter={setFilters}
         initialFilters={filters}
         managers={uniqueManagers}
+      />
+      <FrcFilterModal
+        isOpen={isFrcFilterOpen}
+        onOpenChange={setIsFrcFilterOpen}
+        managers={uniqueManagers}
+        value={frcSelectedManagers}
+        onChange={setFrcSelectedManagers}
       />
     </div>
   )
