@@ -1,12 +1,9 @@
 import { useState, useEffect, useMemo, useCallback } from 'react'
-import {
-  getWalletOrganization,
-  getFrcStatistics,
-} from '@/services/wallet/walleInfoService'
+import { getWalletOrganization } from '@/services/wallet/walleInfoService'
+import { getWalletHistoric } from '@/services/historicService'
 import { TClientInfosResponse } from '@/types/customer.type'
-import { FrcStats } from '@/types/wallet.type'
+import { FrcStats, HistoricEntry } from '@/types/wallet.type'
 
-// Existing types
 interface WalletRecord {
   walletUuid: string
   clientName: string
@@ -65,6 +62,9 @@ export function useWalletMonitoring() {
   const [currentPage, setCurrentPage] = useState(1)
   const [standardizationCurrentPage, setStandardizationCurrentPage] =
     useState(1)
+  // FRC specific pagination & filters (separate from balance/standardization)
+  const [frcPage, setFrcPage] = useState(1)
+  const [frcSelectedManagers, setFrcSelectedManagers] = useState<string[]>([])
   const [filters, setFilters] = useState<FilterOptions>({
     managersSelected: [],
     dateFrom: '',
@@ -73,10 +73,6 @@ export function useWalletMonitoring() {
     status: [],
     searchTerm: '',
   })
-
-  // States for FRC from backend - remove separate states
-  // const [frcStats, setFrcStats] = useState<FrcStats[]>([])
-  // const [frcLoading, setFrcLoading] = useState(false)
 
   // Function to calculate days since last rebalancing
   const calculateDaysSinceLastRebalance = (
@@ -155,11 +151,7 @@ export function useWalletMonitoring() {
     try {
       setLoading(true)
 
-      // Fetch both data in parallel
-      const [walletsResponse, frcStatsResponse] = await Promise.all([
-        getWalletOrganization(),
-        getFrcStatistics(),
-      ])
+      const walletsResponse = await getWalletOrganization()
 
       if (walletsResponse && Array.isArray(walletsResponse)) {
         const walletRecords: WalletRecord[] = walletsResponse.map((wallet) => ({
@@ -181,22 +173,119 @@ export function useWalletMonitoring() {
         )
         setStandardizedWallets(standardizationResults)
 
-        // Create a Map of FRC data by manager for easier merging
-        const frcByManagerName = new Map<string, FrcStats>()
-        if (frcStatsResponse && Array.isArray(frcStatsResponse)) {
-          frcStatsResponse.forEach((frc) => {
-            frcByManagerName.set(frc.managerName, frc)
+        type WalletFrcBucket = 'FRC0' | 'FRC1' | 'FRC_GT1'
+
+        const managerFrcAccumulator = new Map<
+          string,
+          {
+            managerName: string
+            managerUuid?: string
+            totalClients: number
+            frc0Count: number
+            frc1Count: number
+            frcMoreThan1Count: number
+          }
+        >()
+
+        // Helper to classify wallet
+        const classifyWalletFrc = (
+          events: HistoricEntry[],
+          last?: string | null,
+          next?: string | null,
+        ): WalletFrcBucket => {
+          const lastDate = last ? new Date(last) : null
+          const nextDate = next ? new Date(next) : null
+          // Filter only BUY/SELL inside the cycle window
+          const relevant = events.filter((e) => {
+            if (e.historyType !== 'BUY_ASSET' && e.historyType !== 'SELL_ASSET')
+              return false
+            const created = new Date(e.createAt)
+            if (lastDate && created < lastDate) return false
+            if (nextDate && created >= nextDate) return false
+            return true
           })
+          // Group by calendar day (1-day window). Multiple trades same day = 1 rebalance.
+          const uniqueDays = new Set<string>()
+          relevant.forEach((e) => {
+            const d = new Date(e.createAt)
+            // Using UTC date component; adjust if business timezone differs.
+            const dayKey = d.toISOString().slice(0, 10) // YYYY-MM-DD
+            uniqueDays.add(dayKey)
+          })
+          const rebalanceCount = uniqueDays.size
+          if (rebalanceCount === 0) return 'FRC0'
+          if (rebalanceCount === 1) return 'FRC1'
+          return 'FRC_GT1'
         }
 
-        // Calculate manager stats with integrated FRC data
+        for (const w of walletsResponse) {
+          try {
+            const history = await getWalletHistoric(w.walletUuid)
+            const bucket = classifyWalletFrc(
+              history || [],
+              w.lastBalance,
+              w.nextBalance,
+            )
+            const mgr = w.managerName || 'N/A'
+            const selectedManager = managerFrcAccumulator.get(mgr) || {
+              managerName: mgr,
+              managerUuid: undefined,
+              totalClients: 0,
+              frc0Count: 0,
+              frc1Count: 0,
+              frcMoreThan1Count: 0,
+            }
+            selectedManager.totalClients += 1
+            if (bucket === 'FRC0') selectedManager.frc0Count += 1
+            else if (bucket === 'FRC1') selectedManager.frc1Count += 1
+            else selectedManager.frcMoreThan1Count += 1
+            managerFrcAccumulator.set(mgr, selectedManager)
+          } catch (err) {
+            // Ignore individual history errors so rest can proceed
+            console.error(
+              'Error fetching history for wallet',
+              w.walletUuid,
+              err,
+            )
+          }
+        }
+
+        // Build FrcStats objects
+        const computedFrcStats: FrcStats[] = Array.from(
+          managerFrcAccumulator.values(),
+        ).map((m) => {
+          const { totalClients, frc0Count, frc1Count, frcMoreThan1Count } = m
+          return {
+            managerName: m.managerName,
+            managerUuid: m.managerUuid || '',
+            totalClients,
+            frc0Count,
+            frc1Count,
+            frcMoreThan1Count,
+            frc0Percent:
+              totalClients > 0 ? (frc0Count / totalClients) * 100 : 0,
+            frc1Percent:
+              totalClients > 0 ? (frc1Count / totalClients) * 100 : 0,
+            frcMoreThan1Percent:
+              totalClients > 0 ? (frcMoreThan1Count / totalClients) * 100 : 0,
+            period: 'current-cycle',
+          }
+        })
+
+        // Create a Map of FRC data by manager for merging
+        const frcByManagerName = new Map<string, FrcStats>()
+        computedFrcStats.forEach((frc) => {
+          frcByManagerName.set(frc.managerName, frc)
+        })
+
+        // Calculate manager stats with integrated (computed) FRC data
         const managerMap = new Map<
           string,
           ManagerStats & { frcData?: FrcStats }
         >()
 
         walletRecords.forEach((wallet) => {
-          const existing = managerMap.get(wallet.managerName) || {
+          const selectedManager = managerMap.get(wallet.managerName) || {
             managerName: wallet.managerName,
             balancedWallets: 0,
             delayedWallets: 0,
@@ -205,22 +294,23 @@ export function useWalletMonitoring() {
             frcData: undefined,
           }
 
-          existing.totalWallets++
+          selectedManager.totalWallets++
           if (wallet.isDelayedRebalancing) {
-            existing.delayedWallets++
+            selectedManager.delayedWallets++
           } else {
-            existing.balancedWallets++
+            selectedManager.balancedWallets++
           }
 
-          existing.percentage =
-            (existing.balancedWallets / existing.totalWallets) * 100
+          selectedManager.percentage =
+            (selectedManager.balancedWallets / selectedManager.totalWallets) *
+            100
 
           // Add FRC data if available for this manager
-          if (!existing.frcData) {
-            existing.frcData = frcByManagerName.get(wallet.managerName)
+          if (!selectedManager.frcData) {
+            selectedManager.frcData = frcByManagerName.get(wallet.managerName)
           }
 
-          managerMap.set(wallet.managerName, existing)
+          managerMap.set(wallet.managerName, selectedManager)
         })
 
         // Save processed managers (with or without FRC data)
@@ -255,7 +345,6 @@ export function useWalletMonitoring() {
     return rebalanceDate < currentDate
   }
 
-  // Use processed data (with integrated FRC) instead of separate managerStats
   const managerStats = processedManagers
 
   // Calculate overall statistics (balancing)
@@ -396,6 +485,33 @@ export function useWalletMonitoring() {
     )
   }, [wallets])
 
+  // FRC filtered managers
+  const frcManagersFiltered = useMemo(() => {
+    let list = processedManagers
+    if (frcSelectedManagers.length > 0) {
+      list = list.filter((m) => frcSelectedManagers.includes(m.managerName))
+    }
+    if (searchTerm) {
+      list = list.filter((m) =>
+        m.managerName.toLowerCase().includes(searchTerm.toLowerCase()),
+      )
+    }
+    return list
+  }, [processedManagers, frcSelectedManagers, searchTerm])
+
+  useEffect(() => {
+    setFrcPage(1)
+  }, [frcSelectedManagers, searchTerm, processedManagers])
+
+  const frcTotalPages =
+    Math.ceil(frcManagersFiltered.length / ITEMS_PER_PAGE) || 1
+  const canFrcPrevious = frcPage > 1
+  const canFrcNext = frcPage < frcTotalPages
+  const paginatedFrcManagers = useMemo(() => {
+    const start = (frcPage - 1) * ITEMS_PER_PAGE
+    return frcManagersFiltered.slice(start, start + ITEMS_PER_PAGE)
+  }, [frcManagersFiltered, frcPage])
+
   useEffect(() => {
     fetchWalletsAndFrc()
   }, [fetchWalletsAndFrc])
@@ -423,5 +539,13 @@ export function useWalletMonitoring() {
     canStandardizationNextPage,
     standardizationTotalPages,
     processedManagers,
+    frcPage,
+    setFrcPage,
+    frcTotalPages,
+    canFrcPrevious,
+    canFrcNext,
+    paginatedFrcManagers,
+    frcSelectedManagers,
+    setFrcSelectedManagers,
   }
 }

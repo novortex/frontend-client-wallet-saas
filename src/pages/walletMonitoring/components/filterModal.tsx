@@ -80,7 +80,7 @@ export function FilterModal({
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle className="text-black dark:text-white">
-            Filter Wallet Monitoring
+            Filter Balance Monitoring
           </DialogTitle>
         </DialogHeader>
 
