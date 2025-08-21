@@ -7,6 +7,7 @@ import {
 import { TInfosCustomerResponse } from '@/types/response.type'
 import {
   AllTimePerformance,
+  FrcStats,
   KpiData,
   RebalanceReturn,
 } from '@/types/wallet.type'
@@ -32,6 +33,25 @@ export async function getWalletOrganization(): Promise<TClientInfosResponse[]> {
     return response.data
   } catch (error) {
     console.error(error)
+    throw error
+  }
+}
+
+export async function getFrcStatistics(
+  year?: number,
+  month?: number,
+): Promise<FrcStats[]> {
+  try {
+    const params: Record<string, string> = {}
+    if (year) params.year = year.toString()
+    if (month) params.month = month.toString()
+
+    const response = await instance.get<FrcStats[]>('wallet/frc-stats', {
+      params,
+    })
+    return response.data
+  } catch (error) {
+    console.error('Error fetching FRC statistics:', error)
     throw error
   }
 }

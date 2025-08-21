@@ -73,7 +73,7 @@ export function TradeConfirmationDialog({
             </p>
             <div className="flex flex-col space-y-2">
               <p className="mt-2 text-center text-2xl font-bold">
-                {Math.abs(tradeAmount)} {assetName}
+                {Math.abs(tradeAmount).toFixed(6)} {assetName}
               </p>
               <label className="text-center font-medium text-yellow-400">
                 {new Intl.NumberFormat('en-US', {

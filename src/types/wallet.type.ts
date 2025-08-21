@@ -138,6 +138,19 @@ export type KpiData = {
   }
 }
 
+export interface FrcStats {
+  managerName: string
+  managerUuid: string
+  totalClients: number
+  frc0Count: number
+  frc1Count: number
+  frcMoreThan1Count: number
+  frc0Percent: number
+  frc1Percent: number
+  frcMoreThan1Percent: number
+  period: string
+}
+
 export enum TradeType {
   BUY = 'BUY',
   SELL = 'SELL',
