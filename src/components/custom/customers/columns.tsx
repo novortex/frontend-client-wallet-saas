@@ -42,7 +42,7 @@ export const columnsCustomerOrg: ColumnDef<CustomersOrganization>[] = [
     accessorKey: 'name',
     header: () => <div className="w-fit pl-10 text-left">Name</div>,
     cell: ({ row }) => (
-      <div className="w-fit whitespace-nowrap pl-4 text-left">
+      <div className="w-fit whitespace-nowrap pl-4 text-left font-medium text-foreground">
         {row.original.name}
       </div>
     ),

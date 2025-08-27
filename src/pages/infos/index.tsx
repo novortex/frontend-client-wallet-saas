@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
+import { Card, CardContent } from '@/components/ui/card'
 import {
   CircleAlert,
   Check,
@@ -11,7 +12,7 @@ import {
   PhoneCall,
 } from 'lucide-react'
 import responsibleIcon from '../../assets/image/responsible-icon.png'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { formatDate } from '@/utils'
 import exportIcon from '../../assets/icons/export.svg'
@@ -51,6 +52,13 @@ export function Infos() {
     useState(false)
 
   const [timeZone, setTimeZone] = useState(null)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [searchResults, setSearchResults] = useState<any[]>([])
+  const [showDropdown, setShowDropdown] = useState(false)
+  const [allCustomers, setAllCustomers] = useState<any[]>([])
+  const [selectedIndex, setSelectedIndex] = useState(-1)
+  const searchInputRef = useRef<HTMLInputElement>(null)
+  const dropdownRef = useRef<HTMLDivElement>(null)
 
   const [walletCommission, setWalletCommission] = useState<TWalletCommission[]>(
     [],
@@ -125,6 +133,79 @@ export function Infos() {
 
   const closeModalContact = () => {
     setisModalContactOpen(false)
+  }
+
+  // Função para filtrar clientes baseado na pesquisa
+  const filterCustomers = (query: string) => {
+    if (!query.trim()) {
+      setSearchResults([])
+      setShowDropdown(false)
+      return
+    }
+
+    const filtered = allCustomers.filter((customer) =>
+      customer.name.toLowerCase().includes(query.toLowerCase())
+    ).slice(0, 10) // Limite de 10 resultados
+
+    setSearchResults(filtered)
+    setShowDropdown(filtered.length > 0)
+  }
+
+  // Lidar com mudanças na pesquisa
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const query = e.target.value
+    setSearchQuery(query)
+    setSelectedIndex(-1) // Reset selection
+    filterCustomers(query)
+  }
+
+  // Lidar com navegação por teclado
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!showDropdown || searchResults.length === 0) return
+
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault()
+        setSelectedIndex(prev => 
+          prev < searchResults.length - 1 ? prev + 1 : prev
+        )
+        break
+      case 'ArrowUp':
+        e.preventDefault()
+        setSelectedIndex(prev => prev > 0 ? prev - 1 : -1)
+        break
+      case 'Enter':
+        e.preventDefault()
+        if (selectedIndex >= 0 && selectedIndex < searchResults.length) {
+          handleClientSelect(searchResults[selectedIndex])
+        }
+        break
+      case 'Escape':
+        setShowDropdown(false)
+        setSelectedIndex(-1)
+        break
+    }
+  }
+
+  // Navegar para a página do cliente selecionado
+  const handleClientSelect = (client: any) => {
+    if (client.walletUuid) {
+      navigate(`/clients/${client.walletUuid}/infos`)
+      setSearchQuery('')
+      setShowDropdown(false)
+    }
+  }
+
+  // Fechar dropdown quando clicar fora
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.contains(event.target as Node) &&
+      searchInputRef.current &&
+      !searchInputRef.current.contains(event.target as Node)
+    ) {
+      setShowDropdown(false)
+    }
   }
 
   // Função para buscar o customerUuid usando o walletUuid
@@ -211,52 +292,108 @@ export function Infos() {
 
     fetchTimeZone()
   }, [])
+
+  // Effect para carregar todos os clientes para pesquisa
+  useEffect(() => {
+    const loadAllCustomers = async () => {
+      try {
+        const customers = await getAllCustomersOrganization()
+        setAllCustomers(customers || [])
+      } catch (error) {
+        console.error('Error loading customers for search:', error)
+      }
+    }
+
+    loadAllCustomers()
+  }, [])
+
+  // Effect para lidar com cliques fora do dropdown
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
   return (
-    <div className="relative h-full bg-white p-10 dark:bg-transparent">
+    <div className="relative min-h-screen bg-background p-6">
       {/* Overlay semi-transparente quando não tiver manager */}
       {walletInfos.hasManager === false && (
         <div className="absolute inset-0 z-10 bg-black bg-opacity-50 backdrop-blur-sm" />
       )}
-      <div className="mb-10 flex items-center justify-between">
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink
-                className="text-2xl font-medium text-black dark:text-white"
-                href="/wallets"
-              >
-                Wallets
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage className="text-2xl font-medium text-black dark:text-white">
-                Information clients
-              </BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-        <SwitchTheme />
-      </div>
-
-      <div className="mb-10 flex items-center justify-between">
-        <Input
-          className="w-5/6 border border-0 bg-gray-100 focus:ring-0 dark:bg-[#171717] dark:text-white"
-          type="text"
-          placeholder="Search for ..."
-        />
-        <div className="">
-          <Button className="flex gap-2 bg-gray-200 p-5 text-black hover:bg-gray-400 dark:bg-white">
-            {' '}
-            <img src={exportIcon} alt="" /> Export
-          </Button>
+      <div className="mx-auto max-w-7xl">
+        <div className="mb-6 flex items-center justify-between">
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink
+                  className="text-sm font-medium text-muted-foreground hover:text-foreground"
+                  href="/wallets"
+                >
+                  Wallets
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage className="text-sm font-medium text-foreground">
+                  Information clients
+                </BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+          <SwitchTheme />
         </div>
-      </div>
 
-      <div className="flex gap-10">
-        <div className="flex w-3/5 flex-col">
-          <div className="mb-5 flex justify-between">
-            <div className="flex gap-5">
+        <div className="mb-10 flex items-center justify-between">
+          <div className="relative w-5/6">
+            <Input
+              ref={searchInputRef}
+              className="border border-border bg-background text-foreground focus:ring-2 focus:ring-primary"
+              type="text"
+              placeholder="Search for clients..."
+              value={searchQuery}
+              onChange={handleSearchChange}
+              onKeyDown={handleKeyDown}
+              onFocus={() => {
+                if (searchResults.length > 0) setShowDropdown(true)
+              }}
+            />
+            
+            {/* Dropdown de resultados */}
+            {showDropdown && (
+              <div
+                ref={dropdownRef}
+                className="absolute top-full left-0 right-0 z-50 mt-1 max-h-60 overflow-y-auto rounded-md border border-border bg-popover shadow-lg"
+              >
+                {searchResults.map((client, index) => (
+                  <div
+                    key={client.uuid}
+                    className={`cursor-pointer px-4 py-3 text-sm transition-colors border-b border-border last:border-b-0 ${
+                      index === selectedIndex 
+                        ? 'bg-primary/20 text-primary' 
+                        : 'text-popover-foreground hover:bg-muted/50'
+                    }`}
+                    onClick={() => handleClientSelect(client)}
+                    onMouseEnter={() => setSelectedIndex(index)}
+                  >
+                    <div className="font-medium">{client.name}</div>
+                    <div className="text-xs text-muted-foreground">{client.email}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+          <div className="">
+            <Button className="flex gap-2 bg-muted p-5 text-foreground hover:bg-muted/80">
+              {' '}
+              <img src={exportIcon} alt="" /> Export
+            </Button>
+          </div>
+        </div>
+
+      <div className="grid grid-cols-5 gap-10">
+        <div className="col-span-3 flex flex-col">
+          <div className="mb-5 flex justify-between items-center">
+            <div className="flex gap-5 items-center">
               <h1 className="text-3xl text-black dark:text-white">
                 {walletI.user.name || '-'}
               </h1>
@@ -271,18 +408,16 @@ export function Infos() {
                   <Check className="w-5" /> Confirm contact
                 </Badge>
               )}
-            </div>
-
-            <div className="flex gap-5">
+              
               <Button
-                className="flex gap-3 bg-gray-200 bg-yellow-500 text-black hover:bg-yellow-400 dark:bg-[#131313] dark:text-[#F2BE38] dark:hover:bg-yellow-500 dark:hover:text-black"
+                className="flex gap-3 bg-primary text-primary-foreground hover:bg-primary/90 shadow-md"
                 onClick={openModal}
               >
                 {' '}
                 <CircleAlert className="w-5" /> Information
               </Button>
               <Button
-                className="flex gap-3 bg-gray-200 bg-yellow-500 text-black hover:bg-yellow-400 dark:bg-[#131313] dark:text-[#F2BE38] dark:hover:bg-yellow-500 dark:hover:text-black"
+                className="flex gap-3 bg-primary text-primary-foreground hover:bg-primary/90 shadow-md"
                 onClick={openModalContact}
               >
                 {' '}
@@ -290,6 +425,7 @@ export function Infos() {
                 Contact confirm
               </Button>
             </div>
+
           </div>
 
           <div className="mb-14">
@@ -321,24 +457,25 @@ export function Infos() {
             </div>
           </div>
 
-          <div className="w-full rounded-xl border bg-lightComponent p-10 dark:border-[#272727] dark:bg-[#171717]">
+          <Card className="w-full flex-1 bg-card border-border hover:shadow-md transition-shadow">
+            <CardContent className="p-10">
             <div className="mb-5 flex justify-between gap-2 text-xl text-[#959CB6]">
               <div className="flex items-center gap-5">
                 <div className="rounded-full bg-transparent p-2">
                   <img className="w-6" src={responsibleIcon} alt="" />
                 </div>
 
-                <p className="text-black dark:text-white">
+                <p className="text-foreground">
                   Wallet informations
                 </p>
                 <div className="flex gap-3">
-                  <Badge className="flex gap-2 bg-[#F2BE38] p-2 pl-5 pr-5 text-black hover:bg-[#F2BE38] hover:text-black">
+                  <Badge className="flex gap-2 bg-primary p-2 pl-5 pr-5 text-primary-foreground hover:bg-primary/90">
                     Contract: {walletI.contract ? 'Yes' : 'No'}
                   </Badge>
                 </div>
               </div>
 
-              <Badge className="flex gap-2 bg-[#F2BE38] p-2 pl-5 pr-5 text-black hover:bg-[#F2BE38] hover:text-black">
+              <Badge className="flex gap-2 bg-primary p-2 pl-5 pr-5 text-primary-foreground hover:bg-primary/90">
                 {' '}
                 <CircleAlert className="" /> {walletI.riskProfile}
               </Badge>
@@ -346,8 +483,8 @@ export function Infos() {
 
             <div className="mb-5 grid w-full grid-cols-2 gap-5 p-2">
               <div className="flex gap-3">
-                <Calendar className="text-[#F2BE38]" />
-                <p className="text-black dark:text-white">
+                <Calendar className="text-primary" />
+                <p className="text-foreground">
                   Initial amount invested:{' '}
                   {walletI.investedAmount !== undefined
                     ? Number(walletI.investedAmount).toFixed(2)
@@ -355,8 +492,8 @@ export function Infos() {
                 </p>
               </div>
               <div className="flex gap-3">
-                <Calendar className="text-[#F2BE38]" />
-                <p className="text-black dark:text-white">
+                <Calendar className="text-primary" />
+                <p className="text-foreground">
                   Current value referring to the benchmark:{' '}
                   {walletI.currentValueBenchmark !== undefined
                     ? Number(walletI.currentValueBenchmark).toFixed(2)
@@ -364,8 +501,8 @@ export function Infos() {
                 </p>
               </div>
               <div className="flex gap-3">
-                <Calendar className="text-[#F2BE38]" />
-                <p className="text-black dark:text-white">
+                <Calendar className="text-primary" />
+                <p className="text-foreground">
                   Current value:{' '}
                   {walletI.currentAmount !== null &&
                   walletI.currentAmount !== undefined
@@ -374,8 +511,8 @@ export function Infos() {
                 </p>
               </div>
               <div className="flex gap-3">
-                <Calendar className="text-[#F2BE38]" />
-                <p className="text-black dark:text-white">
+                <Calendar className="text-primary" />
+                <p className="text-foreground">
                   Next rebalancing date:{' '}
                   {walletI.nextBalance !== null
                     ? formatDate(walletI.nextBalance?.toString())
@@ -383,8 +520,8 @@ export function Infos() {
                 </p>
               </div>
               <div className="flex gap-3">
-                <Calendar className="text-[#F2BE38]" />
-                <p className="text-black dark:text-white">
+                <Calendar className="text-primary" />
+                <p className="text-foreground">
                   Performance fee:{' '}
                   {walletI.performanceFee !== undefined
                     ? Number(walletI.performanceFee).toFixed(2)
@@ -392,8 +529,8 @@ export function Infos() {
                 </p>
               </div>
               <div className="flex gap-3">
-                <Calendar className="text-[#F2BE38]" />
-                <p className="text-black dark:text-white">
+                <Calendar className="text-primary" />
+                <p className="text-foreground">
                   Last rebalance date:{' '}
                   {walletI.lastRebalance !== null
                     ? formatDate(walletI.lastRebalance?.toString())
@@ -401,14 +538,14 @@ export function Infos() {
                 </p>
               </div>
               <div className="flex gap-3">
-                <Calendar className="text-[#F2BE38]" />
-                <p className="text-black dark:text-white">
+                <Calendar className="text-primary" />
+                <p className="text-foreground">
                   Benchmark: {walletI.benchmark.name || '-'}
                 </p>
               </div>
               <div className="flex gap-3">
-                <Calendar className="text-[#F2BE38]" />
-                <p className="text-black dark:text-white">
+                <Calendar className="text-primary" />
+                <p className="text-foreground">
                   Next monthly closing date:{' '}
                   {walletI.monthCloseDate !== null
                     ? formatDate(walletI.monthCloseDate?.toString())
@@ -421,14 +558,14 @@ export function Infos() {
 
             <div className="grid w-full grid-cols-2 gap-5 p-2">
               <div className="flex gap-3">
-                <Calendar className="text-[#F2BE38]" />
-                <p className="text-black dark:text-white">
+                <Calendar className="text-primary" />
+                <p className="text-foreground">
                   Exchange: {walletI.exchange.name || '-'}
                 </p>
               </div>
               <div className="flex gap-3">
-                <Calendar className="text-[#F2BE38]" />
-                <p className="text-black dark:text-white">
+                <Calendar className="text-primary" />
+                <p className="text-foreground">
                   Initial fee:{' '}
                   {walletI.initialFee !== undefined
                     ? Number(walletI.initialFee).toFixed(2)
@@ -437,21 +574,21 @@ export function Infos() {
               </div>
               <div className="flex gap-3">
                 <Button
-                  className="bg-[#F2BE38] text-black hover:bg-yellow-400"
+                  className="bg-primary text-primary-foreground hover:bg-primary/90"
                   onClick={openModalExchange}
                 >
                   Account exchange information
                 </Button>
               </div>
               <div className="flex gap-3">
-                <Calendar className="text-[#F2BE38]" />
-                <p className="text-black dark:text-white">
+                <Calendar className="text-primary" />
+                <p className="text-foreground">
                   Initial fee was paid: {walletI.initialFeePaid ? '✅' : '❌'}
                 </p>
               </div>
               <div className="flex gap-3">
-                <Calendar className="text-[#F2BE38]" />
-                <p className="text-black dark:text-white">
+                <Calendar className="text-primary" />
+                <p className="text-foreground">
                   Joined as a client:{' '}
                   {walletI.joinedAsClient !== null
                     ? formatDate(walletI.joinedAsClient?.toString())
@@ -459,65 +596,79 @@ export function Infos() {
                 </p>
               </div>
             </div>
-          </div>
+            </CardContent>
+          </Card>
         </div>
 
-        <div className="flex w-2/5 flex-col">
-          <div className="mb-5 flex justify-end gap-7">
-            <div className="flex flex-col items-center rounded-lg border bg-lightComponent p-10 dark:bg-[#171717]">
-              <Calendar className="text-[#F2BE38]" />
-              <p className="text-black dark:text-white">Start Date</p>
-              <p className="text-[#959CB6]">
-                {walletI.startDate !== null
-                  ? formatDate(walletI.startDate?.toString())
-                  : '-'}
-              </p>
-            </div>
-            <div className="flex flex-col items-center rounded-lg border bg-lightComponent p-10 dark:bg-[#171717]">
-              <Calendar className="text-[#F2BE38]" />
-              <p className="text-black dark:text-white">Close Date</p>
-              <p className="text-[#959CB6]">
-                {walletI.closeDate !== null
-                  ? formatDate(walletI.closeDate?.toString())
-                  : '-'}
-              </p>
-            </div>
+        <div className="col-span-2 flex flex-col">
+          <div className="mb-5 flex gap-5 justify-end">
+            <Card className="bg-card border-border hover:shadow-md transition-shadow">
+              <CardContent className="flex flex-col items-center p-8">
+                <Calendar className="text-primary mb-2" size={24} />
+                <p className="text-foreground font-medium mb-1">Start Date</p>
+                <p className="text-muted-foreground text-sm">
+                  {walletI.startDate !== null
+                    ? formatDate(walletI.startDate?.toString())
+                    : '-'}
+                </p>
+              </CardContent>
+            </Card>
+            <Card className="bg-card border-border hover:shadow-md transition-shadow">
+              <CardContent className="flex flex-col items-center p-8">
+                <Calendar className="text-primary mb-2" size={24} />
+                <p className="text-foreground font-medium mb-1">Close Date</p>
+                <p className="text-muted-foreground text-sm">
+                  {walletI.closeDate !== null
+                    ? formatDate(walletI.closeDate?.toString())
+                    : '-'}
+                </p>
+              </CardContent>
+            </Card>
           </div>
 
-          <div className="h-full w-full rounded-xl border bg-lightComponent p-10 dark:border-[#272727] dark:bg-[#171717]">
-            <div className="mb-16 flex items-center justify-between">
-              <h1 className="text-xl text-black dark:text-white">Alerts</h1>
-              <div className="flex gap-5">
-                <Button
-                  onClick={() => navigate(`/wallet/${walletUuid}/assets`)}
-                  className="flex gap-3 bg-yellow-600 pb-5 pt-5 text-white hover:bg-yellow-500"
-                >
-                  <Wallet />
-                  <p>Wallet</p>
-                </Button>
+          <Card className="w-full flex-1 bg-card border-border hover:shadow-md transition-shadow">
+            <CardContent className="p-10">
+              <div className="mb-16 flex items-center justify-between">
+                <h1 className="text-xl text-foreground">Alerts</h1>
+                <div className="flex gap-5">
+                  <Button
+                    onClick={() => navigate(`/wallet/${walletUuid}/assets`)}
+                    className="flex gap-3 bg-primary pb-5 pt-5 text-primary-foreground hover:bg-primary/90"
+                  >
+                    <Wallet />
+                    <p>Wallet</p>
+                  </Button>
 
-                <Button
-                  onClick={() => navigate(`/wallet/${walletUuid}/graphs`)}
-                  className="flex gap-3 bg-yellow-600 pb-5 pt-5 text-white hover:bg-yellow-500"
-                >
-                  <BarChartBigIcon />
-                  <p>Graphics</p>
-                </Button>
+                  <Button
+                    onClick={() => navigate(`/wallet/${walletUuid}/graphs`)}
+                    className="flex gap-3 bg-primary pb-5 pt-5 text-primary-foreground hover:bg-primary/90"
+                  >
+                    <BarChartBigIcon />
+                    <p>Graphics</p>
+                  </Button>
+                </div>
               </div>
-            </div>
-            <div className="flex flex-col gap-5">
-              <div className="w-full rounded-md bg-[#EF4E3D] p-5 text-white">
-                <h2>Alert when it happens X</h2>
+              <div className="flex flex-col gap-5">
+                <Card className="w-full bg-destructive border-destructive hover:shadow-lg transition-all cursor-pointer hover:scale-105">
+                  <CardContent className="p-5">
+                    <h2 className="text-destructive-foreground font-medium">Alert when it happens X</h2>
+                  </CardContent>
+                </Card>
+                <Card className="w-full bg-warning border-warning hover:shadow-lg transition-all cursor-pointer hover:scale-105">
+                  <CardContent className="p-5">
+                    <h2 className="text-warning-foreground font-medium">Alert when it happens Y</h2>
+                  </CardContent>
+                </Card>
+                <Card className="w-full bg-success border-success hover:shadow-lg transition-all cursor-pointer hover:scale-105">
+                  <CardContent className="p-5">
+                    <h2 className="text-success-foreground font-medium">Alert when it happens Z</h2>
+                  </CardContent>
+                </Card>
               </div>
-              <div className="w-full rounded-md bg-[#F1BA00] p-5 text-white">
-                <h2>Alert when it happens Y</h2>
-              </div>
-              <div className="w-full rounded-md bg-[#10A45C] p-5 text-white">
-                <h2>Alert when it happens Z</h2>
-              </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         </div>
+      </div>
       </div>
       <ClientsInfoModal
         isOpen={isModalOpen}

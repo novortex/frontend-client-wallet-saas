@@ -1,5 +1,4 @@
 import { SwitchTheme } from '@/components/custom/switch-theme'
-import { Input } from '@/components/ui/input'
 import { CardDashboard } from '@/components/custom/card-dashboard'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
@@ -59,7 +58,7 @@ export function Graphs() {
 
         if (!result) {
           return toast({
-            className: 'bg-red-500 border-0 text-black dark:text-white',
+            className: 'bg-destructive border-0 text-destructive-foreground',
             title: 'Failed get assets organization :(',
             description: 'Demo Vault !!',
           })
@@ -89,7 +88,7 @@ export function Graphs() {
         setLoading(false)
       } catch (error) {
         toast({
-          className: 'bg-red-500 border-0 text-black dark:text-white',
+          className: 'bg-destructive border-0 text-destructive-foreground',
           title: 'Failed get assets organization :(',
           description: 'Demo Vault !!',
         })
@@ -98,7 +97,7 @@ export function Graphs() {
 
     if (!walletUuid) {
       toast({
-        className: 'bg-red-500 border-0 text-black dark:text-white',
+        className: 'bg-destructive border-0 text-destructive-foreground',
         title: 'Failed get assets organization :(',
         description: 'Demo Vault !!',
       })
@@ -139,13 +138,14 @@ export function Graphs() {
   }
 
   return (
-    <div className="bg-white p-10 dark:bg-transparent">
-      <div className="mb-10 flex items-center justify-between">
+    <div className="min-h-screen bg-background p-6">
+      <div className="mx-auto max-w-7xl">
+        <div className="mb-6 flex items-center justify-between">
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink
-                className="text-2xl font-medium text-black dark:text-white"
+                className="text-sm font-medium text-muted-foreground hover:text-foreground"
                 href="/wallets"
               >
                 Wallets
@@ -154,7 +154,7 @@ export function Graphs() {
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbLink
-                className="text-2xl font-medium text-black dark:text-white"
+                className="text-sm font-medium text-muted-foreground hover:text-foreground"
                 href={`/clients/${walletUuid}/infos`}
               >
                 Information clients
@@ -162,22 +162,23 @@ export function Graphs() {
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage className="text-2xl font-medium text-black dark:text-white">
-                Wallet Graphic
+              <BreadcrumbPage className="text-sm font-medium text-foreground">
+                Wallet Performance
               </BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
         <SwitchTheme />
       </div>
-      <div className="mb-10 flex items-center justify-between">
-        <Input
-          className="w-full border bg-lightComponent text-black focus:ring-0 dark:bg-[#171717] dark:text-white"
-          type="text"
-          placeholder="Search for ..."
-        />
+      
+      {/* Header com título */}
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold text-foreground">Performance Analysis</h1>
+        <p className="text-sm text-muted-foreground mt-1">Track wallet performance and compare with benchmark</p>
       </div>
-      <div className="mb-5 flex h-1/3 w-full flex-row justify-between">
+      
+      {/* Grid de métricas */}
+      <div className="mb-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <CardDashboard
           title="Entry date"
           data={
@@ -210,8 +211,6 @@ export function Graphs() {
               : '-'
           }
         />
-      </div>
-      <div className="mb-10 flex h-1/3 w-full flex-row justify-between">
         <CardDashboard
           title="Performance fee"
           data={
@@ -243,8 +242,11 @@ export function Graphs() {
           }
         />
       </div>
-      <div className="h-1/3 w-full">
+      
+      {/* Gráfico */}
+      <div className="w-full">
         <WalletGraph />
+      </div>
       </div>
     </div>
   )

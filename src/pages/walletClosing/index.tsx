@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react'
 import { SwitchTheme } from '@/components/custom/switch-theme'
 import { Loading } from '@/components/custom/loading'
+import { Card, CardContent } from '@/components/ui/card'
 import { FilterModal } from './components/filterModal'
 import {
   WalletClosingsTable,
@@ -104,53 +105,70 @@ export function WalletClosings() {
   }
 
   return (
-    <div className="h-full bg-white p-10 dark:bg-transparent">
-      <div className="mb-10 flex items-center justify-between">
-        <h1 className="text-2xl font-medium dark:text-white">
-          Wallet Closings
-        </h1>
-        <SwitchTheme />
-      </div>
+    <div className="min-h-screen bg-background p-6">
+      <div className="mx-auto max-w-7xl">
+        <div className="mb-6 flex items-center justify-between">
+          <div className="space-y-2">
+            <h1 className="text-2xl font-bold text-foreground">
+              Wallet Closings
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              Track and manage wallet closing dates
+            </p>
+          </div>
+          <SwitchTheme />
+        </div>
 
       {/* Cards de estatísticas */}
       <div className="mb-10 grid grid-cols-1 gap-4 md:grid-cols-5">
-        <div className="rounded-lg bg-green-100 p-4 dark:bg-green-900">
-          <div className="text-sm text-green-600 dark:text-green-300">
+        <Card className="bg-card border-border hover:shadow-md transition-shadow">
+            <CardContent className="p-4">
+          <div className="text-sm text-success">
             On time
           </div>
-          <div className="text-2xl font-bold text-green-800 dark:text-green-100">
+          <div className="text-2xl font-bold text-success">
             {stats.ok}
           </div>
-        </div>
-        <div className="rounded-lg bg-yellow-100 p-4 dark:bg-yellow-900">
-          <div className="text-sm text-yellow-600 dark:text-yellow-300">
+            </CardContent>
+          </Card>
+        <Card className="bg-card border-border hover:shadow-md transition-shadow">
+            <CardContent className="p-4">
+          <div className="text-sm text-warning">
             Due soon
           </div>
-          <div className="text-2xl font-bold text-yellow-800 dark:text-yellow-100">
+          <div className="text-2xl font-bold text-warning">
             {stats.days_left}
           </div>
-        </div>
-        <div className="rounded-lg bg-red-100 p-4 dark:bg-red-900">
-          <div className="text-sm text-red-600 dark:text-red-300">Overdue</div>
-          <div className="text-2xl font-bold text-red-800 dark:text-red-100">
+            </CardContent>
+          </Card>
+        <Card className="bg-card border-border hover:shadow-md transition-shadow">
+            <CardContent className="p-4">
+          <div className="text-sm text-destructive">Overdue</div>
+          <div className="text-2xl font-bold text-destructive">
             {stats.overdue}
           </div>
-        </div>
-        <div className="rounded-lg bg-muted p-4">
+            </CardContent>
+          </Card>
+        <Card className="bg-card border-border hover:shadow-md transition-shadow">
+            <CardContent className="p-4">
           <div className="text-sm text-muted-foreground">Closed</div>
           <div className="text-2xl font-bold text-foreground">
             {stats.no_call}
           </div>
-        </div>
-        <div className="rounded-lg bg-secondary p-4">
-          <div className="text-sm text-secondary-foreground">Total</div>
-          <div className="text-2xl font-bold text-secondary-foreground">
+            </CardContent>
+          </Card>
+        <Card className="bg-card border-border hover:shadow-md transition-shadow">
+            <CardContent className="p-4">
+          <div className="text-sm text-muted-foreground">Total</div>
+          <div className="text-2xl font-bold text-foreground">
             {stats.total}
           </div>
-        </div>
+            </CardContent>
+          </Card>
       </div>
 
-      <div className="mb-10 rounded-md border">
+      <Card className="mb-10 bg-card border-border hover:shadow-md transition-shadow">
+        <CardContent className="p-0">
         <TableToolbar
           onSearch={onSearch}
           onExport={handleExport}
@@ -172,13 +190,15 @@ export function WalletClosings() {
           pageSize={pageSize}
           onPaginationChange={handleTablePaginationChange}
         />
-      </div>
+        </CardContent>
+      </Card>
 
-      <FilterModal
-        isOpen={isFilterModalOpen}
-        onOpenChange={setIsFilterModalOpen}
-        onApplyFilter={handleApplyFilters}
-      />
+        <FilterModal
+          isOpen={isFilterModalOpen}
+          onOpenChange={setIsFilterModalOpen}
+          onApplyFilter={handleApplyFilters}
+        />
+      </div>
     </div>
   )
 }

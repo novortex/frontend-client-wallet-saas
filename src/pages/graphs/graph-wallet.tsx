@@ -182,30 +182,30 @@ export function WalletGraph() {
   }
 
   return (
-    <Card className="rounded-lg border bg-lightComponent p-4 text-card-foreground shadow-lg dark:bg-[#131313]">
+    <Card className="rounded-lg border bg-card p-4 shadow-lg">
       <CardHeader className="mb-4 gap-10">
         <CardTitle className="flex flex-row gap-5 text-2xl font-semibold">
           <div className="flex w-1/2 flex-row gap-5">
-            <div className="flex flex-row items-center gap-2 dark:text-[#fff]">
+            <div className="flex flex-row items-center gap-2 text-foreground">
               <Checkbox
                 checked={showWallet}
                 onCheckedChange={(checked) => setShowWallet(checked === true)}
-                className="border-transparent bg-[#1878f3] data-[state=checked]:bg-[#1878f3]"
+                className="border-border data-[state=checked]:bg-chart-4 data-[state=checked]:border-chart-4"
               />
               <Label className="text-lg">Wallet</Label>
             </div>
-            <div className="flex flex-row items-center gap-2 dark:text-[#fff]">
+            <div className="flex flex-row items-center gap-2 text-foreground">
               <Checkbox
                 checked={showBenchmark}
                 onCheckedChange={(checked) =>
                   setShowBenchmark(checked === true)
                 }
-                className="border-transparent bg-[#11a45c] data-[state=checked]:bg-[#11a45c]"
+                className="border-border data-[state=checked]:bg-chart-2 data-[state=checked]:border-chart-2"
               />
               <Label className="text-lg">Benchmark</Label>
             </div>
           </div>
-          <div className="flex w-1/2 items-center justify-end gap-4 text-sm dark:text-[#fff]">
+          <div className="flex w-1/2 items-center justify-end gap-4 text-sm text-foreground">
             <p>Daily</p>
             <Switch
               checked={isMonthlyView}
@@ -214,7 +214,7 @@ export function WalletGraph() {
             <p>Monthly</p>
           </div>
         </CardTitle>
-        <CardDescription className="text-lg text-sm text-black text-muted-foreground dark:text-[#fff]">
+        <CardDescription className="text-sm text-muted-foreground">
           Graphic | Profitability x Time
         </CardDescription>
       </CardHeader>
@@ -264,7 +264,7 @@ export function WalletGraph() {
                 <Line
                   dataKey="wallet"
                   type="linear"
-                  stroke="#1878f3"
+                  stroke="hsl(var(--chart-4))"
                   strokeWidth={1.5}
                   dot={false}
                   activeDot={{ r: 4 }}
@@ -274,7 +274,7 @@ export function WalletGraph() {
                 <Line
                   dataKey="Benchmark"
                   type="linear"
-                  stroke="#11a45c"
+                  stroke="hsl(var(--chart-2))"
                   strokeWidth={1.5}
                   dot={false}
                   activeDot={{ r: 4 }}

@@ -21,7 +21,7 @@ export default function Navbar() {
       {!shouldHideNavigation && (
         <SideBar alerts={0}>
           <div className="mb-5">
-            <h3 className="w-full text-center font-medium dark:text-white">
+            <h3 className="w-full text-center font-medium text-foreground">
               Admin
             </h3>
             <br />

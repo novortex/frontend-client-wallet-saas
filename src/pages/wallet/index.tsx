@@ -30,14 +30,15 @@ export function Wallet() {
   if (loading) return <Loading />
   if (!infosWallet)
     return (
-      <div className="flex h-screen items-center justify-center dark:text-white">
+      <div className="flex h-screen items-center justify-center text-foreground">
         Error: Wallet information is not available.
       </div>
     )
   else {
     return (
-      <div className="h-full bg-white p-10 dark:bg-transparent">
-        <Header walletUuid={walletUuid} />
+      <div className="min-h-screen bg-background p-6">
+        <div className="mx-auto max-w-7xl">
+          <Header walletUuid={walletUuid} />
         <ActionButtons
           walletUuid={walletUuid}
           openOperationModal={openOperationModal}
@@ -79,6 +80,7 @@ export function Wallet() {
           onClose={openOrCloseModalRebalanced}
           fetchData={fetchData}
         />
+        </div>
       </div>
     )
   }

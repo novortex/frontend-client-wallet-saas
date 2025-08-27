@@ -67,16 +67,23 @@ export function AssetsOrg() {
   }
 
   return (
-    <div className="h-full bg-white p-10 dark:bg-transparent">
-      <div className="mb-10 flex items-center justify-between">
-        <h1 className="text-2xl font-medium text-black dark:text-white">
-          Assets
-        </h1>
-        <SwitchTheme />
-      </div>
+    <div className="min-h-screen bg-background p-6">
+      <div className="mx-auto max-w-7xl">
+        <div className="mb-6 flex items-center justify-between">
+          <div className="space-y-2">
+            <h1 className="text-2xl font-bold text-foreground">
+              Assets
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              Manage organization assets and allocations
+            </p>
+          </div>
+          <SwitchTheme />
+        </div>
 
-      <div className="mb-10">
-        <DataTableAssetOrg columns={columnsAssetOrg} data={data} />
+        <div className="mb-10">
+          <DataTableAssetOrg columns={columnsAssetOrg} data={data} />
+        </div>
       </div>
     </div>
   )

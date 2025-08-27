@@ -16,14 +16,14 @@ export const useAddAsset = (onClose: () => void) => {
 
     if (!assetId) {
       return toast({
-        className: 'bg-red-500 border-0',
+        className: 'bg-destructive border-0 text-destructive-foreground',
         title: 'Asset ID is required',
         description: 'Demo Vault !!',
       })
     }
 
     toast({
-      className: 'bg-yellow-500 border-0',
+      className: 'bg-warning border-0 text-warning-foreground',
       title: 'Processing add Asset in organization',
       description: 'Demo Vault !!',
     })
@@ -35,7 +35,7 @@ export const useAddAsset = (onClose: () => void) => {
       setSignal(!signal)
 
       toast({
-        className: 'bg-green-500 border-0',
+        className: 'bg-success border-0 text-success-foreground',
         title: 'Success !! new Asset in organization',
         description: 'Demo Vault !!',
       })
@@ -43,7 +43,7 @@ export const useAddAsset = (onClose: () => void) => {
       setAssetId('')
 
       toast({
-        className: 'bg-red-500 border-0',
+        className: 'bg-destructive border-0 text-destructive-foreground',
         title: 'Failed to add asset',
         description: error?.message || 'Unexpected error while adding asset',
       })

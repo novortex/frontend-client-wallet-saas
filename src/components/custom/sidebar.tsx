@@ -88,11 +88,11 @@ export function SideBar({
 
   return (
     <aside
-      className={`h-screen bg-lightComponent dark:bg-[#171717] ${expanded ? 'w-1/6' : 'w-9'} z-10`}
+      className={`h-screen bg-background dark:bg-sidebar ${expanded ? 'w-1/6' : 'w-9'} z-10`}
     >
       <nav
         ref={navRef}
-        className={`fixed flex h-full flex-col border bg-lightComponent shadow-sm dark:bg-[#171717] ${expanded ? 'w-1/6' : 'w-20'}`}
+        className={`fixed flex h-full flex-col border bg-background shadow-sm dark:bg-sidebar ${expanded ? 'w-1/6' : 'w-20'}`}
         onMouseEnter={() => setExpanded(true)}
         onMouseLeave={() => {
           if (!dropdownRef.current) {
@@ -107,10 +107,10 @@ export function SideBar({
           <img src={LogoOrg} className="w-16" alt="" />
           {expanded && (
             <div className="w-20 overflow-hidden transition-all">
-              <h2 className="font-semibold text-black dark:text-white">
+              <h2 className="font-semibold text-foreground">
                 Vault
               </h2>
-              <p className="text-sm text-[#959CB6]">Capital</p>
+              <p className="text-sm text-sidebar-foreground">Capital</p>
             </div>
           )}
         </div>
@@ -118,7 +118,7 @@ export function SideBar({
         <SideBarContext.Provider value={{ expanded }}>
           <ul className="flex-1 px-3">
             <li
-              className={`relative my-1 mb-10 flex cursor-pointer items-center rounded-md px-3 py-2 font-medium text-black transition-colors dark:text-white ${!expanded ? 'justify-center' : ''}`}
+              className={`relative my-1 mb-10 flex cursor-pointer items-center rounded-md px-3 py-2 font-medium text-foreground transition-colors hover:bg-sidebar-primary hover:text-white ${!expanded ? 'justify-center' : ''}`}
             >
               <Bell size={20} />
               <p
@@ -127,7 +127,7 @@ export function SideBar({
                 Notifications
               </p>
               <div
-                className={`h-5 overflow-hidden text-center text-[#F2BE38] transition-all ${expanded ? 'w-5' : 'w-0'}`}
+                className={`h-5 overflow-hidden text-center text-sidebar-primary transition-all ${expanded ? 'w-5' : 'w-0'}`}
               >
                 {alerts}
               </div>
@@ -138,7 +138,7 @@ export function SideBar({
         </SideBarContext.Provider>
 
         <div
-          className={`flex border bg-white p-3 text-black dark:bg-[#272727] dark:text-white ${!expanded ? 'justify-center' : 'justify-start'}`}
+          className={`flex border bg-background p-3 text-foreground dark:bg-sidebar-accent ${!expanded ? 'justify-center' : 'justify-start'}`}
         >
           <Avatar>
             <AvatarImage
@@ -164,7 +164,7 @@ export function SideBar({
                 >
                   {userInfo?.name?.split('@')[0] || 'Guest'}
                 </p>
-                <span className="truncate text-xs text-black dark:text-[#959CB6]">
+                <span className="truncate text-xs text-sidebar-foreground">
                   {userInfo?.role || 'User'}
                 </span>
               </div>
@@ -176,17 +176,17 @@ export function SideBar({
                   asChild
                   className="flex h-[100%] w-[25%] items-center justify-center"
                 >
-                  <button className="rounded-md hover:bg-gray-300 focus:outline-none dark:hover:bg-[#171717]">
-                    <MoreVertical className="cursor-pointer text-black transition-colors dark:text-white dark:hover:text-yellow-300" />
+                  <button className="rounded-md hover:bg-muted focus:outline-none dark:hover:bg-sidebar">
+                    <MoreVertical className="cursor-pointer text-foreground transition-colors hover:text-sidebar-primary" />
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
                   align="end"
-                  className="w-40 dark:border-[#171717] dark:bg-[#272727]"
+                  className="w-40 border-border bg-popover"
                 >
                   <DropdownMenuItem
                     onClick={handleLogout}
-                    className="flex cursor-pointer items-center text-[#959CB6] focus:bg-red-600 focus:text-white"
+                    className="flex cursor-pointer items-center text-sidebar-foreground focus:bg-destructive focus:text-destructive-foreground"
                   >
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Logout</span>
@@ -233,7 +233,7 @@ export function SideBarItem({
       <div>
         <li
           onClick={() => setOpen(!open)}
-          className={`group relative my-1 flex cursor-pointer items-center rounded-md px-3 py-2 font-medium text-black transition-colors hover:bg-[#F2BE38] hover:text-black dark:text-[#959CB6] dark:hover:text-black ${!expanded ? 'justify-center' : ''}`}
+          className={`group relative my-1 flex cursor-pointer items-center rounded-md px-3 py-2 font-medium text-foreground transition-colors hover:bg-sidebar-primary hover:text-white ${!expanded ? 'justify-center' : ''}`}
         >
           {icon}
           <span
@@ -254,7 +254,7 @@ export function SideBarItem({
   return (
     <li
       onClick={() => navigate(href)}
-      className={`group relative my-1 flex cursor-pointer items-center rounded-md px-3 py-2 font-medium text-black transition-colors hover:bg-[#F2BE38] hover:text-black dark:text-[#959CB6] dark:hover:text-black ${!expanded ? 'justify-center' : ''} ${active ? 'bg-gradient-to-tr from-indigo-200 to-indigo-100 text-indigo-800' : ''}`}
+      className={`group relative my-1 flex cursor-pointer items-center rounded-md px-3 py-2 font-medium text-foreground transition-colors hover:bg-sidebar-primary hover:text-white ${!expanded ? 'justify-center' : ''} ${active ? 'bg-sidebar-primary text-white' : ''}`}
     >
       {icon}
       <span
@@ -267,7 +267,7 @@ export function SideBarItem({
       )}
 
       {!expanded && (
-        <div className="invisible absolute left-full ml-6 -translate-x-3 rounded-md bg-yellow-300 px-2 py-1 text-sm text-black opacity-20 transition-all group-hover:visible group-hover:translate-x-0 group-hover:opacity-100">
+        <div className="invisible absolute left-full ml-6 -translate-x-3 rounded-md bg-sidebar-primary px-2 py-1 text-sm text-white opacity-20 transition-all group-hover:visible group-hover:translate-x-0 group-hover:opacity-100">
           {text}
         </div>
       )}

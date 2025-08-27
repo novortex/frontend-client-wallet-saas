@@ -56,7 +56,7 @@ export function WalletClosingsTable({
       accessorKey: 'clientName',
       header: () => <div className="w-fit pl-4 text-left">Client</div>,
       cell: ({ row }) => (
-        <div className="w-fit whitespace-nowrap pl-4 text-left">
+        <div className="w-fit whitespace-nowrap pl-4 text-left font-medium text-foreground">
           {row.original.clientName}
         </div>
       ),

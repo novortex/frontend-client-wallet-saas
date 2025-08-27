@@ -296,25 +296,31 @@ export function Clients() {
   }
 
   return (
-    <div className="h-full bg-white p-10 dark:bg-transparent">
-      <div className="mb-10 flex items-center justify-between">
-        <h1 className="text-2xl font-medium text-black dark:text-white">
-          Wallets
-        </h1>
-        <SwitchTheme />
-      </div>
+    <div className="min-h-screen bg-background p-6">
+      <div className="mx-auto max-w-7xl">
+        <div className="mb-6 flex items-center justify-between">
+          <div className="space-y-2">
+            <h1 className="text-2xl font-bold text-foreground">
+              Wallets
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              Browse and manage client wallets
+            </p>
+          </div>
+          <SwitchTheme />
+        </div>
 
-      <div className="mb-10 flex items-center justify-between">
-        <Input
-          className="w-5/6 border bg-gray-100 text-black focus:ring-0 dark:bg-[#171717] dark:text-white"
-          type="text"
-          placeholder="Search for ..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          data-testid="search-input"
-        />
-        <ClientsFilterModal handleApplyFilters={handleApplyFilters} />
-      </div>
+        <div className="mb-10 flex items-center justify-between">
+          <Input
+            className="w-5/6 border border-border bg-background text-foreground focus:ring-2 focus:ring-primary"
+            type="text"
+            placeholder="Search for ..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            data-testid="search-input"
+          />
+          <ClientsFilterModal handleApplyFilters={handleApplyFilters} />
+        </div>
 
       {/* Results counter */}
       <div className="mb-4 flex justify-between text-sm text-gray-600 dark:text-gray-400">
@@ -388,10 +394,11 @@ export function Clients() {
         </>
       )}
 
-      <MonthlyStandardizationModal
-        open={isMonthlyStandardizationOpen}
-        onOpenChange={setIsMonthlyStandardizationOpen}
-      />
+        <MonthlyStandardizationModal
+          open={isMonthlyStandardizationOpen}
+          onOpenChange={setIsMonthlyStandardizationOpen}
+        />
+      </div>
     </div>
   )
 }

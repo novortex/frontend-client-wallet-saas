@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { SwitchTheme } from '@/components/custom/switch-theme'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Download, SlidersHorizontal, Search } from 'lucide-react'
 import { useCallMonitoring } from './hooks/useCallMonitoring'
 import { StatusBadge } from './components/StatusBadge'
@@ -53,56 +54,72 @@ const CallMonitoring = () => {
   }
 
   return (
-    <div className="h-full bg-white p-10 dark:bg-transparent">
-      <div className="mb-10 flex items-center justify-between">
-        <h1 className="text-2xl font-medium dark:text-white">
-          Monthly Call Monitoring
-        </h1>
-        <SwitchTheme />
-      </div>
+    <div className="min-h-screen bg-background p-6">
+      <div className="mx-auto max-w-7xl">
+        <div className="mb-6 flex items-center justify-between">
+          <div className="space-y-2">
+            <h1 className="text-2xl font-bold text-foreground">
+              Monthly Call Monitoring
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              Track monthly client communication status
+            </p>
+          </div>
+          <SwitchTheme />
+        </div>
 
       {/* Cards de estatísticas */}
       <div className="mb-10 grid grid-cols-1 gap-4 md:grid-cols-5">
-        <div className="rounded-lg bg-green-100 p-4 dark:bg-green-900">
-          <div className="text-sm text-green-600 dark:text-green-300">
+        <Card className="bg-card border-border hover:shadow-md transition-shadow">
+            <CardContent className="p-4">
+          <div className="text-sm text-success">
             On time
           </div>
-          <div className="text-2xl font-bold text-green-800 dark:text-green-100">
+          <div className="text-2xl font-bold text-success">
             {stats.ok}
           </div>
-        </div>
-        <div className="rounded-lg bg-yellow-100 p-4 dark:bg-yellow-900">
-          <div className="text-sm text-yellow-600 dark:text-yellow-300">
+            </CardContent>
+          </Card>
+        <Card className="bg-card border-border hover:shadow-md transition-shadow">
+            <CardContent className="p-4">
+          <div className="text-sm text-warning">
             Due soon
           </div>
-          <div className="text-2xl font-bold text-yellow-800 dark:text-yellow-100">
+          <div className="text-2xl font-bold text-warning">
             {stats.days_left}
           </div>
-        </div>
-        <div className="rounded-lg bg-red-100 p-4 dark:bg-red-900">
-          <div className="text-sm text-red-600 dark:text-red-300">Overdue</div>
-          <div className="text-2xl font-bold text-red-800 dark:text-red-100">
+            </CardContent>
+          </Card>
+        <Card className="bg-card border-border hover:shadow-md transition-shadow">
+            <CardContent className="p-4">
+          <div className="text-sm text-destructive">Overdue</div>
+          <div className="text-2xl font-bold text-destructive">
             {stats.overdue}
           </div>
-        </div>
-        <div className="rounded-lg bg-muted p-4">
+            </CardContent>
+          </Card>
+        <Card className="bg-card border-border hover:shadow-md transition-shadow">
+            <CardContent className="p-4">
           <div className="text-sm text-muted-foreground">Outdated</div>
           <div className="text-2xl font-bold text-foreground">
             {stats.no_call}
           </div>
-        </div>
-        <div className="rounded-lg bg-secondary p-4">
-          <div className="text-sm text-secondary-foreground">Total</div>
-          <div className="text-2xl font-bold text-secondary-foreground">
+            </CardContent>
+          </Card>
+        <Card className="bg-card border-border hover:shadow-md transition-shadow">
+            <CardContent className="p-4">
+          <div className="text-sm text-muted-foreground">Total</div>
+          <div className="text-2xl font-bold text-foreground">
             {stats.total}
           </div>
-        </div>
+            </CardContent>
+          </Card>
       </div>
 
       {/* Barra superior da tabela */}
-      <div className="mb-10 rounded-md border">
-        <div className="flex items-center justify-between rounded-t-lg bg-lightComponent p-5 dark:bg-[#171717]">
-          <h1 className="text-xl dark:text-white">Call monitoring status</h1>
+      <Card className="mb-10 bg-card border-border hover:shadow-md transition-shadow">
+        <CardHeader className="flex flex-row items-center justify-between rounded-t-lg p-5">
+          <CardTitle className="text-xl text-foreground">Call monitoring status</CardTitle>
           <div className="flex items-center gap-3">
             {isSearchOpen ? (
               <div className="flex w-64 items-center">
@@ -173,8 +190,8 @@ const CallMonitoring = () => {
               </Button>
             </div>
           </div>
-        </div>
-
+        </CardHeader>
+        <CardContent className="p-0">
         {/* Tabela */}
         <div className="overflow-x-auto">
           <table className="w-full">
@@ -245,13 +262,15 @@ const CallMonitoring = () => {
             </div>
           </div>
         )}
-      </div>
+        </CardContent>
+      </Card>
       <FilterModal
         isOpen={isFilterOpen}
         onOpenChange={setIsFilterOpen}
         onApplyFilter={setFilters}
         initialFilters={filters}
       />
+      </div>
     </div>
   )
 }

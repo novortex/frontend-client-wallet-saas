@@ -3,6 +3,7 @@ import { Search, Download, SlidersHorizontal } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Loading } from '@/components/custom/loading'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { SwitchTheme } from '@/components/custom/switch-theme'
 import { useWalletMonitoring } from './hooks/useWalletMonitoring'
 import { FilterModal } from './components/filterModal'
@@ -66,13 +67,19 @@ export default function WalletMonitoring() {
   }
 
   return (
-    <div className="h-full bg-white p-10 dark:bg-transparent">
-      <div className="mb-10 flex items-center justify-between">
-        <h1 className="text-2xl font-medium dark:text-white">
-          Wallet Monitoring
-        </h1>
-        <SwitchTheme />
-      </div>
+    <div className="min-h-screen bg-background p-6">
+      <div className="mx-auto max-w-7xl">
+        <div className="mb-6 flex items-center justify-between">
+          <div className="space-y-2">
+            <h1 className="text-2xl font-bold text-foreground">
+              Wallet Monitoring
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              Monitor wallet balance and standardization status
+            </p>
+          </div>
+          <SwitchTheme />
+        </div>
 
       {/* Navigation tabs */}
       <div className="mb-6 flex border-b border-gray-300 dark:border-gray-600">
@@ -106,54 +113,64 @@ export default function WalletMonitoring() {
             data-testid="stats-cards-container"
             className="mb-10 grid grid-cols-1 gap-4 md:grid-cols-5"
           >
-            <div className="rounded-lg bg-green-100 p-4 dark:bg-green-900">
-              <div className="text-sm text-green-600 dark:text-green-300">
+            <Card className="bg-card border-border hover:shadow-md transition-shadow">
+              <CardContent className="p-4">
+              <div className="text-sm text-success">
                 Perfect (100%)
               </div>
-              <div className="text-2xl font-bold text-green-800 dark:text-green-100">
+              <div className="text-2xl font-bold text-success">
                 {stats.perfectManagers}
               </div>
-            </div>
-            <div className="rounded-lg bg-blue-100 p-4 dark:bg-blue-900">
-              <div className="text-sm text-blue-600 dark:text-blue-300">
+              </CardContent>
+            </Card>
+            <Card className="bg-card border-border hover:shadow-md transition-shadow">
+              <CardContent className="p-4">
+              <div className="text-sm text-info">
                 Good (80-99%)
               </div>
-              <div className="text-2xl font-bold text-blue-800 dark:text-blue-100">
+              <div className="text-2xl font-bold text-info">
                 {stats.goodManagers}
               </div>
-            </div>
-            <div className="rounded-lg bg-yellow-100 p-4 dark:bg-yellow-900">
-              <div className="text-sm text-yellow-600 dark:text-yellow-300">
+              </CardContent>
+            </Card>
+            <Card className="bg-card border-border hover:shadow-md transition-shadow">
+              <CardContent className="p-4">
+              <div className="text-sm text-warning">
                 Warning (60-79%)
               </div>
-              <div className="text-2xl font-bold text-yellow-800 dark:text-yellow-100">
+              <div className="text-2xl font-bold text-warning">
                 {stats.warningManagers}
               </div>
-            </div>
-            <div className="rounded-lg bg-red-100 p-4 dark:bg-red-900">
-              <div className="text-sm text-red-600 dark:text-red-300">
+              </CardContent>
+            </Card>
+            <Card className="bg-card border-border hover:shadow-md transition-shadow">
+              <CardContent className="p-4">
+              <div className="text-sm text-destructive">
                 Critical (&lt;60%)
               </div>
-              <div className="text-2xl font-bold text-red-800 dark:text-red-100">
+              <div className="text-2xl font-bold text-destructive">
                 {stats.criticalManagers}
               </div>
-            </div>
-            <div className="rounded-lg bg-muted p-4">
+              </CardContent>
+            </Card>
+            <Card className="bg-card border-border hover:shadow-md transition-shadow">
+              <CardContent className="p-4">
               <div className="text-sm text-muted-foreground">
                 Total Managers
               </div>
               <div className="text-2xl font-bold text-foreground">
                 {stats.totalManagers}
               </div>
-            </div>
+              </CardContent>
+            </Card>
           </div>
 
           {/* Table top bar */}
-          <div className="mb-10 rounded-md border">
-            <div className="flex items-center justify-between rounded-t-lg bg-lightComponent p-5 dark:bg-[#171717]">
-              <h1 className="text-xl dark:text-white">
+          <Card className="mb-10 bg-card border-border hover:shadow-md transition-shadow">
+            <CardHeader className="flex flex-row items-center justify-between rounded-t-lg p-5">
+              <CardTitle className="text-xl text-foreground">
                 Manager Performance Overview
-              </h1>
+              </CardTitle>
               <div className="flex items-center gap-3">
                 {isSearchOpen ? (
                   <div className="flex w-64 items-center">
@@ -224,8 +241,8 @@ export default function WalletMonitoring() {
                   </Button>
                 </div>
               </div>
-            </div>
-
+            </CardHeader>
+            <CardContent className="p-0">
             {/* Table */}
             <div className="overflow-x-auto">
               <table className="w-full">
@@ -301,7 +318,8 @@ export default function WalletMonitoring() {
                 </div>
               </div>
             )}
-          </div>
+            </CardContent>
+          </Card>
         </>
       )}
 
@@ -310,11 +328,12 @@ export default function WalletMonitoring() {
         <>
           {/* FRC statistics cards */}
           <div className="mb-10 grid grid-cols-1 gap-4 md:grid-cols-4">
-            <div className="rounded-lg bg-red-100 p-4 dark:bg-red-900">
-              <div className="text-sm text-red-600 dark:text-red-300">
+            <Card className="bg-card border-border hover:shadow-md transition-shadow">
+              <CardContent className="p-4">
+              <div className="text-sm text-destructive">
                 FRC = 0
               </div>
-              <div className="text-2xl font-bold text-red-800 dark:text-red-100">
+              <div className="text-2xl font-bold text-destructive">
                 {processedManagers.filter((m) => m.frcData).length > 0
                   ? (
                       processedManagers
@@ -328,12 +347,14 @@ export default function WalletMonitoring() {
                   : '0.0'}
                 %
               </div>
-            </div>
-            <div className="rounded-lg bg-green-100 p-4 dark:bg-green-900">
-              <div className="text-sm text-green-600 dark:text-green-300">
+              </CardContent>
+            </Card>
+            <Card className="bg-card border-border hover:shadow-md transition-shadow">
+              <CardContent className="p-4">
+              <div className="text-sm text-success">
                 FRC = 1
               </div>
-              <div className="text-2xl font-bold text-green-800 dark:text-green-100">
+              <div className="text-2xl font-bold text-success">
                 {processedManagers.filter((m) => m.frcData).length > 0
                   ? (
                       processedManagers
@@ -347,12 +368,14 @@ export default function WalletMonitoring() {
                   : '0.0'}
                 %
               </div>
-            </div>
-            <div className="rounded-lg bg-yellow-100 p-4 dark:bg-yellow-900">
-              <div className="text-sm text-yellow-600 dark:text-yellow-300">
+              </CardContent>
+            </Card>
+            <Card className="bg-card border-border hover:shadow-md transition-shadow">
+              <CardContent className="p-4">
+              <div className="text-sm text-warning">
                 FRC &gt; 1
               </div>
-              <div className="text-2xl font-bold text-green-800 dark:text-green-100">
+              <div className="text-2xl font-bold text-warning">
                 {processedManagers.filter((m) => m.frcData).length > 0
                   ? (
                       processedManagers
@@ -366,8 +389,10 @@ export default function WalletMonitoring() {
                   : '0.0'}
                 %
               </div>
-            </div>
-            <div className="rounded-lg bg-muted p-4">
+              </CardContent>
+            </Card>
+            <Card className="bg-card border-border hover:shadow-md transition-shadow">
+              <CardContent className="p-4">
               <div className="text-sm text-muted-foreground">Total Clients</div>
               <div className="text-2xl font-bold text-foreground">
                 {processedManagers
@@ -378,15 +403,16 @@ export default function WalletMonitoring() {
                     0,
                   )}
               </div>
-            </div>
+              </CardContent>
+            </Card>
           </div>
 
           {/* FRC table top bar */}
-          <div className="mb-10 rounded-md border">
-            <div className="flex items-center justify-between rounded-t-lg bg-lightComponent p-5 dark:bg-[#171717]">
-              <h1 className="text-xl dark:text-white">
+          <Card className="mb-10 bg-card border-border hover:shadow-md transition-shadow">
+            <CardHeader className="flex flex-row items-center justify-between rounded-t-lg p-5">
+              <CardTitle className="text-xl text-foreground">
                 FRC Statistics by Manager
-              </h1>
+              </CardTitle>
               <div className="flex items-center gap-3">
                 {isSearchOpen ? (
                   <div className="flex w-64 items-center">
@@ -455,8 +481,8 @@ export default function WalletMonitoring() {
                   </Button>
                 </div>
               </div>
-            </div>
-
+            </CardHeader>
+            <CardContent className="p-0">
             {/* FRC table by manager */}
             <div className="overflow-x-auto">
               <table className="w-full">
@@ -519,7 +545,8 @@ export default function WalletMonitoring() {
                 </tbody>
               </table>
             </div>
-          </div>
+            </CardContent>
+          </Card>
         </>
       )}
 
@@ -530,13 +557,14 @@ export default function WalletMonitoring() {
         initialFilters={filters}
         managers={uniqueManagers}
       />
-      <FrcFilterModal
-        isOpen={isFrcFilterOpen}
-        onOpenChange={setIsFrcFilterOpen}
-        managers={uniqueManagers}
-        value={frcSelectedManagers}
-        onChange={setFrcSelectedManagers}
-      />
+        <FrcFilterModal
+          isOpen={isFrcFilterOpen}
+          onOpenChange={setIsFrcFilterOpen}
+          managers={uniqueManagers}
+          value={frcSelectedManagers}
+          onChange={setFrcSelectedManagers}
+        />
+      </div>
     </div>
   )
 }

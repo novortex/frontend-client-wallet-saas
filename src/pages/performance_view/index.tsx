@@ -12,6 +12,15 @@ import { Loading } from '@/components/custom/loading'
 import PerformanceChart from './components/PerformanceChart'
 import { PerformanceWallets } from './types/performanceWallets'
 import { SwitchTheme } from '@/components/custom/switch-theme'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+import { Card } from '@/components/ui/card'
 
 async function fetchPerformanceData(): Promise<
   Record<string, PerformanceWallets>
@@ -254,7 +263,7 @@ export const PerformanceView: React.FC = () => {
         header: 'Performance',
         cell: (info) => {
           const value = info.getValue<number>()
-          const textColor = value >= 0 ? 'text-green-400' : 'text-red-400'
+          const textColor = value >= 0 ? 'text-success' : 'text-destructive'
           return (
             <span className={`font-semibold ${textColor}`}>
               {value >= 0 ? '+' : ''}
@@ -280,156 +289,151 @@ export const PerformanceView: React.FC = () => {
   if (loading) return <Loading />
 
   return (
-    <div className="flex min-h-screen flex-col bg-white p-4 text-black dark:bg-transparent dark:text-white sm:p-6">
-      <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-black dark:text-white sm:text-3xl">
-          Performance das Carteiras
-        </h2>
-        <SwitchTheme />
-      </div>
-      <div className="mb-6">
-        {/* Estatísticas dos filtros aplicados */}
-        {(managerFilter ||
-          benchmarkFilter ||
-          performanceFilter ||
-          isCustomFilter) && (
-          <div className="mt-2 flex flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-400">
-            <span>
-              Resultados:{' '}
-              <strong className="text-black dark:text-white">
-                {filteredStats.total}
-              </strong>{' '}
-              carteiras
-            </span>
-            <span className="text-green-400">
-              Positivas: <strong>{filteredStats.positive}</strong>
-            </span>
-            <span className="text-red-400">
-              Negativas: <strong>{filteredStats.negative}</strong>
-            </span>
-            <span>
-              Média:{' '}
-              <strong className="text-black dark:text-white">
-                {filteredStats.average.toFixed(2)}%
-              </strong>
-            </span>
-            <span>
-              Min:{' '}
-              <strong className="text-red-300">
-                {filteredStats.min.toFixed(2)}%
-              </strong>
-            </span>
-            <span>
-              Max:{' '}
-              <strong className="text-green-300">
-                {filteredStats.max.toFixed(2)}%
-              </strong>
-            </span>
+    <div className="min-h-screen bg-background p-6">
+      <div className="mx-auto max-w-7xl">
+        <div className="mb-6 flex items-center justify-between">
+          <div className="space-y-2">
+            <h1 className="text-2xl font-bold text-foreground">
+              Performance das Carteiras
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              Acompanhe o desempenho das carteiras e compare com benchmarks
+            </p>
           </div>
-        )}
-      </div>
-
-      {/* Abas de navegação */}
-      <div className="mb-6 flex border-b border-gray-300 dark:border-gray-600">
-        <button
-          className={`px-4 py-2 ${activeTab === 'table' ? 'border-b-2 border-yellow-500 text-yellow-600' : 'text-black dark:text-white'}`}
-          onClick={() => setActiveTab('table')}
-        >
-          Tabela de Performance
-        </button>
-        <button
-          className={`px-4 py-2 ${activeTab === 'chart' ? 'border-b-2 border-yellow-500 text-yellow-600' : 'text-black dark:text-white'}`}
-          onClick={() => setActiveTab('chart')}
-        >
-          Gráfico de Barras
-        </button>
-      </div>
-
-      {/* Filtros */}
-      <div className="mb-6 space-y-4">
-        {/* Filtros básicos */}
-        <div className="flex flex-wrap gap-4">
-          <select
-            className="rounded border bg-lightComponent px-3 py-2 text-black dark:border-[#323232] dark:bg-[#131313] dark:text-[#959CB6]"
-            value={managerFilter}
-            onChange={(e) => setManagerFilter(e.target.value)}
-          >
-            <option value="">Todos os Managers</option>
-            {managers.map((manager) => (
-              <option key={manager} value={manager}>
-                {manager}
-              </option>
-            ))}
-          </select>
-
-          <select
-            className="rounded border bg-lightComponent px-3 py-2 text-black dark:border-[#323232] dark:bg-[#131313] dark:text-[#959CB6]"
-            value={benchmarkFilter}
-            onChange={(e) => setBenchmarkFilter(e.target.value)}
-          >
-            <option value="">Todos os Benchmarks</option>
-            {benchmarks.map((benchmark) => (
-              <option key={benchmark} value={benchmark}>
-                {benchmark}
-              </option>
-            ))}
-          </select>
-
-          {/* Botão para limpar filtros */}
-          {(managerFilter ||
-            benchmarkFilter ||
-            performanceFilter ||
-            isCustomFilter) && (
-            <button
-              className="rounded bg-red-600 px-3 py-2 text-white transition-colors hover:bg-red-700"
-              onClick={clearAllFilters}
-            >
-              Limpar Filtros
-            </button>
-          )}
+          <SwitchTheme />
+        </div>
+        
+        {/* Estatísticas de Performance - Sempre visível */}
+        <div className="mb-6 p-4 bg-card rounded-lg border border-border">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            <div>
+              <p className="text-xs text-muted-foreground">Resultados</p>
+              <p className="text-sm font-semibold text-foreground">{filteredStats.total} carteiras</p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground">Positivas</p>
+              <p className="text-sm font-semibold text-success">{filteredStats.positive}</p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground">Negativas</p>
+              <p className="text-sm font-semibold text-destructive">{filteredStats.negative}</p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground">Média</p>
+              <p className="text-sm font-semibold text-foreground">{filteredStats.average.toFixed(2)}%</p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground">Min</p>
+              <p className="text-sm font-semibold text-destructive">{filteredStats.min.toFixed(2)}%</p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground">Max</p>
+              <p className="text-sm font-semibold text-success">{filteredStats.max.toFixed(2)}%</p>
+            </div>
+          </div>
         </div>
 
-        {/* Filtros de Performance */}
-        <div className="rounded-lg border border-gray-300 bg-lightComponent p-4 dark:border-[#272727] dark:bg-[#171717]">
-          <h3 className="mb-3 font-semibold text-black dark:text-white">
-            Filtro de Performance
-          </h3>
+        {/* Abas de navegação */}
+        <div className="mb-6 flex border-b border-border">
+          <button
+            className={`px-4 py-2 ${activeTab === 'table' ? 'border-b-2 border-primary text-primary' : 'text-muted-foreground hover:text-foreground'}`}
+            onClick={() => setActiveTab('table')}
+          >
+            Tabela de Performance
+          </button>
+          <button
+            className={`px-4 py-2 ${activeTab === 'chart' ? 'border-b-2 border-primary text-primary' : 'text-muted-foreground hover:text-foreground'}`}
+            onClick={() => setActiveTab('chart')}
+          >
+            Gráfico de Barras
+          </button>
+        </div>
 
-          {/* Toggle entre filtro predefinido e customizado */}
-          <div className="mb-4 flex gap-4">
-            <label className="flex cursor-pointer items-center gap-2">
-              <input
-                type="radio"
-                name="filterType"
-                checked={!isCustomFilter}
-                onChange={() => handleFilterTypeChange(false)}
-                className="text-yellow-500"
-              />
-              <span className="text-black dark:text-white">
-                Filtros Predefinidos
-              </span>
-            </label>
-            <label className="flex cursor-pointer items-center gap-2">
-              <input
-                type="radio"
-                name="filterType"
-                checked={isCustomFilter}
-                onChange={() => handleFilterTypeChange(true)}
-                className="text-yellow-500"
-              />
-              <span className="text-black dark:text-white">
-                Filtro Customizado
-              </span>
-            </label>
+        {/* Filtros */}
+        <div className="mb-6 space-y-4">
+          {/* Filtros básicos */}
+          <div className="flex flex-wrap gap-4">
+            <select
+              className="rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+              value={managerFilter}
+              onChange={(e) => setManagerFilter(e.target.value)}
+            >
+              <option value="">Todos os Managers</option>
+              {managers.map((manager) => (
+                <option key={manager} value={manager}>
+                  {manager}
+                </option>
+              ))}
+            </select>
+
+            <select
+              className="rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+              value={benchmarkFilter}
+              onChange={(e) => setBenchmarkFilter(e.target.value)}
+            >
+              <option value="">Todos os Benchmarks</option>
+              {benchmarks.map((benchmark) => (
+                <option key={benchmark} value={benchmark}>
+                  {benchmark}
+                </option>
+              ))}
+            </select>
+
+            {/* Botão para limpar filtros */}
+            {(managerFilter ||
+              benchmarkFilter ||
+              performanceFilter ||
+              isCustomFilter) && (
+              <button
+                className="rounded-md bg-destructive px-3 py-2 text-sm text-destructive-foreground transition-colors hover:bg-destructive/90"
+                onClick={clearAllFilters}
+              >
+                Limpar Filtros
+              </button>
+            )}
           </div>
 
-          {/* Filtros predefinidos */}
-          {!isCustomFilter && (
-            <select
-              className="w-full max-w-md rounded border bg-lightComponent px-3 py-2 text-black dark:border-[#323232] dark:bg-[#131313] dark:text-[#959CB6]"
-              value={performanceFilter}
-              onChange={(e) => setPerformanceFilter(e.target.value)}
-            >
+          {/* Filtros de Performance */}
+          <Card className="p-4">
+            <h3 className="mb-3 font-semibold text-foreground">
+              Filtro de Performance
+            </h3>
+
+            {/* Toggle entre filtro predefinido e customizado */}
+            <div className="mb-4 flex gap-4">
+              <label className="flex cursor-pointer items-center gap-2">
+                <input
+                  type="radio"
+                  name="filterType"
+                  checked={!isCustomFilter}
+                  onChange={() => handleFilterTypeChange(false)}
+                  className="text-primary"
+                />
+                <span className="text-foreground">
+                  Filtros Predefinidos
+                </span>
+              </label>
+              <label className="flex cursor-pointer items-center gap-2">
+                <input
+                  type="radio"
+                  name="filterType"
+                  checked={isCustomFilter}
+                  onChange={() => handleFilterTypeChange(true)}
+                  className="text-primary"
+                />
+                <span className="text-foreground">
+                  Filtro Customizado
+                </span>
+              </label>
+            </div>
+
+            {/* Filtros predefinidos */}
+            {!isCustomFilter && (
+              <select
+                className="w-full max-w-md rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                value={performanceFilter}
+                onChange={(e) => setPerformanceFilter(e.target.value)}
+              >
               <option value="">Todas as Performances</option>
               <optgroup label="Geral">
                 <option value="positive">Apenas Positivas (&gt; 0%)</option>
@@ -452,39 +456,39 @@ export const PerformanceView: React.FC = () => {
                 <option value="range-10--5">Entre -10% e -5%</option>
                 <option value="range-15--10">Entre -15% e -10%</option>
               </optgroup>
-            </select>
-          )}
+              </select>
+            )}
 
-          {/* Filtro customizado */}
-          {isCustomFilter && (
-            <div className="flex flex-wrap items-center gap-4">
-              <div className="flex items-center gap-2">
-                <label className="text-black dark:text-white">De:</label>
-                <input
-                  type="number"
-                  step="0.01"
-                  placeholder="Min %"
-                  className="w-24 rounded border bg-lightComponent px-3 py-2 text-black dark:border-[#323232] dark:bg-[#131313] dark:text-[#959CB6]"
-                  value={customMinPerformance}
-                  onChange={(e) => setCustomMinPerformance(e.target.value)}
-                />
-                <span className="text-gray-600 dark:text-gray-400">%</span>
-              </div>
+            {/* Filtro customizado */}
+            {isCustomFilter && (
+              <div className="flex flex-wrap items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <label className="text-foreground">De:</label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    placeholder="Min %"
+                    className="w-24 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                    value={customMinPerformance}
+                    onChange={(e) => setCustomMinPerformance(e.target.value)}
+                  />
+                  <span className="text-muted-foreground">%</span>
+                </div>
 
-              <div className="flex items-center gap-2">
-                <label className="text-black dark:text-white">Até:</label>
-                <input
-                  type="number"
-                  step="0.01"
-                  placeholder="Max %"
-                  className="w-24 rounded border bg-lightComponent px-3 py-2 text-black dark:border-[#323232] dark:bg-[#131313] dark:text-[#959CB6]"
-                  value={customMaxPerformance}
-                  onChange={(e) => setCustomMaxPerformance(e.target.value)}
-                />
-                <span className="text-gray-600 dark:text-gray-400">%</span>
-              </div>
+                <div className="flex items-center gap-2">
+                  <label className="text-foreground">Até:</label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    placeholder="Max %"
+                    className="w-24 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                    value={customMaxPerformance}
+                    onChange={(e) => setCustomMaxPerformance(e.target.value)}
+                  />
+                  <span className="text-muted-foreground">%</span>
+                </div>
 
-              <div className="text-xs text-gray-600 dark:text-gray-400">
+                <div className="text-xs text-muted-foreground">
                 {customMinPerformance !== '' || customMaxPerformance !== '' ? (
                   <span>
                     Filtro ativo: {customMinPerformance || '-∞'}% até{' '}
@@ -493,100 +497,102 @@ export const PerformanceView: React.FC = () => {
                 ) : (
                   <span>Digite os valores para filtrar</span>
                 )}
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </Card>
         </div>
-      </div>
 
-      {/* Conteúdo da Tabela */}
-      {activeTab === 'table' && (
-        <div className="flex flex-col">
-          <main>
-            <div className="items-center overflow-x-auto border border-gray-300 shadow-lg dark:border-gray-600">
-              <table className="min-w-full divide-y divide-gray-300 dark:divide-gray-600">
-                <thead className="bg-gray-200 dark:bg-[#131313]">
-                  {table.getHeaderGroups().map((headerGroup) => (
-                    <tr key={headerGroup.id}>
-                      {headerGroup.headers.map((header) => (
-                        <th
-                          key={header.id}
-                          scope="col"
-                          className={`cursor-pointer select-none px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-black dark:text-white sm:px-6 sm:py-3.5 sm:text-sm ${['investedAmount', 'currentAmount', 'performance'].includes(header.column.id) ? 'relative' : ''} `}
-                          onClick={header.column.getToggleSortingHandler()}
-                        >
+        {/* Conteúdo da Tabela */}
+        {activeTab === 'table' && (
+          <Card className="rounded-lg border">
+            <Table>
+              <TableHeader>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <TableRow
+                    key={headerGroup.id}
+                    className="bg-muted/50 hover:bg-muted/50"
+                  >
+                    {headerGroup.headers.map((header) => (
+                      <TableHead
+                        key={header.id}
+                        className="cursor-pointer font-semibold text-foreground"
+                        onClick={header.column.getToggleSortingHandler()}
+                      >
+                        <div className="flex items-center">
                           {header.isPlaceholder
                             ? null
                             : flexRender(
                                 header.column.columnDef.header,
                                 header.getContext(),
                               )}
-
-                          {/* Seta de ordenação */}
                           {[
                             'investedAmount',
                             'currentAmount',
                             'performance',
                           ].includes(header.column.id) && (
                             <span
-                              className={`ml-1 inline-block transition-colors ${
+                              className={`ml-1 transition-colors ${
                                 header.column.getIsSorted()
-                                  ? 'font-bold text-blue-400'
-                                  : 'text-gray-500 dark:text-gray-400'
-                              } `}
+                                  ? 'text-primary'
+                                  : 'text-muted-foreground'
+                              }`}
                             >
                               {header.column.getIsSorted() === 'asc' && '▲'}
                               {header.column.getIsSorted() === 'desc' && '▼'}
                               {!header.column.getIsSorted() && '▲'}
                             </span>
                           )}
-                        </th>
-                      ))}
-                    </tr>
-                  ))}
-                </thead>
-                <tbody className="divide-y divide-gray-300 bg-lightComponent dark:divide-gray-600 dark:bg-[#171717] dark:text-[#959CB6]">
-                  {table.getRowModel().rows.map((row) => (
-                    <tr
+                        </div>
+                      </TableHead>
+                    ))}
+                  </TableRow>
+                ))}
+              </TableHeader>
+              <TableBody>
+                {table.getRowModel().rows.length > 0 ? (
+                  table.getRowModel().rows.map((row) => (
+                    <TableRow
                       key={row.id}
-                      className="transition-colors duration-150 hover:bg-gray-200 dark:hover:bg-[#101010]"
+                      className="hover:bg-muted/50"
                     >
                       {row.getVisibleCells().map((cell) => (
-                        <td
-                          key={cell.id}
-                          className="whitespace-nowrap px-4 py-3 text-xl text-black dark:text-white sm:px-6 sm:py-4"
-                        >
+                        <TableCell key={cell.id}>
                           {flexRender(
                             cell.column.columnDef.cell,
                             cell.getContext(),
                           )}
-                        </td>
+                        </TableCell>
                       ))}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            {filteredData.length === 0 && !loading && (
-              <p className="mt-6 text-center text-gray-600 dark:text-gray-400">
-                {managerFilter ||
-                benchmarkFilter ||
-                performanceFilter ||
-                isCustomFilter
-                  ? 'Nenhuma carteira encontrada com os filtros aplicados.'
-                  : 'Nenhum dado de performance encontrado.'}
-              </p>
-            )}
-          </main>
-        </div>
-      )}
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell
+                      colSpan={columns.length}
+                      className="h-24 text-center text-muted-foreground"
+                    >
+                      {managerFilter ||
+                      benchmarkFilter ||
+                      performanceFilter ||
+                      isCustomFilter
+                        ? 'Nenhuma carteira encontrada com os filtros aplicados.'
+                        : 'Nenhum dado de performance encontrado.'}
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </Card>
+        )}
 
-      {/* Conteúdo do Gráfico */}
-      {activeTab === 'chart' && (
-        <div className="mx-auto w-full max-w-7xl">
-          <PerformanceChart data={filteredData} />
-        </div>
-      )}
+        {/* Conteúdo do Gráfico */}
+        {activeTab === 'chart' && (
+          <Card className="p-6">
+            <PerformanceChart data={filteredData} />
+          </Card>
+        )}
+      </div>
     </div>
   )
 }

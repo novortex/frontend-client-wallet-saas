@@ -44,7 +44,7 @@ export function Customers() {
 
         if (!result) {
           return toast({
-            className: 'bg-red-500 border-0 text-white',
+            className: 'bg-destructive border-0 text-destructive-foreground',
             title: 'Failed get assets organization :(',
             description: 'Demo Vault !!',
           })
@@ -78,7 +78,7 @@ export function Customers() {
         setLoading(false)
       } catch (error) {
         toast({
-          className: 'bg-red-500 border-0 text-white',
+          className: 'bg-destructive border-0 text-destructive-foreground',
           title: 'Failed get assets organization :(',
           description: 'Demo Vault !!',
         })
@@ -107,14 +107,21 @@ export function Customers() {
   }
 
   return (
-    <div className="h-full bg-white p-10 dark:bg-transparent">
-      <div className="mb-10 flex items-center justify-between">
-        <h1 className="text-2xl font-medium dark:text-white">Customers</h1>
-        <SwitchTheme />
-      </div>
+    <div className="min-h-screen bg-background p-6">
+      <div className="mx-auto max-w-7xl">
+        <div className="mb-6 flex items-center justify-between">
+          <div className="space-y-2">
+            <h1 className="text-2xl font-bold text-foreground">Customers</h1>
+            <p className="text-sm text-muted-foreground">
+              Manage customer accounts and wallets
+            </p>
+          </div>
+          <SwitchTheme />
+        </div>
 
-      <div className="mb-10">
-        <DataTableCustomers columns={columnsCustomerOrg} data={data} />
+        <div className="mb-10">
+          <DataTableCustomers columns={columnsCustomerOrg} data={data} />
+        </div>
       </div>
     </div>
   )

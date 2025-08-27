@@ -6,65 +6,119 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 224 71.4% 4.1%;
+    --background: 0 0% 98%;
+    --foreground: 0 0% 10%;
 
     --card: 0 0% 100%;
-    --card-foreground: 224 71.4% 4.1%;
+    --card-foreground: 0 0% 10%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 224 71.4% 4.1%;
+    --popover-foreground: 0 0% 10%;
 
-    --primary: 220.9 39.3% 11%;
-    --primary-foreground: 210 20% 98%;
+    /* Vault Primary Color - Amarelo */
+    --primary: 45 95% 58%;
+    --primary-foreground: 220.9 39.3% 11%;
 
-    --secondary: 220 14.3% 95.9%;
-    --secondary-foreground: 220.9 39.3% 11%;
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 10%;
 
-    --muted: 220 14.3% 95.9%;
-    --muted-foreground: 220 8.9% 46.1%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
 
-    --accent: 220 14.3% 95.9%;
-    --accent-foreground: 220.9 39.3% 11%;
+    --accent: 0 0% 96%;
+    --accent-foreground: 0 0% 10%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 20% 98%;
 
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 224 71.4% 4.1%;
+    /* Cores funcionais */
+    --success: 145 63% 32%;
+    --success-foreground: 210 20% 98%;
+    
+    --warning: 45 95% 58%;
+    --warning-foreground: 220.9 39.3% 11%;
+    
+    --info: 217 91% 60%;
+    --info-foreground: 210 20% 98%;
+
+    /* Sidebar específico */
+    --sidebar: 0 0% 10%;
+    --sidebar-accent: 0 0% 15%;
+    --sidebar-foreground: 0 0% 50%;
+    --sidebar-primary: 45 95% 58%;
+
+    /* Sistema de cores para gráficos */
+    --chart-1: 45 95% 58%;     /* Amarelo Vault */
+    --chart-2: 145 63% 32%;    /* Verde */
+    --chart-3: 0 84% 60%;      /* Vermelho */
+    --chart-4: 217 91% 60%;    /* Azul */
+    --chart-5: 262 83% 58%;    /* Roxo */
+    --chart-6: 322 81% 57%;    /* Rosa */
+    --chart-7: 189 94% 43%;    /* Ciano */
+    --chart-8: 84 81% 44%;     /* Lima */
+
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 45 95% 58%;
 
     --radius: 0.5rem;
   }
 
   .dark {
-    --background: 224 71.4% 4.1%;
-    --foreground: 210 20% 98%;
+    --background: 0 0% 9%;
+    --foreground: 0 0% 95%;
 
-    --card: 224 71.4% 4.1%;
-    --card-foreground: 210 20% 98%;
+    --card: 0 0% 12%;
+    --card-foreground: 0 0% 95%;
 
-    --popover: 224 71.4% 4.1%;
-    --popover-foreground: 210 20% 98%;
+    --popover: 0 0% 15%;
+    --popover-foreground: 0 0% 95%;
 
-    --primary: 210 20% 98%;
+    /* Vault Primary Color - Amarelo (mesmo no dark) */
+    --primary: 45 95% 58%;
     --primary-foreground: 220.9 39.3% 11%;
 
-    --secondary: 215 27.9% 16.9%;
-    --secondary-foreground: 210 20% 98%;
+    --secondary: 0 0% 15%;
+    --secondary-foreground: 0 0% 95%;
 
-    --muted: 215 27.9% 16.9%;
-    --muted-foreground: 217.9 10.6% 64.9%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 60%;
 
-    --accent: 215 27.9% 16.9%;
-    --accent-foreground: 210 20% 98%;
+    --accent: 0 0% 15%;
+    --accent-foreground: 0 0% 95%;
 
-    --destructive: 0 62.8% 30.6%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 210 20% 98%;
 
-    --border: 215 27.9% 16.9%;
-    --input: 215 27.9% 16.9%;
-    --ring: 216 12.2% 83.9%;
+    /* Cores funcionais dark mode */
+    --success: 145 63% 42%;
+    --success-foreground: 210 20% 98%;
+    
+    --warning: 45 95% 58%;
+    --warning-foreground: 220.9 39.3% 11%;
+    
+    --info: 217 91% 70%;
+    --info-foreground: 210 20% 98%;
+
+    /* Sidebar dark mode */
+    --sidebar: 0 0% 9%;
+    --sidebar-accent: 0 0% 15%;
+    --sidebar-foreground: 0 0% 60%;
+    --sidebar-primary: 45 95% 58%;
+
+    /* Sistema de cores para gráficos (ajustado para dark) */
+    --chart-1: 45 95% 68%;     /* Amarelo Vault mais claro */
+    --chart-2: 145 63% 42%;    /* Verde mais claro */
+    --chart-3: 0 84% 70%;      /* Vermelho mais claro */
+    --chart-4: 217 91% 70%;    /* Azul mais claro */
+    --chart-5: 262 83% 68%;    /* Roxo mais claro */
+    --chart-6: 322 81% 67%;    /* Rosa mais claro */
+    --chart-7: 189 94% 53%;    /* Ciano mais claro */
+    --chart-8: 84 81% 54%;     /* Lima mais claro */
+
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 45 95% 58%;
   }
 }
 
@@ -78,7 +132,6 @@
 }
 
 body {
-  background-color: #1c1c1c;
   margin: 0;
   padding: 0;
   font-family: 'Inter', sans-serif;

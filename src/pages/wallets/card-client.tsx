@@ -23,15 +23,15 @@ interface CardClientProps {
 const getTagAlertColor = (alerts: number) => {
   switch (true) {
     case alerts >= 1 && alerts <= 3:
-      return 'bg-green-500'
+      return 'bg-success'
     case alerts >= 4 && alerts <= 6:
-      return 'bg-yellow-500'
+      return 'bg-warning'
     case alerts >= 7 && alerts <= 8:
-      return 'bg-orange-500'
+      return 'bg-chart-6'
     case alerts >= 9:
-      return 'bg-red-500'
+      return 'bg-destructive'
     default:
-      return 'bg-gray-200 dark:bg-[#272727]'
+      return 'bg-muted'
   }
 }
 
@@ -46,7 +46,7 @@ const getTextAlertColor = (alerts: number) => {
     case alerts >= 9:
       return 'text-black dark:text-white'
     default:
-      return 'text-[#f0bc32]'
+      return 'text-chart-1'
   }
 }
 
@@ -91,7 +91,7 @@ export default function CardClient({
           </div>
           <div className="relative flex h-full w-1/2 items-center justify-end">
             <div className="group relative">
-              <CircleAlert className="text-[#F2BE38]" />
+              <CircleAlert className="text-chart-1" />
               <div className="pointer-events-none absolute bottom-full right-full mb-2 w-[1250%] rounded bg-white px-4 py-2 text-start text-sm text-black opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-black dark:text-white">
                 {name}
                 <br />

@@ -148,17 +148,17 @@ const PerformanceChart: React.FC<PerformanceChartProps> = ({ data }) => {
       : 1
 
   return (
-    <div className="relative w-full rounded-lg border border-gray-300 bg-lightComponent p-6 dark:border-[#272727] dark:bg-[#171717]">
+    <div className="relative w-full rounded-lg border bg-card p-6 border-border">
       <div className="mb-4 flex items-center justify-between">
-        <h3 className="text-xl font-bold text-black dark:text-white">
+        <h3 className="text-xl font-bold text-foreground">
           Distribuição de Performance dos Clientes
         </h3>
         <div className="flex items-center gap-2">
-          <span className="text-sm text-black dark:text-white">
+          <span className="text-sm text-foreground">
             Tamanho do Range:
           </span>
           <select
-            className="w-24 rounded border bg-lightComponent px-2 py-1 text-black dark:border-[#323232] dark:bg-[#131313] dark:text-[#959CB6]"
+            className="w-24 rounded border bg-background px-2 py-1 text-foreground border-border"
             value={rangeSize}
             onChange={(e) => setRangeSize(Number(e.target.value))}
           >
@@ -223,7 +223,7 @@ const PerformanceChart: React.FC<PerformanceChartProps> = ({ data }) => {
         {/* Tooltip simples */}
         {isTooltipVisible && tooltipData && (
           <div
-            className="fixed z-50 w-80 max-w-sm rounded-lg border border-gray-300 bg-white p-3 shadow-2xl dark:border-gray-600 dark:bg-gray-800"
+            className="fixed z-50 w-80 max-w-sm rounded-lg border bg-popover p-3 shadow-2xl border-border"
             style={{
               left: fixedTooltipPosition.x + 10,
               top: fixedTooltipPosition.y + 10,
@@ -236,19 +236,19 @@ const PerformanceChart: React.FC<PerformanceChartProps> = ({ data }) => {
                 className="h-4 w-4 rounded"
                 style={{ backgroundColor: tooltipData.color }}
               />
-              <p className="font-semibold text-black dark:text-white">
+              <p className="font-semibold text-popover-foreground">
                 {tooltipData.range}
               </p>
             </div>
-            <p className="mb-2 text-black dark:text-white">
+            <p className="mb-2 text-popover-foreground">
               Clientes: {tooltipData.count}
             </p>
             {tooltipData.count > 0 && (
               <div>
-                <p className="mb-2 text-xs text-gray-600 dark:text-gray-400">
+                <p className="mb-2 text-xs text-muted-foreground">
                   Clientes neste range:
                 </p>
-                <div className="scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-700 max-h-32 overflow-y-auto rounded border border-gray-200 bg-gray-50 p-2 dark:border-gray-600 dark:bg-gray-700/50">
+                <div className="scrollbar-thin max-h-32 overflow-y-auto rounded border bg-muted p-2 border-border">
                   {tooltipData.clients.map(
                     (
                       client: { name: string; performance: number },
@@ -256,7 +256,7 @@ const PerformanceChart: React.FC<PerformanceChartProps> = ({ data }) => {
                     ) => (
                       <p
                         key={index}
-                        className="rounded px-2 py-1 text-xs text-black hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700/50"
+                        className="rounded px-2 py-1 text-xs text-muted-foreground hover:bg-muted/50"
                       >
                         • {client.name} — {client.performance?.toFixed(2)}%
                       </p>
@@ -278,7 +278,7 @@ const PerformanceChart: React.FC<PerformanceChartProps> = ({ data }) => {
                 className="h-3 w-3 rounded"
                 style={{ backgroundColor: item.color }}
               />
-              <span className="text-black dark:text-white">
+              <span className="text-foreground">
                 {item.range} ({item.count})
               </span>
             </div>
@@ -286,31 +286,31 @@ const PerformanceChart: React.FC<PerformanceChartProps> = ({ data }) => {
       </div>
       {/* Estatísticas */}
       <div className="mt-4 grid grid-cols-2 gap-4 text-sm sm:grid-cols-4">
-        <div className="rounded bg-gray-100 p-3 dark:bg-[#131313]">
-          <p className="text-gray-600 dark:text-gray-400">Total de Clientes</p>
-          <p className="text-lg font-semibold text-black dark:text-white">
+        <div className="rounded bg-muted p-3">
+          <p className="text-muted-foreground">Total de Clientes</p>
+          <p className="text-lg font-semibold text-foreground">
             {data.length}
           </p>
         </div>
         <div className="rounded bg-green-900/20 p-3">
-          <p className="text-gray-600 dark:text-gray-400">
+          <p className="text-muted-foreground">
             Performance Positiva
           </p>
-          <p className="text-lg font-semibold text-green-400">
+          <p className="text-lg font-semibold text-success">
             {data.filter((client) => client.performance > 0).length}
           </p>
         </div>
         <div className="rounded bg-red-900/20 p-3">
-          <p className="text-gray-600 dark:text-gray-400">
+          <p className="text-muted-foreground">
             Performance Negativa
           </p>
-          <p className="text-lg font-semibold text-red-400">
+          <p className="text-lg font-semibold text-destructive">
             {data.filter((client) => client.performance < 0).length}
           </p>
         </div>
-        <div className="rounded bg-gray-100 p-3 dark:bg-[#131313]">
-          <p className="text-gray-600 dark:text-gray-400">Performance Média</p>
-          <p className="text-lg font-semibold text-black dark:text-white">
+        <div className="rounded bg-muted p-3">
+          <p className="text-muted-foreground">Performance Média</p>
+          <p className="text-lg font-semibold text-foreground">
             {data.length > 0
               ? (
                   data.reduce((acc, client) => acc + client.performance, 0) /
