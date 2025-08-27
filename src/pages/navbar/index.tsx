@@ -75,7 +75,7 @@ export default function Navbar() {
           </div>
         </SideBar>
       )}
-      <div className="w-screen" id="detail">
+      <div className="flex-1 overflow-x-auto" id="detail">
         <RouterOutlet />
       </div>
     </div>

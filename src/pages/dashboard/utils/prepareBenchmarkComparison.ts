@@ -7,11 +7,11 @@ export const prepareBenchmarkComparisonData = (
   return [
     {
       name: 'Superaram o Benchmark',
-      value: data.summary.benchmarkOutperformedWalletCount,
+      value: totalWallets - data.summary.benchmarkOutperformedWalletCount,
     },
     {
       name: 'Não Superaram o Benchmark',
-      value: totalWallets - data.summary.benchmarkOutperformedWalletCount,
+      value: data.summary.benchmarkOutperformedWalletCount,
     },
   ]
 }
