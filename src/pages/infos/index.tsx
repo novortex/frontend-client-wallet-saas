@@ -29,7 +29,15 @@ import { SwitchTheme } from '@/components/custom/switch-theme'
 import { ClientsInfoModal } from './client-info-modal'
 import { ConfirmContactModal } from './confirm-contact-modal'
 import { ExchangeInfoModal } from './exchange-info-modal'
-import { convertedTimeZone } from '@/services/managementService'
+import { MandatorySelectManagerModal } from '../customers/mandatory-select-manager-modal'
+import { useManagerOrganization } from '@/store/managers_benckmark_exchanges'
+import {
+  convertedTimeZone,
+  getAllManagersOnOrganization,
+  getAllBenchmark,
+  getAllExchange,
+  getAllCustomersOrganization,
+} from '@/services/managementService'
 import {
   getInfosCustomer,
   updateCurrentAmount,
@@ -39,6 +47,8 @@ export function Infos() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isModalExchangeOpen, setIsModalExchangeOpen] = useState(false)
   const [isModalContactOpen, setisModalContactOpen] = useState(false)
+  const [isSelectManagerModalOpen, setIsSelectManagerModalOpen] =
+    useState(false)
 
   const [timeZone, setTimeZone] = useState(null)
 
@@ -47,10 +57,12 @@ export function Infos() {
   )
   const [walletInfos, setWalletInfos] = useState<TWalletInfos>({
     manager: '',
+    hasManager: false,
     lastContactAt: '',
   })
 
   const [walletI, setWalletI] = useState<TWallet>({
+    customerUuid: '',
     startDate: '',
     investedAmount: 0,
     currentAmount: 0,
@@ -83,6 +95,13 @@ export function Infos() {
   const { walletUuid } = useParams()
 
   const [signal] = useSignalStore((state) => [state.signal])
+  const [managers, setManager, setBenchs, setExchanges] =
+    useManagerOrganization((state) => [
+      state.managers,
+      state.setManagers,
+      state.setBenchs,
+      state.setExchanges,
+    ])
 
   const openModal = () => {
     setIsModalOpen(true)
@@ -108,6 +127,19 @@ export function Infos() {
     setisModalContactOpen(false)
   }
 
+  // Função para buscar o customerUuid usando o walletUuid
+  const findCustomerUuid = async (walletUuid: string) => {
+    try {
+      const customers = await getAllCustomersOrganization()
+      const customer = customers?.find((c: any) => c.walletUuid === walletUuid)
+      console.log('Found customer by walletUuid:', customer)
+      return customer?.uuid || null
+    } catch (error) {
+      console.error('Error finding customer:', error)
+      return null
+    }
+  }
+
   useEffect(() => {
     const getInfo = async () => {
       if (!walletUuid) {
@@ -122,13 +154,50 @@ export function Infos() {
         return false
       }
 
-      setWalletI(result.walletInfo)
+      // Debug logs
+      console.log('API Response - walletInfo:', result.walletInfo)
+      console.log('API Response - customerUuid:', result.walletInfo?.customerUuid)
+
+      // Se a API não retorna customerUuid, busca pelos customers
+      let customerUuid: string | null = result.walletInfo?.customerUuid || null
+      if (!customerUuid) {
+        console.log('CustomerUuid not found in API response, searching in customers...')
+        customerUuid = await findCustomerUuid(walletUuid)
+      }
+
+      console.log('Final customerUuid:', customerUuid)
+
+      // Atualiza o estado com o customerUuid correto
+      setWalletI({
+        ...result.walletInfo,
+        customerUuid: customerUuid || ''
+      })
       setWalletInfos(result.walletPreInfos)
       setWalletCommission(result.walletCommission)
+
+      // Se não tiver manager, abre o modal automaticamente
+      if (result.walletPreInfos.hasManager === false) {
+        setIsSelectManagerModalOpen(true)
+      }
     }
 
     getInfo()
-  }, [navigate, walletUuid, signal])
+
+    const fetchManagersAndBenchmarks = async () => {
+      try {
+        const managersData = await getAllManagersOnOrganization()
+        const benchmarks = await getAllBenchmark()
+        const exchanges = await getAllExchange()
+
+        setManager(managersData)
+        setBenchs(benchmarks)
+        setExchanges(exchanges)
+      } catch (error) {
+        console.error('Erro ao buscar gerentes:', error)
+      }
+    }
+    fetchManagersAndBenchmarks()
+  }, [navigate, walletUuid, signal, setManager, setBenchs, setExchanges])
 
   useEffect(() => {
     const fetchTimeZone = async () => {
@@ -143,7 +212,11 @@ export function Infos() {
     fetchTimeZone()
   }, [])
   return (
-    <div className="h-full bg-white p-10 dark:bg-transparent">
+    <div className="relative h-full bg-white p-10 dark:bg-transparent">
+      {/* Overlay semi-transparente quando não tiver manager */}
+      {walletInfos.hasManager === false && (
+        <div className="absolute inset-0 z-10 bg-black bg-opacity-50 backdrop-blur-sm" />
+      )}
       <div className="mb-10 flex items-center justify-between">
         <Breadcrumb>
           <BreadcrumbList>
@@ -222,7 +295,12 @@ export function Infos() {
           <div className="mb-14">
             <div className="flex h-full w-1/2 items-center justify-start gap-2 text-xl text-[#959CB6]">
               <img className="w-6" src={responsibleIcon} alt="" />
-              <p>{walletInfos.manager || '-'}</p>
+              <p>
+                {walletInfos.manager ||
+                  (walletInfos.hasManager === false
+                    ? 'No manager assigned'
+                    : '-')}
+              </p>
             </div>
             <div className="flex text-xl">
               <DollarSign className="text-[#F2BE38]" />
@@ -458,6 +536,34 @@ export function Infos() {
       <ConfirmContactModal
         isOpen={isModalContactOpen}
         onClose={closeModalContact}
+      />
+      <MandatorySelectManagerModal
+        customer={{
+          id: walletI.customerUuid || '',
+          name: walletI.user.name,
+          active: true,
+          email: walletI.user.email,
+          phone: walletI.user.phone,
+          isWallet: true,
+          hasManager: walletInfos.hasManager,
+          walletUuid: walletUuid || '',
+          exchange: walletI.exchange
+            ? { exchangeUuid: '', exchangeName: walletI.exchange.name }
+            : null,
+          emailExchange: walletI.accountEmail,
+          emailPassword: walletI.emailPassword,
+          exchangePassword: walletI.exchangePassword,
+          manager: walletInfos.manager
+            ? { managerUuid: '', managerName: walletInfos.manager }
+            : null,
+          performanceFee: walletI.performanceFee,
+          initialFeePaid: walletI.initialFeePaid,
+          contract: walletI.contract ? 'signed' : null,
+          riskProfile: walletI.riskProfile as any,
+        }}
+        managers={managers}
+        isOpen={isSelectManagerModalOpen}
+        onClose={() => setIsSelectManagerModalOpen(false)}
       />
     </div>
   )

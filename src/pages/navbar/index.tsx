@@ -36,11 +36,6 @@ export default function Navbar() {
               href="/customers"
             />
             <SideBarItem
-              icon={<FileCheck size={20} />}
-              text="Wallet Closings"
-              href="/wallet-closings"
-            />
-            <SideBarItem
               icon={<Eye size={20} />}
               text="Monitoring"
               isDropdown={true}
@@ -55,6 +50,11 @@ export default function Navbar() {
                 icon={<Wallet2Icon size={18} />}
                 text="Wallet Monitoring"
                 href="/wallet-monitoring"
+              />
+              <SideBarItem
+                icon={<FileCheck size={18} />}
+                text="Wallet Closings"
+                href="/wallet-closings"
               />
             </SideBarItem>
             <SideBarItem

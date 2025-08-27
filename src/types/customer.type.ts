@@ -45,6 +45,7 @@ export type TCustomersOrganization = {
   email: string
   phone: string | null
   isWallet: boolean
+  hasManager: boolean
   walletUuid: string | null
   exchange: {
     exchangeUuid: string
