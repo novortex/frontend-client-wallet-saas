@@ -6,8 +6,6 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
-  DialogClose,
 } from '@/components/ui/dialog'
 import {
   Select,
@@ -55,7 +53,7 @@ export function SelectManagerModal({ customer, managers, isOpen, onClose }: Sele
         description: 'Manager assigned successfully',
       })
       
-      setSignal(Math.random())
+      setSignal(true)
       onClose()
       setSelectedManager('')
     } catch (error) {

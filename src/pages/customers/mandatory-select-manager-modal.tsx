@@ -26,12 +26,14 @@ interface MandatorySelectManagerModalProps {
   customer: CustomersOrganization
   managers: { name: string; uuid: string }[]
   isOpen: boolean
+  onClose: () => void
 }
 
 export function MandatorySelectManagerModal({
   customer,
   managers,
   isOpen,
+  onClose,
 }: MandatorySelectManagerModalProps) {
   const [selectedManager, setSelectedManager] = useState<string>('')
   const [isLoading, setIsLoading] = useState(false)
@@ -81,8 +83,14 @@ export function MandatorySelectManagerModal({
         description: 'Manager assigned successfully',
       })
 
-      setSignal(Math.random())
+      setSignal(true)
       setSelectedManager('')
+      onClose()
+      
+      // Recarrega a página para buscar os dados atualizados
+      setTimeout(() => {
+        window.location.reload()
+      }, 1000)
     } catch (error) {
       toast({
         className: 'bg-red-500 border-0 text-white',
@@ -99,7 +107,7 @@ export function MandatorySelectManagerModal({
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={() => {}}>
+    <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
         className="dark:border-[#323232] dark:bg-[#131313] sm:max-w-[500px]"
         onPointerDownOutside={(e) => e.preventDefault()}

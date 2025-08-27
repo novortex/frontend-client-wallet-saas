@@ -36,6 +36,7 @@ import {
   getAllManagersOnOrganization,
   getAllBenchmark,
   getAllExchange,
+  getAllCustomersOrganization,
 } from '@/services/managementService'
 import {
   getInfosCustomer,
@@ -130,7 +131,7 @@ export function Infos() {
   const findCustomerUuid = async (walletUuid: string) => {
     try {
       const customers = await getAllCustomersOrganization()
-      const customer = customers.find(c => c.walletUuid === walletUuid)
+      const customer = customers?.find((c: any) => c.walletUuid === walletUuid)
       console.log('Found customer by walletUuid:', customer)
       return customer?.uuid || null
     } catch (error) {
@@ -158,7 +159,7 @@ export function Infos() {
       console.log('API Response - customerUuid:', result.walletInfo?.customerUuid)
 
       // Se a API não retorna customerUuid, busca pelos customers
-      let customerUuid = result.walletInfo?.customerUuid
+      let customerUuid: string | null = result.walletInfo?.customerUuid || null
       if (!customerUuid) {
         console.log('CustomerUuid not found in API response, searching in customers...')
         customerUuid = await findCustomerUuid(walletUuid)
@@ -562,6 +563,7 @@ export function Infos() {
         }}
         managers={managers}
         isOpen={isSelectManagerModalOpen}
+        onClose={() => setIsSelectManagerModalOpen(false)}
       />
     </div>
   )
