@@ -12,6 +12,7 @@ export type CustomersOrganization = {
   email: string
   phone: string | null
   isWallet: boolean
+  hasManager: boolean
   walletUuid: string | null
   exchange: {
     exchangeUuid: string
@@ -104,13 +105,25 @@ export const columnsCustomerOrg: ColumnDef<CustomersOrganization>[] = [
       </Button>
     ),
     cell: ({ row }) => {
-      const isWallet = row.original.isWallet
+      const { isWallet, hasManager } = row.original
+      
+      let status = 'Need Wallet'
+      let bgColor = 'bg-red-500'
+      
+      if (isWallet && hasManager) {
+        status = 'Completed'
+        bgColor = 'bg-green-500'
+      } else if (isWallet && !hasManager) {
+        status = 'Need Manager'
+        bgColor = 'bg-yellow-500'
+      }
+      
       return (
         <div className="text-center">
           <span
-            className={`rounded-full px-2 py-1 text-white ${isWallet ? 'bg-green-500' : 'bg-red-500'}`}
+            className={`rounded-full px-2 py-1 text-white ${bgColor}`}
           >
-            {isWallet ? 'Completed' : 'Need Wallet'}
+            {status}
           </span>
         </div>
       )

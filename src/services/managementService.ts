@@ -313,6 +313,22 @@ export async function sendContractId(
   }
 }
 
+export async function updateCustomerManager(
+  customerUuid: string,
+  managerUuid: string,
+) {
+  try {
+    const response = await instance.put(
+      `/management/customer/${customerUuid}/manager`,
+      { managerUuid },
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error updating customer manager:', error)
+    throw error
+  }
+}
+
 export async function getWalletClosings(): Promise<WalletClosing[]> {
   try {
     const result = await instance.get('/management/wallet-closings')

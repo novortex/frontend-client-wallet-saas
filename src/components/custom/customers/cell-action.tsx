@@ -15,7 +15,9 @@ import {
 import CreateWalletModal from '../create-wallet-modal'
 import { DisableCustomerModal } from '@/pages/customers/disable-customer-modal'
 import { EditCustomerModal } from '@/pages/customers/edit-customer-modal'
+import { SelectManagerModal } from '@/pages/customers/select-manager-modal'
 import { CustomersOrganization } from './columns'
+import { useManagerOrganization } from '@/store/managers_benckmark_exchanges'
 
 export default function CellActions({
   rowInfos,
@@ -24,8 +26,10 @@ export default function CellActions({
 }) {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [isDisableDialogOpen, setIsDisableDialogOpen] = useState(false)
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isCreateWalletModalOpen, setIsCreateWalletModalOpen] = useState(false)
+  const [isSelectManagerModalOpen, setIsSelectManagerModalOpen] = useState(false)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const [managers] = useManagerOrganization((state) => [state.managers])
 
   const handleClose = () => {
     setIsDropdownOpen(false)
@@ -58,10 +62,14 @@ export default function CellActions({
             <span>Edit</span>
           </DropdownMenuItem>
 
-          {rowInfos.isWallet === false && (
+          {(rowInfos.isWallet === false || (rowInfos.isWallet === true && rowInfos.hasManager === false)) && (
             <DropdownMenuItem
               onClick={() => {
-                setIsModalOpen(true)
+                if (rowInfos.isWallet === false) {
+                  setIsCreateWalletModalOpen(true)
+                } else if (rowInfos.isWallet === true && rowInfos.hasManager === false) {
+                  setIsSelectManagerModalOpen(true)
+                }
                 handleClose()
               }}
               className="flex cursor-pointer items-center gap-2 px-4 py-2 text-sm text-black transition-colors hover:bg-black hover:text-white focus:bg-black focus:text-white"
@@ -105,10 +113,20 @@ export default function CellActions({
       <CreateWalletModal
         rowInfos={rowInfos}
         onClose={() => {
-          setIsModalOpen(false)
+          setIsCreateWalletModalOpen(false)
           setIsDropdownOpen(false)
         }}
-        isOpen={isModalOpen}
+        isOpen={isCreateWalletModalOpen}
+      />
+
+      <SelectManagerModal
+        customer={rowInfos}
+        managers={managers}
+        isOpen={isSelectManagerModalOpen}
+        onClose={() => {
+          setIsSelectManagerModalOpen(false)
+          setIsDropdownOpen(false)
+        }}
       />
     </>
   )

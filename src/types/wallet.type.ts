@@ -5,10 +5,12 @@ export type TWalletCommission = {
 
 export type TWalletInfos = {
   manager: string
+  hasManager: boolean
   lastContactAt: string | null
 }
 
 export type TWallet = {
+  customerUuid: string
   startDate: string // or Date
   investedAmount: number
   currentAmount: number

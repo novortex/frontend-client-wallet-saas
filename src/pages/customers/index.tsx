@@ -60,6 +60,7 @@ export function Customers() {
             email: item.email,
             phone: item.phone,
             isWallet: item.isWallet,
+            hasManager: item.hasManager,
             walletUuid: item.walletUuid,
             exchange: item.exchange,
             emailExchange: item.emailExchange,
