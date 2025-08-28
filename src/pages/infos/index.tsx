@@ -30,13 +30,8 @@ import { SwitchTheme } from '@/components/custom/switch-theme'
 import { ClientsInfoModal } from './client-info-modal'
 import { ConfirmContactModal } from './confirm-contact-modal'
 import { ExchangeInfoModal } from './exchange-info-modal'
-import { MandatorySelectManagerModal } from '../customers/mandatory-select-manager-modal'
-import { useManagerOrganization } from '@/store/managers_benckmark_exchanges'
 import {
   convertedTimeZone,
-  getAllManagersOnOrganization,
-  getAllBenchmark,
-  getAllExchange,
   getAllCustomersOrganization,
 } from '@/services/managementService'
 import {
@@ -48,8 +43,6 @@ export function Infos() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isModalExchangeOpen, setIsModalExchangeOpen] = useState(false)
   const [isModalContactOpen, setisModalContactOpen] = useState(false)
-  const [isSelectManagerModalOpen, setIsSelectManagerModalOpen] =
-    useState(false)
 
   const [timeZone, setTimeZone] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
@@ -103,13 +96,6 @@ export function Infos() {
   const { walletUuid } = useParams()
 
   const [signal] = useSignalStore((state) => [state.signal])
-  const [managers, setManager, setBenchs, setExchanges] =
-    useManagerOrganization((state) => [
-      state.managers,
-      state.setManagers,
-      state.setBenchs,
-      state.setExchanges,
-    ])
 
   const openModal = () => {
     setIsModalOpen(true)
@@ -256,29 +242,11 @@ export function Infos() {
       setWalletInfos(result.walletPreInfos)
       setWalletCommission(result.walletCommission)
 
-      // Se não tiver manager, abre o modal automaticamente
-      if (result.walletPreInfos.hasManager === false) {
-        setIsSelectManagerModalOpen(true)
-      }
     }
 
     getInfo()
 
-    const fetchManagersAndBenchmarks = async () => {
-      try {
-        const managersData = await getAllManagersOnOrganization()
-        const benchmarks = await getAllBenchmark()
-        const exchanges = await getAllExchange()
-
-        setManager(managersData)
-        setBenchs(benchmarks)
-        setExchanges(exchanges)
-      } catch (error) {
-        console.error('Erro ao buscar gerentes:', error)
-      }
-    }
-    fetchManagersAndBenchmarks()
-  }, [navigate, walletUuid, signal, setManager, setBenchs, setExchanges])
+  }, [navigate, walletUuid, signal])
 
   useEffect(() => {
     const fetchTimeZone = async () => {
@@ -316,10 +284,6 @@ export function Infos() {
   }, [])
   return (
     <div className="relative min-h-screen bg-background p-6">
-      {/* Overlay semi-transparente quando não tiver manager */}
-      {walletInfos.hasManager === false && (
-        <div className="absolute inset-0 z-10 bg-black bg-opacity-50 backdrop-blur-sm" />
-      )}
       <div className="mx-auto max-w-7xl">
         <div className="mb-6 flex items-center justify-between">
           <Breadcrumb>
@@ -687,34 +651,6 @@ export function Infos() {
       <ConfirmContactModal
         isOpen={isModalContactOpen}
         onClose={closeModalContact}
-      />
-      <MandatorySelectManagerModal
-        customer={{
-          id: walletI.customerUuid || '',
-          name: walletI.user.name,
-          active: true,
-          email: walletI.user.email,
-          phone: walletI.user.phone,
-          isWallet: true,
-          hasManager: walletInfos.hasManager,
-          walletUuid: walletUuid || '',
-          exchange: walletI.exchange
-            ? { exchangeUuid: '', exchangeName: walletI.exchange.name }
-            : null,
-          emailExchange: walletI.accountEmail,
-          emailPassword: walletI.emailPassword,
-          exchangePassword: walletI.exchangePassword,
-          manager: walletInfos.manager
-            ? { managerUuid: '', managerName: walletInfos.manager }
-            : null,
-          performanceFee: walletI.performanceFee,
-          initialFeePaid: walletI.initialFeePaid,
-          contract: walletI.contract ? 'signed' : null,
-          riskProfile: walletI.riskProfile as any,
-        }}
-        managers={managers}
-        isOpen={isSelectManagerModalOpen}
-        onClose={() => setIsSelectManagerModalOpen(false)}
       />
     </div>
   )
