@@ -751,10 +751,10 @@ describe('WalletMonitoring Component', () => {
       render(<WalletMonitoring />)
 
       const title = screen.getByText('Wallet Monitoring')
-      expect(title).toHaveClass('dark:text-white')
+      expect(title).toHaveClass('text-foreground')
 
       const tableHeader = screen.getByText('Manager Performance Overview')
-      expect(tableHeader).toHaveClass('dark:text-white')
+      expect(tableHeader).toHaveClass('text-foreground')
     })
 
     it('should have table with responsive overflow', () => {

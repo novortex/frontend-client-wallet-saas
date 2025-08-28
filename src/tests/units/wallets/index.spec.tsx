@@ -186,11 +186,11 @@ describe('Wallet Page', () => {
 
     it('should display the correct alert colors based on alert count', () => {
       const testCases = [
-        { alerts: 0, expectedClass: 'bg-gray-200' },
-        { alerts: 2, expectedClass: 'bg-green-500' },
-        { alerts: 5, expectedClass: 'bg-yellow-500' },
-        { alerts: 7, expectedClass: 'bg-orange-500' },
-        { alerts: 10, expectedClass: 'bg-red-500' },
+        { alerts: 0, expectedClass: 'bg-muted' },
+        { alerts: 2, expectedClass: 'bg-success' },
+        { alerts: 5, expectedClass: 'bg-warning' },
+        { alerts: 7, expectedClass: 'bg-chart-6' },
+        { alerts: 10, expectedClass: 'bg-destructive' },
       ]
 
       testCases.forEach(({ alerts, expectedClass }) => {
