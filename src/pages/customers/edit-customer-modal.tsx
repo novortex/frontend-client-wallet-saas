@@ -198,8 +198,24 @@ export function EditCustomerModal({
 
       // If checkbox is checked and riskProfile changed, call the backend route
       if (isUpdateWithBaseWallet && riskProfile !== rowInfos.riskProfile) {
+        if (!riskProfile) {
+          toast({
+            className: 'bg-red-500 border-0',
+            title: 'Campo obrigatório',
+            description: 'Por favor, selecione um perfil de risco.',
+          })
+          return
+        }
         try {
-          const baseWallet = await getBaseWalletByRisk(riskProfile!)
+          const baseWallet = await getBaseWalletByRisk(riskProfile)
+          if (!baseWallet || !baseWallet.uuid) {
+            toast({
+              className: 'bg-red-500 border-0',
+              title: 'Erro',
+              description: 'Modelo base não encontrado para o perfil de risco selecionado.',
+            })
+            return
+          }
           const baseWalletUuid = baseWallet.uuid
 
           await applyBaseWalletAllocationForNewRisk({
