@@ -212,7 +212,8 @@ export function EditCustomerModal({
             toast({
               className: 'bg-red-500 border-0',
               title: 'Erro',
-              description: 'Modelo base não encontrado para o perfil de risco selecionado.',
+              description:
+                'Modelo base não encontrado para o perfil de risco selecionado.',
             })
             return
           }
