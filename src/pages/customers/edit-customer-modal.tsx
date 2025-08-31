@@ -10,6 +10,10 @@ import { useManagerOrganization } from '@/store/managers_benckmark_exchanges'
 import { useSignalStore } from '@/store/signalEffect'
 import { useToast } from '@/components/ui/use-toast'
 import { updateCustomer, updateWallet } from '@/services/managementService'
+import {
+  getBaseWalletByRisk,
+  applyBaseWalletAllocationForNewRisk,
+} from '@/services/wallet/baseWalletService'
 import { ProfileTab } from './profile-tab'
 import { WalletTab } from './wallet-tab'
 import { CustomersOrganization } from '@/components/custom/customers/columns'
@@ -57,6 +61,7 @@ export function EditCustomerModal({
     phone: '',
     general: '',
   })
+  const [isUpdateWithBaseWallet, setIsUpdateWithBaseWallet] = useState(false)
 
   const accountPasswordRef = useRef<HTMLInputElement>(null)
   const emailExchangeRef = useRef<HTMLInputElement>(null)
@@ -181,7 +186,45 @@ export function EditCustomerModal({
         })
         return
       }
-      const result = await updateWallet(rowInfos.walletUuid || '', {
+
+      if (!rowInfos.walletUuid) {
+        toast({
+          className: 'bg-red-500 border-0',
+          title: 'Erro',
+          description: 'UUID da carteira não encontrado.',
+        })
+        return
+      }
+
+      // If checkbox is checked and riskProfile changed, call the backend route
+      if (isUpdateWithBaseWallet && riskProfile !== rowInfos.riskProfile) {
+        try {
+          const baseWallet = await getBaseWalletByRisk(riskProfile!)
+          const baseWalletUuid = baseWallet.uuid
+
+          await applyBaseWalletAllocationForNewRisk({
+            walletUuid: rowInfos.walletUuid,
+            baseWalletUuid,
+          })
+
+          toast({
+            className: 'bg-green-500 border-0',
+            title: 'Carteira atualizada!',
+            description: 'Ideal allocation aplicado com sucesso.',
+          })
+        } catch (err) {
+          console.error('Erro ao aplicar modelo base:', err)
+          toast({
+            className: 'bg-red-500 border-0',
+            title: 'Erro na atualização da carteira',
+            description:
+              'Não foi possível aplicar o modelo base. Tente novamente.',
+          })
+          return
+        }
+      }
+
+      const result = await updateWallet(rowInfos.walletUuid, {
         accountPassword: accountPasswordRef.current?.value ?? '',
         contract: contractChecked,
         emailExchange: emailExchangeRef.current?.value ?? '',
@@ -235,8 +278,11 @@ export function EditCustomerModal({
       setPhone(rowInfos.phone || '')
       setRiskProfile(rowInfos.riskProfile as RiskProfile)
       setErrors({ name: '', email: '', phone: '', general: '' })
+      setIsUpdateWithBaseWallet(false)
     }
   }, [isOpen, rowInfos])
+
+  const showUpdateCheckbox = riskProfile !== rowInfos.riskProfile
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -295,6 +341,9 @@ export function EditCustomerModal({
               handleUpdateWallet={handleUpdateWallet}
               setRiskProfile={setRiskProfile}
               riskProfile={riskProfile}
+              showUpdateCheckbox={showUpdateCheckbox}
+              isUpdateWithBaseWallet={isUpdateWithBaseWallet}
+              setIsUpdateWithBaseWallet={setIsUpdateWithBaseWallet}
             />
           </TabsContent>
         </Tabs>

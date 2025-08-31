@@ -33,6 +33,9 @@ interface WalletTabProps {
   handleUpdateWallet: () => Promise<void>
   setRiskProfile: (value: RiskProfile) => void
   riskProfile: RiskProfile
+  showUpdateCheckbox: boolean
+  isUpdateWithBaseWallet: boolean
+  setIsUpdateWithBaseWallet: (value: boolean) => void
 }
 
 export function WalletTab({
@@ -55,6 +58,9 @@ export function WalletTab({
   handleUpdateWallet,
   setRiskProfile,
   riskProfile,
+  showUpdateCheckbox,
+  isUpdateWithBaseWallet,
+  setIsUpdateWithBaseWallet,
 }: WalletTabProps) {
   if (!rowInfos.isWallet) {
     return (
@@ -65,7 +71,7 @@ export function WalletTab({
   }
 
   return (
-    <div className="grid grid-cols-2 justify-items-center gap-5">
+    <div className="grid grid-cols-2 justify-items-start gap-5">
       <div className="w-full">
         <Label className="ml-2" htmlFor="Name">
           Exchange
@@ -218,6 +224,19 @@ export function WalletTab({
           />
           <Label>Contract</Label>
         </div>
+
+        {showUpdateCheckbox && (
+          <div className="mt-3 flex items-center gap-3">
+            <Checkbox
+              className="border-gray-500"
+              checked={isUpdateWithBaseWallet}
+              onCheckedChange={(checked) =>
+                setIsUpdateWithBaseWallet(checked as boolean)
+              }
+            />
+            <Label>Update with base wallet?</Label>
+          </div>
+        )}
       </div>
 
       <div className="mt-12 flex justify-end gap-5">
