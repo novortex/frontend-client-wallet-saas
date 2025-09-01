@@ -192,7 +192,7 @@ describe('Wallet Page', () => {
         { alerts: 10, expectedClass: 'bg-destructive' },
       ]
 
-      testCases.forEach(({ alerts, expectedClass }) => {
+      testCases.forEach(() => {
         const { unmount } = render(
           <CardClient {...defaultProps} />,
         )
