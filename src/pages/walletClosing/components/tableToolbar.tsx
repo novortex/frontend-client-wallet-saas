@@ -123,7 +123,7 @@ export function TableToolbar({
             size="sm"
             onClick={onNextPage}
             disabled={!canNextPage}
-            className="bg-[#F2BE38] text-black hover:bg-yellow-500 hover:text-white"
+            className="btn-yellow"
           >
             Next
           </Button>

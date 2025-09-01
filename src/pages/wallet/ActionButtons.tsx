@@ -244,11 +244,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
           Rebalanced
         </Button>
         <Button
-          className={`flex items-center gap-2 px-4 font-medium text-white transition-all duration-200 transform hover:scale-105 hover:text-white ${
-            infosWallet?.isClosed
-              ? 'bg-[#10A45C] hover:bg-green-700'
-              : 'bg-[#EF4E3D] hover:bg-red-700'
-          }`}
+          className={infosWallet?.isClosed ? 'btn-green' : 'btn-red'}
           type="button"
           onClick={openCloseWalletModal}
         >

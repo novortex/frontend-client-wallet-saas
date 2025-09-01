@@ -32,7 +32,7 @@ export function ComingSoonModal({
             Esta funcionalidade está sendo desenvolvida e estará disponível em breve.
           </p>
           <Button 
-            className="w-full bg-[#F2BE38] text-black hover:bg-yellow-500 hover:text-white transition-all duration-200 transform hover:scale-105"
+            className="w-full btn-yellow"
             onClick={onClose}
           >
             Entendi

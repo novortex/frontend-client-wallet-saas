@@ -67,9 +67,10 @@ export function TradeDialog({
 
     if (buyAmount <= 0) {
       return toast({
-        className: 'bg-red-500 border-0',
+        className: 'toast-error',
         title: 'Error',
         description: 'Please provide a valid quantity to buy.',
+        duration: 6000,
       })
     }
 
@@ -82,17 +83,19 @@ export function TradeDialog({
 
     if (sellAmount >= 0) {
       return toast({
-        className: 'bg-red-500 border-0',
+        className: 'toast-error',
         title: 'Invalid quantity for sell',
         description: 'Please provide a valid quantity to sell.',
+        duration: 6000,
       })
     }
 
     if (rowInfos.assetQuantity + sellAmount < 0) {
       return toast({
-        className: 'bg-red-500 border-0',
+        className: 'toast-error',
         title: 'Insufficient quantity',
         description: `You cannot sell more than your current quantity of ${rowInfos.assetQuantity}.`,
+        duration: 6000,
       })
     }
 

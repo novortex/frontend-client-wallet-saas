@@ -40,6 +40,7 @@ export default function AddNewClientModal({
         className: 'toast-warning',
         title: 'Processando cliente',
         description: 'Adicionando cliente à organização...',
+        duration: 5000,
       })
 
       const response = await registerNewCustomer(name, email, phone)
@@ -49,6 +50,7 @@ export default function AddNewClientModal({
           className: 'toast-error',
           title: 'Erro ao adicionar cliente',
           description: 'Não foi possível adicionar o cliente à organização.',
+          duration: 6000,
         })
       }
 
@@ -68,6 +70,7 @@ export default function AddNewClientModal({
         className: 'toast-success',
         title: 'Cliente adicionado com sucesso',
         description: 'O novo cliente foi adicionado à organização.',
+        duration: 4000,
       })
     } catch (error) {
       console.error('Erro ao cadastrar novo cliente:', error)

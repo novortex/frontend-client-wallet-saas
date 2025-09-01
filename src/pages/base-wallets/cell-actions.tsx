@@ -8,6 +8,7 @@ import {
 import {
   MoreHorizontal,
   ArrowUpDown,
+  Trash2,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { BaseWalletTarget } from '@/types/baseWallet.type'
@@ -15,9 +16,11 @@ import { BaseWalletTarget } from '@/types/baseWallet.type'
 export function BaseWalletCellActions({
   rowInfos,
   onEditAllocation,
+  onDeleteAsset,
 }: {
   rowInfos: BaseWalletTarget
   onEditAllocation: (target: BaseWalletTarget) => void
+  onDeleteAsset: (target: BaseWalletTarget) => void
 }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
@@ -51,6 +54,21 @@ export function BaseWalletCellActions({
         >
           <ArrowUpDown className="h-4 w-4" />
           <span>Allocation</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          className="flex cursor-pointer items-center gap-2 px-4 py-2 text-sm text-red-600 transition-colors hover:bg-red-600 hover:text-white focus:bg-red-600 focus:text-white"
+          onClick={(e) => {
+            e.stopPropagation()
+            try {
+              onDeleteAsset(rowInfos)
+              handleClose()
+            } catch (error) {
+              console.error('Error in delete asset handler:', error)
+            }
+          }}
+        >
+          <Trash2 className="h-4 w-4" />
+          <span>Remover</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

@@ -101,6 +101,7 @@ export default function RegisterCustomerModal({
       className: 'toast-warning',
       title: 'Processando cliente',
       description: 'Adicionando cliente à organização...',
+      duration: 5000,
     })
     const formattedPhone = formatPhoneNumber(phone)
     const customer = await registerNewCustomer(
@@ -114,6 +115,7 @@ export default function RegisterCustomerModal({
         className: 'toast-error',
         title: 'Erro ao adicionar cliente',
         description: 'Não foi possível adicionar o cliente à organização.',
+        duration: 6000,
       })
     }
     setInputValues({ ...inputValues, name: '', email: '', phone: '' })
@@ -122,6 +124,7 @@ export default function RegisterCustomerModal({
       className: 'toast-success',
       title: 'Cliente adicionado com sucesso',
       description: 'O novo cliente foi adicionado à organização.',
+      duration: 4000,
     })
   }
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

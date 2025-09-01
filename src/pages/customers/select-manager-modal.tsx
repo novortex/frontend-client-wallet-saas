@@ -36,9 +36,10 @@ export function SelectManagerModal({ customer, managers, isOpen, onClose }: Sele
   const handleSaveManager = async () => {
     if (!selectedManager) {
       toast({
-        className: 'bg-red-500 border-0 text-white',
+        className: 'toast-error',
         title: 'Error',
         description: 'Please select a manager',
+        duration: 6000,
       })
       return
     }
@@ -48,9 +49,10 @@ export function SelectManagerModal({ customer, managers, isOpen, onClose }: Sele
       await updateCustomerManager(customer.id, selectedManager)
       
       toast({
-        className: 'bg-green-500 border-0 text-white',
+        className: 'toast-success',
         title: 'Success',
         description: 'Manager assigned successfully',
+        duration: 4000,
       })
       
       setSignal(true)
@@ -58,9 +60,10 @@ export function SelectManagerModal({ customer, managers, isOpen, onClose }: Sele
       setSelectedManager('')
     } catch (error) {
       toast({
-        className: 'bg-red-500 border-0 text-white',
+        className: 'toast-error',
         title: 'Error',
         description: 'Failed to assign manager',
+        duration: 6000,
       })
     } finally {
       setIsLoading(false)

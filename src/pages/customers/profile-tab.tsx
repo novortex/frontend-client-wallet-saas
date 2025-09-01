@@ -154,7 +154,7 @@ export function ProfileTab({
           Save Profile
         </Button>
         <DialogClose asChild>
-          <Button className="bg-red-500 text-white hover:bg-red-600 transition-all duration-200 transform hover:scale-105">
+          <Button className="btn-red">
             Close
           </Button>
         </DialogClose>

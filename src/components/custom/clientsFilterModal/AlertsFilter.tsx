@@ -21,6 +21,7 @@ export function AlertsFilter({ setFilterDelayed }: FilterProps) {
       title: 'Feature em desenvolvimento',
       description: 'O filtro por número de alertas será liberado em breve.',
       className: 'toast-info',
+      duration: 4000,
     })
   }
 

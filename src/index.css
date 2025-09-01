@@ -136,8 +136,45 @@
     @apply flex items-center gap-2 bg-[#F2BE38] px-4 font-medium text-black transition-all duration-200 transform hover:scale-105 hover:bg-primary hover:text-white;
   }
   
-  .btn-copy {
-    @apply h-6 w-6 p-0 bg-yellow-400 text-black transition-all duration-200 transform hover:scale-110 hover:bg-yellow-500 hover:text-white;
+  
+  .btn-green {
+    @apply flex items-center gap-2 text-white transition-all duration-200 transform hover:scale-105;
+    background-color: #10A45C !important;
+  }
+  .btn-green:hover {
+    background-color: #22c55e !important;
+    color: white !important;
+  }
+  .dark .btn-green:hover {
+    background-color: #16a34a !important;
+    color: white !important;
+  }
+  
+  .btn-red {
+    @apply flex items-center gap-2 text-white transition-all duration-200 transform hover:scale-105;
+    background-color: #EF4E3D !important;
+  }
+  .btn-red:hover {
+    background-color: #dc2626 !important;
+    color: white !important;
+  }
+  
+  .btn-yellow {
+    @apply flex items-center gap-2 text-black transition-all duration-200 transform hover:scale-105;
+    background-color: #F2BE38 !important;
+  }
+  .btn-yellow:hover {
+    background-color: #eab308 !important;
+    color: white !important;
+  }
+  
+  .btn-blue {
+    @apply flex items-center gap-2 text-white transition-all duration-200 transform hover:scale-105;
+    background-color: #1877F2 !important;
+  }
+  .btn-blue:hover {
+    background-color: #2563eb !important;
+    color: white !important;
   }
   
   .card-wallet {

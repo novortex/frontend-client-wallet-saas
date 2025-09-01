@@ -66,6 +66,7 @@ export function Clients() {
           className: 'toast-error',
           title: 'Erro ao carregar carteiras',
           description: 'Não foi possível carregar as carteiras dos clientes.',
+          duration: 6000,
         })
       }
 
@@ -98,6 +99,7 @@ export function Clients() {
         className: 'toast-error',
         title: 'Erro',
         description: 'Falha ao buscar carteiras. Tente novamente.',
+        duration: 6000,
       })
       setIsLoading(false)
     }
@@ -337,7 +339,7 @@ export function Clients() {
           />
           <Button
             onClick={() => setIsMonthlyStandardizationOpen(true)}
-            className="bg-[#F2BE38] text-black hover:bg-yellow-500 hover:text-white transition-all duration-200 transform hover:scale-105"
+            className="btn-yellow"
           >
             <Calendar className="h-4 w-4 mr-2" />
             Monthly Rebalancing

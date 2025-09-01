@@ -8,7 +8,6 @@ import { TAssetsOrganizationResponse } from '@/types/response.type'
 import { Loading } from '@/components/custom/loading'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import {
   Table,
   TableBody,
@@ -29,7 +28,9 @@ import { BaseWalletTarget } from '@/types/baseWallet.type'
 import EditAllocationModal from './edit-allocation-modal'
 import AddAssetModal from './add-asset-modal'
 import DeleteBaseWalletModal from './delete-base-wallet-modal'
-import { Trash2, Plus } from 'lucide-react'
+import DeleteAssetModal from './delete-asset-modal'
+import ApplyToAllWalletsModal from './apply-to-all-wallets-modal'
+import { Trash2, Plus, CheckCheck } from 'lucide-react'
 import { toast } from '@/components/ui/use-toast'
 import { Input } from '@/components/ui/input'
 
@@ -42,17 +43,6 @@ const getRiskProfileDisplayName = (riskProfile: string) => {
     SUPER_HIGH_RISK: 'Super Alto Risco',
   }
   return profiles[riskProfile] || riskProfile
-}
-
-const getRiskProfileColor = (riskProfile: string) => {
-  const colors: Record<string, string> = {
-    SUPER_LOW_RISK: 'bg-green-600 hover:bg-green-700',
-    LOW_RISK: 'bg-green-400 hover:bg-green-500',
-    STANDARD: 'bg-[#F2BE38] hover:bg-yellow-500',
-    HIGH_RISK: 'bg-orange-500 hover:bg-orange-600',
-    SUPER_HIGH_RISK: 'bg-red-600 hover:bg-red-700',
-  }
-  return colors[riskProfile] || 'bg-gray-500 hover:bg-gray-600'
 }
 
 const getAssetTicker = (assetName: string) => {
@@ -70,6 +60,8 @@ export function BaseWalletDetail() {
   const [editingTarget, setEditingTarget] = useState<BaseWalletTarget | null>(null)
   const [isAddAssetModalOpen, setIsAddAssetModalOpen] = useState(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const [deletingAsset, setDeletingAsset] = useState<BaseWalletTarget | null>(null)
+  const [isApplyToAllModalOpen, setIsApplyToAllModalOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [assets, setAssets] = useState<TAssetsOrganizationResponse[]>([])
 
@@ -87,6 +79,26 @@ export function BaseWalletDetail() {
         className: 'toast-error',
         title: 'Erro',
         description: 'Erro ao abrir modal de alocação.',
+        duration: 6000,
+      })
+    }
+  }
+
+  const handleDeleteAsset = (target: BaseWalletTarget) => {
+    try {
+      console.log('Deleting asset:', target)
+      if (!target) {
+        console.error('Target is null or undefined')
+        return
+      }
+      setDeletingAsset(target)
+    } catch (error) {
+      console.error('Error in handleDeleteAsset:', error)
+      toast({
+        className: 'toast-error',
+        title: 'Erro',
+        description: 'Erro ao abrir modal de remoção.',
+        duration: 6000,
       })
     }
   }
@@ -109,7 +121,7 @@ export function BaseWalletDetail() {
 
   const table = useReactTable({
     data: enrichedTargetAssets,
-    columns: createBaseWalletColumns(handleEditAllocation),
+    columns: createBaseWalletColumns(handleEditAllocation, handleDeleteAsset),
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
@@ -136,6 +148,7 @@ export function BaseWalletDetail() {
             className: 'toast-error',
             title: 'Erro',
             description: 'Carteira padrão não encontrada.',
+            duration: 6000,
           })
           navigate('/base-wallets')
           return
@@ -151,6 +164,7 @@ export function BaseWalletDetail() {
           className: 'toast-error',
           title: 'Erro',
           description: 'Falha ao carregar carteira padrão.',
+          duration: 6000,
         })
         navigate('/base-wallets')
       } finally {
@@ -187,8 +201,15 @@ export function BaseWalletDetail() {
           />
           
           <Button 
-            variant="destructive" 
-            className="flex items-center gap-2"
+            className="btn-green"
+            onClick={() => setIsApplyToAllModalOpen(true)}
+          >
+            <CheckCheck size={16} />
+            Aplicar em Todas
+          </Button>
+          
+          <Button 
+            className="btn-red"
             onClick={() => setIsDeleteModalOpen(true)}
           >
             <Trash2 size={16} />
@@ -243,7 +264,7 @@ export function BaseWalletDetail() {
             <div className="flex items-center justify-between">
               <CardTitle>Alocações de Ativos</CardTitle>
               <Button 
-                className="bg-[#F2BE38] text-black hover:bg-yellow-500 hover:text-white transition-all duration-200 transform hover:scale-105 flex items-center gap-2"
+                className="btn-yellow"
                 size="sm"
                 onClick={() => setIsAddAssetModalOpen(true)}
               >
@@ -344,6 +365,7 @@ export function BaseWalletDetail() {
               className: 'toast-success',
               title: 'Sucesso!',
               description: 'Alocação atualizada com sucesso.',
+              duration: 4000,
             })
             
             setEditingTarget(null)
@@ -353,6 +375,7 @@ export function BaseWalletDetail() {
               className: 'toast-error',
               title: 'Erro',
               description: 'Falha ao atualizar alocação. Tente novamente.',
+              duration: 6000,
             })
           }
         }}
@@ -389,6 +412,39 @@ export function BaseWalletDetail() {
           }}
         />
       )}
+      
+      {baseWallet && (
+        <ApplyToAllWalletsModal
+          isOpen={isApplyToAllModalOpen}
+          onClose={() => setIsApplyToAllModalOpen(false)}
+          baseWalletName={baseWallet.name}
+          riskProfile={baseWallet.riskProfile}
+          onSuccess={() => {
+            // Optionally refresh data or show success message
+          }}
+        />
+      )}
+      
+      <DeleteAssetModal
+        isOpen={!!deletingAsset}
+        onClose={() => setDeletingAsset(null)}
+        target={deletingAsset}
+        baseWalletUuid={baseWallet.uuid}
+        onSuccess={async () => {
+          // Refresh data after deleting asset
+          const baseWallets = await getBaseWallets()
+          const updatedWallet = baseWallets.find((wallet) => wallet.uuid === uuid)
+          if (updatedWallet) {
+            setBaseWallet(updatedWallet)
+          }
+          
+          // Refresh assets list
+          const assetsData = await getAllAssetsOrg()
+          if (assetsData && Array.isArray(assetsData)) {
+            setAssets(assetsData)
+          }
+        }}
+      />
     </div>
   )
 }

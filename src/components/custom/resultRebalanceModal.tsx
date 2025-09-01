@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
 import { RebalanceReturn } from '@/types/wallet.type'
 import { useState, useEffect } from 'react'
+import { useToast } from '@/components/ui/use-toast'
 
 type RebalanceItem = RebalanceReturn & {
   selected: boolean
@@ -171,9 +172,19 @@ export function ResultRebalanceModal({
     }
   }
 
+  const { toast } = useToast()
+
   // Handle confirm button click
   const handleConfirm = () => {
     const selectedItems = rebalanceItems.filter((item) => item.selected)
+    
+    toast({
+      className: 'toast-success',
+      title: 'Rebalanceamento confirmado',
+      description: 'As operações de rebalanceamento foram executadas com sucesso.',
+      duration: 4000,
+    })
+    
     onConfirm?.(selectedItems)
     onOpenChange(false)
   }
@@ -215,15 +226,15 @@ export function ResultRebalanceModal({
     colorClass: string,
     total: number,
   ) => (
-    <div className="w-1/2 rounded-[8px] bg-gray-200 p-4 dark:bg-[#171717]">
-      <div className="mb-2 flex items-center justify-between">
-        <p className="text-center text-[16px] dark:text-white">{title}</p>
-        <p className={`text-[14px] font-semibold ${colorClass}`}>
+    <div className="w-1/2 rounded-lg bg-gray-50 dark:bg-[#171717] p-4 border border-gray-200 dark:border-gray-700">
+      <div className="mb-3 flex items-center justify-between">
+        <p className="text-lg font-medium dark:text-white">{title}</p>
+        <p className={`text-sm font-semibold ${colorClass}`}>
           Total: ${total.toLocaleString()}
         </p>
       </div>
-      <Separator className="my-2 bg-gray-500 dark:bg-[#F2BE38]" />
-      <div className="flex max-h-[200px] w-full flex-col items-center gap-3 overflow-auto">
+      <Separator className="my-3 bg-gray-300 dark:bg-gray-600" />
+      <div className="flex max-h-[350px] w-full flex-col items-center gap-3 overflow-auto">
         {items.map((result, index) => {
           const originalIndex = rebalanceItems.findIndex(
             (item) =>
@@ -234,10 +245,10 @@ export function ResultRebalanceModal({
           return (
             <div
               key={`${result.assetName}-${result.action}-${index}`}
-              className={`flex w-full flex-col gap-2 rounded-[8px] p-3 transition-all duration-200 ${
+              className={`flex w-full flex-col gap-2 rounded-lg p-3 transition-all duration-200 border ${
                 result.selected
-                  ? 'bg-gray-300 shadow-sm dark:bg-[#1C1C1C]'
-                  : 'bg-gray-400 opacity-60 dark:bg-[#2A2A2A]'
+                  ? 'bg-white dark:bg-[#1C1C1C] border-gray-200 dark:border-gray-600 shadow-sm'
+                  : 'bg-gray-100 dark:bg-[#2A2A2A] border-gray-300 dark:border-gray-700 opacity-60'
               }`}
             >
               {/* Header with checkbox and asset info */}
@@ -256,13 +267,13 @@ export function ResultRebalanceModal({
                   className="h-6 w-6 flex-shrink-0"
                 />
                 <div className="flex-1">
-                  <p className="text-[14px] font-medium dark:text-white">
+                  <p className="text-sm font-medium dark:text-white">
                     {result.assetName}
                   </p>
-                  <p className="text-[12px] text-gray-500 dark:text-gray-400">
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
                     Original: ${result.originalAmount.toLocaleString()}
                     {result.isCustomAmount && (
-                      <span className="ml-1 text-yellow-500">• Custom</span>
+                      <span className="ml-1 text-yellow-500 font-medium">• Custom</span>
                     )}
                   </p>
                 </div>
@@ -309,16 +320,16 @@ export function ResultRebalanceModal({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="mx-auto flex h-[650px] w-full max-w-[800px] flex-col border-none p-6 dark:bg-[#1C1C1C]"
+        className="mx-auto flex h-[85vh] w-full max-w-[900px] flex-col border-0 p-6 dark:bg-[#1C1C1C] text-white"
         aria-describedby="rebalance-description"
       >
         <DialogHeader>
-          <DialogTitle className="text-center text-[24px] dark:text-[#F2BE38]">
+          <DialogTitle className="text-center text-2xl font-semibold dark:text-white">
             Rebalancing Parameters
           </DialogTitle>
           <p
             id="rebalance-description"
-            className="text-center text-[14px] text-gray-600 dark:text-gray-400"
+            className="text-center text-sm text-gray-600 dark:text-gray-400 mt-2"
           >
             Select assets and adjust amounts for rebalancing
           </p>
@@ -326,45 +337,47 @@ export function ResultRebalanceModal({
 
         <div className="flex w-full flex-1 flex-col items-center gap-4 overflow-hidden">
           {/* Balance information */}
-          <div
-            className="flex w-full justify-center gap-6 py-2"
-            role="status"
-            aria-live="polite"
-          >
-            <div className="text-center">
-              <p className="text-[12px] text-gray-500 dark:text-gray-400">
-                Total Buy
-              </p>
-              <p className="text-[16px] font-bold text-green-600 dark:text-[#8BF067]">
-                ${totalBuySelected.toLocaleString()}
-              </p>
-            </div>
-            <div className="text-center">
-              <p className="text-[12px] text-gray-500 dark:text-gray-400">
-                Total Sell
-              </p>
-              <p className="text-[16px] font-bold text-red-600 dark:text-[#FF6666]">
-                ${totalSellSelected.toLocaleString()}
-              </p>
-            </div>
-            <div className="text-center">
-              <p className="text-[12px] text-gray-500 dark:text-gray-400">
-                Balance
-              </p>
-              <p
-                className={`text-[16px] font-bold ${
-                  isBalanced
-                    ? 'text-green-600 dark:text-[#8BF067]'
-                    : 'text-yellow-600 dark:text-[#F2BE38]'
-                }`}
-              >
-                ${balanceValue.toLocaleString()}
-                {isBalanced && (
-                  <span className="ml-1 text-[12px]" aria-label="Balanced">
-                    ✓
-                  </span>
-                )}
-              </p>
+          <div className="w-full bg-gray-100 dark:bg-[#131313] rounded-lg p-4 mb-4">
+            <div
+              className="flex w-full justify-center gap-8 py-2"
+              role="status"
+              aria-live="polite"
+            >
+              <div className="text-center">
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">
+                  Total Buy
+                </p>
+                <p className="text-lg font-bold text-green-600 dark:text-green-400">
+                  ${totalBuySelected.toLocaleString()}
+                </p>
+              </div>
+              <div className="text-center">
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">
+                  Total Sell
+                </p>
+                <p className="text-lg font-bold text-red-600 dark:text-red-400">
+                  ${totalSellSelected.toLocaleString()}
+                </p>
+              </div>
+              <div className="text-center">
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">
+                  Balance
+                </p>
+                <p
+                  className={`text-lg font-bold ${
+                    isBalanced
+                      ? 'text-green-600 dark:text-green-400'
+                      : 'text-yellow-600 dark:text-yellow-400'
+                  }`}
+                >
+                  ${balanceValue.toLocaleString()}
+                  {isBalanced && (
+                    <span className="ml-1 text-sm" aria-label="Balanced">
+                      ✓
+                    </span>
+                  )}
+                </p>
+              </div>
             </div>
           </div>
 
@@ -372,7 +385,7 @@ export function ResultRebalanceModal({
           <Button
             onClick={handleResetCalculation}
             variant="outline"
-            className="border-[#F2BE38] text-[12px] text-[#F2BE38] hover:bg-[#F2BE38] hover:text-black"
+            className="border-gray-300 dark:border-gray-600 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
           >
             Reset to Original Calculation
           </Button>
@@ -392,27 +405,27 @@ export function ResultRebalanceModal({
             )}
           </div>
 
-          <DialogFooter className="flex w-full justify-center gap-3">
-            <DialogClose asChild>
-              <Button
-                variant="outline"
-                className="w-[30%] rounded-[16px] border-[#F2BE38] text-[#F2BE38] hover:bg-[#F2BE38] hover:text-black"
-              >
-                Cancel
-              </Button>
-            </DialogClose>
-            <Button
-              onClick={handleConfirm}
-              disabled={
-                rebalanceItems.filter((item) => item.selected).length === 0
-              }
-              className="w-[40%] rounded-[16px] bg-[#F2BE38] text-[16px] text-black hover:bg-[#D4A532] disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              Confirm Rebalance (
-              {rebalanceItems.filter((item) => item.selected).length} items)
-            </Button>
-          </DialogFooter>
         </div>
+        
+        <DialogFooter className="flex w-full justify-center gap-4 mt-4">
+          <DialogClose asChild>
+            <Button
+              className="w-[30%] bg-red-500 text-white hover:bg-red-600 font-medium transition-all duration-200 transform hover:scale-105"
+            >
+              Cancel
+            </Button>
+          </DialogClose>
+          <Button
+            onClick={handleConfirm}
+            disabled={
+              rebalanceItems.filter((item) => item.selected).length === 0
+            }
+            className="w-[40%] bg-green-500 text-black font-medium hover:bg-green-600 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 transform hover:scale-105"
+          >
+            Confirm Rebalance (
+            {rebalanceItems.filter((item) => item.selected).length} items)
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   )

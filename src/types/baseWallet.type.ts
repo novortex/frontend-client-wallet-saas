@@ -39,5 +39,5 @@ export interface UpdateBaseWalletRequest {
 
 export interface ApplyAllocationRequest {
   walletUuid: string
-  baseWalletUuid: string
+  riskProfile: string
 }

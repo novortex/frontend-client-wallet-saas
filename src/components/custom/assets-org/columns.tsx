@@ -64,9 +64,10 @@ function DisableAssetButton({ assetData }: { assetData: AssetOrgs }) {
       await disableAssetOrg(assetData.id)
 
       toast({
-        className: 'bg-green-500 border-0 text-white',
+        className: 'toast-success',
         title: 'Asset disabled successfully!',
         description: `${assetData.asset.name} has been disabled for the organization.`,
+        duration: 4000,
       })
 
       // Atualizar a lista de ativos - triggering uma nova busca
@@ -77,10 +78,10 @@ function DisableAssetButton({ assetData }: { assetData: AssetOrgs }) {
         error instanceof Error ? error.message : 'Please try again later.'
 
       toast({
-        className: 'bg-red-500 border-0 text-white',
+        className: 'toast-error',
         title: 'Cannot disable asset',
         description: errorMessage,
-        duration: 5000, // Mostrar por mais tempo
+        duration: 6000,
       })
     } finally {
       setIsLoading(false)
@@ -136,7 +137,7 @@ function DisableAssetButton({ assetData }: { assetData: AssetOrgs }) {
           <Button
             onClick={handleDisableAsset}
             disabled={isLoading}
-            className="bg-red-600 text-white hover:bg-red-700"
+            className="btn-red"
           >
             {isLoading ? 'Disabling...' : 'Disable Asset'}
           </Button>
@@ -296,13 +297,13 @@ export const columnsAssetOrg: ColumnDef<AssetOrgs>[] = [
                     </DialogHeader>
                     <DialogFooter>
                       <DialogClose asChild>
-                        <Button className="bg-red-500 text-white hover:bg-red-600">
+                        <Button className="btn-red">
                           Close
                         </Button>
                       </DialogClose>
                       <Button
                         disabled
-                        className="bg-green-500 text-black hover:bg-green-600"
+                        className="btn-green"
                       >
                         Save
                       </Button>

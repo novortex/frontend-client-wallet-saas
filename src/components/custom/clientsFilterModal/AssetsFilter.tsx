@@ -13,9 +13,9 @@ export function AssetsFilter({
   handleSelectAsset,
   handleRemoveAsset,
 }: {
-  assets: { uuid: string; name: string }[]
-  selectedAssets: { uuid: string; name: string }[]
-  handleSelectAsset: (asset: { uuid: string; name: string }) => void
+  assets: { uuid: string; name: string; icon?: string }[]
+  selectedAssets: { uuid: string; name: string; icon?: string }[]
+  handleSelectAsset: (asset: { uuid: string; name: string; icon?: string }) => void
   handleRemoveAsset: (assetUuid: string) => void
 }) {
   const handleAssetSelection = (selectedName: string) => {
@@ -52,7 +52,10 @@ export function AssetsFilter({
                 value={asset.name}
                 className="hover:bg-gray-100 focus:bg-gray-100 dark:hover:bg-gray-700 dark:focus:bg-gray-700"
               >
-                <div>{asset.name}</div>
+                <div className="flex items-center gap-2">
+                  {asset.icon && <img src={asset.icon} alt={asset.name} className="w-5 h-5 rounded-full" />}
+                  <span>{asset.name}</span>
+                </div>
               </SelectItem>
             ))}
           </SelectContent>

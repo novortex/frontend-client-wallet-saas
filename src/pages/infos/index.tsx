@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button'
+import { CopyButton } from '@/components/ui/copy-button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
@@ -13,7 +14,6 @@ import {
   FileCheck,
   User,
   X,
-  Copy,
   Download,
 } from 'lucide-react'
 import { useEffect, useState, useRef } from 'react'
@@ -45,7 +45,6 @@ export function Infos() {
   const [isModalExchangeOpen, setIsModalExchangeOpen] = useState(false)
   const [isModalContactOpen, setisModalContactOpen] = useState(false)
   const [isComingSoonModalOpen, setIsComingSoonModalOpen] = useState(false)
-  const [copiedText, setCopiedText] = useState('')
 
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState<any[]>([])
@@ -71,6 +70,7 @@ export function Infos() {
     initialFeePaid: false,
     riskProfile: '',
     monthCloseDate: '',
+    lastMonthCloseDate: '',
     contract: false,
     performanceFee: 0,
     joinedAsClient: null,
@@ -125,11 +125,6 @@ export function Infos() {
     setIsComingSoonModalOpen(false)
   }
 
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text)
-    setCopiedText(text)
-    setTimeout(() => setCopiedText(''), 2000)
-  }
 
   // Função para filtrar clientes baseado na pesquisa
   const filterCustomers = (query: string) => {
@@ -367,35 +362,35 @@ export function Infos() {
 
             <div className="grid grid-cols-2 gap-3 md:grid-cols-5">
               <Button
-                className="flex h-11 items-center gap-2 bg-[#F2BE38] px-4 font-medium text-black transition-all duration-200 transform hover:scale-105 hover:bg-yellow-500 hover:text-white"
+                className="h-11 btn-yellow px-4"
                 onClick={openModal}
               >
                 <CircleAlert className="h-4 w-4" />
                 Information
               </Button>
               <Button
-                className="flex h-11 items-center gap-2 bg-[#F2BE38] px-4 font-medium text-black transition-all duration-200 transform hover:scale-105 hover:bg-yellow-500 hover:text-white"
+                className="h-11 btn-yellow px-4"
                 onClick={openModalContact}
               >
                 <PhoneCall className="h-4 w-4" />
                 Contact confirm
               </Button>
               <Button
-                className="flex h-11 items-center gap-2 bg-[#F2BE38] px-4 font-medium text-black transition-all duration-200 transform hover:scale-105 hover:bg-yellow-500 hover:text-white"
+                className="h-11 btn-yellow px-4"
                 onClick={() => navigate(`/wallet/${walletUuid}/assets`)}
               >
                 <Wallet className="h-4 w-4" />
                 Wallet
               </Button>
               <Button
-                className="flex h-11 items-center gap-2 bg-[#F2BE38] px-4 font-medium text-black transition-all duration-200 transform hover:scale-105 hover:bg-yellow-500 hover:text-white"
+                className="h-11 btn-yellow px-4"
                 onClick={() => navigate(`/wallet/${walletUuid}/graphs`)}
               >
                 <BarChartBigIcon className="h-4 w-4" />
                 Graphics
               </Button>
               <Button
-                className="flex h-11 items-center gap-2 bg-[#F2BE38] px-4 font-medium text-black transition-all duration-200 transform hover:scale-105 hover:bg-yellow-500 hover:text-white"
+                className="h-11 btn-yellow px-4"
                 onClick={openComingSoonModal}
               >
                 <Download className="h-4 w-4" />
@@ -478,7 +473,7 @@ export function Infos() {
                     Initial Amount Invested
                   </p>
                   <p className="text-2xl font-bold text-foreground">
-                    $
+                    R$
                     {walletI.investedAmount !== undefined
                       ? Number(walletI.investedAmount).toLocaleString('en-US', {
                           minimumFractionDigits: 2,
@@ -491,7 +486,7 @@ export function Infos() {
                     Current Value
                   </p>
                   <p className="text-2xl font-bold text-success">
-                    $
+                    R$
                     {walletI.currentAmount !== null &&
                     walletI.currentAmount !== undefined
                       ? Number(walletI.currentAmount).toLocaleString('en-US', {
@@ -505,7 +500,7 @@ export function Infos() {
                     Benchmark Value
                   </p>
                   <p className="text-2xl font-bold text-foreground">
-                    {walletI.currentValueBenchmark !== undefined
+                    R${walletI.currentValueBenchmark !== undefined
                       ? Number(walletI.currentValueBenchmark).toFixed(2)
                       : '0.06'}
                   </p>
@@ -515,7 +510,7 @@ export function Infos() {
                     Performance Fee
                   </p>
                   <p className="text-2xl font-bold text-foreground">
-                    $
+                    R$
                     {walletI.performanceFee !== undefined
                       ? Number(walletI.performanceFee).toFixed(2)
                       : '37.00'}
@@ -573,13 +568,21 @@ export function Infos() {
                     <p className="mb-2 text-sm font-medium text-muted-foreground">
                       Last Portfolio Call
                     </p>
-                    <p className="text-xl font-bold text-foreground">-</p>
+                    <p className="text-xl font-bold text-foreground">
+                      {walletI.lastMonthCloseDate !== null && walletI.lastMonthCloseDate !== '' && walletI.lastMonthCloseDate !== undefined
+                        ? formatDate(walletI.lastMonthCloseDate?.toString())
+                        : '-'}
+                    </p>
                   </div>
                   <div className="flex min-h-[100px] flex-col justify-between rounded-lg border border-border bg-muted/30 p-4">
                     <p className="mb-2 text-sm font-medium text-muted-foreground">
                       Next Portfolio Call
                     </p>
-                    <p className="text-xl font-bold text-foreground">-</p>
+                    <p className="text-xl font-bold text-foreground">
+                      {walletI.monthCloseDate !== null && walletI.monthCloseDate !== ''
+                        ? formatDate(walletI.monthCloseDate?.toString())
+                        : '-'}
+                    </p>
                   </div>
                   <div className="flex min-h-[100px] flex-col justify-between rounded-lg border border-border bg-muted/30 p-4">
                     <p className="mb-2 text-sm font-medium text-muted-foreground">
@@ -642,7 +645,7 @@ export function Infos() {
                       Initial Fee
                     </p>
                     <p className="text-xl font-bold text-foreground">
-                      $
+                      R$
                       {walletI.initialFee !== undefined
                         ? Number(walletI.initialFee).toFixed(2)
                         : '800.00'}
@@ -667,14 +670,7 @@ export function Infos() {
                       <p className="text-sm font-medium text-muted-foreground">
                         Account Email
                       </p>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-6 w-6 p-0 bg-yellow-400 text-black transition-all duration-200 transform hover:scale-110 hover:bg-yellow-500 hover:text-white"
-                        onClick={() => copyToClipboard(walletI.accountEmail || 'account@email.com')}
-                      >
-                        <Copy className="h-3 w-3" />
-                      </Button>
+                      <CopyButton text={walletI.accountEmail || 'account@email.com'} />
                     </div>
                     <p className="truncate text-xl font-bold text-foreground" title={walletI.accountEmail || 'account@email.com'}>
                       {walletI.accountEmail || 'account@email.com'}
@@ -685,14 +681,7 @@ export function Infos() {
                       <p className="text-sm font-medium text-muted-foreground">
                         Email Password
                       </p>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-6 w-6 p-0 bg-yellow-400 text-black transition-all duration-200 transform hover:scale-110 hover:bg-yellow-500 hover:text-white"
-                        onClick={() => copyToClipboard(walletI.emailPassword || '••••••••')}
-                      >
-                        <Copy className="h-3 w-3" />
-                      </Button>
+                      <CopyButton text={walletI.emailPassword || '••••••••'} />
                     </div>
                     <p className="truncate text-xl font-bold text-foreground" title={walletI.emailPassword || '••••••••'}>
                       {walletI.emailPassword || '••••••••'}
@@ -729,12 +718,6 @@ export function Infos() {
         onClose={closeComingSoonModal}
       />
       
-      {/* Copy Feedback */}
-      {copiedText && (
-        <div className="fixed bottom-4 right-4 z-50 rounded-lg bg-success px-4 py-2 text-success-foreground shadow-lg transition-all">
-          Copiado: {copiedText.length > 20 ? copiedText.substring(0, 20) + '...' : copiedText}
-        </div>
-      )}
     </div>
   )
 }

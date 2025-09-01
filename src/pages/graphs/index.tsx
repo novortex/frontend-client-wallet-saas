@@ -62,6 +62,7 @@ export function Graphs() {
             className: 'toast-error',
             title: 'Failed get assets organization :(',
             description: 'Demo Vault !!',
+            duration: 6000,
           })
         }
 

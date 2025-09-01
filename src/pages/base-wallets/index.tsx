@@ -35,6 +35,7 @@ export function BaseWallets() {
         className: 'toast-error',
         title: 'Erro ao carregar carteiras',
         description: 'Não foi possível carregar as carteiras padrões.',
+        duration: 6000,
       })
       setIsLoading(false)
     }
@@ -87,7 +88,7 @@ export function BaseWallets() {
             data-testid="search-input"
           />
           <Button 
-            className="ml-4 bg-[#F2BE38] text-black hover:bg-yellow-500 hover:text-white transition-all duration-200 transform hover:scale-105"
+            className="ml-4 btn-yellow"
             onClick={() => setIsCreateModalOpen(true)}
           >
             <Plus size={16} className="mr-2" />

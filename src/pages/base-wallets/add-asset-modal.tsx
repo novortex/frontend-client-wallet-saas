@@ -59,6 +59,7 @@ export default function AddAssetModal({
           className: 'toast-error',
           title: 'Erro',
           description: 'Falha ao carregar ativos disponíveis.',
+          duration: 6000,
         })
       } finally {
         setIsLoadingAssets(false)
@@ -76,6 +77,7 @@ export default function AddAssetModal({
         className: 'toast-error',
         title: 'Erro',
         description: 'Por favor, selecione um ativo.',
+        duration: 6000,
       })
       return
     }
@@ -85,6 +87,7 @@ export default function AddAssetModal({
         className: 'toast-error',
         title: 'Erro',
         description: 'Por favor, insira uma alocação válida entre 0 e 100.',
+        duration: 6000,
       })
       return
     }
@@ -114,6 +117,7 @@ export default function AddAssetModal({
         className: 'toast-success',
         title: 'Sucesso!',
         description: 'Ativo adicionado à carteira padrão com sucesso.',
+        duration: 4000,
       })
 
       setSelectedAssetUuid('')
@@ -126,6 +130,7 @@ export default function AddAssetModal({
         className: 'toast-error',
         title: 'Erro',
         description: 'Falha ao adicionar ativo à carteira padrão. Tente novamente.',
+        duration: 6000,
       })
     } finally {
       setIsLoading(false)
@@ -195,7 +200,7 @@ export default function AddAssetModal({
           <Button
             onClick={handleAddAsset}
             disabled={isLoading || isLoadingAssets}
-            className="flex-1 bg-[#F2BE38] text-black hover:bg-yellow-500 hover:text-white transition-all duration-200 transform hover:scale-105 flex items-center gap-2"
+            className="btn-yellow flex-1"
           >
             {isLoading ? (
               <>

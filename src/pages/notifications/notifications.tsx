@@ -36,6 +36,7 @@ export function Notifications() {
         title: 'Nova Transação',
         description: `Nova transação para ${latestNotification.userId}`,
         className: 'toast-success',
+        duration: 4000,
       })
     }
   }, [notifications])
@@ -46,6 +47,7 @@ export function Notifications() {
         title: 'Erro de Conexão',
         description: error,
         className: 'toast-error',
+        duration: 6000,
       })
     }
   }, [error])

@@ -37,6 +37,7 @@ export default function EditAllocationModal({
         className: 'toast-error',
         title: 'Alocação inválida',
         description: 'A alocação deve estar entre 0 e 100%.',
+        duration: 6000,
       })
     }
     onSave(idealAllocation)
@@ -94,14 +95,14 @@ export default function EditAllocationModal({
         <DialogFooter>
           <DialogClose asChild>
             <Button
-              className="bg-red-500 text-white hover:bg-red-600"
+              className="btn-red"
               onClick={handleClose}
             >
               Close
             </Button>
           </DialogClose>
           <Button
-            className="bg-green-500 text-black hover:bg-green-600"
+            className="btn-green"
             onClick={handleSave}
           >
             Save Allocation

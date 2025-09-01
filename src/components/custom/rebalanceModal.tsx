@@ -25,18 +25,13 @@ export function RebalanceModal({ walletUuid }: RebalanceModalProps) {
     try {
       const results = await calculateRebalance()
       setRebalancesResults(results)
-
-      toast({
-        className: 'toast-success',
-        title: 'Rebalanceamento realizado com sucesso',
-      })
-
       setIsResultModalOpen(true)
     } catch (error) {
       toast({
         className: 'toast-error',
         title: 'Erro no cálculo do rebalanceamento',
         description: (error as Error).message || 'Algo deu errado.',
+        duration: 6000,
       })
     } finally {
       setLoading(false)

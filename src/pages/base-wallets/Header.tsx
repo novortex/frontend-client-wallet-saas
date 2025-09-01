@@ -19,7 +19,7 @@ const Header: React.FC<HeaderProps> = ({ baseWalletName }) => (
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink
-            className="text-2xl font-medium text-black dark:text-white"
+            className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
             href="/base-wallets"
           >
             Carteiras Padrões
@@ -27,7 +27,7 @@ const Header: React.FC<HeaderProps> = ({ baseWalletName }) => (
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
-          <BreadcrumbPage className="text-2xl font-medium text-black dark:text-white">
+          <BreadcrumbPage className="text-sm font-medium text-foreground">
             {baseWalletName || 'Carteira Padrão'}
           </BreadcrumbPage>
         </BreadcrumbItem>

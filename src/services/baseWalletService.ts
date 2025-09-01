@@ -55,6 +55,19 @@ export async function updateBaseWallet(
   }
 }
 
+export async function deleteAssetFromBaseWallet(
+  baseWalletUuid: string,
+  assetUuid: string,
+): Promise<BaseWallet> {
+  try {
+    const response = await instance.delete<BaseWallet>(`base-wallet/${baseWalletUuid}/assets/${assetUuid}`)
+    return response.data
+  } catch (error) {
+    console.error('Error deleting asset from base wallet:', error)
+    throw error
+  }
+}
+
 export async function deleteBaseWallet(uuid: string): Promise<void> {
   try {
     await instance.delete(`base-wallet/${uuid}`)
@@ -72,6 +85,20 @@ export async function applyBaseWalletAllocation(
     return response.data
   } catch (error) {
     console.error('Error applying base wallet allocation:', error)
+    throw error
+  }
+}
+
+export async function applyBaseWalletAllocationToAllWallets(
+  riskProfile: string,
+): Promise<any> {
+  try {
+    const response = await instance.post('base-wallet/apply-allocation-to-all', {
+      riskProfile
+    })
+    return response.data
+  } catch (error) {
+    console.error('Error applying base wallet allocation to all wallets:', error)
     throw error
   }
 }

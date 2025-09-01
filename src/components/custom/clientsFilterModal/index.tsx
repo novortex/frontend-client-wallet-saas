@@ -50,9 +50,9 @@ type ApplyFiltersProps = {
 
 export function ClientsFilterModal({ handleApplyFilters, filteredCount, totalCount }: ApplyFiltersProps) {
   const [isOpen, setIsOpen] = useState(false)
-  const [assets, setAssets] = useState<{ uuid: string; name: string }[]>([])
+  const [assets, setAssets] = useState<{ uuid: string; name: string; icon?: string }[]>([])
   const [selectedAssets, setSelectedAssets] = useState<
-    { uuid: string; name: string; cash?: number }[]
+    { uuid: string; name: string; icon?: string; cash?: number }[]
   >([])
   const [selectedManagers, setSelectedManagers] = useState<string[]>([])
   const [selectedWalletTypes, setSelectedWalletTypes] = useState<string[]>([])
@@ -134,6 +134,7 @@ export function ClientsFilterModal({ handleApplyFilters, filteredCount, totalCou
         assetsOrg.map((asset) => ({
           uuid: asset.uuid,
           name: asset.name,
+          icon: asset.icon,
         })),
       )
     }
@@ -201,6 +202,7 @@ export function ClientsFilterModal({ handleApplyFilters, filteredCount, totalCou
   const handleSelectAsset = (asset: {
     uuid: string
     name: string
+    icon?: string
     cash?: number
   }) => setSelectedAssets((prev) => [...prev, asset])
 

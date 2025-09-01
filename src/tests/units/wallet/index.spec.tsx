@@ -148,6 +148,7 @@ describe('Wallet Component', () => {
               lastRebalance: '02/01/2023',
               monthCloseDate: '01/02/2023',
               isClosed: false,
+              riskProfile: 'STANDARD',
             }}
           />
         </MemoryRouter>,
@@ -178,6 +179,7 @@ describe('Wallet Component', () => {
         performanceFee: 0.5,
         lastRebalance: '02/01/2023',
         monthCloseDate: '01/02/2023',
+        riskProfile: 'STANDARD',
       }
 
       render(<WalletInfo ownerName={''} isClosed={false} {...mockData} />)

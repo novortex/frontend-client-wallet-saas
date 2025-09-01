@@ -20,7 +20,7 @@ const Header: React.FC<HeaderProps> = ({ walletUuid }) => (
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink
-              className="text-2xl font-medium text-black dark:text-white"
+              className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
               href="/wallets"
             >
               Wallets
@@ -29,7 +29,7 @@ const Header: React.FC<HeaderProps> = ({ walletUuid }) => (
           <BreadcrumbSeparator />
           <BreadcrumbItem>
             <BreadcrumbLink
-              className="text-2xl font-medium text-black dark:text-white"
+              className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
               href={`/clients/${walletUuid}/infos`}
             >
               Information clients
@@ -37,7 +37,7 @@ const Header: React.FC<HeaderProps> = ({ walletUuid }) => (
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage className="text-2xl font-medium text-black dark:text-white">
+            <BreadcrumbPage className="text-sm font-medium text-foreground">
               Client wallet
             </BreadcrumbPage>
           </BreadcrumbItem>

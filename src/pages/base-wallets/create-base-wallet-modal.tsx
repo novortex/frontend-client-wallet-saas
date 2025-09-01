@@ -91,6 +91,7 @@ export default function CreateBaseWalletModal({
         className: 'toast-error',
         title: 'Erro ao carregar ativos',
         description: 'Falha ao carregar ativos disponíveis.',
+        duration: 6000,
       })
     }
   }
@@ -159,6 +160,7 @@ export default function CreateBaseWalletModal({
         className: 'toast-success',
         title: 'Sucesso!',
         description: 'Carteira padrão criada com sucesso.',
+        duration: 4000,
       })
     } catch (error) {
       console.error('Error creating base wallet:', error)
@@ -166,6 +168,7 @@ export default function CreateBaseWalletModal({
         className: 'toast-error',
         title: 'Erro ao criar carteira',
         description: 'Falha ao criar carteira padrão. Tente novamente.',
+        duration: 6000,
       })
     } finally {
       setIsLoading(false)

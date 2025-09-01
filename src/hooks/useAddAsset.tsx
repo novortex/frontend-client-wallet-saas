@@ -19,6 +19,7 @@ export const useAddAsset = (onClose: () => void) => {
         className: 'toast-error',
         title: 'ID do ativo é obrigatório',
         description: 'Por favor, insira um ID válido para o ativo.',
+        duration: 6000,
       })
     }
 
@@ -26,6 +27,7 @@ export const useAddAsset = (onClose: () => void) => {
       className: 'toast-warning',
       title: 'Processando ativo',
       description: 'Adicionando ativo à organização...',
+      duration: 5000,
     })
 
     try {
@@ -38,6 +40,7 @@ export const useAddAsset = (onClose: () => void) => {
         className: 'toast-success',
         title: 'Ativo adicionado com sucesso',
         description: 'O novo ativo foi adicionado à organização.',
+        duration: 4000,
       })
     } catch (error: any) {
       setAssetId('')
@@ -46,6 +49,7 @@ export const useAddAsset = (onClose: () => void) => {
         className: 'toast-error',
         title: 'Erro ao adicionar ativo',
         description: error?.message || 'Erro inesperado ao adicionar o ativo.',
+        duration: 6000,
       })
     }
   }

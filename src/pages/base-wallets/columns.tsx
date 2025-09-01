@@ -7,7 +7,8 @@ import { BaseWalletTarget } from '@/types/baseWallet.type'
 import { BaseWalletCellActions } from './cell-actions'
 
 export const createBaseWalletColumns = (
-  onEditAllocation: (target: BaseWalletTarget) => void
+  onEditAllocation: (target: BaseWalletTarget) => void,
+  onDeleteAsset: (target: BaseWalletTarget) => void
 ): ColumnDef<BaseWalletTarget>[] => [
   {
     accessorKey: 'asset',
@@ -79,6 +80,7 @@ export const createBaseWalletColumns = (
       <BaseWalletCellActions 
         rowInfos={row.original} 
         onEditAllocation={onEditAllocation}
+        onDeleteAsset={onDeleteAsset}
       />
     ),
   },

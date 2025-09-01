@@ -159,6 +159,7 @@ export function MonthlyStandardizationModal({
         title: 'Erro',
         description: 'Não foi possível carregar os ativos.',
         className: 'toast-error',
+        duration: 6000,
       })
     } finally {
       setLoading(false)
@@ -216,6 +217,7 @@ export function MonthlyStandardizationModal({
           title: 'Nenhum mês selecionado',
           description: 'Selecione pelo menos um mês para continuar.',
           className: 'toast-error',
+          duration: 6000,
         })
         return
       }
@@ -223,6 +225,7 @@ export function MonthlyStandardizationModal({
         title: 'Configuração inválida',
         description: 'A soma das alocações deve ser 100%.',
         className: 'toast-error',
+        duration: 6000,
       })
       return
     }
@@ -237,6 +240,7 @@ export function MonthlyStandardizationModal({
           title: 'Nenhuma carteira encontrada',
           description: 'Não há carteiras disponíveis.',
           className: 'toast-error',
+          duration: 6000,
         })
         return
       }
@@ -326,6 +330,7 @@ export function MonthlyStandardizationModal({
           title: 'Nenhuma carteira encontrada',
           description: `Não há carteiras que começaram em ${selectedMonths.join(', ')}.`,
           className: 'toast-error',
+          duration: 6000,
         })
       } else {
         const walletsWithChanges = result.filter(
@@ -335,6 +340,7 @@ export function MonthlyStandardizationModal({
           title: 'Preview gerado!',
           description: `${result.length} carteiras encontradas, ${walletsWithChanges} precisam de mudanças.`,
           className: 'toast-success',
+          duration: 4000,
         })
       }
     } catch (error) {
@@ -343,6 +349,7 @@ export function MonthlyStandardizationModal({
         title: 'Erro ao simular',
         description: 'Não foi possível simular as mudanças.',
         className: 'toast-error',
+        duration: 6000,
       })
     } finally {
       setLoading(false)
@@ -355,6 +362,7 @@ export function MonthlyStandardizationModal({
         title: 'Nenhuma carteira para atualizar',
         description: 'Execute o preview primeiro.',
         className: 'toast-error',
+        duration: 6000,
       })
       return
     }
@@ -365,6 +373,7 @@ export function MonthlyStandardizationModal({
         title: 'ℹ️ Nenhuma mudança necessária',
         description: 'Todas as carteiras já estão padronizadas.',
         className: 'bg-info border-0 text-info-foreground',
+        duration: 4000,
       })
       return
     }
@@ -390,6 +399,7 @@ export function MonthlyStandardizationModal({
         title: 'Padronização aplicada!',
         description: 'Carteiras padronizadas com sucesso.',
         className: 'toast-success',
+        duration: 4000,
       })
       setPreview(null)
     } catch (error) {
@@ -399,6 +409,7 @@ export function MonthlyStandardizationModal({
         description:
           'Algumas mudanças podem não ter sido aplicadas. Verifique o console para detalhes.',
         className: 'toast-error',
+        duration: 6000,
       })
     } finally {
       setApplying(false)
@@ -606,7 +617,7 @@ export function MonthlyStandardizationModal({
               <Button
                 onClick={handleApply}
                 disabled={!preview || preview.length === 0 || applying}
-                className="flex items-center gap-2 bg-green-600 text-white hover:bg-green-700 transition-all duration-200 transform hover:scale-105"
+                className="btn-green"
               >
                 {applying ? (
                   <>

@@ -20,7 +20,10 @@ import {
 import { Button } from '@/components/ui/button'
 import { AddNewWalletModal } from '../add-new-wallet-modal'
 import { RebalanceModal } from '../rebalanceModal'
+import { ApplyBaseWalletModal } from '../apply-base-wallet-modal'
 import { useAssetPricesSocket } from '@/hooks/useSocketPrice'
+import { TWalletAssetsInfo } from '@/types/wallet.type'
+import { Wallet } from 'lucide-react'
 
 export type ClientActive = {
   id: string
@@ -48,6 +51,7 @@ interface DataTableProps<TValue> {
     minAmount: number
     minPercentage: number
   }) => Promise<unknown[]>
+  infosWallet: TWalletAssetsInfo
 }
 
 export function DataTable<TValue>({
@@ -55,8 +59,10 @@ export function DataTable<TValue>({
   data,
   walletUuid,
   fetchData,
+  infosWallet,
 }: DataTableProps<TValue>) {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isApplyBaseWalletModalOpen, setIsApplyBaseWalletModalOpen] = useState(false)
   const [sorting, setSorting] = useState<SortingState>([
     { id: 'investedAmount', desc: true },
   ])
@@ -68,6 +74,14 @@ export function DataTable<TValue>({
 
   const closeModal = () => {
     setIsModalOpen(false)
+  }
+
+  const openApplyBaseWalletModal = () => {
+    setIsApplyBaseWalletModalOpen(true)
+  }
+
+  const closeApplyBaseWalletModal = () => {
+    setIsApplyBaseWalletModalOpen(false)
   }
 
   const assetIds = useMemo(() => {
@@ -111,6 +125,13 @@ export function DataTable<TValue>({
         <h1 className="w-1/3 text-xl dark:text-white">Assets wallet</h1>
         <div className="flex w-fit gap-5">
           <RebalanceModal walletUuid={walletUuid} />
+          <Button
+            className="flex items-center gap-2 bg-[#F2BE38] px-4 font-medium text-black transition-all duration-200 transform hover:scale-105 hover:bg-yellow-500 hover:text-white"
+            onClick={openApplyBaseWalletModal}
+          >
+            <Wallet />
+            Aplicar Base Wallet
+          </Button>
           <Button
             className="flex items-center gap-2 bg-[#F2BE38] px-4 font-medium text-black transition-all duration-200 transform hover:scale-105 hover:bg-yellow-500 hover:text-white"
             onClick={openModal}
@@ -169,6 +190,13 @@ export function DataTable<TValue>({
         isOpen={isModalOpen}
         onClose={closeModal}
         walletUuid={walletUuid}
+        fetchData={fetchData}
+      />
+      <ApplyBaseWalletModal
+        isOpen={isApplyBaseWalletModalOpen}
+        onClose={closeApplyBaseWalletModal}
+        walletUuid={walletUuid}
+        riskProfile={infosWallet.riskProfile}
         fetchData={fetchData}
       />
     </div>

@@ -47,6 +47,7 @@ export function Customers() {
             className: 'toast-error',
             title: 'Erro ao carregar clientes',
             description: 'Não foi possível carregar os clientes da organização.',
+            duration: 6000,
           })
         }
 
@@ -81,6 +82,7 @@ export function Customers() {
           className: 'toast-error',
           title: '❌ Erro ao carregar clientes',
           description: 'Não foi possível carregar os clientes da organização.',
+          duration: 6000,
         })
       }
     }

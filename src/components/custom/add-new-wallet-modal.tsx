@@ -65,9 +65,10 @@ export function AddNewWalletModal({
     onClose()
 
     toast({
-      className: 'bg-yellow-500 border-0',
+      className: 'toast-warning',
       title: 'Processing add Asset in organization',
       description: 'Demo Vault !!',
+      duration: 5000,
     })
 
     const result = await addCryptoWalletClient(
@@ -82,9 +83,10 @@ export function AddNewWalletModal({
       setEntryValue('')
       setAllocation('')
       return toast({
-        className: 'bg-red-500 border-0',
+        className: 'toast-error',
         title: 'Failed add Asset in organization',
         description: 'Demo Vault !!',
+        duration: 6000,
       })
     }
 
@@ -101,9 +103,10 @@ export function AddNewWalletModal({
     fetchData()
 
     return toast({
-      className: 'bg-green-500 border-0',
+      className: 'toast-success',
       title: 'Success !! new Asset in organization',
       description: 'Demo Vault !!',
+      duration: 4000,
     })
   }
 

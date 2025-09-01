@@ -1,6 +1,14 @@
 import { useEffect, useState } from 'react'
 import { SwitchTheme } from '@/components/custom/switch-theme'
 import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb'
+import {
   AssetOrgs,
   columnsAssetOrg,
 } from '@/components/custom/assets-org/columns'
@@ -30,6 +38,7 @@ export function AssetsOrg() {
             className: 'toast-error',
             title: 'Erro ao carregar ativos',
             description: 'Não foi possível carregar os ativos da organização.',
+            duration: 6000,
           })
         }
 
@@ -56,6 +65,7 @@ export function AssetsOrg() {
           className: 'toast-error',
           title: '❌ Erro ao carregar ativos',
           description: 'Não foi possível carregar os ativos da organização.',
+          duration: 6000,
         })
       }
     }
@@ -69,15 +79,25 @@ export function AssetsOrg() {
   return (
     <div className="min-h-screen bg-background p-6">
       <div className="mx-auto max-w-7xl">
-        <div className="mb-6 flex items-center justify-between">
-          <div className="space-y-2">
-            <h1 className="text-2xl font-bold text-foreground">
-              Assets
-            </h1>
-            <p className="text-sm text-muted-foreground">
-              Manage organization assets and allocations
-            </p>
-          </div>
+        <div className="mb-8 flex items-center justify-between">
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink
+                  className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                  href="/wallets"
+                >
+                  Wallets
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage className="text-sm font-medium text-foreground">
+                  Assets
+                </BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
           <SwitchTheme />
         </div>
 
