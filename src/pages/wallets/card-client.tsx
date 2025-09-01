@@ -51,8 +51,8 @@ export default function CardClient({
       onClick={handleCardClick}
     >
       <CardHeader className="px-4 pt-4 pb-1">
-        <CardTitle className="flex flex-row items-center gap-3">
-          <div className="flex-1">
+        <CardTitle className="flex flex-row items-center justify-between">
+          <div className="min-w-0 flex-1 pr-3">
             <div className="group relative">
               <p className="truncate text-2xl text-black dark:text-white">{name}</p>
               <div className="pointer-events-none absolute bottom-full left-0 mb-2 whitespace-nowrap rounded bg-white px-3 py-2 text-sm text-black opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-black dark:text-white shadow-lg border border-border z-10">
@@ -61,12 +61,12 @@ export default function CardClient({
             </div>
           </div>
           {isDelayedRebalancing && (
-            <div className="relative flex items-center justify-end">
+            <div className="flex-shrink-0">
               <div className="group relative">
                 <div className="rounded-full bg-destructive/10 p-2">
                   <CircleAlert className="h-5 w-5 text-destructive" data-testid="delayed-rebalancing-alert" />
                 </div>
-                <div className="pointer-events-none absolute bottom-full right-0 mb-2 whitespace-nowrap rounded bg-white px-3 py-2 text-sm text-black opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-black dark:text-white shadow-lg border border-border">
+                <div className="pointer-events-none absolute bottom-full right-0 mb-2 whitespace-nowrap rounded bg-white px-3 py-2 text-sm text-black opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-black dark:text-white shadow-lg border border-border z-10">
                   O rebalanceamento está atrasado
                 </div>
               </div>

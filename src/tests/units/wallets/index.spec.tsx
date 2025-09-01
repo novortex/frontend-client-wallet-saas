@@ -156,7 +156,7 @@ describe('Wallet Page', () => {
     it('should render the card with correct data', () => {
       render(<CardClient {...defaultProps} />)
 
-      expect(screen.getByText('John Doe')).toBeInTheDocument()
+      expect(screen.getAllByText('John Doe')).toHaveLength(2) // Main text + tooltip
       expect(screen.getByText('Manager One')).toBeInTheDocument()
       expect(screen.getByText('Next rebalancing:')).toBeInTheDocument()
       expect(screen.getByText('Last rebalancing:')).toBeInTheDocument()
@@ -168,7 +168,7 @@ describe('Wallet Page', () => {
       const user = userEvent.setup()
       render(<CardClient {...defaultProps} />)
 
-      const card = screen.getByText('John Doe').closest('div')
+      const card = screen.getAllByText('John Doe')[0].closest('div')
       expect(card).toBeInTheDocument()
 
       if (card) {
@@ -229,9 +229,9 @@ describe('Wallet Page', () => {
 
       // Aguarda o carregamento dos clientes
       await waitFor(() => {
-        expect(screen.getByText('John Doe')).toBeInTheDocument()
-        expect(screen.getByText('Jane Smith')).toBeInTheDocument()
-        expect(screen.getByText('Bob Johnson')).toBeInTheDocument()
+        expect(screen.getAllByText('John Doe')).toHaveLength(2) // Main + tooltip
+        expect(screen.getAllByText('Jane Smith')).toHaveLength(2) // Main + tooltip
+        expect(screen.getAllByText('Bob Johnson')).toHaveLength(2) // Main + tooltip
       })
 
       // Verifica se o contador está correto
@@ -244,7 +244,7 @@ describe('Wallet Page', () => {
 
       // Aguarda o carregamento inicial
       await waitFor(() => {
-        expect(screen.getByText('John Doe')).toBeInTheDocument()
+        expect(screen.getAllByText('John Doe')).toHaveLength(2) // Main + tooltip
       })
 
       // Busca por "John"
@@ -253,8 +253,8 @@ describe('Wallet Page', () => {
 
       // Verifica se apenas John Doe e Bob Johnson são exibidos
       await waitFor(() => {
-        expect(screen.getByText('John Doe')).toBeInTheDocument()
-        expect(screen.getByText('Bob Johnson')).toBeInTheDocument()
+        expect(screen.getAllByText('John Doe')).toHaveLength(2) // Main + tooltip
+        expect(screen.getAllByText('Bob Johnson')).toHaveLength(2) // Main + tooltip
         expect(screen.queryByText('Jane Smith')).not.toBeInTheDocument()
       })
 
@@ -270,7 +270,7 @@ describe('Wallet Page', () => {
 
       // Aguarda carregamento inicial
       await waitFor(() => {
-        expect(screen.getByText('John Doe')).toBeInTheDocument()
+        expect(screen.getAllByText('John Doe')).toHaveLength(2) // Main + tooltip
       })
 
       // Busca por algo que não existe
@@ -309,10 +309,10 @@ describe('Wallet Page', () => {
         expect(screen.getByText('Showing 12 of 15 wallets')).toBeInTheDocument()
       })
 
-      // Verifica que apenas 12 cards únicos são renderizados inicialmente
+      // Verifica que apenas 12 cards únicos são renderizados inicialmente (24 total = 12 cards x 2 textos cada)
       await waitFor(() => {
         const clientCards = screen.getAllByText(/^Client \d+$/)
-        expect(clientCards).toHaveLength(12)
+        expect(clientCards).toHaveLength(24) // 12 cards x 2 (main + tooltip)
       })
     })
 
@@ -322,7 +322,7 @@ describe('Wallet Page', () => {
 
       // Aguarda carregamento inicial
       await waitFor(() => {
-        expect(screen.getByText('John Doe')).toBeInTheDocument()
+        expect(screen.getAllByText('John Doe')).toHaveLength(2) // Main + tooltip
       })
 
       // Clica no botão de filtros
@@ -342,7 +342,7 @@ describe('Wallet Page', () => {
       render(<Wallets />)
 
       await waitFor(() => {
-        expect(screen.getByText('John Doe')).toBeInTheDocument()
+        expect(screen.getAllByText('John Doe')).toHaveLength(2) // Main + tooltip
       })
 
       const searchInput = screen.getByTestId('search-input')
