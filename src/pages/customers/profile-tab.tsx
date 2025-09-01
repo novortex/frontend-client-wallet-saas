@@ -149,12 +149,12 @@ export function ProfileTab({
       <div className="mt-12 flex justify-end gap-5">
         <Button
           onClick={handleUpdateCustomer}
-          className="bg-blue-500 text-white hover:bg-blue-600"
+          className="bg-blue-500 text-white hover:bg-blue-600 transition-all duration-200 transform hover:scale-105"
         >
           Save Profile
         </Button>
         <DialogClose asChild>
-          <Button className="bg-red-500 text-white hover:bg-red-600">
+          <Button className="bg-red-500 text-white hover:bg-red-600 transition-all duration-200 transform hover:scale-105">
             Close
           </Button>
         </DialogClose>

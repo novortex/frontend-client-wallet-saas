@@ -1,4 +1,5 @@
 import { SwitchTheme } from '@/components/custom/switch-theme'
+import { ClientSearch } from '@/components/custom/client-search'
 import { CardDashboard } from '@/components/custom/card-dashboard'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
@@ -58,7 +59,7 @@ export function Graphs() {
 
         if (!result) {
           return toast({
-            className: 'bg-destructive border-0 text-destructive-foreground',
+            className: 'toast-error',
             title: 'Failed get assets organization :(',
             description: 'Demo Vault !!',
           })
@@ -170,6 +171,8 @@ export function Graphs() {
         </Breadcrumb>
         <SwitchTheme />
       </div>
+      
+      <ClientSearch />
       
       {/* Header com título */}
       <div className="mb-8">

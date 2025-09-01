@@ -26,6 +26,8 @@ import Dashboard from './pages/dashboard'
 import { PerformanceView } from './pages/performance_view'
 import CallMonitoring from './pages/mensalContact'
 import WalletMonitoring from './pages/walletMonitoring'
+import { BaseWallets } from '@/pages/base-wallets'
+import { BaseWalletDetail } from '@/pages/base-wallets/base-wallet-detail'
 
 export function App() {
   const [isMobile, setIsMobile] = useState(false)
@@ -78,6 +80,8 @@ export function App() {
                 <Route path="/" element={<Navigate to="/wallets" replace />} />
                 <Route path="/wallet/:walletUuid/assets" element={<Wallet />} />
                 <Route path="/wallets" element={<Clients />} />
+                <Route path="/base-wallets" element={<BaseWallets />} />
+                <Route path="/base-wallets/:uuid" element={<BaseWalletDetail />} />
                 <Route path="/notifications" element={<Notifications />} />
                 <Route path="/customers" element={<Customers />} />
                 <Route path="/admin/orgs" element={<AssetsOrg />} />

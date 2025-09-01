@@ -236,7 +236,7 @@ export function FilterModal({
           </Button>
           <Button
             onClick={handleApplyFilters}
-            className="bg-[#F2BE38] text-black hover:bg-yellow-600 hover:text-white"
+            className="bg-[#F2BE38] text-black hover:bg-yellow-500 hover:text-white transition-all duration-200 transform hover:scale-105"
           >
             Apply Filters
           </Button>

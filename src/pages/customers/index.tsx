@@ -44,9 +44,9 @@ export function Customers() {
 
         if (!result) {
           return toast({
-            className: 'bg-destructive border-0 text-destructive-foreground',
-            title: 'Failed get assets organization :(',
-            description: 'Demo Vault !!',
+            className: 'toast-error',
+            title: 'Erro ao carregar clientes',
+            description: 'Não foi possível carregar os clientes da organização.',
           })
         }
 
@@ -78,9 +78,9 @@ export function Customers() {
         setLoading(false)
       } catch (error) {
         toast({
-          className: 'bg-destructive border-0 text-destructive-foreground',
-          title: 'Failed get assets organization :(',
-          description: 'Demo Vault !!',
+          className: 'toast-error',
+          title: '❌ Erro ao carregar clientes',
+          description: 'Não foi possível carregar os clientes da organização.',
         })
       }
     }

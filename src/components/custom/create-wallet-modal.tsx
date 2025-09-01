@@ -336,7 +336,7 @@ export default function CreateWalletModal({
         </div>
         <DialogFooter className="flex items-end justify-end">
           <Button
-            className="flex w-1/6 items-center justify-center gap-3 bg-[#1877F2] p-5 hover:bg-blue-600"
+            className="flex w-1/6 items-center justify-center gap-3 bg-[#1877F2] p-5 hover:bg-blue-600 transition-all duration-200 transform hover:scale-105"
             onClick={openModal}
           >
             <StepForwardIcon />

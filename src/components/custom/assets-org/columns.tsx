@@ -107,7 +107,7 @@ function DisableAssetButton({ assetData }: { assetData: AssetOrgs }) {
             </span>{' '}
             for your organization
             <div className="mt-4 rounded bg-yellow-100 p-4 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
-              <p className="mb-2 font-semibold">⚠️ Warning:</p>
+              <p className="mb-2 font-semibold">Aviso:</p>
               <p className="text-sm">
                 You are about to disable this crypto asset from your
                 organization. This action will:

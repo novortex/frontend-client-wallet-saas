@@ -27,16 +27,16 @@ export function RebalanceModal({ walletUuid }: RebalanceModalProps) {
       setRebalancesResults(results)
 
       toast({
-        className: 'bg-green-500 border-0',
-        title: 'Rebalancing done successfully',
+        className: 'toast-success',
+        title: 'Rebalanceamento realizado com sucesso',
       })
 
       setIsResultModalOpen(true)
     } catch (error) {
       toast({
-        className: 'bg-red-500 border-0',
-        title: 'Error during rebalance calculation',
-        description: (error as Error).message || 'Something went wrong.',
+        className: 'toast-error',
+        title: 'Erro no cálculo do rebalanceamento',
+        description: (error as Error).message || 'Algo deu errado.',
       })
     } finally {
       setLoading(false)
@@ -46,7 +46,7 @@ export function RebalanceModal({ walletUuid }: RebalanceModalProps) {
   return (
     <>
       <Button
-        className="flex items-center justify-center gap-2 bg-[#F2BE38] text-[14px] text-black hover:bg-yellow-600 hover:text-white"
+        className="flex items-center gap-2 bg-[#F2BE38] px-4 font-medium text-black transition-all duration-200 transform hover:scale-105 hover:bg-yellow-500 hover:text-white"
         onClick={handleRebalanceCalculation}
         disabled={loading}
       >

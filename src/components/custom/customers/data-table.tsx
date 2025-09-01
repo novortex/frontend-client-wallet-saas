@@ -122,13 +122,13 @@ export function DataTableCustomers<TData, TValue>({
           </Button>
           <Button
             onClick={openModal}
-            className="w-1/2 bg-[#F2BE38] text-black hover:bg-yellow-600 hover:text-white"
+            className="w-1/2 bg-[#F2BE38] text-black hover:bg-yellow-500 hover:text-white"
           >
             + Add new
           </Button>
           <Button
             onClick={openSendIdModal}
-            className="w-1/2 bg-[#F2BE38] text-black hover:bg-yellow-600 hover:text-white"
+            className="w-1/2 bg-[#F2BE38] text-black hover:bg-yellow-500 hover:text-white"
           >
             <FileText /> Send ID
           </Button>
@@ -145,7 +145,7 @@ export function DataTableCustomers<TData, TValue>({
               size="sm"
               onClick={() => table.nextPage()}
               disabled={!table.getCanNextPage()}
-              className="bg-[#F2BE38] text-black hover:bg-yellow-600 hover:text-white"
+              className="bg-[#F2BE38] text-black hover:bg-yellow-500 hover:text-white"
             >
               Next
             </Button>

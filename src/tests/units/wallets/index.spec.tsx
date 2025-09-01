@@ -195,7 +195,7 @@ describe('Wallet Page', () => {
 
       testCases.forEach(({ alerts, expectedClass }) => {
         const { unmount } = render(
-          <CardClient {...defaultProps} alerts={alerts} />,
+          <CardClient {...defaultProps} />,
         )
 
         const alertDiv = screen.getByText(`${alerts} alerts`).parentElement

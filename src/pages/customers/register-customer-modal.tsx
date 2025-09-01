@@ -98,9 +98,9 @@ export default function RegisterCustomerModal({
     const email = emailRef.current?.value.toLowerCase().trim()
     onClose()
     toast({
-      className: 'bg-yellow-500 border-0',
-      title: 'Processing add customer in organization',
-      description: 'Demo Vault !!',
+      className: 'toast-warning',
+      title: 'Processando cliente',
+      description: 'Adicionando cliente à organização...',
     })
     const formattedPhone = formatPhoneNumber(phone)
     const customer = await registerNewCustomer(
@@ -111,17 +111,17 @@ export default function RegisterCustomerModal({
     if (!customer) {
       setInputValues({ ...inputValues, name: '', email: '', phone: '' })
       return toast({
-        className: 'bg-red-500 border-0',
-        title: 'Failed to add customer in organization',
-        description: 'Demo Vault !!',
+        className: 'toast-error',
+        title: 'Erro ao adicionar cliente',
+        description: 'Não foi possível adicionar o cliente à organização.',
       })
     }
     setInputValues({ ...inputValues, name: '', email: '', phone: '' })
     setSignal(!signal)
     return toast({
-      className: 'bg-green-500 border-0',
-      title: 'Success! New customer added to the organization',
-      description: 'Demo Vault !!',
+      className: 'toast-success',
+      title: 'Cliente adicionado com sucesso',
+      description: 'O novo cliente foi adicionado à organização.',
     })
   }
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -225,7 +225,7 @@ export default function RegisterCustomerModal({
         </div>
         <DialogFooter className="flex items-center justify-end pt-4">
           <Button
-            className="flex w-1/6 items-center justify-center gap-3 bg-[#1877F2] p-5 hover:bg-blue-600"
+            className="flex w-1/6 items-center justify-center gap-3 bg-[#1877F2] p-5 hover:bg-blue-600 transition-all duration-200 transform hover:scale-105"
             onClick={handleRegisterCustomer}
           >
             <StepForwardIcon />

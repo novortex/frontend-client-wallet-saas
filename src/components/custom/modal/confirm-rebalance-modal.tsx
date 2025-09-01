@@ -63,13 +63,13 @@ export default function ConfirmRebalanceModal({
         </div>
         <DialogFooter className="flex items-end justify-end">
           <Button
-            className="bg-[#10A45C] text-white hover:bg-green-400 dark:hover:bg-green-500"
+            className="bg-[#10A45C] text-white hover:bg-green-400 dark:hover:bg-green-500 transition-all duration-200 transform hover:scale-105"
             onClick={handleConfirmContact}
           >
             Confirm
           </Button>
           <Button
-            className="bg-[#EF4E3D] text-white hover:bg-red-800"
+            className="bg-[#EF4E3D] text-white hover:bg-red-800 transition-all duration-200 transform hover:scale-105"
             onClick={onClose}
           >
             Cancel

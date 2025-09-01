@@ -27,9 +27,9 @@ export function AssetsOrg() {
 
         if (!result) {
           return toast({
-            className: 'bg-red-500 border-0 text-white',
-            title: 'Failed get assets organization :(',
-            description: 'Demo Vault !!',
+            className: 'toast-error',
+            title: 'Erro ao carregar ativos',
+            description: 'Não foi possível carregar os ativos da organização.',
           })
         }
 
@@ -53,9 +53,9 @@ export function AssetsOrg() {
         setLoading(false)
       } catch (error) {
         toast({
-          className: 'bg-red-500 border-0 text-white',
-          title: 'Failed get assets organization :(',
-          description: 'Demo Vault !!',
+          className: 'toast-error',
+          title: '❌ Erro ao carregar ativos',
+          description: 'Não foi possível carregar os ativos da organização.',
         })
       }
     }

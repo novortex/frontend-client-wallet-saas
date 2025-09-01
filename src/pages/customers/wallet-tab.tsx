@@ -224,14 +224,14 @@ export function WalletTab({
         <DialogClose asChild>
           <Button
             onClick={handleUpdateWallet}
-            className="bg-blue-500 text-white hover:bg-blue-600"
+            className="bg-blue-500 text-white hover:bg-blue-600 transition-all duration-200 transform hover:scale-105"
           >
             Save Wallet
           </Button>
         </DialogClose>
 
         <DialogClose asChild>
-          <Button className="bg-red-500 text-white hover:bg-red-600">
+          <Button className="bg-red-500 text-white hover:bg-red-600 transition-all duration-200 transform hover:scale-105">
             Close
           </Button>
         </DialogClose>

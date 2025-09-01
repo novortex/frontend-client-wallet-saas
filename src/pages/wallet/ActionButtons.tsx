@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 import { Button } from '@/components/ui/button'
-import { HandCoins, TrendingUp } from 'lucide-react'
+import { HandCoins, TrendingUp, History, RotateCcw } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import {
   AllTimePerformance,
@@ -88,7 +88,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
       </Label>
       <div className="flex gap-5">
         <Button
-          className="bg-[#F2BE38] text-black hover:bg-yellow-600 hover:text-white"
+          className="flex items-center gap-2 bg-[#F2BE38] px-4 font-medium text-black transition-all duration-200 transform hover:scale-105 hover:bg-yellow-500 hover:text-white"
           onClick={() => setIsKpiModalOpen(true)}
         >
           <TrendingUp /> KPI's
@@ -104,7 +104,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
 
             <div className="mb-6 flex justify-center gap-4">
               <Button
-                className={`rounded-md p-2 ${selectedPeriod === 'all' ? 'bg-yellow-500 text-black' : 'bg-gray-700'} hover:bg-yellow-600`}
+                className={`flex items-center gap-2 rounded-md px-4 py-2 font-medium transition-all duration-200 transform hover:scale-105 hover:text-white ${selectedPeriod === 'all' ? 'bg-yellow-500 text-black hover:bg-yellow-500' : 'bg-gray-700 text-white hover:bg-gray-600'}`}
                 onClick={() => {
                   fetchKpis('all')
                   setShowAllTimeOnly(true)
@@ -113,11 +113,11 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
                 All Time Wallet
               </Button>
               <Button
-                className={`rounded-md p-2 ${
+                className={`flex items-center gap-2 rounded-md px-4 py-2 font-medium transition-all duration-200 transform hover:scale-105 hover:text-white ${
                   selectedPeriod === 'sixmonths'
-                    ? 'bg-yellow-500 text-black'
-                    : 'bg-gray-700'
-                } hover:bg-yellow-600`}
+                    ? 'bg-yellow-500 text-black hover:bg-yellow-500'
+                    : 'bg-gray-700 text-white hover:bg-gray-600'
+                }`}
                 onClick={() => {
                   fetchKpis('sixmonths')
                   setShowAllTimeOnly(false)
@@ -126,11 +126,11 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
                 Last 6 Months
               </Button>
               <Button
-                className={`rounded-md p-2 ${
+                className={`flex items-center gap-2 rounded-md px-4 py-2 font-medium transition-all duration-200 transform hover:scale-105 hover:text-white ${
                   selectedPeriod === 'month'
-                    ? 'bg-yellow-500 text-black'
-                    : 'bg-gray-700'
-                } hover:bg-yellow-600`}
+                    ? 'bg-yellow-500 text-black hover:bg-yellow-500'
+                    : 'bg-gray-700 text-white hover:bg-gray-600'
+                }`}
                 onClick={() => {
                   fetchKpis('month')
                   setShowAllTimeOnly(false)
@@ -139,11 +139,11 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
                 Last Month
               </Button>
               <Button
-                className={`rounded-md p-2 ${
+                className={`flex items-center gap-2 rounded-md px-4 py-2 font-medium transition-all duration-200 transform hover:scale-105 hover:text-white ${
                   selectedPeriod === 'week'
-                    ? 'bg-yellow-500 text-black'
-                    : 'bg-gray-700'
-                } hover:bg-yellow-600`}
+                    ? 'bg-yellow-500 text-black hover:bg-yellow-500'
+                    : 'bg-gray-700 text-white hover:bg-gray-600'
+                }`}
                 onClick={() => {
                   fetchKpis('week')
                   setShowAllTimeOnly(false)
@@ -222,28 +222,29 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
 
         {/* Other Wallet Actions */}
         <Button
-          className="bg-[#F2BE38] text-black hover:bg-yellow-600 hover:text-white"
+          className="flex items-center gap-2 bg-[#F2BE38] px-4 font-medium text-black transition-all duration-200 transform hover:scale-105 hover:bg-yellow-500 hover:text-white"
           onClick={openOperationModal}
         >
           <HandCoins /> Withdrawal / Deposit
         </Button>
         <Button
           type="button"
-          variant="outline"
           onClick={() => navigate(`/wallet/${walletUuid}/history`)}
-          className="hover:bg-gray-200 dark:hover:bg-gray-800"
+          className="flex items-center gap-2 bg-[#F2BE38] px-4 font-medium text-black transition-all duration-200 transform hover:scale-105 hover:bg-yellow-500 hover:text-white"
         >
+          <History className="h-4 w-4" />
           Historic
         </Button>
         <Button
           type="button"
-          className="bg-[#F2BE38] text-black hover:bg-yellow-600 hover:text-white"
+          className="flex items-center gap-2 bg-[#F2BE38] px-4 font-medium text-black transition-all duration-200 transform hover:scale-105 hover:bg-yellow-500 hover:text-white"
           onClick={openOrCloseModalRebalanced}
         >
+          <RotateCcw className="h-4 w-4" />
           Rebalanced
         </Button>
         <Button
-          className={`p-5 text-white ${
+          className={`flex items-center gap-2 px-4 font-medium text-white transition-all duration-200 transform hover:scale-105 hover:text-white ${
             infosWallet?.isClosed
               ? 'bg-[#10A45C] hover:bg-green-700'
               : 'bg-[#EF4E3D] hover:bg-red-700'
