@@ -53,7 +53,12 @@ export default function CardClient({
       <CardHeader className="px-4 pt-4 pb-1">
         <CardTitle className="flex flex-row items-center gap-3">
           <div className="flex-1">
-            <p className="truncate text-2xl text-black dark:text-white">{name}</p>
+            <div className="group relative">
+              <p className="truncate text-2xl text-black dark:text-white">{name}</p>
+              <div className="pointer-events-none absolute bottom-full left-0 mb-2 whitespace-nowrap rounded bg-white px-3 py-2 text-sm text-black opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-black dark:text-white shadow-lg border border-border z-10">
+                {name}
+              </div>
+            </div>
           </div>
           {isDelayedRebalancing && (
             <div className="relative flex items-center justify-end">
