@@ -49,29 +49,29 @@ export function ConfirmContactModal({
       <DialogContent className="h-1/2 w-[200%] dark:bg-[#131313] dark:text-[#fff]">
         <DialogHeader className="flex items-center justify-center">
           <DialogTitle className="text-2xl dark:text-[#fff]">
-            Confirm contact
+            Confirmar contato
           </DialogTitle>
         </DialogHeader>
         <div className="flex flex-col items-center justify-center gap-6">
           <CircleAlert className="text-red-600 dark:text-[#F2BE38]" />
           <p className="flex w-2/3 text-center">
-            Do you confirm that you have contacted the client? Upon
-            confirmation, the next recommended contact date will be updated and
-            cannot be undone.
+            Você confirma que entrou em contato com o cliente? Após
+            a confirmação, a próxima data de contato recomendada será atualizada e
+            não poderá ser desfeita.
           </p>
         </div>
         <DialogFooter className="flex items-end justify-end">
           <Button
-            className="bg-[#10A45C] hover:bg-green-500 hover:text-black"
+            className="bg-success hover:bg-success/80 transition-all duration-200 transform hover:scale-105"
             onClick={handleConfirmContact}
           >
-            Confirm
+            Confirmar
           </Button>
           <Button
-            className="bg-[#EF4E3D] hover:bg-red-500 hover:text-black"
+            className="bg-destructive hover:bg-destructive/80 transition-all duration-200 transform hover:scale-105"
             onClick={onClose}
           >
-            Cancel
+            Cancelar
           </Button>
         </DialogFooter>
       </DialogContent>

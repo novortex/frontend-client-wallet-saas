@@ -33,9 +33,10 @@ export function AllocationDialog({
     const idealAllocation = parseFloat(idealAllocationRef.current?.value ?? '0')
     if (idealAllocation < 0 || idealAllocation > 100) {
       return toast({
-        className: 'bg-red-500 border-0',
+        className: 'toast-error',
         title: 'Invalid ideal allocation',
         description: 'Ideal allocation must be between 0 and 100.',
+        duration: 6000,
       })
     }
     handleUpdateIdealAllocation(idealAllocation)

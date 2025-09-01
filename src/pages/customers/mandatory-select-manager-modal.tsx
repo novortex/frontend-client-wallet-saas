@@ -53,9 +53,10 @@ export function MandatorySelectManagerModal({
   const handleSaveManager = async () => {
     if (!selectedManager) {
       toast({
-        className: 'bg-red-500 border-0 text-white',
+        className: 'toast-error',
         title: 'Error',
         description: 'Please select a manager',
+        duration: 6000,
       })
       return
     }
@@ -63,9 +64,10 @@ export function MandatorySelectManagerModal({
     if (!customer.id) {
       console.error('Customer ID is missing:', customer)
       toast({
-        className: 'bg-red-500 border-0 text-white',
+        className: 'toast-error',
         title: 'Error',
         description: 'Customer ID is missing. Please try again.',
+        duration: 6000,
       })
       return
     }
@@ -78,9 +80,10 @@ export function MandatorySelectManagerModal({
       await updateCustomerManager(customer.id, selectedManager)
 
       toast({
-        className: 'bg-green-500 border-0 text-white',
+        className: 'toast-success',
         title: 'Success',
         description: 'Manager assigned successfully',
+        duration: 4000,
       })
 
       setSignal(true)
@@ -93,9 +96,10 @@ export function MandatorySelectManagerModal({
       }, 1000)
     } catch (error) {
       toast({
-        className: 'bg-red-500 border-0 text-white',
+        className: 'toast-error',
         title: 'Error',
         description: 'Failed to assign manager',
+        duration: 6000,
       })
     } finally {
       setIsLoading(false)

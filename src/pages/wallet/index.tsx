@@ -53,6 +53,7 @@ export function Wallet() {
           walletUuid={walletUuid as string}
           fetchData={fetchData}
           calculateRebalance={calculateRebalance}
+          infosWallet={infosWallet}
         />
         {/* ***DO NOT DELETE <TriggerSection
           isOperationModalOpen={isOperationModalOpen}

@@ -122,9 +122,10 @@ export default function RelateClientExchangeModal({
     if (!handleFormValidation()) return
 
     toast({
-      className: 'bg-yellow-500 border-0',
+      className: 'toast-warning',
       title: 'Processing create wallet for this customer ',
       description: 'Demo Vault !!',
+      duration: 5000,
     })
 
     const result = await registerWalletForCustomer(
@@ -146,9 +147,10 @@ export default function RelateClientExchangeModal({
 
     if (!result) {
       return toast({
-        className: 'bg-red-500 border-0',
+        className: 'toast-error',
         title: 'Failed create a wallet for this customer ',
         description: 'Demo Vault !!',
+        duration: 6000,
       })
     }
 
@@ -161,9 +163,10 @@ export default function RelateClientExchangeModal({
     onClose()
 
     return toast({
-      className: 'bg-green-500 border-0',
+      className: 'toast-success',
       title: 'Success !! wallet created for this customer ',
       description: 'Demo Vault !!',
+      duration: 4000,
     })
   }
 

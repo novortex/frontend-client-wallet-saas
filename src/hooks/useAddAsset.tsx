@@ -16,16 +16,18 @@ export const useAddAsset = (onClose: () => void) => {
 
     if (!assetId) {
       return toast({
-        className: 'bg-destructive border-0 text-destructive-foreground',
-        title: 'Asset ID is required',
-        description: 'Demo Vault !!',
+        className: 'toast-error',
+        title: 'ID do ativo é obrigatório',
+        description: 'Por favor, insira um ID válido para o ativo.',
+        duration: 6000,
       })
     }
 
     toast({
-      className: 'bg-warning border-0 text-warning-foreground',
-      title: 'Processing add Asset in organization',
-      description: 'Demo Vault !!',
+      className: 'toast-warning',
+      title: 'Processando ativo',
+      description: 'Adicionando ativo à organização...',
+      duration: 5000,
     })
 
     try {
@@ -35,17 +37,19 @@ export const useAddAsset = (onClose: () => void) => {
       setSignal(!signal)
 
       toast({
-        className: 'bg-success border-0 text-success-foreground',
-        title: 'Success !! new Asset in organization',
-        description: 'Demo Vault !!',
+        className: 'toast-success',
+        title: 'Ativo adicionado com sucesso',
+        description: 'O novo ativo foi adicionado à organização.',
+        duration: 4000,
       })
     } catch (error: any) {
       setAssetId('')
 
       toast({
-        className: 'bg-destructive border-0 text-destructive-foreground',
-        title: 'Failed to add asset',
-        description: error?.message || 'Unexpected error while adding asset',
+        className: 'toast-error',
+        title: 'Erro ao adicionar ativo',
+        description: error?.message || 'Erro inesperado ao adicionar o ativo.',
+        duration: 6000,
       })
     }
   }

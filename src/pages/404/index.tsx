@@ -21,7 +21,7 @@ export function ErrorPage() {
       </p>
       <button
         onClick={handleGoHome}
-        className="rounded-md bg-primary px-6 py-3 text-lg font-semibold text-primary-foreground shadow-md transition-colors duration-200 ease-in-out hover:bg-primary/90"
+        className="rounded-md btn-yellow px-6 py-3 text-lg font-semibold shadow-md"
       >
         Go to Home
       </button>

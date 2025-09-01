@@ -235,7 +235,7 @@ export default function WalletMonitoring() {
                       setCurrentPage((prev) => Math.min(prev + 1, totalPages))
                     }
                     disabled={!canNextPage}
-                    className="bg-[#F2BE38] text-black hover:bg-yellow-600 hover:text-white"
+                    className="bg-[#F2BE38] text-black hover:bg-yellow-500 hover:text-white"
                   >
                     Next
                   </Button>
@@ -475,7 +475,7 @@ export default function WalletMonitoring() {
                       setFrcPage((p) => Math.min(p + 1, frcTotalPages))
                     }
                     disabled={!canFrcNext}
-                    className="bg-[#F2BE38] text-black hover:bg-yellow-600 hover:text-white"
+                    className="bg-[#F2BE38] text-black hover:bg-yellow-500 hover:text-white"
                   >
                     Next
                   </Button>

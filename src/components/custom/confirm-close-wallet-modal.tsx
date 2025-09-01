@@ -137,7 +137,7 @@ export default function ConfirmCloseWalletModal({
 
         <DialogFooter className="flex items-end justify-end">
           <Button
-            className="w-[20%] bg-[#1877F2] p-5 text-white hover:bg-blue-600"
+            className="w-[20%] btn-blue p-5"
             disabled={!isInputValid}
             onClick={handleSendWalletAction}
           >

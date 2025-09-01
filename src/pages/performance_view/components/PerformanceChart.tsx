@@ -9,6 +9,13 @@ import {
   Cell,
 } from 'recharts'
 import { PerformanceWallets } from '../types/performanceWallets'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 type PerformanceChartProps = {
   data: PerformanceWallets[]
@@ -157,16 +164,17 @@ const PerformanceChart: React.FC<PerformanceChartProps> = ({ data }) => {
           <span className="text-sm text-foreground">
             Tamanho do Range:
           </span>
-          <select
-            className="w-24 rounded border bg-background px-2 py-1 text-foreground border-border"
-            value={rangeSize}
-            onChange={(e) => setRangeSize(Number(e.target.value))}
-          >
-            <option value={5}>5%</option>
-            <option value={10}>10%</option>
-            <option value={15}>15%</option>
-            <option value={20}>20%</option>
-          </select>
+          <Select value={rangeSize.toString()} onValueChange={(value) => setRangeSize(Number(value))}>
+            <SelectTrigger className="w-24">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="5">5%</SelectItem>
+              <SelectItem value="10">10%</SelectItem>
+              <SelectItem value="15">15%</SelectItem>
+              <SelectItem value="20">20%</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
       <div className="relative">

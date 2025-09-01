@@ -33,9 +33,10 @@ export function Notifications() {
         notifications.length - 1
       ] as Notification
       toast({
-        title: 'New Transaction',
-        description: `New transaction for ${latestNotification.userId}`,
-        className: 'bg-green-500 text-white',
+        title: 'Nova Transação',
+        description: `Nova transação para ${latestNotification.userId}`,
+        className: 'toast-success',
+        duration: 4000,
       })
     }
   }, [notifications])
@@ -43,9 +44,10 @@ export function Notifications() {
   useEffect(() => {
     if (error) {
       toast({
-        title: 'Connection Error',
+        title: 'Erro de Conexão',
         description: error,
-        className: 'bg-red-500 text-white',
+        className: 'toast-error',
+        duration: 6000,
       })
     }
   }, [error])
@@ -64,7 +66,7 @@ export function Notifications() {
           ) : (
             <Button
               onClick={reconnect}
-              className="bg-red-100 text-red-800 hover:bg-red-200"
+              className="bg-red-100 text-red-800 hover:bg-red-200 transition-all duration-200 transform hover:scale-105"
             >
               Disconnected (Click to reconnect)
             </Button>

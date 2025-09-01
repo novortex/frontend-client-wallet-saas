@@ -3,6 +3,7 @@ import { SwitchTheme } from '@/components/custom/switch-theme'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { ClientsFilterModal } from '@/components/custom/clientsFilterModal/index'
+import { Calendar } from 'lucide-react'
 import { MonthlyStandardizationModal } from './components/MonthlyStandardizationModal'
 import { toast } from '@/components/ui/use-toast'
 import { formatDate } from '@/utils'
@@ -62,9 +63,10 @@ export function Clients() {
       if (!result || result.length === 0) {
         setIsLoading(false)
         return toast({
-          className: 'bg-red-500 border-0 text-black dark:text-white',
-          title: 'Failed to get clients :(',
-          description: 'Demo Vault !!',
+          className: 'toast-error',
+          title: 'Erro ao carregar carteiras',
+          description: 'Não foi possível carregar as carteiras dos clientes.',
+          duration: 6000,
         })
       }
 
@@ -94,9 +96,10 @@ export function Clients() {
     } catch (error) {
       console.error('Error fetching clients:', error)
       toast({
-        className: 'bg-red-500 border-0 text-black dark:text-white',
-        title: 'Error',
-        description: 'Failed to fetch clients. Please try again.',
+        className: 'toast-error',
+        title: 'Erro',
+        description: 'Falha ao buscar carteiras. Tente novamente.',
+        duration: 6000,
       })
       setIsLoading(false)
     }
@@ -310,16 +313,15 @@ export function Clients() {
           <SwitchTheme />
         </div>
 
-        <div className="mb-10 flex items-center justify-between">
+        <div className="mb-6">
           <Input
-            className="w-5/6 border border-border bg-background text-foreground focus:ring-2 focus:ring-primary"
+            className="h-12 border-2 border-border bg-background text-foreground transition-all placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20"
             type="text"
-            placeholder="Search for ..."
+            placeholder="Search for clients..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             data-testid="search-input"
           />
-          <ClientsFilterModal handleApplyFilters={handleApplyFilters} />
         </div>
 
       {/* Results counter */}
@@ -330,10 +332,16 @@ export function Clients() {
             ` (${clients.length} total)`}
         </div>
         <div className="flex gap-4">
+          <ClientsFilterModal 
+            handleApplyFilters={handleApplyFilters} 
+            filteredCount={filteredClients.length}
+            totalCount={clients.length}
+          />
           <Button
             onClick={() => setIsMonthlyStandardizationOpen(true)}
-            className="bg-[#F2BE38] text-black hover:bg-yellow-600 hover:text-white"
+            className="btn-yellow"
           >
+            <Calendar className="h-4 w-4 mr-2" />
             Monthly Rebalancing
           </Button>
         </div>
@@ -357,7 +365,6 @@ export function Clients() {
                 name={client.infosClient.name}
                 email={client.infosClient.email}
                 phone={client.infosClient.phone}
-                alerts={0}
                 responsible={client.managerName}
                 lastRebalancing={
                   client.lastBalance
