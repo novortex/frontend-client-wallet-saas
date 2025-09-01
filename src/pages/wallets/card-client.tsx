@@ -59,11 +59,9 @@ export default function CardClient({
             <div className="relative flex items-center justify-end">
               <div className="group relative">
                 <div className="rounded-full bg-destructive/10 p-2">
-                  <CircleAlert className="h-5 w-5 text-destructive" />
+                  <CircleAlert className="h-5 w-5 text-destructive" data-testid="delayed-rebalancing-alert" />
                 </div>
-                <div className="pointer-events-none absolute bottom-full right-full mb-2 w-[300%] rounded bg-white px-4 py-2 text-start text-sm text-black opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-black dark:text-white">
-                  Rebalance is delayed
-                  <br />
+                <div className="pointer-events-none absolute bottom-full right-0 mb-2 whitespace-nowrap rounded bg-white px-3 py-2 text-sm text-black opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-black dark:text-white shadow-lg border border-border">
                   O rebalanceamento está atrasado
                 </div>
               </div>
@@ -77,11 +75,6 @@ export default function CardClient({
             </div>
             <p className="truncate">{responsible}</p>
           </div>
-          {isDelayedRebalancing && (
-            <div className="flex items-center justify-end">
-              <p className="text-[12px] text-red-600">delayed rebalancing</p>
-            </div>
-          )}
         </CardDescription>
       </CardHeader>
       <CardContent className="px-4 pt-1 pb-4 space-y-1">

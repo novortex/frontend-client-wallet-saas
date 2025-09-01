@@ -203,14 +203,13 @@ describe('Wallet Page', () => {
       })
     })
 
-    it('should show delayed rebalancing warning when next rebalancing is in the past', () => {
+    it('should show delayed rebalancing alert icon when next rebalancing is in the past', () => {
       const pastDate = '01/01/2020' // Data no passado
       render(<CardClient {...defaultProps} nextRebalancing={pastDate} />)
 
-      expect(screen.getByText('delayed rebalancing')).toBeInTheDocument()
-      expect(screen.getByText('delayed rebalancing')).toHaveClass(
-        'text-red-600',
-      )
+      // Verifica se o ícone de alerta está presente
+      const alertIcon = screen.getByTestId('delayed-rebalancing-alert')
+      expect(alertIcon).toBeInTheDocument()
     })
   })
 

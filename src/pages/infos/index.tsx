@@ -500,8 +500,11 @@ export function Infos() {
                     Benchmark Value
                   </p>
                   <p className="text-2xl font-bold text-foreground">
-                    R${walletI.currentValueBenchmark !== undefined
-                      ? Number(walletI.currentValueBenchmark).toFixed(2)
+                    R$
+                    {walletI.currentValueBenchmark !== undefined
+                      ? Number(walletI.currentValueBenchmark).toLocaleString('en-US', {
+                          minimumFractionDigits: 2,
+                        })
                       : '0.06'}
                   </p>
                 </div>
@@ -670,10 +673,10 @@ export function Infos() {
                       <p className="text-sm font-medium text-muted-foreground">
                         Account Email
                       </p>
-                      <CopyButton text={walletI.accountEmail || 'account@email.com'} />
+                      {walletI.accountEmail && <CopyButton text={walletI.accountEmail} />}
                     </div>
-                    <p className="truncate text-xl font-bold text-foreground" title={walletI.accountEmail || 'account@email.com'}>
-                      {walletI.accountEmail || 'account@email.com'}
+                    <p className="truncate text-xl font-bold text-foreground" title={walletI.accountEmail || '-'}>
+                      {walletI.accountEmail || '-'}
                     </p>
                   </div>
                   <div className="flex min-h-[100px] flex-col justify-between rounded-lg border border-border bg-muted/30 p-4">
@@ -681,10 +684,10 @@ export function Infos() {
                       <p className="text-sm font-medium text-muted-foreground">
                         Email Password
                       </p>
-                      <CopyButton text={walletI.emailPassword || '••••••••'} />
+                      {walletI.emailPassword && <CopyButton text={walletI.emailPassword} />}
                     </div>
-                    <p className="truncate text-xl font-bold text-foreground" title={walletI.emailPassword || '••••••••'}>
-                      {walletI.emailPassword || '••••••••'}
+                    <p className="truncate text-xl font-bold text-foreground" title={walletI.emailPassword || '-'}>
+                      {walletI.emailPassword || '-'}
                     </p>
                   </div>
                 </div>
