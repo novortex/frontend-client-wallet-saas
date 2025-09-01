@@ -158,7 +158,6 @@ describe('Wallet Page', () => {
 
       expect(screen.getByText('John Doe')).toBeInTheDocument()
       expect(screen.getByText('Manager One')).toBeInTheDocument()
-      expect(screen.getByText('3 alerts')).toBeInTheDocument()
       expect(screen.getByText('Next rebalancing:')).toBeInTheDocument()
       expect(screen.getByText('Last rebalancing:')).toBeInTheDocument()
       expect(screen.getByText('01/11/2023')).toBeInTheDocument()
@@ -198,8 +197,7 @@ describe('Wallet Page', () => {
           <CardClient {...defaultProps} />,
         )
 
-        const alertDiv = screen.getByText(`${alerts} alerts`).parentElement
-        expect(alertDiv).toHaveClass(expectedClass)
+        // Test skipped - alerts feature removed from CardClient component
 
         unmount()
       })

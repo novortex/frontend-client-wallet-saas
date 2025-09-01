@@ -201,7 +201,7 @@ describe('Wallet Component', () => {
 
   describe('Header Component', () => {
     it('renders the header title', () => {
-      render(<Header walletUuid={undefined} />)
+      render(<Header walletUuid={undefined} />, { wrapper: MemoryRouter })
       expect(getByTextCaseInsensitive('client wallet')).toBeInTheDocument()
     })
   })
