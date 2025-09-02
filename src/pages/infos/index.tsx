@@ -401,7 +401,7 @@ export function Infos() {
 
           {/* Manager, Contract and Risk Profile Section */}
           <Card className="flex h-[90px] items-center">
-            <div className="flex w-full items-center justify-center gap-8 px-6">
+            <div className="flex w-full items-center justify-start gap-8 px-6">
               {' '}
               <div className="flex items-center gap-3">
                 <div className="rounded-full bg-primary/10 p-2">
@@ -421,23 +421,6 @@ export function Infos() {
               </div>
               <div className="flex items-center gap-3">
                 <div className="rounded-full bg-primary/10 p-2">
-                  <FileCheck className="h-5 w-5 text-primary" />
-                </div>
-                <div className="flex flex-col">
-                  <p className="text-sm font-medium text-muted-foreground">
-                    Contract
-                  </p>
-                  <div className="flex items-start">
-                    {walletI.contract ? (
-                      <Check className="h-5 w-5 text-success" />
-                    ) : (
-                      <X className="h-5 w-5 text-destructive" />
-                    )}
-                  </div>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="rounded-full bg-primary/10 p-2">
                   <AlertTriangle className="h-5 w-5 text-primary" />
                 </div>
                 <div className="flex flex-col">
@@ -447,6 +430,27 @@ export function Infos() {
                   <p className="text-base font-semibold text-foreground">
                     STANDARD
                   </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="rounded-full bg-primary/10 p-2">
+                  <FileCheck className="h-5 w-5 text-primary" />
+                </div>
+                <div className="flex flex-col">
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Contract
+                  </p>
+                  <div className="flex items-start">
+                    {walletI.contract ? (
+                      <div className="rounded-full bg-success/10 p-1">
+                        <Check className="h-4 w-4 text-success" />
+                      </div>
+                    ) : (
+                      <div className="rounded-full bg-destructive/10 p-1">
+                        <X className="h-4 w-4 text-destructive" />
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>

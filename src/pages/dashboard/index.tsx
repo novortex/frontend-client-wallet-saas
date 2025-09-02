@@ -28,6 +28,14 @@ import { formatDolarCurrency } from '@/utils/formatDolarCurrency'
 import { gerarCores } from './utils/generateBarchartColors'
 import { SwitchTheme } from '@/components/custom/switch-theme'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 
 // Sistema de cores padronizado
 const COLORS_PERFORMANCE = ['hsl(var(--chart-2))', 'hsl(var(--chart-3))'] // Verde, Vermelho
@@ -402,6 +410,58 @@ export default function Dashboard() {
         {/* Conteúdo do Perfil de Risco */}
         {activeTab === 'risk' && (
           <div className="w-full">
+            {/* Tabela de Análise por Perfil de Risco */}
+            <Card className="mb-6 border-border bg-card transition-shadow hover:shadow-md">
+              <CardHeader>
+                <CardTitle className="text-foreground">
+                  Métricas por Perfil de Risco
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="text-left">Perfil de Risco</TableHead>
+                        <TableHead className="text-right">Carteiras</TableHead>
+                        <TableHead className="text-right">AUM</TableHead>
+                        <TableHead className="text-right">Capital Investido</TableHead>
+                        <TableHead className="text-right">Receita Total</TableHead>
+                        <TableHead className="text-right">Média de Investimento</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {Object.entries(revenueProjection.byRiskProfile).map(([riskProfile, data]) => {
+                        const avgInvestmentData = revenueProjection.averageInvestmentByRiskProfile?.[riskProfile]
+                        return (
+                          <TableRow key={riskProfile}>
+                            <TableCell className="font-medium text-foreground">
+                              {riskProfile}
+                            </TableCell>
+                            <TableCell className="text-right text-foreground">
+                              {data.count}
+                            </TableCell>
+                            <TableCell className="text-right font-medium text-foreground">
+                              {formatRealCurrency(data.aum)}
+                            </TableCell>
+                            <TableCell className="text-right text-foreground">
+                              {formatRealCurrency(data.invested)}
+                            </TableCell>
+                            <TableCell className="text-right text-foreground">
+                              {formatRealCurrency(data.revenue)}
+                            </TableCell>
+                            <TableCell className="text-right text-foreground">
+                              {avgInvestmentData ? formatRealCurrency(avgInvestmentData.averageInvestment) : '-'}
+                            </TableCell>
+                          </TableRow>
+                        )
+                      })}
+                    </TableBody>
+                  </Table>
+                </div>
+              </CardContent>
+            </Card>
+
             {/* Primeira linha de gráficos - Receita e Média de Investimento */}
             <div className="mb-6 grid w-full grid-cols-1 gap-6 lg:grid-cols-2">
               <Card className="w-full">
@@ -744,12 +804,65 @@ export default function Dashboard() {
                 </CardContent>
               </Card>
             </div>
+
           </div>
         )}
 
         {/* Conteúdo da Análise por Benchmark */}
         {activeTab === 'benchmark' && (
           <div>
+            {/* Tabela de Análise por Benchmark */}
+            <Card className="mb-6 border-border bg-card transition-shadow hover:shadow-md">
+              <CardHeader>
+                <CardTitle className="text-foreground">
+                  Métricas por Benchmark
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="text-left">Benchmark</TableHead>
+                        <TableHead className="text-right">Carteiras</TableHead>
+                        <TableHead className="text-right">AUM</TableHead>
+                        <TableHead className="text-right">Capital Investido</TableHead>
+                        <TableHead className="text-right">Receita Total</TableHead>
+                        <TableHead className="text-right">Média de Investimento</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {Object.entries(revenueProjection.byBenchmark).map(([benchmark, data]) => {
+                        const avgInvestmentData = revenueProjection.averageInvestmentByBenchmark?.[benchmark]
+                        return (
+                          <TableRow key={benchmark}>
+                            <TableCell className="font-medium text-foreground">
+                              {benchmark}
+                            </TableCell>
+                            <TableCell className="text-right text-foreground">
+                              {data.count}
+                            </TableCell>
+                            <TableCell className="text-right font-medium text-foreground">
+                              {formatRealCurrency(data.aum)}
+                            </TableCell>
+                            <TableCell className="text-right text-foreground">
+                              {formatRealCurrency(data.invested)}
+                            </TableCell>
+                            <TableCell className="text-right text-foreground">
+                              {formatRealCurrency(data.revenue)}
+                            </TableCell>
+                            <TableCell className="text-right text-foreground">
+                              {avgInvestmentData ? formatRealCurrency(avgInvestmentData.averageInvestment) : '-'}
+                            </TableCell>
+                          </TableRow>
+                        )
+                      })}
+                    </TableBody>
+                  </Table>
+                </div>
+              </CardContent>
+            </Card>
+
             {/* Primeira linha de gráficos - Receita e Média de Investimento */}
             <div className="mb-6 grid w-full grid-cols-1 gap-6 lg:grid-cols-2">
               <Card className="w-full border-border bg-card transition-shadow hover:shadow-md">
@@ -1094,6 +1207,7 @@ export default function Dashboard() {
                 </CardContent>
               </Card>
             </div>
+
           </div>
         )}
       </div>
