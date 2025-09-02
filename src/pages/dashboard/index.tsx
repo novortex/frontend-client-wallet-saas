@@ -14,6 +14,7 @@ import {
 } from 'recharts'
 import { preparePerformanceData } from './utils/prepareWalletsPerformanceComparison'
 import { prepareBenchmarkComparisonData } from './utils/prepareBenchmarkComparison'
+import { prepareRevenueGeneratingData } from './utils/prepareRevenueGeneratingData'
 import { getAUMByRiskProfile } from './utils/getAUMByRiskprofile'
 import { getAUMByBenchmark } from './utils/getAUMByBenchmark'
 import { formatRealCurrency } from '@/utils/formatRealCurrency'
@@ -40,6 +41,7 @@ import {
 // Sistema de cores padronizado
 const COLORS_PERFORMANCE = ['hsl(var(--chart-2))', 'hsl(var(--chart-3))'] // Verde, Vermelho
 const COLORS_BENCHMARK = ['hsl(var(--chart-2))', 'hsl(var(--chart-3))'] // Verde, Vermelho
+const COLORS_REVENUE_GENERATING = ['hsl(var(--chart-2))', 'hsl(var(--chart-3))'] // Verde, Vermelho
 
 export default function Dashboard() {
   const [allocationByAsset, setAllocationByAsset] = useState<AllocationByAsset>(
@@ -102,6 +104,7 @@ export default function Dashboard() {
     revenueProjection,
     revenueProjection.summary.openWallets,
   )
+  const revenueGeneratingData = prepareRevenueGeneratingData(revenueProjection, revenueProjection.summary.openWallets)
 
   return (
     <div className="min-h-screen bg-background p-6">
@@ -175,6 +178,38 @@ export default function Dashboard() {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="mb-2 font-semibold text-foreground">
+                        Carteiras Gerando Receita
+                      </p>
+                      <p className="text-lg font-bold text-foreground">
+                        {revenueProjection.summary.profitableWallets}
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="p-3">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="mb-2 font-semibold text-foreground">
+                        Média de Investimento por Carteira
+                      </p>
+                      <p className="text-lg font-bold text-foreground">
+                        {revenueProjection.summary.averageInvestmentGeneral 
+                          ? formatRealCurrency(revenueProjection.summary.averageInvestmentGeneral)
+                          : '-'}
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="p-3">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="mb-2 font-semibold text-foreground">
                         AUM Total
                       </p>
                       <p className="text-lg font-bold text-foreground">
@@ -216,6 +251,43 @@ export default function Dashboard() {
                         {formatRealCurrency(
                           revenueProjection.summary.totalRevenue,
                         )}
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="group relative">
+                <CardContent className="p-3">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="mb-2 font-semibold text-foreground">
+                        Média de Ganho por Carteira
+                      </p>
+                      <p className="text-lg font-bold text-foreground">
+                        {revenueProjection.summary.averageGainPerWallet 
+                          ? formatRealCurrency(revenueProjection.summary.averageGainPerWallet)
+                          : '-'}
+                      </p>
+                    </div>
+                  </div>
+                  {/* Tooltip hover */}
+                  <div className="absolute bottom-full left-1/2 mb-2 hidden -translate-x-1/2 transform rounded bg-black px-2 py-1 text-xs text-white group-hover:block">
+                    Receita Total ({formatRealCurrency(revenueProjection.summary.totalRevenue)}) / Número de Carteiras Abertas ({revenueProjection.summary.openWallets})
+                    <div className="absolute left-1/2 top-full h-0 w-0 -translate-x-1/2 transform border-l-4 border-r-4 border-t-4 border-transparent border-t-black"></div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="p-3">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="mb-2 font-semibold text-foreground">
+                        Clientes com Menos de R$ 25k
+                      </p>
+                      <p className="text-lg font-bold text-foreground">
+                        {revenueProjection.summary.clientsUnder25k || 0}
                       </p>
                     </div>
                   </div>
@@ -283,7 +355,7 @@ export default function Dashboard() {
               </CardContent>
             </Card>
 
-            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
               <Card className="border-border bg-card transition-shadow hover:shadow-md">
                 <CardHeader>
                   <CardTitle className="text-foreground">
@@ -302,9 +374,6 @@ export default function Dashboard() {
                           outerRadius={45}
                           fill="hsl(var(--chart-4))"
                           dataKey="value"
-                          label={({ name, percent }) =>
-                            `${name}: ${(percent * 100).toFixed(1)}%`
-                          }
                         >
                           {performanceData.map((_, index) => (
                             <Cell
@@ -321,23 +390,6 @@ export default function Dashboard() {
                         <Legend />
                       </PieChart>
                     </ResponsiveContainer>
-                  </div>
-                  <div className="mt-6 text-center text-sm text-gray-300">
-                    <span
-                      style={{ color: COLORS_PERFORMANCE[0] }}
-                      className="font-semibold"
-                    >
-                      {revenueProjection.summary.openWallets -
-                        revenueProjection.summary.walletsLosingMoneyCount}
-                    </span>
-                    <span> carteiras com lucro • </span>
-                    <span
-                      style={{ color: COLORS_PERFORMANCE[1] }}
-                      className="font-semibold"
-                    >
-                      {revenueProjection.summary.walletsLosingMoneyCount}
-                    </span>
-                    <span> carteiras com prejuízo</span>
                   </div>
                 </CardContent>
               </Card>
@@ -360,9 +412,6 @@ export default function Dashboard() {
                           outerRadius={45}
                           fill="hsl(var(--chart-4))"
                           dataKey="value"
-                          label={({ name, percent }) =>
-                            `${name}: ${(percent * 100).toFixed(0)}%`
-                          }
                         >
                           {benchmarkComparisonData.map((_, index) => (
                             <Cell
@@ -380,26 +429,43 @@ export default function Dashboard() {
                       </PieChart>
                     </ResponsiveContainer>
                   </div>
-                  <div className="mt-6 text-center text-sm text-gray-300">
-                    <span
-                      style={{ color: COLORS_BENCHMARK[0] }}
-                      className="font-semibold"
-                    >
-                      {revenueProjection.summary.openWallets -
-                        revenueProjection.summary
-                          .benchmarkOutperformedWalletCount}
-                    </span>
-                    <span> carteiras superaram o Benchmark • </span>
-                    <span
-                      style={{ color: COLORS_BENCHMARK[1] }}
-                      className="font-semibold"
-                    >
-                      {
-                        revenueProjection.summary
-                          .benchmarkOutperformedWalletCount
-                      }
-                    </span>
-                    <span> carteiras não superaram o benchmark</span>
+                </CardContent>
+              </Card>
+
+              <Card className="border-border bg-card transition-shadow hover:shadow-md">
+                <CardHeader>
+                  <CardTitle className="text-foreground">
+                    Carteiras Abertas vs Gerando Receita
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-48">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart>
+                        <Pie
+                          data={revenueGeneratingData}
+                          cx="50%"
+                          cy="35%"
+                          labelLine={false}
+                          outerRadius={45}
+                          fill="hsl(var(--chart-4))"
+                          dataKey="value"
+                        >
+                          {revenueGeneratingData.map((_, index) => (
+                            <Cell
+                              key={`cell-${index}`}
+                              fill={
+                                COLORS_REVENUE_GENERATING[
+                                  index % COLORS_REVENUE_GENERATING.length
+                                ]
+                              }
+                            />
+                          ))}
+                        </Pie>
+                        <Tooltip formatter={(value) => [value, 'Quantidade']} />
+                        <Legend />
+                      </PieChart>
+                    </ResponsiveContainer>
                   </div>
                 </CardContent>
               </Card>
