@@ -35,6 +35,7 @@ import { ClientsInfoModal } from './client-info-modal'
 import { ConfirmContactModal } from './confirm-contact-modal'
 import { ExchangeInfoModal } from './exchange-info-modal'
 import { ComingSoonModal } from './coming-soon-modal'
+import { NotesModal } from './notes-modal'
 import { getAllCustomersOrganization } from '@/services/managementService'
 import {
   getInfosCustomer,
@@ -46,6 +47,7 @@ export function Infos() {
   const [isModalExchangeOpen, setIsModalExchangeOpen] = useState(false)
   const [isModalContactOpen, setisModalContactOpen] = useState(false)
   const [isComingSoonModalOpen, setIsComingSoonModalOpen] = useState(false)
+  const [isNotesModalOpen, setIsNotesModalOpen] = useState(false)
 
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState<any[]>([])
@@ -123,6 +125,14 @@ export function Infos() {
 
   const closeComingSoonModal = () => {
     setIsComingSoonModalOpen(false)
+  }
+
+  const openNotesModal = () => {
+    setIsNotesModalOpen(true)
+  }
+
+  const closeNotesModal = () => {
+    setIsNotesModalOpen(false)
   }
 
   // Função para filtrar clientes baseado na pesquisa
@@ -363,7 +373,7 @@ export function Infos() {
                 <CircleAlert className="h-4 w-4" />
                 Information
               </Button>
-              <Button className="btn-yellow h-11 px-4" onClick={openModal}>
+              <Button className="btn-yellow h-11 px-4" onClick={openNotesModal}>
                 <NotebookTabs className="h-4 w-4" />
                 Notes
               </Button>
@@ -738,6 +748,12 @@ export function Infos() {
       <ComingSoonModal
         isOpen={isComingSoonModalOpen}
         onClose={closeComingSoonModal}
+      />
+      <NotesModal
+        isOpen={isNotesModalOpen}
+        onClose={closeNotesModal}
+        customerName={walletI.user.name || 'Cliente'}
+        initialNotes=""
       />
     </div>
   )
