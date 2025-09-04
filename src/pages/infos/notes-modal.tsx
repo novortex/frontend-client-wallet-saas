@@ -36,11 +36,16 @@ export function NotesModal({
 
   const handleSave = async () => {
     if (!onSave) {
+      // TODO: Integrar com backend
+      // 1. Criar endpoint no backend: POST /api/customers/{customerId}/notes
+      // 2. Payload: { notes: string, customerName: string }
+      // 3. Implementar função no service: saveCustomerNotes(customerId, notes)
+      // 4. Para carregar: GET /api/customers/{customerId}/notes
+      // 5. Atualizar initialNotes com dados do backend
       toast({
         className: 'bg-yellow-500 border-0',
         title: 'Funcionalidade em desenvolvimento',
-        description:
-          'A funcionalidade de salvar notas será implementada em breve.',
+        description: 'Integração com backend será implementada em breve.',
       })
       onClose()
       return
