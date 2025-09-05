@@ -17,7 +17,7 @@ import {
   Download,
   NotebookTabs,
 } from 'lucide-react'
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, useCallback } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { formatDate } from '@/utils'
 import {
@@ -30,12 +30,14 @@ import {
 } from '@/components/ui/breadcrumb'
 import { useSignalStore } from '@/store/signalEffect'
 import { TWallet, TWalletInfos } from '@/types/wallet.type'
+import { TCustomersOrganization } from '@/types/customer.type'
 import { SwitchTheme } from '@/components/custom/switch-theme'
 import { ClientsInfoModal } from './client-info-modal'
 import { ConfirmContactModal } from './confirm-contact-modal'
 import { ExchangeInfoModal } from './exchange-info-modal'
 import { ComingSoonModal } from './coming-soon-modal'
 import { NotesModal } from './notes-modal'
+import { getClientNote, upsertClientNote } from '@/services/clientNoteService'
 import { getAllCustomersOrganization } from '@/services/managementService'
 import {
   getInfosCustomer,
@@ -48,11 +50,14 @@ export function Infos() {
   const [isModalContactOpen, setisModalContactOpen] = useState(false)
   const [isComingSoonModalOpen, setIsComingSoonModalOpen] = useState(false)
   const [isNotesModalOpen, setIsNotesModalOpen] = useState(false)
+  const [customerNotes, setCustomerNotes] = useState('')
 
   const [searchQuery, setSearchQuery] = useState('')
-  const [searchResults, setSearchResults] = useState<any[]>([])
+  const [searchResults, setSearchResults] = useState<TCustomersOrganization[]>(
+    [],
+  )
   const [showDropdown, setShowDropdown] = useState(false)
-  const [allCustomers, setAllCustomers] = useState<any[]>([])
+  const [allCustomers, setAllCustomers] = useState<TCustomersOrganization[]>([])
   const [selectedIndex, setSelectedIndex] = useState(-1)
   const searchInputRef = useRef<HTMLInputElement>(null)
   const dropdownRef = useRef<HTMLDivElement>(null)
@@ -127,12 +132,30 @@ export function Infos() {
     setIsComingSoonModalOpen(false)
   }
 
-  const openNotesModal = () => {
+  const openNotesModal = async () => {
     setIsNotesModalOpen(true)
+    if (!walletUuid) return
+    try {
+      const data = await getClientNote(walletUuid)
+      if (data) {
+        setCustomerNotes(data.content)
+      } else {
+        const created = await upsertClientNote(walletUuid, { content: '' })
+        setCustomerNotes(created.content)
+      }
+    } catch (e) {
+      setCustomerNotes('')
+    }
   }
 
   const closeNotesModal = () => {
     setIsNotesModalOpen(false)
+  }
+
+  const handleSaveNotes = async (notes: string) => {
+    if (!walletUuid) return
+    const saved = await upsertClientNote(walletUuid, { content: notes })
+    setCustomerNotes(saved.content)
   }
 
   // Função para filtrar clientes baseado na pesquisa
@@ -190,7 +213,7 @@ export function Infos() {
   }
 
   // Navegar para a página do cliente selecionado
-  const handleClientSelect = (client: any) => {
+  const handleClientSelect = (client: TCustomersOrganization) => {
     if (client.walletUuid) {
       navigate(`/clients/${client.walletUuid}/infos`)
       setSearchQuery('')
@@ -211,17 +234,17 @@ export function Infos() {
   }
 
   // Função para buscar o customerUuid usando o walletUuid
-  const findCustomerUuid = async (walletUuid: string) => {
+  const findCustomerUuid = useCallback(async (walletUuid: string) => {
     try {
       const customers = await getAllCustomersOrganization()
-      const customer = customers?.find((c: any) => c.walletUuid === walletUuid)
+      const customer = customers?.find((c) => c.walletUuid === walletUuid)
       console.log('Found customer by walletUuid:', customer)
       return customer?.uuid || null
     } catch (error) {
       console.error('Error finding customer:', error)
       return null
     }
-  }
+  }, [])
 
   useEffect(() => {
     const getInfo = async () => {
@@ -264,7 +287,7 @@ export function Infos() {
     }
 
     getInfo()
-  }, [navigate, walletUuid, signal])
+  }, [navigate, walletUuid, signal, findCustomerUuid])
 
   // Effect para carregar todos os clientes para pesquisa
   useEffect(() => {
@@ -759,7 +782,8 @@ export function Infos() {
         isOpen={isNotesModalOpen}
         onClose={closeNotesModal}
         customerName={walletI.user.name || 'Cliente'}
-        initialNotes=""
+        initialNotes={customerNotes}
+        onSave={handleSaveNotes}
       />
     </div>
   )
