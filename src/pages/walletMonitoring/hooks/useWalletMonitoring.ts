@@ -65,6 +65,8 @@ export function useWalletMonitoring() {
   // FRC specific pagination & filters (separate from balance/standardization)
   const [frcPage, setFrcPage] = useState(1)
   const [frcSelectedManagers, setFrcSelectedManagers] = useState<string[]>([])
+  const [frcLoading, setFrcLoading] = useState(false)
+  const [frcLoaded, setFrcLoaded] = useState(false)
   const [filters, setFilters] = useState<FilterOptions>({
     managersSelected: [],
     dateFrom: '',
@@ -325,6 +327,134 @@ export function useWalletMonitoring() {
     }
   }, [checkWalletStandardization])
 
+  // lazy loaded
+  const fetchFrcData = useCallback(async () => {
+    if (frcLoaded) return // Already loaded
+
+    try {
+      setFrcLoading(true)
+
+      const walletsResponse = await getWalletOrganization()
+
+      if (walletsResponse && Array.isArray(walletsResponse)) {
+        type WalletFrcBucket = 'FRC0' | 'FRC1' | 'FRC_GT1'
+
+        const managerFrcAccumulator = new Map<
+          string,
+          {
+            managerName: string
+            managerUuid?: string
+            totalClients: number
+            frc0Count: number
+            frc1Count: number
+            frcMoreThan1Count: number
+          }
+        >()
+
+        // Helper to classify wallet
+        const classifyWalletFrc = (
+          events: HistoricEntry[],
+          last?: string | null,
+          next?: string | null,
+        ): WalletFrcBucket => {
+          const lastDate = last ? new Date(last) : null
+          const nextDate = next ? new Date(next) : null
+          // Filter only BUY/SELL inside the cycle window
+          const relevant = events.filter((e) => {
+            if (e.historyType !== 'BUY_ASSET' && e.historyType !== 'SELL_ASSET')
+              return false
+            const created = new Date(e.createAt)
+            if (lastDate && created < lastDate) return false
+            if (nextDate && created >= nextDate) return false
+            return true
+          })
+          // Group by calendar day (1-day window). Multiple trades same day = 1 rebalance.
+          const uniqueDays = new Set<string>()
+          relevant.forEach((e) => {
+            const d = new Date(e.createAt)
+            // Using UTC date component; adjust if business timezone differs.
+            const dayKey = d.toISOString().slice(0, 10) // YYYY-MM-DD
+            uniqueDays.add(dayKey)
+          })
+          const rebalanceCount = uniqueDays.size
+          if (rebalanceCount === 0) return 'FRC0'
+          if (rebalanceCount === 1) return 'FRC1'
+          return 'FRC_GT1'
+        }
+
+        for (const w of walletsResponse) {
+          try {
+            const history = await getWalletHistoric(w.walletUuid)
+            const bucket = classifyWalletFrc(
+              history || [],
+              w.lastBalance,
+              w.nextBalance,
+            )
+            const mgr = w.managerName || 'N/A'
+            const selectedManager = managerFrcAccumulator.get(mgr) || {
+              managerName: mgr,
+              managerUuid: undefined,
+              totalClients: 0,
+              frc0Count: 0,
+              frc1Count: 0,
+              frcMoreThan1Count: 0,
+            }
+            selectedManager.totalClients += 1
+            if (bucket === 'FRC0') selectedManager.frc0Count += 1
+            else if (bucket === 'FRC1') selectedManager.frc1Count += 1
+            else selectedManager.frcMoreThan1Count += 1
+            managerFrcAccumulator.set(mgr, selectedManager)
+          } catch (err) {
+            // Ignore individual history errors so rest can proceed
+            console.error(
+              'Error fetching history for wallet',
+              w.walletUuid,
+              err,
+            )
+          }
+        }
+
+        // Build FrcStats objects
+        const computedFrcStats: FrcStats[] = Array.from(
+          managerFrcAccumulator.values(),
+        ).map((m) => {
+          const { totalClients, frc0Count, frc1Count, frcMoreThan1Count } = m
+          return {
+            managerName: m.managerName,
+            managerUuid: m.managerUuid || '',
+            totalClients,
+            frc0Count,
+            frc1Count,
+            frcMoreThan1Count,
+            frc0Percent:
+              totalClients > 0 ? (frc0Count / totalClients) * 100 : 0,
+            frc1Percent:
+              totalClients > 0 ? (frc1Count / totalClients) * 100 : 0,
+            frcMoreThan1Percent:
+              totalClients > 0 ? (frcMoreThan1Count / totalClients) * 100 : 0,
+            period: 'current-cycle',
+          }
+        })
+
+        // Update processed managers with FRC data
+        setProcessedManagers((prev) =>
+          prev.map((manager) => {
+            const frcData = computedFrcStats.find(
+              (frc) => frc.managerName === manager.managerName,
+            )
+            return { ...manager, frcData }
+          }),
+        )
+
+        setFrcLoaded(true)
+      }
+    } catch (error) {
+      console.error('Error fetching FRC data:', error)
+    } finally {
+      setFrcLoading(false)
+    }
+  }, [frcLoaded])
+
   const [searchTerm, setSearchTerm] = useState('')
 
   // Pagination constants
@@ -547,5 +677,7 @@ export function useWalletMonitoring() {
     paginatedFrcManagers,
     frcSelectedManagers,
     setFrcSelectedManagers,
+    frcLoading,
+    fetchFrcData,
   }
 }
