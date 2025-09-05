@@ -64,6 +64,16 @@ jest.mock('@/components/custom/loading', () => ({
   Loading: () => <div data-testid="loading">Loading...</div>,
 }))
 
+// Mock do ViewToggle
+jest.mock('../../../pages/wallets/components/view-toggle', () => ({
+  ViewToggle: () => <div data-testid="view-toggle">ViewToggle</div>,
+}))
+
+// Mock do WalletsTableView
+jest.mock('../../../pages/wallets/components/wallets-table-view', () => ({
+  WalletsTableView: () => <div data-testid="wallets-table-view">Table View</div>,
+}))
+
 // Mock da função formatDate
 jest.mock('@/utils', () => ({
   formatDate: (date: string) => {
@@ -137,6 +147,16 @@ describe('Wallet Page', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     mockToast.mockClear()
+    // Force card mode for tests by mocking localStorage
+    Object.defineProperty(window, 'localStorage', {
+      value: {
+        getItem: jest.fn(() => 'card'), // Always return card mode
+        setItem: jest.fn(),
+        removeItem: jest.fn(),
+        clear: jest.fn(),
+      },
+      writable: true,
+    })
     ;(getWalletOrganization as jest.Mock).mockResolvedValue(mockClients)
     ;(getWalletsCash as jest.Mock).mockResolvedValue(mockWalletsCash)
   })

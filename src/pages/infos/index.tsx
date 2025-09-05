@@ -104,7 +104,6 @@ export function Infos() {
     setIsModalOpen(false)
   }
 
-
   const closeModalopenModalExchange = () => {
     setIsModalExchangeOpen(false)
   }
@@ -124,7 +123,6 @@ export function Infos() {
   const closeComingSoonModal = () => {
     setIsComingSoonModalOpen(false)
   }
-
 
   // Função para filtrar clientes baseado na pesquisa
   const filterCustomers = (query: string) => {
@@ -257,7 +255,6 @@ export function Infos() {
     getInfo()
   }, [navigate, walletUuid, signal])
 
-
   // Effect para carregar todos os clientes para pesquisa
   useEffect(() => {
     const loadAllCustomers = async () => {
@@ -361,36 +358,33 @@ export function Infos() {
             </div>
 
             <div className="grid grid-cols-2 gap-3 md:grid-cols-5">
-              <Button
-                className="h-11 btn-yellow px-4"
-                onClick={openModal}
-              >
+              <Button className="btn-yellow h-11 px-4" onClick={openModal}>
                 <CircleAlert className="h-4 w-4" />
                 Information
               </Button>
               <Button
-                className="h-11 btn-yellow px-4"
+                className="btn-yellow h-11 px-4"
                 onClick={openModalContact}
               >
                 <PhoneCall className="h-4 w-4" />
                 Contact confirm
               </Button>
               <Button
-                className="h-11 btn-yellow px-4"
+                className="btn-yellow h-11 px-4"
                 onClick={() => navigate(`/wallet/${walletUuid}/assets`)}
               >
                 <Wallet className="h-4 w-4" />
                 Wallet
               </Button>
               <Button
-                className="h-11 btn-yellow px-4"
+                className="btn-yellow h-11 px-4"
                 onClick={() => navigate(`/wallet/${walletUuid}/graphs`)}
               >
                 <BarChartBigIcon className="h-4 w-4" />
                 Graphics
               </Button>
               <Button
-                className="h-11 btn-yellow px-4"
+                className="btn-yellow h-11 px-4"
                 onClick={openComingSoonModal}
               >
                 <Download className="h-4 w-4" />
@@ -428,7 +422,7 @@ export function Infos() {
                     Risk Profile
                   </p>
                   <p className="text-base font-semibold text-foreground">
-                    STANDARD
+                    {walletI.riskProfile || '-'}
                   </p>
                 </div>
               </div>
@@ -506,9 +500,12 @@ export function Infos() {
                   <p className="text-2xl font-bold text-foreground">
                     R$
                     {walletI.currentValueBenchmark !== undefined
-                      ? Number(walletI.currentValueBenchmark).toLocaleString('en-US', {
-                          minimumFractionDigits: 2,
-                        })
+                      ? Number(walletI.currentValueBenchmark).toLocaleString(
+                          'en-US',
+                          {
+                            minimumFractionDigits: 2,
+                          },
+                        )
                       : '0.06'}
                   </p>
                 </div>
@@ -529,6 +526,20 @@ export function Infos() {
                   </p>
                   <p className="text-2xl font-bold text-foreground">
                     {walletI.benchmark.name || 'CDI'}
+                  </p>
+                </div>
+                <div className="flex min-h-[100px] flex-col justify-between rounded-lg border border-border bg-muted/30 p-4">
+                  <p className="mb-2 text-sm font-medium text-muted-foreground">
+                    Initial Fee Status
+                  </p>
+                  <p
+                    className={`text-2xl font-bold ${
+                      walletI.initialFeePaid
+                        ? 'text-success'
+                        : 'text-destructive'
+                    }`}
+                  >
+                    {walletI.initialFeePaid ? 'Paid' : 'Pending'}
                   </p>
                 </div>
               </div>
@@ -576,7 +587,9 @@ export function Infos() {
                       Last Portfolio Call
                     </p>
                     <p className="text-xl font-bold text-foreground">
-                      {walletI.lastMonthCloseDate !== null && walletI.lastMonthCloseDate !== '' && walletI.lastMonthCloseDate !== undefined
+                      {walletI.lastMonthCloseDate !== null &&
+                      walletI.lastMonthCloseDate !== '' &&
+                      walletI.lastMonthCloseDate !== undefined
                         ? formatDate(walletI.lastMonthCloseDate?.toString())
                         : '-'}
                     </p>
@@ -586,7 +599,8 @@ export function Infos() {
                       Next Portfolio Call
                     </p>
                     <p className="text-xl font-bold text-foreground">
-                      {walletI.monthCloseDate !== null && walletI.monthCloseDate !== ''
+                      {walletI.monthCloseDate !== null &&
+                      walletI.monthCloseDate !== ''
                         ? formatDate(walletI.monthCloseDate?.toString())
                         : '-'}
                     </p>
@@ -659,27 +673,18 @@ export function Infos() {
                     </p>
                   </div>
                   <div className="flex min-h-[100px] flex-col justify-between rounded-lg border border-border bg-muted/30 p-4">
-                    <p className="mb-2 text-sm font-medium text-muted-foreground">
-                      Initial Fee Status
-                    </p>
-                    <p
-                      className={`text-xl font-bold ${
-                        walletI.initialFeePaid
-                          ? 'text-success'
-                          : 'text-destructive'
-                      }`}
-                    >
-                      {walletI.initialFeePaid ? 'Paid' : 'Pending'}
-                    </p>
-                  </div>
-                  <div className="flex min-h-[100px] flex-col justify-between rounded-lg border border-border bg-muted/30 p-4">
                     <div className="mb-2 flex items-center justify-between">
                       <p className="text-sm font-medium text-muted-foreground">
                         Account Email
                       </p>
-                      {walletI.accountEmail && <CopyButton text={walletI.accountEmail} />}
+                      {walletI.accountEmail && (
+                        <CopyButton text={walletI.accountEmail} />
+                      )}
                     </div>
-                    <p className="truncate text-xl font-bold text-foreground" title={walletI.accountEmail || '-'}>
+                    <p
+                      className="truncate text-xl font-bold text-foreground"
+                      title={walletI.accountEmail || '-'}
+                    >
                       {walletI.accountEmail || '-'}
                     </p>
                   </div>
@@ -688,10 +693,31 @@ export function Infos() {
                       <p className="text-sm font-medium text-muted-foreground">
                         Email Password
                       </p>
-                      {walletI.emailPassword && <CopyButton text={walletI.emailPassword} />}
+                      {walletI.emailPassword && (
+                        <CopyButton text={walletI.emailPassword} />
+                      )}
                     </div>
-                    <p className="truncate text-xl font-bold text-foreground" title={walletI.emailPassword || '-'}>
+                    <p
+                      className="truncate text-xl font-bold text-foreground"
+                      title={walletI.emailPassword || '-'}
+                    >
                       {walletI.emailPassword || '-'}
+                    </p>
+                  </div>
+                  <div className="flex min-h-[100px] flex-col justify-between rounded-lg border border-border bg-muted/30 p-4">
+                    <div className="mb-2 flex items-center justify-between">
+                      <p className="text-sm font-medium text-muted-foreground">
+                        Exchange Password
+                      </p>
+                      {walletI.exchangePassword && (
+                        <CopyButton text={walletI.exchangePassword} />
+                      )}
+                    </div>
+                    <p
+                      className="truncate text-xl font-bold text-foreground"
+                      title={walletI.exchangePassword || '-'}
+                    >
+                      {walletI.exchangePassword || '-'}
                     </p>
                   </div>
                 </div>
@@ -724,7 +750,6 @@ export function Infos() {
         isOpen={isComingSoonModalOpen}
         onClose={closeComingSoonModal}
       />
-      
     </div>
   )
 }
