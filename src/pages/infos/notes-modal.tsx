@@ -47,11 +47,65 @@ export function NotesModal({
       })
       onClose()
     } catch (error) {
-      toast({
-        className: 'bg-red-500 border-0',
-        title: 'Save error',
-        description: 'Could not save notes. Please try again.',
-      })
+      const err = error as unknown as {
+        response?: { data?: Record<string, unknown>; status?: number }
+      }
+      const data = (err?.response?.data as Record<string, unknown>) || {}
+      const status = err?.response?.status
+      const reason = typeof data.reason === 'string' ? data.reason : ''
+      const code = typeof data.code === 'string' ? data.code : ''
+      const errorKey = typeof data.error === 'string' ? data.error : ''
+      const message = typeof data.message === 'string' ? data.message : ''
+      const isMalicious =
+        reason === 'XSS_DETECTED' ||
+        code === 'INVALID_CONTENT' ||
+        errorKey === 'MALICIOUS_CONTENT' ||
+        /unsafe|malicious|xss/i.test(message) ||
+        (status && [400, 422].includes(status) && /script|<|>/i.test(notes))
+
+      if (isMalicious) {
+        const serverMsg: string =
+          message || 'Potentially unsafe content detected and blocked.'
+        const sanitizedContent =
+          typeof data.sanitizedContent === 'string' ? data.sanitizedContent : ''
+        const sanitizedAlt =
+          typeof data.sanitized === 'string' ? data.sanitized : ''
+        const sanitized: string = sanitizedContent || sanitizedAlt
+        const preview = notes
+          .replace(/\s+/g, ' ')
+          .slice(0, 160)
+          .concat(notes.length > 160 ? '…' : '')
+
+        toast({
+          className:
+            'border-0 bg-amber-500 text-black dark:bg-amber-400 dark:text-black',
+          title: 'Unsafe content blocked',
+          description: (
+            <div className="space-y-2 text-xs">
+              <p className="text-sm font-medium leading-snug">{serverMsg}</p>
+              <div className="rounded bg-black/10 p-2 dark:bg-black/20">
+                <span className="font-semibold">Attempted:</span> {preview}
+              </div>
+              {sanitized && (
+                <div className="rounded bg-black/10 p-2 dark:bg-black/20">
+                  <span className="font-semibold">Sanitized stored:</span>{' '}
+                  {sanitized.slice(0, 160)}
+                  {sanitized.length > 160 ? '…' : ''}
+                </div>
+              )}
+              <p className="leading-snug text-muted-foreground">
+                Please remove script / HTML tags and try saving again.
+              </p>
+            </div>
+          ),
+        })
+      } else {
+        toast({
+          className: 'bg-red-500 border-0',
+          title: 'Save error',
+          description: 'Could not save notes. Please try again.',
+        })
+      }
     } finally {
       setIsSaving(false)
     }
