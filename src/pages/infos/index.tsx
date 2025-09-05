@@ -368,38 +368,44 @@ export function Infos() {
               </h1>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 md:grid-cols-5">
-              <Button className="btn-yellow h-11 px-4" onClick={openModal}>
+            <div className="flex w-full flex-nowrap gap-3 pb-2">
+              <Button
+                className="btn-yellow h-11 min-w-[140px] flex-1 px-4"
+                onClick={openModal}
+              >
                 <CircleAlert className="h-4 w-4" />
                 Information
               </Button>
-              <Button className="btn-yellow h-11 px-4" onClick={openNotesModal}>
+              <Button
+                className="btn-yellow h-11 min-w-[140px] flex-1 px-4"
+                onClick={openNotesModal}
+              >
                 <NotebookTabs className="h-4 w-4" />
                 Notes
               </Button>
               <Button
-                className="btn-yellow h-11 px-4"
+                className="btn-yellow h-11 min-w-[140px] flex-1 px-4"
                 onClick={openModalContact}
               >
                 <PhoneCall className="h-4 w-4" />
                 Contact confirm
               </Button>
               <Button
-                className="btn-yellow h-11 px-4"
+                className="btn-yellow h-11 min-w-[140px] flex-1 px-4"
                 onClick={() => navigate(`/wallet/${walletUuid}/assets`)}
               >
                 <Wallet className="h-4 w-4" />
                 Wallet
               </Button>
               <Button
-                className="btn-yellow h-11 px-4"
+                className="btn-yellow h-11 min-w-[140px] flex-1 px-4"
                 onClick={() => navigate(`/wallet/${walletUuid}/graphs`)}
               >
                 <BarChartBigIcon className="h-4 w-4" />
                 Graphics
               </Button>
               <Button
-                className="btn-yellow h-11 px-4"
+                className="btn-yellow h-11 min-w-[140px] flex-1 px-4"
                 onClick={openComingSoonModal}
               >
                 <Download className="h-4 w-4" />
