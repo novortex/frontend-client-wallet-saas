@@ -137,12 +137,7 @@ export function Infos() {
     if (!walletUuid) return
     try {
       const data = await getClientNote(walletUuid)
-      if (data) {
-        setCustomerNotes(data.content)
-      } else {
-        const created = await upsertClientNote(walletUuid, { content: '' })
-        setCustomerNotes(created.content)
-      }
+      setCustomerNotes(data?.content ?? '')
     } catch (e) {
       setCustomerNotes('')
     }
@@ -155,7 +150,7 @@ export function Infos() {
   const handleSaveNotes = async (notes: string) => {
     if (!walletUuid) return
     const saved = await upsertClientNote(walletUuid, { content: notes })
-    setCustomerNotes(saved.content)
+    setCustomerNotes(saved.content ?? notes)
   }
 
   // Função para filtrar clientes baseado na pesquisa
