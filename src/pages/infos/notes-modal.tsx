@@ -42,15 +42,15 @@ export function NotesModal({
       await Promise.resolve(onSave(notes))
       toast({
         className: 'bg-green-500 border-0',
-        title: 'Notas salvas!',
-        description: 'As notas do cliente foram atualizadas com sucesso.',
+        title: 'Notes saved!',
+        description: 'Client notes updated successfully.',
       })
       onClose()
     } catch (error) {
       toast({
         className: 'bg-red-500 border-0',
-        title: 'Erro ao salvar',
-        description: 'Não foi possível salvar as notas. Tente novamente.',
+        title: 'Save error',
+        description: 'Could not save notes. Please try again.',
       })
     } finally {
       setIsSaving(false)
@@ -70,7 +70,7 @@ export function NotesModal({
       <DialogContent className="mx-auto w-full max-w-2xl border-0 dark:bg-[#1C1C1C] dark:text-white">
         <DialogHeader>
           <DialogTitle className="text-2xl dark:text-white">
-            Notas do Cliente - {customerName}
+            Client Notes - {customerName}
           </DialogTitle>
         </DialogHeader>
 
@@ -80,7 +80,7 @@ export function NotesModal({
             onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
               setNotes(e.target.value)
             }
-            placeholder="Digite suas notas sobre o cliente aqui... (ex: data de aniversário, preferências, lembretes importantes, etc.)"
+            placeholder="Write your notes about the client here... (e.g., birthday, preferences, important reminders, etc.)"
             className="min-h-[300px] w-full resize-none rounded-md border-2 border-border bg-background p-3 text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-[#323232] dark:bg-[#131313] dark:text-white"
           />
         </div>
@@ -91,14 +91,14 @@ export function NotesModal({
             variant="outline"
             className="border-border bg-background text-foreground hover:bg-muted dark:border-[#323232] dark:bg-[#131313] dark:text-white dark:hover:bg-[#171717]"
           >
-            Cancelar
+            Cancel
           </Button>
           <Button
             onClick={handleSave}
             disabled={isSaving}
             className="btn-yellow"
           >
-            {isSaving ? 'Salvando...' : 'Salvar Notas'}
+            {isSaving ? 'Saving...' : 'Save Notes'}
           </Button>
         </DialogFooter>
 
@@ -106,11 +106,10 @@ export function NotesModal({
           <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 p-4">
             <div className="w-full max-w-sm rounded-lg border border-border bg-popover p-5 shadow-lg">
               <h4 className="mb-2 text-lg font-semibold text-popover-foreground">
-                Descartar alterações?
+                Discard changes?
               </h4>
               <p className="mb-5 text-sm text-muted-foreground">
-                Você tem alterações não salvas. Tem certeza que deseja
-                descartá-las?
+                You have unsaved changes. Are you sure you want to discard them?
               </p>
               <div className="flex justify-end gap-3">
                 <Button
@@ -118,7 +117,7 @@ export function NotesModal({
                   onClick={() => setShowUnsavedConfirm(false)}
                   className="border-border bg-background text-foreground hover:bg-muted dark:border-[#323232] dark:bg-[#131313] dark:text-white dark:hover:bg-[#171717]"
                 >
-                  Voltar
+                  Back
                 </Button>
                 <Button
                   className="btn-yellow"
@@ -127,7 +126,7 @@ export function NotesModal({
                     onClose()
                   }}
                 >
-                  Descartar
+                  Discard
                 </Button>
               </div>
             </div>
