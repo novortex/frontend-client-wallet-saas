@@ -26,6 +26,7 @@ export function NotesModal({
 }: NotesModalProps) {
   const [notes, setNotes] = useState(initialNotes)
   const [isSaving, setIsSaving] = useState(false)
+  const [showUnsavedConfirm, setShowUnsavedConfirm] = useState(false)
   const { toast } = useToast()
 
   useEffect(() => {
@@ -56,18 +57,16 @@ export function NotesModal({
     }
   }
 
-  const handleClose = () => {
+  const attemptClose = () => {
     if (notes !== initialNotes) {
-      const confirm = window.confirm(
-        'Você tem alterações não salvas. Deseja descartar as mudanças?',
-      )
-      if (!confirm) return
+      setShowUnsavedConfirm(true)
+    } else {
+      onClose()
     }
-    onClose()
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleClose}>
+    <Dialog open={isOpen} onOpenChange={(open) => !open && attemptClose()}>
       <DialogContent className="mx-auto w-full max-w-2xl border-0 dark:bg-[#1C1C1C] dark:text-white">
         <DialogHeader>
           <DialogTitle className="text-2xl dark:text-white">
@@ -88,7 +87,7 @@ export function NotesModal({
 
         <DialogFooter className="flex gap-3">
           <Button
-            onClick={handleClose}
+            onClick={attemptClose}
             variant="outline"
             className="border-border bg-background text-foreground hover:bg-muted dark:border-[#323232] dark:bg-[#131313] dark:text-white dark:hover:bg-[#171717]"
           >
@@ -102,6 +101,38 @@ export function NotesModal({
             {isSaving ? 'Salvando...' : 'Salvar Notas'}
           </Button>
         </DialogFooter>
+
+        {showUnsavedConfirm && (
+          <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 p-4">
+            <div className="w-full max-w-sm rounded-lg border border-border bg-popover p-5 shadow-lg">
+              <h4 className="mb-2 text-lg font-semibold text-popover-foreground">
+                Descartar alterações?
+              </h4>
+              <p className="mb-5 text-sm text-muted-foreground">
+                Você tem alterações não salvas. Tem certeza que deseja
+                descartá-las?
+              </p>
+              <div className="flex justify-end gap-3">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowUnsavedConfirm(false)}
+                  className="border-border bg-background text-foreground hover:bg-muted dark:border-[#323232] dark:bg-[#131313] dark:text-white dark:hover:bg-[#171717]"
+                >
+                  Voltar
+                </Button>
+                <Button
+                  className="btn-yellow"
+                  onClick={() => {
+                    setShowUnsavedConfirm(false)
+                    onClose()
+                  }}
+                >
+                  Descartar
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   )
