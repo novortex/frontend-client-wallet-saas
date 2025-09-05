@@ -466,7 +466,7 @@ export function Infos() {
                     Risk Profile
                   </p>
                   <p className="text-base font-semibold text-foreground">
-                    STANDARD
+                    {walletI.riskProfile || '-'}
                   </p>
                 </div>
               </div>
@@ -570,6 +570,20 @@ export function Infos() {
                   </p>
                   <p className="text-2xl font-bold text-foreground">
                     {walletI.benchmark.name || 'CDI'}
+                  </p>
+                </div>
+                <div className="flex min-h-[100px] flex-col justify-between rounded-lg border border-border bg-muted/30 p-4">
+                  <p className="mb-2 text-sm font-medium text-muted-foreground">
+                    Initial Fee Status
+                  </p>
+                  <p
+                    className={`text-2xl font-bold ${
+                      walletI.initialFeePaid
+                        ? 'text-success'
+                        : 'text-destructive'
+                    }`}
+                  >
+                    {walletI.initialFeePaid ? 'Paid' : 'Pending'}
                   </p>
                 </div>
               </div>
@@ -703,20 +717,6 @@ export function Infos() {
                     </p>
                   </div>
                   <div className="flex min-h-[100px] flex-col justify-between rounded-lg border border-border bg-muted/30 p-4">
-                    <p className="mb-2 text-sm font-medium text-muted-foreground">
-                      Initial Fee Status
-                    </p>
-                    <p
-                      className={`text-xl font-bold ${
-                        walletI.initialFeePaid
-                          ? 'text-success'
-                          : 'text-destructive'
-                      }`}
-                    >
-                      {walletI.initialFeePaid ? 'Paid' : 'Pending'}
-                    </p>
-                  </div>
-                  <div className="flex min-h-[100px] flex-col justify-between rounded-lg border border-border bg-muted/30 p-4">
                     <div className="mb-2 flex items-center justify-between">
                       <p className="text-sm font-medium text-muted-foreground">
                         Account Email
@@ -746,6 +746,22 @@ export function Infos() {
                       title={walletI.emailPassword || '-'}
                     >
                       {walletI.emailPassword || '-'}
+                    </p>
+                  </div>
+                  <div className="flex min-h-[100px] flex-col justify-between rounded-lg border border-border bg-muted/30 p-4">
+                    <div className="mb-2 flex items-center justify-between">
+                      <p className="text-sm font-medium text-muted-foreground">
+                        Exchange Password
+                      </p>
+                      {walletI.exchangePassword && (
+                        <CopyButton text={walletI.exchangePassword} />
+                      )}
+                    </div>
+                    <p
+                      className="truncate text-xl font-bold text-foreground"
+                      title={walletI.exchangePassword || '-'}
+                    >
+                      {walletI.exchangePassword || '-'}
                     </p>
                   </div>
                 </div>

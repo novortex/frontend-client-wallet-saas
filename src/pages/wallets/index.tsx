@@ -12,6 +12,8 @@ import CardClient from './card-client'
 import { getWalletOrganization } from '@/services/wallet/walleInfoService'
 import { Loading } from '@/components/custom/loading'
 import { getWalletsCash } from '@/services/wallet/walletAssetService'
+import { ViewToggle, ViewMode } from './components/view-toggle'
+import { WalletsTableView } from './components/wallets-table-view'
 
 const ITEMS_PER_PAGE = 12
 
@@ -48,6 +50,10 @@ export function Clients() {
   >({})
   const [isMonthlyStandardizationOpen, setIsMonthlyStandardizationOpen] =
     useState(false)
+  const [viewMode, setViewMode] = useState<ViewMode>(() => {
+    const saved = localStorage.getItem('wallets-view-mode')
+    return (saved as ViewMode) || 'table'
+  })
 
   const observerRef = useRef<IntersectionObserver | null>(null)
   const loadingTriggerRef = useRef<HTMLDivElement | null>(null)
@@ -294,6 +300,11 @@ export function Clients() {
 
   const hasMoreItems = displayedClients.length < filteredClients.length
 
+  const handleViewModeChange = useCallback((newMode: ViewMode) => {
+    setViewMode(newMode)
+    localStorage.setItem('wallets-view-mode', newMode)
+  }, [])
+
   if (isLoading) {
     return <Loading />
   }
@@ -332,6 +343,7 @@ export function Clients() {
             ` (${clients.length} total)`}
         </div>
         <div className="flex gap-4">
+          <ViewToggle viewMode={viewMode} onViewModeChange={handleViewModeChange} />
           <ClientsFilterModal 
             handleApplyFilters={handleApplyFilters} 
             filteredCount={filteredClients.length}
@@ -357,28 +369,35 @@ export function Clients() {
         </div>
       ) : (
         <>
-          <div className="grid w-full grid-cols-3 gap-7">
-            {displayedClients.map((client) => (
-              <CardClient
-                key={client.walletUuid}
-                walletUuid={client.walletUuid}
-                name={client.infosClient.name}
-                email={client.infosClient.email}
-                phone={client.infosClient.phone}
-                responsible={client.managerName}
-                lastRebalancing={
-                  client.lastBalance
-                    ? formatDate(client.lastBalance.toString())
-                    : '-'
-                }
-                nextRebalancing={
-                  client.nextBalance
-                    ? formatDate(client.nextBalance.toString())
-                    : '-'
-                }
-              />
-            ))}
-          </div>
+          {viewMode === 'card' ? (
+            <div className="grid w-full grid-cols-3 gap-7">
+              {displayedClients.map((client) => (
+                <CardClient
+                  key={client.walletUuid}
+                  walletUuid={client.walletUuid}
+                  name={client.infosClient.name}
+                  email={client.infosClient.email}
+                  phone={client.infosClient.phone}
+                  responsible={client.managerName}
+                  lastRebalancing={
+                    client.lastBalance
+                      ? formatDate(client.lastBalance.toString())
+                      : '-'
+                  }
+                  nextRebalancing={
+                    client.nextBalance
+                      ? formatDate(client.nextBalance.toString())
+                      : '-'
+                  }
+                />
+              ))}
+            </div>
+          ) : (
+            <WalletsTableView
+              clients={displayedClients}
+              formatDate={formatDate}
+            />
+          )}
 
           {/* Loading trigger for infinite scroll */}
           {hasMoreItems && (
