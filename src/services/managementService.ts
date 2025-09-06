@@ -84,6 +84,16 @@ export async function getClientSegmentAnalysis() {
   }
 }
 
+export async function getManagerBreakdown() {
+  try {
+    const result = await instance.get('analytic/manager-breakdown')
+    return result.data
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
+}
+
 export async function invalidateAnalyticsCache() {
   try {
     // Como não temos acesso direto ao organizationUuid no frontend,
