@@ -28,15 +28,17 @@ export function OverviewTab({ revenueProjection, allocationArray }: OverviewTabP
       {/* KPIs */}
       <KPICards data={revenueProjection.summary} />
 
+      {/* Charts Grid */}
+      <div className="mb-6">
+        <ChartsGrid
+          performanceData={performanceData}
+          benchmarkComparisonData={benchmarkComparisonData}
+          revenueGeneratingData={revenueGeneratingData}
+        />
+      </div>
+
       {/* Asset Allocation Table */}
       <AssetAllocationTable data={allocationArray} colors={colors} />
-
-      {/* Charts Grid */}
-      <ChartsGrid
-        performanceData={performanceData}
-        benchmarkComparisonData={benchmarkComparisonData}
-        revenueGeneratingData={revenueGeneratingData}
-      />
     </div>
   )
 }

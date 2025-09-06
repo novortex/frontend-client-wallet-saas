@@ -66,20 +66,18 @@ const Dashboard = () => {
   }
 
   // Prepare allocation array from asset data
-  const allocationArray = Object.entries(revenueProjection.byAsset)
+  const allocationArray = Object.entries(revenueProjection.byAsset || {})
     .map(([name, data]: [string, any]) => {
-      const totalAUM = Object.values(revenueProjection.byAsset).reduce(
-        (sum: number, asset: any) => sum + (asset.aum || 0),
-        0
-      )
       return {
         name,
-        total: data.aum || 0,
-        percentage: totalAUM > 0 ? ((data.aum || 0) / totalAUM) * 100 : 0,
-        walletCount: data.count || 0,
+        total: data?.value || 0,
+        percentage: data?.percentage || 0,
+        walletCount: data?.walletCount || 0,
       }
     })
+    .filter(item => item.total > 0) // Remove entries with no data
     .sort((a, b) => b.total - a.total)
+
 
   const handleTabChange = (tab: TabType) => {
     setActiveTab(tab)

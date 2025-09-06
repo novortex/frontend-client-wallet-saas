@@ -50,9 +50,10 @@ export function PieChartCard({
                 cy="50%"
                 innerRadius={innerRadius}
                 outerRadius={outerRadius}
-                paddingAngle={5}
+                paddingAngle={2}
                 dataKey={dataKey}
                 nameKey={nameKey}
+                fill="#8884d8"
               >
                 {data.map((_, index) => (
                   <Cell 

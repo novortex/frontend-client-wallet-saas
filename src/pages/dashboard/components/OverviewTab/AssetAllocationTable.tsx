@@ -14,6 +14,24 @@ interface AssetAllocationTableProps {
 }
 
 export function AssetAllocationTable({ data, colors }: AssetAllocationTableProps) {
+
+  if (!data || data.length === 0) {
+    return (
+      <Card className="border-border bg-card transition-shadow hover:shadow-md">
+        <CardHeader>
+          <CardTitle className="text-foreground">
+            Alocação por Ativo
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="text-center text-muted-foreground py-8">
+            Nenhum dado de alocação de ativos disponível no momento.
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
+
   return (
     <Card className="border-border bg-card transition-shadow hover:shadow-md">
       <CardHeader>

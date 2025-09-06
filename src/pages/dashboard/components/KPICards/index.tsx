@@ -18,14 +18,6 @@ export function KPICards({ data }: KPICardsProps) {
       value: data?.profitableWallets || '-',
     },
     {
-      title: 'Carteiras Perdendo Dinheiro',
-      value: data?.walletsLosingMoneyCount || 0,
-    },
-    {
-      title: 'Carteiras que Superaram Benchmark',
-      value: data?.benchmarkOutperformedWalletCount || 0,
-    },
-    {
       title: 'AUM Total',
       value: data?.totalAUM || 0,
       formatter: formatRealCurrency,

@@ -37,8 +37,8 @@ export function ManagerTab({ revenueProjection }: ManagerTabProps) {
         ]}
       />
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        {/* Receita por Manager */}
+      {/* Primeira linha de gráficos - Receita e Investimento Médio */}
+      <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
         <BarChartCard
           title="Receita por Manager"
           data={managerData}
@@ -47,13 +47,33 @@ export function ManagerTab({ revenueProjection }: ManagerTabProps) {
           maxNameLength={10}
         />
 
-        {/* Investimento Médio por Manager */}
         <BarChartCard
           title="Investimento Médio por Manager"
           data={managerData}
           dataKey="averageInvestment"
           chartType="investment"
           maxNameLength={10}
+        />
+      </div>
+
+      {/* Segunda linha de gráficos - AUM e Número de Carteiras */}
+      <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <BarChartCard
+          title="Distribuição de AUM por Manager"
+          data={managerData}
+          dataKey="aum"
+          chartType="aum"
+          maxNameLength={10}
+          yAxisFormatter={(v) => `${(v / 1_000_000).toFixed(1)}M`}
+        />
+
+        <BarChartCard
+          title="Número de carteiras por Manager"
+          data={managerData}
+          dataKey="count"
+          chartType="count"
+          maxNameLength={10}
+          tooltipFormatter={(v: number) => [v, 'Carteiras']}
         />
       </div>
     </div>
