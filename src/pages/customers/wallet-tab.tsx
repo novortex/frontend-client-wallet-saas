@@ -226,15 +226,26 @@ export function WalletTab({
         </div>
 
         {showUpdateCheckbox && (
-          <div className="mt-3 flex items-center gap-3">
-            <Checkbox
-              className="border-gray-500"
-              checked={isUpdateWithBaseWallet}
-              onCheckedChange={(checked) =>
-                setIsUpdateWithBaseWallet(checked as boolean)
-              }
-            />
-            <Label>Update with base wallet?</Label>
+          <div className="mt-4 rounded-lg border-2 border-yellow-400 bg-yellow-50 dark:bg-yellow-900/20 dark:border-yellow-500 p-4 shadow-md">
+            <div className="flex items-start gap-3">
+              <Checkbox
+                className="border-yellow-500 data-[state=checked]:bg-yellow-500 data-[state=checked]:border-yellow-500 mt-1"
+                checked={isUpdateWithBaseWallet}
+                onCheckedChange={(checked) =>
+                  setIsUpdateWithBaseWallet(checked as boolean)
+                }
+              />
+              <div className="flex-1">
+                <Label className="text-sm font-semibold text-yellow-800 dark:text-yellow-200 cursor-pointer" onClick={() => setIsUpdateWithBaseWallet(!isUpdateWithBaseWallet)}>
+                  🔄 Atualizar com carteira base
+                </Label>
+                <p className="text-xs text-yellow-700 dark:text-yellow-300 mt-1 leading-relaxed">
+                  Ao manter marcado, a <strong>alocação ideal dos ativos na carteira</strong> será 
+                  automaticamente atualizada conforme o novo perfil de risco selecionado. 
+                  Esta ação irá redistribuir os percentuais de cada ativo baseado no modelo padrão.
+                </p>
+              </div>
+            </div>
           </div>
         )}
       </div>

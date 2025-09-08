@@ -310,6 +310,13 @@ export function EditCustomerModal({
     }
   }, [isOpen, rowInfos])
 
+  // Auto-mark checkbox when risk profile changes
+  useEffect(() => {
+    if (riskProfile && riskProfile !== rowInfos.riskProfile) {
+      setIsUpdateWithBaseWallet(true)
+    }
+  }, [riskProfile, rowInfos.riskProfile])
+
   const showUpdateCheckbox = riskProfile !== rowInfos.riskProfile
 
   return (
