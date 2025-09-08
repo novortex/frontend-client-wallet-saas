@@ -115,24 +115,24 @@ export default function WalletMonitoring() {
             >
               <Card className="border-border bg-card transition-shadow hover:shadow-md">
                 <CardContent className="p-4">
-                  <div className="text-success text-sm">Perfect (100%)</div>
-                  <div className="text-success text-2xl font-bold">
+                  <div className="text-sm text-success">Perfect (100%)</div>
+                  <div className="text-2xl font-bold text-success">
                     {stats.perfectManagers}
                   </div>
                 </CardContent>
               </Card>
               <Card className="border-border bg-card transition-shadow hover:shadow-md">
                 <CardContent className="p-4">
-                  <div className="text-info text-sm">Good (80-99%)</div>
-                  <div className="text-info text-2xl font-bold">
+                  <div className="text-sm text-info">Good (80-99%)</div>
+                  <div className="text-2xl font-bold text-info">
                     {stats.goodManagers}
                   </div>
                 </CardContent>
               </Card>
               <Card className="border-border bg-card transition-shadow hover:shadow-md">
                 <CardContent className="p-4">
-                  <div className="text-warning text-sm">Warning (60-79%)</div>
-                  <div className="text-warning text-2xl font-bold">
+                  <div className="text-sm text-warning">Warning (60-79%)</div>
+                  <div className="text-2xl font-bold text-warning">
                     {stats.warningManagers}
                   </div>
                 </CardContent>
@@ -229,7 +229,7 @@ export default function WalletMonitoring() {
                         setCurrentPage((prev) => Math.min(prev + 1, totalPages))
                       }
                       disabled={!canNextPage}
-                      className="bg-[#F2BE38] text-black hover:bg-yellow-600 hover:text-white"
+                      className="bg-[#F2BE38] text-black hover:bg-yellow-500 hover:text-white"
                     >
                       Next
                     </Button>
@@ -344,8 +344,8 @@ export default function WalletMonitoring() {
               </Card>
               <Card className="border-border bg-card transition-shadow hover:shadow-md">
                 <CardContent className="p-4">
-                  <div className="text-success text-sm">FRC = 1</div>
-                  <div className="text-success text-2xl font-bold">
+                  <div className="text-sm text-success">FRC = 1</div>
+                  <div className="text-2xl font-bold text-success">
                     {processedManagers.filter((m) => m.frcData).length > 0
                       ? (
                           processedManagers
@@ -364,8 +364,8 @@ export default function WalletMonitoring() {
               </Card>
               <Card className="border-border bg-card transition-shadow hover:shadow-md">
                 <CardContent className="p-4">
-                  <div className="text-warning text-sm">FRC &gt; 1</div>
-                  <div className="text-warning text-2xl font-bold">
+                  <div className="text-sm text-warning">FRC &gt; 1</div>
+                  <div className="text-2xl font-bold text-warning">
                     {processedManagers.filter((m) => m.frcData).length > 0
                       ? (
                           processedManagers
@@ -469,7 +469,7 @@ export default function WalletMonitoring() {
                         setFrcPage((p) => Math.min(p + 1, frcTotalPages))
                       }
                       disabled={!canFrcNext}
-                      className="bg-[#F2BE38] text-black hover:bg-yellow-600 hover:text-white"
+                      className="bg-[#F2BE38] text-black hover:bg-yellow-500 hover:text-white"
                     >
                       Next
                     </Button>

@@ -23,10 +23,94 @@ export async function deleteCustomer(customerUuid: string) {
   }
 }
 
+// Novos endpoints granulares
+export async function getPerformanceSummary() {
+  try {
+    const result = await instance.get('analytic/performance-summary')
+    return result.data
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
+}
+
+export async function getAssetAllocation() {
+  try {
+    const result = await instance.get<AllocationByAsset>('analytic/asset-allocation')
+    return result.data
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
+}
+
+export async function getRiskBreakdown() {
+  try {
+    const result = await instance.get('analytic/risk-breakdown')
+    return result.data
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
+}
+
+export async function getBenchmarkAnalysis() {
+  try {
+    const result = await instance.get('analytic/benchmark-analysis')
+    return result.data
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
+}
+
+export async function getExchangeBreakdown() {
+  try {
+    const result = await instance.get('analytic/exchange-breakdown')
+    return result.data
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
+}
+
+export async function getClientSegmentAnalysis() {
+  try {
+    const result = await instance.get('analytic/client-segment-analysis')
+    return result.data
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
+}
+
+export async function getManagerBreakdown() {
+  try {
+    const result = await instance.get('analytic/manager-breakdown')
+    return result.data
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
+}
+
+export async function invalidateAnalyticsCache() {
+  try {
+    // Como não temos acesso direto ao organizationUuid no frontend,
+    // vamos usar um endpoint que pega pela organização do usuário logado
+    const result = await instance.delete('analytic/cache/current')
+    return result.data
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
+}
+
+// Métodos legados - mantidos para compatibilidade
 export async function getRevenueProjection() {
   try {
     const result =
-      await instance.get<RevenueProjectionDashboardData>('management/revenue')
+      await instance.get<RevenueProjectionDashboardData>('analytic/dashboard/revenue')
 
     return result.data
   } catch (error) {
@@ -37,10 +121,7 @@ export async function getRevenueProjection() {
 
 export async function getAllocationByAsset() {
   try {
-    const result = await instance.get<AllocationByAsset>(
-      'management/allocation',
-    )
-
+    const result = await instance.get<AllocationByAsset>('analytic/asset-allocation')
     return result.data
   } catch (error) {
     console.log(error)

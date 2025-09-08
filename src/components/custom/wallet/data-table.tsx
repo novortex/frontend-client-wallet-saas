@@ -18,12 +18,12 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import filterIcon from '@/assets/icons/filter.svg'
-import exportIcon from '@/assets/icons/export.svg'
 import { AddNewWalletModal } from '../add-new-wallet-modal'
 import { RebalanceModal } from '../rebalanceModal'
+import { ApplyBaseWalletModal } from '../apply-base-wallet-modal'
 import { useAssetPricesSocket } from '@/hooks/useSocketPrice'
+import { TWalletAssetsInfo } from '@/types/wallet.type'
+import { Wallet } from 'lucide-react'
 
 export type ClientActive = {
   id: string
@@ -51,6 +51,7 @@ interface DataTableProps<TValue> {
     minAmount: number
     minPercentage: number
   }) => Promise<unknown[]>
+  infosWallet: TWalletAssetsInfo
 }
 
 export function DataTable<TValue>({
@@ -58,8 +59,10 @@ export function DataTable<TValue>({
   data,
   walletUuid,
   fetchData,
+  infosWallet,
 }: DataTableProps<TValue>) {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isApplyBaseWalletModalOpen, setIsApplyBaseWalletModalOpen] = useState(false)
   const [sorting, setSorting] = useState<SortingState>([
     { id: 'investedAmount', desc: true },
   ])
@@ -71,6 +74,14 @@ export function DataTable<TValue>({
 
   const closeModal = () => {
     setIsModalOpen(false)
+  }
+
+  const openApplyBaseWalletModal = () => {
+    setIsApplyBaseWalletModalOpen(true)
+  }
+
+  const closeApplyBaseWalletModal = () => {
+    setIsApplyBaseWalletModalOpen(false)
   }
 
   const assetIds = useMemo(() => {
@@ -113,27 +124,19 @@ export function DataTable<TValue>({
       <div className="flex w-full items-center justify-between rounded-t-lg border bg-lightComponent p-5 dark:bg-[#171717]">
         <h1 className="w-1/3 text-xl dark:text-white">Assets wallet</h1>
         <div className="flex w-fit gap-5">
-          <Input
-            placeholder="Filter asset name..."
-            value={(table.getColumn('asset')?.getFilterValue() as string) ?? ''}
-            onChange={(event) =>
-              table.getColumn('asset')?.setFilterValue(event.target.value)
-            }
-            className="h-11 border border-transparent bg-gray-300 dark:bg-gray-800 dark:text-gray-400"
-          />
-
           <RebalanceModal walletUuid={walletUuid} />
-          <Button className="flex w-1/3 gap-2 border bg-gray-200 p-5 text-black hover:bg-gray-400 dark:bg-white">
-            <img src={filterIcon} alt="" /> Filters
-          </Button>
-          <Button className="flex w-1/3 gap-2 bg-gray-200 p-5 text-black hover:bg-gray-400 dark:bg-white">
-            <img src={exportIcon} alt="" /> Export
+          <Button
+            className="flex items-center gap-2 bg-[#F2BE38] px-4 font-medium text-black transition-all duration-200 transform hover:scale-105 hover:bg-yellow-500 hover:text-white"
+            onClick={openApplyBaseWalletModal}
+          >
+            <Wallet />
+            Aplicar Base Wallet
           </Button>
           <Button
-            className="w-1/2 bg-[#F2BE38] p-5 text-black hover:bg-yellow-600 hover:text-white"
+            className="flex items-center gap-2 bg-[#F2BE38] px-4 font-medium text-black transition-all duration-200 transform hover:scale-105 hover:bg-yellow-500 hover:text-white"
             onClick={openModal}
           >
-            + Add New
+            + Add New Asset
           </Button>
         </div>
       </div>
@@ -187,6 +190,13 @@ export function DataTable<TValue>({
         isOpen={isModalOpen}
         onClose={closeModal}
         walletUuid={walletUuid}
+        fetchData={fetchData}
+      />
+      <ApplyBaseWalletModal
+        isOpen={isApplyBaseWalletModalOpen}
+        onClose={closeApplyBaseWalletModal}
+        walletUuid={walletUuid}
+        riskProfile={infosWallet.riskProfile}
         fetchData={fetchData}
       />
     </div>

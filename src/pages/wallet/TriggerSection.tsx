@@ -28,7 +28,7 @@ const TriggerSection: React.FC<TriggerSectionInterface> = ({
     <div className="mt-5">
       <div className="flex items-center justify-between rounded-t-lg bg-gray-200 p-5 dark:bg-[#171717]">
         <h1 className="dark:text-white">My Triggers</h1>
-        <Button className="bg-[#F2BE38] text-black hover:bg-yellow-600 hover:text-white">
+        <Button className="flex items-center gap-2 bg-[#F2BE38] px-4 font-medium text-black transition-all duration-200 transform hover:scale-105 hover:bg-yellow-500 hover:text-white">
           Trigger Action
         </Button>
       </div>

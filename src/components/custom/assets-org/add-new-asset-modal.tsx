@@ -34,7 +34,7 @@ export default function AddNewAssetModal({
         </div>
         <DialogFooter className="flex items-end justify-end">
           <Button
-            className="w-1/4 bg-[#1877F2] p-5 text-white hover:bg-blue-600"
+            className="w-1/4 bg-[#1877F2] p-5 text-white hover:bg-blue-600 transition-all duration-200 transform hover:scale-105"
             onClick={handleAddAsset}
           >
             Add asset

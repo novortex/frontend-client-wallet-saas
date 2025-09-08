@@ -11,6 +11,9 @@ export type RevenueProjectionDashboardData = {
     walletsLosingMoneyCount: number
     benchmarkOutperformedWalletCount: number
     missingInformationAboutPerformanceOrWallet: number
+    averageInvestmentGeneral: number
+    averageGainPerWallet: number
+    clientsUnder25k: number
   }
   byBenchmark: {
     [benchmarkName: string]: {

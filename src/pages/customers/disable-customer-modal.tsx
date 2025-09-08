@@ -33,24 +33,27 @@ export function DisableCustomerModal({
     setLoading(true)
 
     toast({
-      className: 'bg-yellow-500 border-0',
+      className: 'toast-warning',
       title: 'Processing disable customer request...',
+      duration: 5000,
     })
 
     try {
       await deleteCustomer(customerUuid)
 
       toast({
-        className: 'bg-green-500 border-0',
+        className: 'toast-success',
         title: 'Sucessfuly disable customer!',
+        duration: 4000,
       })
 
       onOpenChange(false)
     } catch (error) {
       console.error(error)
       toast({
-        className: 'bg-red-500 border-0',
+        className: 'toast-error',
         title: 'Error on disabling customer.',
+        duration: 6000,
       })
     } finally {
       setLoading(false)

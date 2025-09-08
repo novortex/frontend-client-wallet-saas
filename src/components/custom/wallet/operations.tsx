@@ -148,9 +148,10 @@ export default function OperationsModal({
 
     try {
       toast({
-        className: 'bg-yellow-500 border-0',
-        title: 'Operation in progress',
-        description: `Operation: ${operation}, Amount: ${amount}, Currency: ${currency}`,
+        className: 'toast-warning',
+        title: 'Operação em andamento',
+        description: `Operação: ${operation}, Valor: ${amount}, Moeda: ${currency}`,
+        duration: 5000,
       })
       const customDateFormatted = formatDateToISO(date)
       const result = await createDepositWithdrawal(
@@ -162,17 +163,19 @@ export default function OperationsModal({
       )
       fetchData()
       toast({
-        className: 'bg-green-500 border-0',
-        title: 'Operation successful',
-        description: `Operation: ${operation}, Amount: ${amount}, Currency: ${currency}`,
+        className: 'toast-success',
+        title: 'Operação realizada com sucesso',
+        description: `Operação: ${operation}, Valor: ${amount}, Moeda: ${currency}`,
+        duration: 4000,
       })
       setSignal(!signal)
       console.log('Operation successful:', result)
     } catch (error) {
       toast({
-        className: 'bg-red-500 border-0',
-        title: 'Operation failed',
-        description: 'Something went wrong. Please try again later.',
+        className: 'toast-error',
+        title: 'Erro na operação',
+        description: 'Algo deu errado. Tente novamente mais tarde.',
+        duration: 6000,
       })
       console.error('Operation failed:', error)
     }

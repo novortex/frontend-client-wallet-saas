@@ -8,9 +8,10 @@ export function useValidation() {
 
     if (!entryValue || Number(entryValue) < 0) {
       toast({
-        className: 'bg-red-500 border-0',
+        className: 'toast-error',
         title: 'Validation Error',
         description: 'Entry value cannot be negative',
+        duration: 6000,
       })
       isValid = false
     }
@@ -18,9 +19,10 @@ export function useValidation() {
     const allocationValue = Number(allocation)
     if (!allocation || allocationValue < 0 || allocationValue > 100) {
       toast({
-        className: 'bg-red-500 border-0',
+        className: 'toast-error',
         title: 'Validation Error',
         description: 'Allocation must be between 0 and 100',
+        duration: 6000,
       })
       isValid = false
     }

@@ -19,6 +19,7 @@ export type TWallet = {
   initialFeePaid: boolean
   riskProfile: string // Adjust based on your risk profiles
   monthCloseDate: string // or Date
+  lastMonthCloseDate?: string // or Date
   contract: boolean
   performanceFee: number
   joinedAsClient: Date | null
@@ -50,6 +51,7 @@ export type TWalletAssetsInfo = {
   lastRebalance: string | Date | null
   monthCloseDate: string | Date | null
   isClosed: boolean
+  riskProfile: string
 }
 
 export type HistoricEntry = {

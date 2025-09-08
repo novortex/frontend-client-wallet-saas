@@ -44,9 +44,10 @@ export function useWallet(walletUuid: string) {
       )
     } catch (error) {
       toast({
-        className: 'bg-red-500 border-0 text-white',
-        title: 'Failed to get assets organization',
-        description: 'Demo Vault!',
+        className: 'toast-error',
+        title: 'Erro ao carregar ativos',
+        description: 'Não foi possível carregar os ativos da organização.',
+        duration: 6000,
       })
     } finally {
       setLoading(false)
@@ -56,19 +57,13 @@ export function useWallet(walletUuid: string) {
   const calculateRebalance = useCallback(async () => {
     try {
       const result = await calculateRebalanceInWallet(walletUuid)
-
-      toast({
-        className: 'bg-green-500 border-0 text-white',
-        title: 'Rebalance Successful',
-        description: 'Wallet has been rebalanced successfully!',
-      })
-
       return result
     } catch (error) {
       toast({
-        className: 'bg-red-500 border-0 text-white',
-        title: 'Failed to rebalance wallet',
-        description: 'An error occurred during rebalancing. Please try again.',
+        className: 'toast-error',
+        title: 'Erro no rebalanceamento',
+        description: 'Ocorreu um erro ao rebalancear a carteira. Tente novamente.',
+        duration: 6000,
       })
       throw error
     }

@@ -5,7 +5,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { BadgeCent } from 'lucide-react'
+import { BadgeCent, X } from 'lucide-react'
 
 export function AssetsFilter({
   assets,
@@ -13,9 +13,9 @@ export function AssetsFilter({
   handleSelectAsset,
   handleRemoveAsset,
 }: {
-  assets: { uuid: string; name: string }[]
-  selectedAssets: { uuid: string; name: string }[]
-  handleSelectAsset: (asset: { uuid: string; name: string }) => void
+  assets: { uuid: string; name: string; icon?: string }[]
+  selectedAssets: { uuid: string; name: string; icon?: string }[]
+  handleSelectAsset: (asset: { uuid: string; name: string; icon?: string }) => void
   handleRemoveAsset: (assetUuid: string) => void
 }) {
   const handleAssetSelection = (selectedName: string) => {
@@ -27,53 +27,54 @@ export function AssetsFilter({
   const lastAsset = selectedAssets.at(-1) ?? null
 
   return (
-    <div className="flex w-full flex-col gap-2">
-      <div className="h-[20%] w-full font-bold dark:text-[#959CB6]">
-        Filter by assets
-      </div>
-      <div className="flex h-[80%] w-full flex-col items-center justify-center gap-4">
-        <div className="flex h-full w-[100%] items-center justify-center gap-2">
-          <div className="flex h-full w-[6%] items-center justify-center">
-            <BadgeCent className="text-[#D1AB00]" size="lg" />
-          </div>
-          <div className="flex w-full items-center justify-start">
-            <Select
-              value={lastAsset ? lastAsset.name : ''}
-              onValueChange={handleAssetSelection}
-            >
-              <SelectTrigger className="w-full dark:border-[#323232] dark:bg-[#131313] dark:text-[#fff]">
-                <SelectValue placeholder="Select assets" />
-              </SelectTrigger>
-              <SelectContent className="border-2 dark:border-[#323232] dark:bg-[#131313]">
-                {assets.map((asset) => (
-                  <SelectItem
-                    key={asset.uuid}
-                    value={asset.name}
-                    className="border-0 dark:bg-[#131313] dark:text-white dark:focus:bg-[#252525] dark:focus:text-white"
-                  >
-                    <div>{asset.name}</div>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+    <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-800/50">
+      <div className="mb-4 flex items-center gap-3">
+        <div className="rounded-full bg-primary/10 p-2">
+          <BadgeCent className="h-5 w-5 text-primary" />
         </div>
-        <div className="flex w-full flex-wrap items-start justify-start gap-2">
-          {selectedAssets.map((asset) => (
-            <div
-              key={asset.uuid}
-              className="flex h-8 items-center justify-start rounded-md bg-[#959CB6] px-2 text-white"
-            >
+        <h3 className="text-lg font-semibold text-black dark:text-white">
+          Ativos
+        </h3>
+      </div>
+      
+      <div className="space-y-3">
+        <Select
+          value={lastAsset ? lastAsset.name : ''}
+          onValueChange={handleAssetSelection}
+        >
+          <SelectTrigger className="w-full border-gray-300 bg-white text-black transition-all hover:border-primary focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:hover:border-primary">
+            <SelectValue placeholder="Select assets" />
+          </SelectTrigger>
+          <SelectContent className="border border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-800">
+            {assets.map((asset) => (
+              <SelectItem
+                key={asset.uuid}
+                value={asset.name}
+                className="hover:bg-gray-100 focus:bg-gray-100 dark:hover:bg-gray-700 dark:focus:bg-gray-700"
+              >
+                <div className="flex items-center gap-2">
+                  {asset.icon && <img src={asset.icon} alt={asset.name} className="w-5 h-5 rounded-full" />}
+                  <span>{asset.name}</span>
+                </div>
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        
+        {selectedAssets.length > 0 && (
+          <div className="flex flex-wrap gap-2">
+            {selectedAssets.map((asset) => (
               <div
-                className="mr-2 cursor-pointer"
+                key={asset.uuid}
+                className="flex h-8 items-center justify-start rounded-md bg-yellow-600 px-2 text-white hover:bg-yellow-700 transition-colors cursor-pointer"
                 onClick={() => handleRemoveAsset(asset.uuid)}
               >
-                X
+                <span className="mr-2">{asset.name}</span>
+                <X className="h-3 w-3" />
               </div>
-              <div>{asset.name}</div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   )

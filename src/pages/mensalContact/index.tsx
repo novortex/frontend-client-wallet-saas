@@ -184,7 +184,7 @@ const CallMonitoring = () => {
                   setCurrentPage((prev) => Math.min(prev + 1, totalPages))
                 }
                 disabled={!canNextPage}
-                className="bg-[#F2BE38] text-black hover:bg-yellow-600 hover:text-white"
+                className="bg-[#F2BE38] text-black hover:bg-yellow-500 hover:text-white transition-all duration-200 transform hover:scale-105"
               >
                 Next
               </Button>

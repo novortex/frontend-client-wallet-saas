@@ -158,7 +158,8 @@ export function MonthlyStandardizationModal({
       toast({
         title: 'Erro',
         description: 'Não foi possível carregar os ativos.',
-        variant: 'destructive',
+        className: 'toast-error',
+        duration: 6000,
       })
     } finally {
       setLoading(false)
@@ -215,14 +216,16 @@ export function MonthlyStandardizationModal({
         toast({
           title: 'Nenhum mês selecionado',
           description: 'Selecione pelo menos um mês para continuar.',
-          variant: 'destructive',
+          className: 'toast-error',
+          duration: 6000,
         })
         return
       }
       toast({
         title: 'Configuração inválida',
         description: 'A soma das alocações deve ser 100%.',
-        variant: 'destructive',
+        className: 'toast-error',
+        duration: 6000,
       })
       return
     }
@@ -236,7 +239,8 @@ export function MonthlyStandardizationModal({
         toast({
           title: 'Nenhuma carteira encontrada',
           description: 'Não há carteiras disponíveis.',
-          variant: 'destructive',
+          className: 'toast-error',
+          duration: 6000,
         })
         return
       }
@@ -325,7 +329,8 @@ export function MonthlyStandardizationModal({
         toast({
           title: 'Nenhuma carteira encontrada',
           description: `Não há carteiras que começaram em ${selectedMonths.join(', ')}.`,
-          variant: 'destructive',
+          className: 'toast-error',
+          duration: 6000,
         })
       } else {
         const walletsWithChanges = result.filter(
@@ -334,6 +339,8 @@ export function MonthlyStandardizationModal({
         toast({
           title: 'Preview gerado!',
           description: `${result.length} carteiras encontradas, ${walletsWithChanges} precisam de mudanças.`,
+          className: 'toast-success',
+          duration: 4000,
         })
       }
     } catch (error) {
@@ -341,7 +348,8 @@ export function MonthlyStandardizationModal({
       toast({
         title: 'Erro ao simular',
         description: 'Não foi possível simular as mudanças.',
-        variant: 'destructive',
+        className: 'toast-error',
+        duration: 6000,
       })
     } finally {
       setLoading(false)
@@ -353,7 +361,8 @@ export function MonthlyStandardizationModal({
       toast({
         title: 'Nenhuma carteira para atualizar',
         description: 'Execute o preview primeiro.',
-        variant: 'destructive',
+        className: 'toast-error',
+        duration: 6000,
       })
       return
     }
@@ -361,8 +370,10 @@ export function MonthlyStandardizationModal({
     const walletsWithChanges = preview.filter((w) => w.changes.length > 0)
     if (walletsWithChanges.length === 0) {
       toast({
-        title: 'Nenhuma mudança necessária',
+        title: 'ℹ️ Nenhuma mudança necessária',
         description: 'Todas as carteiras já estão padronizadas.',
+        className: 'bg-info border-0 text-info-foreground',
+        duration: 4000,
       })
       return
     }
@@ -387,6 +398,8 @@ export function MonthlyStandardizationModal({
       toast({
         title: 'Padronização aplicada!',
         description: 'Carteiras padronizadas com sucesso.',
+        className: 'toast-success',
+        duration: 4000,
       })
       setPreview(null)
     } catch (error) {
@@ -395,7 +408,8 @@ export function MonthlyStandardizationModal({
         title: 'Erro ao aplicar',
         description:
           'Algumas mudanças podem não ter sido aplicadas. Verifique o console para detalhes.',
-        variant: 'destructive',
+        className: 'toast-error',
+        duration: 6000,
       })
     } finally {
       setApplying(false)
@@ -423,9 +437,9 @@ export function MonthlyStandardizationModal({
         ) : (
           <div className="space-y-6">
             {/* Month selector */}
-            <div className="rounded-lg border bg-blue-50 p-4 dark:bg-blue-900/20">
+            <div className="rounded-lg border bg-yellow-50 p-4 dark:bg-yellow-900/20">
               <div className="mb-3 flex items-center justify-between">
-                <label className="font-semibold text-blue-900 dark:text-blue-100">
+                <label className="font-semibold text-yellow-900 dark:text-yellow-100">
                   Select the wallets&apos; months:
                 </label>
                 <Button
@@ -445,9 +459,9 @@ export function MonthlyStandardizationModal({
                 {MONTHS.map((month) => (
                   <label
                     key={month}
-                    className={`flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium transition-all hover:bg-blue-100 dark:hover:bg-blue-800/50 ${
+                    className={`flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium transition-all hover:bg-yellow-100 dark:hover:bg-yellow-800/50 ${
                       selectedMonths.includes(month)
-                        ? 'border-blue-500 bg-blue-100 text-blue-900 dark:bg-blue-800 dark:text-blue-100'
+                        ? 'border-yellow-500 bg-yellow-100 text-yellow-900 dark:bg-yellow-800 dark:text-yellow-100'
                         : 'border-gray-300 bg-white text-gray-700 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300'
                     }`}
                   >
@@ -455,7 +469,7 @@ export function MonthlyStandardizationModal({
                       type="checkbox"
                       checked={selectedMonths.includes(month)}
                       onChange={() => handleMonthToggle(month)}
-                      className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      className="h-4 w-4 rounded border-gray-300 text-yellow-600 focus:ring-yellow-500"
                     />
                     <span className="text-xs">{month.slice(0, 3)}</span>
                   </label>
@@ -467,7 +481,7 @@ export function MonthlyStandardizationModal({
                   <Badge
                     key={month}
                     variant="secondary"
-                    className="bg-blue-600 text-white hover:bg-blue-700"
+                    className="bg-yellow-600 text-white hover:bg-yellow-700"
                   >
                     {month}
                   </Badge>
@@ -479,7 +493,7 @@ export function MonthlyStandardizationModal({
                   No month selected.
                 </p>
               ) : (
-                <p className="mt-2 text-sm text-blue-800 dark:text-blue-200">
+                <p className="mt-2 text-sm text-yellow-800 dark:text-yellow-200">
                   Only wallets that started in{' '}
                   <strong>
                     {selectedMonths.length === 1
@@ -573,7 +587,7 @@ export function MonthlyStandardizationModal({
 
               {!isValid && selectedMonths.length > 0 && (
                 <div className="mt-4 flex items-center gap-2 rounded-lg bg-red-50 p-3 text-red-800 dark:bg-red-900/20 dark:text-red-200">
-                  <span className="text-lg">⚠️</span>
+                  <span className="text-lg">!</span>
                   <span className="font-medium">
                     The sum of allocations must be exactly 100%.
                   </span>
@@ -582,7 +596,7 @@ export function MonthlyStandardizationModal({
 
               {selectedMonths.length === 0 && (
                 <div className="mt-4 flex items-center gap-2 rounded-lg bg-yellow-50 p-3 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-200">
-                  <span className="text-lg">⚠️</span>
+                  <span className="text-lg">!</span>
                   <span className="font-medium">
                     Please select at least one month to continue.
                   </span>
@@ -595,7 +609,7 @@ export function MonthlyStandardizationModal({
               <Button
                 onClick={handlePreview}
                 disabled={!isValid || loading}
-                className="flex items-center gap-2 bg-blue-600 text-white hover:bg-blue-700"
+                className="btn-standard"
               >
                 Preview Changes
               </Button>
@@ -603,7 +617,7 @@ export function MonthlyStandardizationModal({
               <Button
                 onClick={handleApply}
                 disabled={!preview || preview.length === 0 || applying}
-                className="flex items-center gap-2 bg-green-600 text-white hover:bg-green-700"
+                className="btn-green"
               >
                 {applying ? (
                   <>
@@ -732,7 +746,7 @@ export function MonthlyStandardizationModal({
                               <td className="p-3">
                                 {wallet.changes.length === 0 ? (
                                   <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                                    ✅ Already standardized
+                                    Already standardized
                                   </Badge>
                                 ) : (
                                   <div className="space-y-1">
@@ -748,7 +762,7 @@ export function MonthlyStandardizationModal({
                                           {change.from.toFixed(2)}%
                                         </span>
                                         <span>→</span>
-                                        <span className="font-bold text-blue-600">
+                                        <span className="font-bold text-yellow-600">
                                           {change.to.toFixed(2)}%
                                         </span>
                                         <span

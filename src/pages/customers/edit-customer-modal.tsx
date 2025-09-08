@@ -116,17 +116,19 @@ export function EditCustomerModal({
   const handleUpdateCustomer = async () => {
     if (!validateInputs()) {
       toast({
-        className: 'bg-red-500 border-0',
+        className: 'toast-error',
         title: 'Erro na validação',
         description: 'Por favor, corrija os erros nos campos destacados.',
+        duration: 6000,
       })
       return
     }
     try {
       toast({
-        className: 'bg-yellow-500 border-0',
+        className: 'toast-warning',
         title: 'Processando atualização',
         description: 'Aguarde enquanto atualizamos os dados...',
+        duration: 5000,
       })
       const formattedPhone = formatPhoneNumber(phone)
       const formattedEmail = email.toLowerCase().trim()
@@ -137,28 +139,31 @@ export function EditCustomerModal({
       })
       if (result === false) {
         toast({
-          className: 'bg-red-500 border-0',
+          className: 'toast-error',
           title: 'Falha na atualização',
           description:
             'Não foi possível atualizar os dados do cliente. Tente novamente.',
+          duration: 6000,
         })
         return
       }
       setSignal(!signal)
       onOpenChange(false)
       toast({
-        className: 'bg-green-500 border-0',
+        className: 'toast-success',
         title: 'Sucesso!',
         description: 'Dados do cliente atualizados com sucesso.',
+        duration: 4000,
       })
     } catch (err) {
       const error = err as { response?: { data?: { message?: string } } }
       const errorMessage =
         error.response?.data?.message || 'Erro ao atualizar dados do cliente.'
       toast({
-        className: 'bg-red-500 border-0',
+        className: 'toast-error',
         title: 'Erro inesperado',
         description: errorMessage,
+        duration: 6000,
       })
     }
   }
@@ -166,23 +171,26 @@ export function EditCustomerModal({
   const handleUpdateWallet = async (): Promise<void> => {
     try {
       toast({
-        className: 'bg-yellow-500 border-0',
+        className: 'toast-warning',
         title: 'Processando atualização',
         description: 'Atualizando dados da carteira...',
+        duration: 5000,
       })
       if (!ExchangeSelected) {
         toast({
-          className: 'bg-red-500 border-0',
+          className: 'toast-error',
           title: 'Campo obrigatório',
           description: 'Por favor, selecione uma exchange.',
+          duration: 6000,
         })
         return
       }
       if (!manager) {
         toast({
-          className: 'bg-red-500 border-0',
+          className: 'toast-error',
           title: 'Campo obrigatório',
           description: 'Por favor, selecione um gerente.',
+          duration: 6000,
         })
         return
       }
@@ -254,29 +262,32 @@ export function EditCustomerModal({
       })
       if (!result) {
         toast({
-          className: 'bg-red-500 border-0',
+          className: 'toast-error',
           title: 'Falha na atualização',
           description:
             'Não foi possível atualizar os dados da carteira. Verifique as informações e tente novamente.',
+          duration: 6000,
         })
         return
       }
       setSignal(!signal)
       onOpenChange(false)
       toast({
-        className: 'bg-green-500 border-0',
+        className: 'toast-success',
         title: 'Sucesso!',
         description: 'Dados da carteira atualizados com sucesso.',
+        duration: 4000,
       })
     } catch (err) {
       const error = err as { response?: { data?: { message?: string } } }
       console.error('Error updating wallet:', error)
       toast({
-        className: 'bg-red-500 border-0',
+        className: 'toast-error',
         title: 'Erro na atualização',
         description:
           error.response?.data?.message ||
           'Erro ao atualizar dados da carteira.',
+        duration: 6000,
       })
     }
   }

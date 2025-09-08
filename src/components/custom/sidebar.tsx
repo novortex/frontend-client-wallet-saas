@@ -1,4 +1,4 @@
-import { MoreVertical, Bell, LogOut, ChevronDown } from 'lucide-react'
+import { MoreVertical, LogOut, ChevronDown } from 'lucide-react'
 import LogoOrg from '../../assets/image/vault-logo.png'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
@@ -29,10 +29,8 @@ const SideBarContext = createContext<SideBarContextProps | null>({
 
 export function SideBar({
   children,
-  alerts,
 }: {
   children: ReactNode
-  alerts: number
 }) {
   useEffect(() => {
     const storedTheme = localStorage.getItem('theme') || 'dark'
@@ -117,22 +115,6 @@ export function SideBar({
 
         <SideBarContext.Provider value={{ expanded }}>
           <ul className="flex-1 px-3">
-            <li
-              className={`relative my-1 mb-10 flex cursor-pointer items-center rounded-md px-3 py-2 font-medium text-foreground transition-colors hover:bg-sidebar-primary hover:text-white ${!expanded ? 'justify-center' : ''}`}
-            >
-              <Bell size={20} />
-              <p
-                className={`overflow-hidden font-normal transition-all ${expanded ? 'ml-3 w-52' : 'w-0'}`}
-              >
-                Notifications
-              </p>
-              <div
-                className={`h-5 overflow-hidden text-center text-sidebar-primary transition-all ${expanded ? 'w-5' : 'w-0'}`}
-              >
-                {alerts}
-              </div>
-            </li>
-
             {children}
           </ul>
         </SideBarContext.Provider>
@@ -203,6 +185,7 @@ export function SideBar({
 
 export function SideBarItem({
   icon,
+  iconExpanded,
   text,
   active,
   alert,
@@ -211,6 +194,7 @@ export function SideBarItem({
   children,
 }: {
   icon: ReactNode
+  iconExpanded?: ReactNode
   text: string
   active?: boolean
   alert?: boolean
@@ -235,7 +219,7 @@ export function SideBarItem({
           onClick={() => setOpen(!open)}
           className={`group relative my-1 flex cursor-pointer items-center rounded-md px-3 py-2 font-medium text-foreground transition-colors hover:bg-sidebar-primary hover:text-white ${!expanded ? 'justify-center' : ''}`}
         >
-          {icon}
+          {expanded && iconExpanded ? iconExpanded : icon}
           <span
             className={`overflow-hidden transition-all ${expanded ? 'ml-3 w-52' : 'w-0'}`}
           >
@@ -256,7 +240,7 @@ export function SideBarItem({
       onClick={() => navigate(href)}
       className={`group relative my-1 flex cursor-pointer items-center rounded-md px-3 py-2 font-medium text-foreground transition-colors hover:bg-sidebar-primary hover:text-white ${!expanded ? 'justify-center' : ''} ${active ? 'bg-sidebar-primary text-white' : ''}`}
     >
-      {icon}
+      {expanded && iconExpanded ? iconExpanded : icon}
       <span
         className={`overflow-hidden transition-all ${expanded ? 'ml-3 w-52' : 'w-0'}`}
       >

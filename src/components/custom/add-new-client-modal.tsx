@@ -37,18 +37,20 @@ export default function AddNewClientModal({
       onClose()
 
       toast({
-        className: 'bg-yellow-500 border-0',
-        title: 'Processing add client in organization',
-        description: 'Demo Vault !!',
+        className: 'toast-warning',
+        title: 'Processando cliente',
+        description: 'Adicionando cliente à organização...',
+        duration: 5000,
       })
 
       const response = await registerNewCustomer(name, email, phone)
 
       if (!response) {
         return toast({
-          className: 'bg-red-500 border-0',
-          title: 'Failed add client in organization',
-          description: 'Demo Vault !!',
+          className: 'toast-error',
+          title: 'Erro ao adicionar cliente',
+          description: 'Não foi possível adicionar o cliente à organização.',
+          duration: 6000,
         })
       }
 
@@ -65,9 +67,10 @@ export default function AddNewClientModal({
       }
 
       return toast({
-        className: 'bg-green-500 border-0',
-        title: 'Success update !!',
-        description: 'Demo Vault !!',
+        className: 'toast-success',
+        title: 'Cliente adicionado com sucesso',
+        description: 'O novo cliente foi adicionado à organização.',
+        duration: 4000,
       })
     } catch (error) {
       console.error('Erro ao cadastrar novo cliente:', error)
@@ -113,7 +116,7 @@ export default function AddNewClientModal({
             <span>This customer will be assigned to you</span>
           </div>
           <Button
-            className="w-1/4 bg-[#1877F2] p-5 hover:bg-blue-600"
+            className="w-1/4 bg-[#1877F2] p-5 hover:bg-blue-600 transition-all duration-200 transform hover:scale-105"
             onClick={() => {
               handleAddClient()
             }}

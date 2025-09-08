@@ -23,24 +23,27 @@ export function useWalletActions(
   const handleTradeAsset = async (tradeAmount: number, action: TradeType) => {
     if (tradeAmount === 0) {
       return toast({
-        className: 'bg-red-500 border-0',
+        className: 'toast-error',
         title: 'Invalid tradeAmount',
         description: 'Please provide a valid amount to trade.',
+        duration: 6000,
       })
     }
 
     if (!walletUuid) {
       return toast({
-        className: 'bg-red-500 border-0',
+        className: 'toast-error',
         title: 'Invalid wallet ID.',
         description: 'Could not find wallet.',
+        duration: 6000,
       })
     }
 
     toast({
-      className: 'bg-yellow-500 border-0',
+      className: 'toast-warning',
       title: `Processing ${action}...`,
       description: '',
+      duration: 5000,
     })
 
     try {
@@ -59,19 +62,21 @@ export function useWalletActions(
       fetchData()
 
       toast({
-        className: 'bg-green-500 border-0',
+        className: 'toast-success',
         title: `${action} successful!`,
         description: '',
+        duration: 4000,
       })
     } catch (error: unknown) {
       console.error(error)
       toast({
-        className: 'bg-red-500 border-0',
+        className: 'toast-error',
         title: 'Trade failed',
         description:
           error instanceof Error
             ? error.message
             : 'An unexpected error occurred.',
+        duration: 6000,
       })
     }
   }
@@ -79,24 +84,27 @@ export function useWalletActions(
   const handleUpdateIdealAllocation = async (idealAllocation: number) => {
     if (!walletUuid) {
       return toast({
-        className: 'bg-red-500 border-0',
+        className: 'toast-error',
         title: 'Invalid wallet ID.',
         description: 'Could not find wallet ID.',
+        duration: 6000,
       })
     }
 
     if (idealAllocation < 0 || idealAllocation > 100) {
       return toast({
-        className: 'bg-red-500 border-0',
+        className: 'toast-error',
         title: 'Invalid ideal allocation',
         description: 'Ideal allocation must be between 0 and 100.',
+        duration: 6000,
       })
     }
 
     toast({
-      className: 'bg-yellow-500 border-0',
+      className: 'toast-warning',
       title: 'Processing update ideal allocation...',
       description: '',
+      duration: 5000,
     })
 
     try {
@@ -114,19 +122,21 @@ export function useWalletActions(
       fetchData()
 
       toast({
-        className: 'bg-green-500 border-0',
+        className: 'toast-success',
         title: 'Ideal allocation updated!',
         description: '',
+        duration: 4000,
       })
     } catch (error: unknown) {
       console.error(error)
       toast({
-        className: 'bg-red-500 border-0',
+        className: 'toast-error',
         title: 'Failed to update ideal allocation.',
         description:
           error instanceof Error
             ? error.message
             : 'An unexpected error occurred.',
+        duration: 6000,
       })
     }
   }
@@ -134,16 +144,18 @@ export function useWalletActions(
   const handleDeleteAssetWallet = async () => {
     if (!walletUuid) {
       return toast({
-        className: 'bg-red-500 border-0',
+        className: 'toast-error',
         title: 'Invalid wallet ID.',
         description: 'Could not find wallet ID.',
+        duration: 6000,
       })
     }
 
     toast({
-      className: 'bg-yellow-500 border-0',
+      className: 'toast-warning',
       title: 'Processing delete Asset in wallet',
       description: 'Demo Vault !!',
+      duration: 5000,
     })
 
     try {
@@ -157,19 +169,21 @@ export function useWalletActions(
       fetchData()
 
       toast({
-        className: 'bg-green-500 border-0',
+        className: 'toast-success',
         title: 'Success delete !!',
         description: 'Demo Vault !!',
+        duration: 4000,
       })
     } catch (error: unknown) {
       console.error(error)
       toast({
-        className: 'bg-red-500 border-0',
+        className: 'toast-error',
         title: 'Failed to delete Asset in Wallet',
         description:
           error instanceof Error
             ? error.message
             : 'An unexpected error occurred.',
+        duration: 6000,
       })
     }
   }

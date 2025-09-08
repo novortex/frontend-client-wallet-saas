@@ -21,6 +21,13 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Card } from '@/components/ui/card'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 async function fetchPerformanceData(): Promise<
   Record<string, PerformanceWallets>
@@ -34,9 +41,9 @@ async function fetchPerformanceData(): Promise<
 export const PerformanceView: React.FC = () => {
   const [data, setData] = useState<PerformanceWallets[]>([])
   const [loading, setLoading] = useState<boolean>(true)
-  const [managerFilter, setManagerFilter] = useState<string>('')
-  const [benchmarkFilter, setBenchmarkFilter] = useState<string>('')
-  const [performanceFilter, setPerformanceFilter] = useState<string>('')
+  const [managerFilter, setManagerFilter] = useState<string>('all')
+  const [benchmarkFilter, setBenchmarkFilter] = useState<string>('all')
+  const [performanceFilter, setPerformanceFilter] = useState<string>('all')
   const [isCustomFilter, setIsCustomFilter] = useState<boolean>(false)
   const [customMinPerformance, setCustomMinPerformance] = useState<string>('')
   const [customMaxPerformance, setCustomMaxPerformance] = useState<string>('')
@@ -116,16 +123,14 @@ export const PerformanceView: React.FC = () => {
     }
 
     return data.filter((item) => {
-      const managerMatch = managerFilter ? item.manager === managerFilter : true
-      const benchmarkMatch = benchmarkFilter
-        ? item.benchmark === benchmarkFilter
-        : true
+      const managerMatch = managerFilter === 'all' ? true : item.manager === managerFilter
+      const benchmarkMatch = benchmarkFilter === 'all' ? true : item.benchmark === benchmarkFilter
 
       let performanceMatch = true
 
       if (isCustomFilter) {
         performanceMatch = filterByCustomPerformance(item.performance)
-      } else if (performanceFilter) {
+      } else if (performanceFilter !== 'all') {
         performanceMatch = filterByPerformance(
           item.performance,
           performanceFilter,
@@ -188,9 +193,9 @@ export const PerformanceView: React.FC = () => {
 
   // Função para limpar todos os filtros
   const clearAllFilters = () => {
-    setManagerFilter('')
-    setBenchmarkFilter('')
-    setPerformanceFilter('')
+    setManagerFilter('all')
+    setBenchmarkFilter('all')
+    setPerformanceFilter('all')
     setIsCustomFilter(false)
     setCustomMinPerformance('')
     setCustomMaxPerformance('')
@@ -200,7 +205,7 @@ export const PerformanceView: React.FC = () => {
   const handleFilterTypeChange = (isCustom: boolean) => {
     setIsCustomFilter(isCustom)
     if (isCustom) {
-      setPerformanceFilter('') // Limpa filtro predefinido
+      setPerformanceFilter('all') // Limpa filtro predefinido
     } else {
       setCustomMinPerformance('') // Limpa filtro customizado
       setCustomMaxPerformance('')
@@ -353,36 +358,38 @@ export const PerformanceView: React.FC = () => {
         <div className="mb-6 space-y-4">
           {/* Filtros básicos */}
           <div className="flex flex-wrap gap-4">
-            <select
-              className="rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-              value={managerFilter}
-              onChange={(e) => setManagerFilter(e.target.value)}
-            >
-              <option value="">Todos os Managers</option>
-              {managers.map((manager) => (
-                <option key={manager} value={manager}>
-                  {manager}
-                </option>
-              ))}
-            </select>
+            <Select value={managerFilter} onValueChange={setManagerFilter}>
+              <SelectTrigger className="w-[200px]">
+                <SelectValue placeholder="Todos os Managers" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos os Managers</SelectItem>
+                {managers.map((manager) => (
+                  <SelectItem key={manager} value={manager}>
+                    {manager}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
 
-            <select
-              className="rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-              value={benchmarkFilter}
-              onChange={(e) => setBenchmarkFilter(e.target.value)}
-            >
-              <option value="">Todos os Benchmarks</option>
-              {benchmarks.map((benchmark) => (
-                <option key={benchmark} value={benchmark}>
-                  {benchmark}
-                </option>
-              ))}
-            </select>
+            <Select value={benchmarkFilter} onValueChange={setBenchmarkFilter}>
+              <SelectTrigger className="w-[200px]">
+                <SelectValue placeholder="Todos os Benchmarks" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos os Benchmarks</SelectItem>
+                {benchmarks.map((benchmark) => (
+                  <SelectItem key={benchmark} value={benchmark}>
+                    {benchmark}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
 
             {/* Botão para limpar filtros */}
-            {(managerFilter ||
-              benchmarkFilter ||
-              performanceFilter ||
+            {(managerFilter !== 'all' ||
+              benchmarkFilter !== 'all' ||
+              performanceFilter !== 'all' ||
               isCustomFilter) && (
               <button
                 className="rounded-md bg-destructive px-3 py-2 text-sm text-destructive-foreground transition-colors hover:bg-destructive/90"
@@ -429,34 +436,29 @@ export const PerformanceView: React.FC = () => {
 
             {/* Filtros predefinidos */}
             {!isCustomFilter && (
-              <select
-                className="w-full max-w-md rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-                value={performanceFilter}
-                onChange={(e) => setPerformanceFilter(e.target.value)}
-              >
-              <option value="">Todas as Performances</option>
-              <optgroup label="Geral">
-                <option value="positive">Apenas Positivas (&gt; 0%)</option>
-                <option value="negative">Apenas Negativas (&lt; 0%)</option>
-              </optgroup>
-              <optgroup label="Performance Positiva">
-                <option value="above5">Acima de 5%</option>
-                <option value="above10">Acima de 10%</option>
-                <option value="above20">Acima de 20%</option>
-                <option value="range0-5">Entre 0% e 5%</option>
-                <option value="range5-10">Entre 5% e 10%</option>
-                <option value="range10-15">Entre 10% e 15%</option>
-                <option value="range15-20">Entre 15% e 20%</option>
-              </optgroup>
-              <optgroup label="Performance Negativa">
-                <option value="below-5">Abaixo de -5%</option>
-                <option value="below-10">Abaixo de -10%</option>
-                <option value="below-20">Abaixo de -20%</option>
-                <option value="range-5-0">Entre -5% e 0%</option>
-                <option value="range-10--5">Entre -10% e -5%</option>
-                <option value="range-15--10">Entre -15% e -10%</option>
-              </optgroup>
-              </select>
+              <Select value={performanceFilter} onValueChange={setPerformanceFilter}>
+                <SelectTrigger className="w-full max-w-md">
+                  <SelectValue placeholder="Todas as Performances" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todas as Performances</SelectItem>
+                  <SelectItem value="positive">Apenas Positivas (&gt; 0%)</SelectItem>
+                  <SelectItem value="negative">Apenas Negativas (&lt; 0%)</SelectItem>
+                  <SelectItem value="above5">Acima de 5%</SelectItem>
+                  <SelectItem value="above10">Acima de 10%</SelectItem>
+                  <SelectItem value="above20">Acima de 20%</SelectItem>
+                  <SelectItem value="range0-5">Entre 0% e 5%</SelectItem>
+                  <SelectItem value="range5-10">Entre 5% e 10%</SelectItem>
+                  <SelectItem value="range10-15">Entre 10% e 15%</SelectItem>
+                  <SelectItem value="range15-20">Entre 15% e 20%</SelectItem>
+                  <SelectItem value="below-5">Abaixo de -5%</SelectItem>
+                  <SelectItem value="below-10">Abaixo de -10%</SelectItem>
+                  <SelectItem value="below-20">Abaixo de -20%</SelectItem>
+                  <SelectItem value="range-5-0">Entre -5% e 0%</SelectItem>
+                  <SelectItem value="range-10--5">Entre -10% e -5%</SelectItem>
+                  <SelectItem value="range-15--10">Entre -15% e -10%</SelectItem>
+                </SelectContent>
+              </Select>
             )}
 
             {/* Filtro customizado */}
@@ -572,9 +574,9 @@ export const PerformanceView: React.FC = () => {
                       colSpan={columns.length}
                       className="h-24 text-center text-muted-foreground"
                     >
-                      {managerFilter ||
-                      benchmarkFilter ||
-                      performanceFilter ||
+                      {managerFilter !== 'all' ||
+                      benchmarkFilter !== 'all' ||
+                      performanceFilter !== 'all' ||
                       isCustomFilter
                         ? 'Nenhuma carteira encontrada com os filtros aplicados.'
                         : 'Nenhum dado de performance encontrado.'}

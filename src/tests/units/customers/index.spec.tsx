@@ -156,7 +156,7 @@ describe('CustomersOrganization', () => {
       await waitFor(() => {
         const successToast = screen.getByRole('status')
         expect(successToast).toHaveTextContent('Sucessfuly disable customer!')
-        expect(successToast).toHaveClass('bg-green-500')
+        expect(successToast).toHaveClass('toast-success')
       })
 
       // Verifica se o modal foi fechado
@@ -187,7 +187,7 @@ describe('CustomersOrganization', () => {
       await waitFor(() => {
         const errorToast = screen.getByRole('status')
         expect(errorToast).toHaveTextContent('Error on disabling customer.')
-        expect(errorToast).toHaveClass('bg-red-500')
+        expect(errorToast).toHaveClass('toast-error')
       })
 
       // Verifica se o modal não foi fechado

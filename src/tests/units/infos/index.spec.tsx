@@ -64,12 +64,10 @@ describe('Infos Components', () => {
       const mockOnClose = jest.fn()
       render(<ConfirmContactModal isOpen={true} onClose={mockOnClose} />)
 
-      await waitFor(() => {
-        expect(screen.getByText(/confirm contact/i)).toBeInTheDocument()
-        const closeButton = screen.getByText(/close/i)
-        fireEvent.click(closeButton)
-        expect(mockOnClose).toHaveBeenCalledTimes(1)
-      })
+      expect(screen.getByText('Confirmar contato')).toBeInTheDocument()
+      const cancelButton = screen.getByText('Cancelar')
+      fireEvent.click(cancelButton)
+      expect(mockOnClose).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -120,7 +118,7 @@ describe('Infos Components', () => {
       await act(async () => {
         render(<Infos />, { wrapper: MemoryRouter })
       })
-      expect(screen.getByText(/information clients/i)).toBeInTheDocument()
+      expect(screen.getByText('Information')).toBeInTheDocument()
     })
 
     it('ensures Wallet and Graphics buttons are present and enabled', async () => {
