@@ -33,6 +33,9 @@ interface WalletTabProps {
   handleUpdateWallet: () => Promise<void>
   setRiskProfile: (value: RiskProfile) => void
   riskProfile: RiskProfile
+  showUpdateCheckbox: boolean
+  isUpdateWithBaseWallet: boolean
+  setIsUpdateWithBaseWallet: (value: boolean) => void
 }
 
 export function WalletTab({
@@ -55,6 +58,9 @@ export function WalletTab({
   handleUpdateWallet,
   setRiskProfile,
   riskProfile,
+  showUpdateCheckbox,
+  isUpdateWithBaseWallet,
+  setIsUpdateWithBaseWallet,
 }: WalletTabProps) {
   if (!rowInfos.isWallet) {
     return (
@@ -65,7 +71,7 @@ export function WalletTab({
   }
 
   return (
-    <div className="grid grid-cols-2 justify-items-center gap-5">
+    <div className="grid grid-cols-2 justify-items-start gap-5">
       <div className="w-full">
         <Label className="ml-2" htmlFor="Name">
           Exchange
@@ -218,6 +224,30 @@ export function WalletTab({
           />
           <Label>Contract</Label>
         </div>
+
+        {showUpdateCheckbox && (
+          <div className="mt-4 rounded-lg border-2 border-yellow-400 bg-yellow-50 dark:bg-yellow-900/20 dark:border-yellow-500 p-4 shadow-md">
+            <div className="flex items-start gap-3">
+              <Checkbox
+                className="border-yellow-500 data-[state=checked]:bg-yellow-500 data-[state=checked]:border-yellow-500 mt-1"
+                checked={isUpdateWithBaseWallet}
+                onCheckedChange={(checked) =>
+                  setIsUpdateWithBaseWallet(checked as boolean)
+                }
+              />
+              <div className="flex-1">
+                <Label className="text-sm font-semibold text-yellow-800 dark:text-yellow-200 cursor-pointer" onClick={() => setIsUpdateWithBaseWallet(!isUpdateWithBaseWallet)}>
+                  🔄 Atualizar com carteira base
+                </Label>
+                <p className="text-xs text-yellow-700 dark:text-yellow-300 mt-1 leading-relaxed">
+                  Ao manter marcado, a <strong>alocação ideal dos ativos na carteira</strong> será 
+                  automaticamente atualizada conforme o novo perfil de risco selecionado. 
+                  Esta ação irá redistribuir os percentuais de cada ativo baseado no modelo padrão.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="mt-12 flex justify-end gap-5">
