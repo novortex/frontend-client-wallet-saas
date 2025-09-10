@@ -87,16 +87,6 @@ export default function RelateClientExchangeModal({
     return progress
   }
 
-  const validateEmail = (email: string) => {
-    // Verifica se há espaços no final do e-mail
-    if (/\s$/.test(email)) {
-      return false
-    }
-
-    // Define o padrão de validação para o e-mail
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    return emailPattern.test(email)
-  }
 
   const handleFormValidation = () => {
     let valid = true
@@ -108,8 +98,8 @@ export default function RelateClientExchangeModal({
       setExchangeError('')
     }
 
-    if (exchangeInfo1 && !validateEmail(exchangeInfo1)) {
-      setEmailError('Invalid email format.')
+    if (!exchangeInfo1.trim()) {
+      setEmailError('Campo obrigatório.')
       valid = false
     } else {
       setEmailError('')
@@ -225,7 +215,7 @@ export default function RelateClientExchangeModal({
 
           <Input
             className="w-2/3 border-[#323232] bg-[#131313] text-[#959CB6]"
-            placeholder="Account email"
+            placeholder="Email ou nome de usuário"
             value={exchangeInfo1}
             onChange={(e) => setExchangeInfo1(e.target.value)}
           />
