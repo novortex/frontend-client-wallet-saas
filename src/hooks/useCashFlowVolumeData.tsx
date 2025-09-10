@@ -120,8 +120,6 @@ export const useCashFlowVolumeData = (
     return acc
   }, {})
 
-  const totalVolumeValueUSDsAssets = Object.values(assetVolumeMap)
-    .reduce((sum, asset) => sum + asset.totalVolumeValueUSD, 0)
   const totalVolumeValueBRLAcrossAssets = Object.values(assetVolumeMap)
     .reduce((sum, asset) => sum + asset.totalVolumeValueBRL, 0)
 

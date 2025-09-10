@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { subMonths, subDays, subWeeks } from 'date-fns'
 import { Loading } from '@/components/custom/loading'
 import { useCashFlowVolumeData } from '@/hooks/useCashFlowVolumeData'
 import { PeriodType, DateRange, Currency } from '@/types/cashFlowVolume.type'
@@ -45,7 +44,6 @@ export function CashFlowVolumeTab() {
     volumeSummary,
     loading,
     error,
-    refresh,
   } = useCashFlowVolumeData(period, dateRange)
 
   const handlePeriodChange = (newPeriod: PeriodType) => {
