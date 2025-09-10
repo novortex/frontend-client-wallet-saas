@@ -17,6 +17,34 @@ interface NotesModalProps {
   onSave?: (notes: string) => Promise<void> | void
 }
 
+// Helper function to decode HTML entities for display
+function decodeHtmlEntities(text: string): string {
+  if (!text) return text
+
+  const textarea = document.createElement('textarea')
+  textarea.innerHTML = text
+  return textarea.value
+}
+
+// Lightweight safety checker: only considers REAL angle-bracket tags dangerous.
+// Plain words ("script de teste", "usar iframe para...") are allowed.
+// Encoded entities (&lt;script&gt;) are treated as plain text and allowed.
+const isTextSafe = (content: string): boolean => {
+  if (!content || typeof content !== 'string') return true
+  const tagNameGroup = '(script|iframe|object|embed|form|input|meta)'
+  // Real tags like <script ...> or </script>
+  const realTag = new RegExp(`<\\/?\\s*${tagNameGroup}\\b`, 'i')
+  // Event handlers only matter inside a tag
+  const inlineHandler = /<[^>]*\bon\w+\s*=/i
+  // javascript: only dangerous when part of an attribute inside a tag
+  const jsProtoInAttr = /<[^>]*=(?:"|')\s*javascript:/i
+  return !(
+    realTag.test(content) ||
+    inlineHandler.test(content) ||
+    jsProtoInAttr.test(content)
+  )
+}
+
 export function NotesModal({
   isOpen,
   onClose,
@@ -24,16 +52,56 @@ export function NotesModal({
   initialNotes = '',
   onSave,
 }: NotesModalProps) {
-  const [notes, setNotes] = useState(initialNotes)
+  const [notes, setNotes] = useState(decodeHtmlEntities(initialNotes))
   const [isSaving, setIsSaving] = useState(false)
   const [showUnsavedConfirm, setShowUnsavedConfirm] = useState(false)
+  const [isContentSafe, setIsContentSafe] = useState(true)
+  const [contentWarning, setContentWarning] = useState('')
   const { toast } = useToast()
 
   useEffect(() => {
     if (isOpen) {
-      setNotes(initialNotes)
+      setNotes(decodeHtmlEntities(initialNotes))
     }
   }, [isOpen, initialNotes])
+
+  // Validate content in real-time (tag-focused, evita falso positivo em frases tipo "script de teste")
+  const validateContent = (content: string) => {
+    const tagNameGroup = '(script|iframe|object|embed|form|input|meta)'
+    const hasRealTag = new RegExp(`<\\/?\\s*${tagNameGroup}\\b`, 'i').test(
+      content,
+    )
+    const obfuscatedScript = /<\s*s\s*c\s*r\s*i\s*p\s*t/i.test(content) // raríssimo, mas mantido
+    const inlineHandler = /<[^>]*\bon\w+\s*=/i.test(content)
+    const jsProtoInAttr = /<[^>]*=(?:"|')\s*javascript:/i.test(content)
+
+    const safe = isTextSafe(content)
+
+    setIsContentSafe(safe)
+
+    if (!safe) {
+      setContentWarning(
+        hasRealTag
+          ? 'Tag HTML não permitida detectada.'
+          : obfuscatedScript
+            ? 'Tag <script> ofuscada detectada.'
+            : inlineHandler
+              ? 'Atributo de evento inline (on*) detectado.'
+              : jsProtoInAttr
+                ? 'Uso de javascript: em atributo detectado.'
+                : 'Conteúdo potencialmente inseguro.',
+      )
+    } else {
+      setContentWarning('')
+    }
+    return safe
+  }
+
+  // Handle notes change: KEEP conteúdo, apenas marcar se inseguro
+  const handleNotesChange = (value: string) => {
+    setNotes(value)
+    validateContent(value)
+  }
 
   const handleSave = async () => {
     if (!onSave) return
@@ -61,7 +129,7 @@ export function NotesModal({
         code === 'INVALID_CONTENT' ||
         errorKey === 'MALICIOUS_CONTENT' ||
         /unsafe|malicious|xss/i.test(message) ||
-        (status && [400, 422].includes(status) && /script|<|>/i.test(notes))
+        (status && [400, 422].includes(status) && !isTextSafe(notes))
 
       if (isMalicious) {
         const serverMsg: string =
@@ -71,6 +139,12 @@ export function NotesModal({
         const sanitizedAlt =
           typeof data.sanitized === 'string' ? data.sanitized : ''
         const sanitized: string = sanitizedContent || sanitizedAlt
+
+        // Update local state with sanitized content if available
+        if (sanitized) {
+          setNotes(decodeHtmlEntities(sanitized))
+        }
+
         const preview = notes
           .replace(/\s+/g, ' ')
           .slice(0, 160)
@@ -103,7 +177,7 @@ export function NotesModal({
         toast({
           className: 'bg-red-500 border-0',
           title: 'Save error',
-          description: 'Could not save notes. Please try again.',
+          description: message || 'Could not save notes. Please try again.',
         })
       }
     } finally {
@@ -112,7 +186,7 @@ export function NotesModal({
   }
 
   const attemptClose = () => {
-    if (notes !== initialNotes) {
+    if (notes !== decodeHtmlEntities(initialNotes)) {
       setShowUnsavedConfirm(true)
     } else {
       onClose()
@@ -132,11 +206,20 @@ export function NotesModal({
           <textarea
             value={notes}
             onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-              setNotes(e.target.value)
+              handleNotesChange(e.target.value)
             }
             placeholder="Write your notes about the client here... (e.g., birthday, preferences, important reminders, etc.)"
-            className="min-h-[300px] w-full resize-none rounded-md border-2 border-border bg-background p-3 text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-[#323232] dark:bg-[#131313] dark:text-white"
+            className={`min-h-[300px] w-full resize-none rounded-md border-2 bg-background p-3 text-foreground placeholder:text-muted-foreground focus:ring-2 dark:bg-[#131313] dark:text-white ${
+              !isContentSafe
+                ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20'
+                : 'border-border focus:border-primary focus:ring-primary/20 dark:border-[#323232]'
+            }`}
           />
+          {contentWarning && (
+            <p className="mt-2 text-sm text-red-600 dark:text-red-400">
+              ⚠️ {contentWarning}
+            </p>
+          )}
         </div>
 
         <DialogFooter className="flex gap-3">
@@ -149,10 +232,14 @@ export function NotesModal({
           </Button>
           <Button
             onClick={handleSave}
-            disabled={isSaving}
+            disabled={isSaving || !isContentSafe}
             className="btn-yellow"
           >
-            {isSaving ? 'Saving...' : 'Save Notes'}
+            {isSaving
+              ? 'Saving...'
+              : !isContentSafe
+                ? 'Content Blocked'
+                : 'Save Notes'}
           </Button>
         </DialogFooter>
 
