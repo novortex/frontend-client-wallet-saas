@@ -248,6 +248,8 @@ const defaultMockHookReturn = {
   paginatedFrcManagers: mockProcessedManagers,
   frcSelectedManagers: [],
   setFrcSelectedManagers: jest.fn(),
+  frcLoading: false,
+  fetchFrcData: jest.fn(),
 }
 
 describe('WalletMonitoring Component', () => {
@@ -440,6 +442,9 @@ describe('WalletMonitoring Component', () => {
       // Type in input
       const searchInput = screen.getByPlaceholderText('Search for a manager...')
       await user.type(searchInput, 'John')
+
+      // Wait for debounce (300ms)
+      await new Promise((resolve) => setTimeout(resolve, 350))
 
       expect(mockSetSearchTerm).toHaveBeenCalledWith('John')
     })
