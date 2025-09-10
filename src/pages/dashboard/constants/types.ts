@@ -30,7 +30,7 @@ export interface RevenueProjection {
   averageInvestmentByManager: Record<string, any>
 }
 
-export type TabType = 'overview' | 'risk' | 'benchmark' | 'exchange' | 'client' | 'manager'
+export type TabType = 'overview' | 'risk' | 'benchmark' | 'exchange' | 'client' | 'manager' | 'cashflow'
 
 export interface TabConfig {
   id: TabType
@@ -45,4 +45,5 @@ export const TAB_CONFIGS: TabConfig[] = [
   { id: 'exchange', label: 'Análise por Corretoras', shortLabel: 'Corretoras' },
   { id: 'client', label: 'Análise por Clientes', shortLabel: 'Clientes' },
   { id: 'manager', label: 'Análise por Manager', shortLabel: 'Manager' },
+  { id: 'cashflow', label: 'Cash Flow & Volume', shortLabel: 'Cash Flow' },
 ]

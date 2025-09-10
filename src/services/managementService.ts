@@ -106,6 +106,37 @@ export async function invalidateAnalyticsCache() {
   }
 }
 
+export async function getCashFlowAnalysis(params?: {
+  period?: string
+  startDate?: string
+  endDate?: string
+  walletUuids?: string[]
+}) {
+  try {
+    const response = await instance.get('/analytic/cash-flow-analysis', { params })
+    return response.data
+  } catch (error) {
+    console.error('Erro ao buscar análise de cash flow:', error)
+    throw error
+  }
+}
+
+export async function getCryptoVolumeAnalysis(params?: {
+  period?: string
+  startDate?: string
+  endDate?: string
+  assetUuids?: string[]
+  walletUuids?: string[]
+}) {
+  try {
+    const response = await instance.get('/analytic/crypto-volume-analysis', { params })
+    return response.data
+  } catch (error) {
+    console.error('Erro ao buscar análise de volume crypto:', error)
+    throw error
+  }
+}
+
 // Métodos legados - mantidos para compatibilidade
 export async function getRevenueProjection() {
   try {
