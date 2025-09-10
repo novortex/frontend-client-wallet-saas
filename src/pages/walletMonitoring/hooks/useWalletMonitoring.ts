@@ -148,6 +148,37 @@ export function useWalletMonitoring() {
     [],
   )
 
+  // Helper to classify wallet FRC
+  const classifyWalletFrc = (
+    events: HistoricEntry[],
+    last?: string | null,
+    next?: string | null,
+  ): 'FRC0' | 'FRC1' | 'FRC_GT1' => {
+    const lastDate = last ? new Date(last) : null
+    const nextDate = next ? new Date(next) : null
+    // Filter only BUY/SELL inside the cycle window
+    const relevant = events.filter((e) => {
+      if (e.historyType !== 'BUY_ASSET' && e.historyType !== 'SELL_ASSET')
+        return false
+      const created = new Date(e.createAt)
+      if (lastDate && created < lastDate) return false
+      if (nextDate && created >= nextDate) return false
+      return true
+    })
+    // Group by calendar day (1-day window). Multiple trades same day = 1 rebalance.
+    const uniqueDays = new Set<string>()
+    relevant.forEach((e) => {
+      const d = new Date(e.createAt)
+      // Using UTC date component; adjust if business timezone differs.
+      const dayKey = d.toISOString().slice(0, 10) // YYYY-MM-DD
+      uniqueDays.add(dayKey)
+    })
+    const rebalanceCount = uniqueDays.size
+    if (rebalanceCount === 0) return 'FRC0'
+    if (rebalanceCount === 1) return 'FRC1'
+    return 'FRC_GT1'
+  }
+
   // Fetch consolidated data (wallets + FRC)
   const fetchWalletsAndFrc = useCallback(async () => {
     try {
@@ -175,8 +206,6 @@ export function useWalletMonitoring() {
         )
         setStandardizedWallets(standardizationResults)
 
-        type WalletFrcBucket = 'FRC0' | 'FRC1' | 'FRC_GT1'
-
         const managerFrcAccumulator = new Map<
           string,
           {
@@ -188,37 +217,6 @@ export function useWalletMonitoring() {
             frcMoreThan1Count: number
           }
         >()
-
-        // Helper to classify wallet
-        const classifyWalletFrc = (
-          events: HistoricEntry[],
-          last?: string | null,
-          next?: string | null,
-        ): WalletFrcBucket => {
-          const lastDate = last ? new Date(last) : null
-          const nextDate = next ? new Date(next) : null
-          // Filter only BUY/SELL inside the cycle window
-          const relevant = events.filter((e) => {
-            if (e.historyType !== 'BUY_ASSET' && e.historyType !== 'SELL_ASSET')
-              return false
-            const created = new Date(e.createAt)
-            if (lastDate && created < lastDate) return false
-            if (nextDate && created >= nextDate) return false
-            return true
-          })
-          // Group by calendar day (1-day window). Multiple trades same day = 1 rebalance.
-          const uniqueDays = new Set<string>()
-          relevant.forEach((e) => {
-            const d = new Date(e.createAt)
-            // Using UTC date component; adjust if business timezone differs.
-            const dayKey = d.toISOString().slice(0, 10) // YYYY-MM-DD
-            uniqueDays.add(dayKey)
-          })
-          const rebalanceCount = uniqueDays.size
-          if (rebalanceCount === 0) return 'FRC0'
-          if (rebalanceCount === 1) return 'FRC1'
-          return 'FRC_GT1'
-        }
 
         for (const w of walletsResponse) {
           try {
@@ -337,8 +335,6 @@ export function useWalletMonitoring() {
       const walletsResponse = await getWalletOrganization()
 
       if (walletsResponse && Array.isArray(walletsResponse)) {
-        type WalletFrcBucket = 'FRC0' | 'FRC1' | 'FRC_GT1'
-
         const managerFrcAccumulator = new Map<
           string,
           {
@@ -350,37 +346,6 @@ export function useWalletMonitoring() {
             frcMoreThan1Count: number
           }
         >()
-
-        // Helper to classify wallet
-        const classifyWalletFrc = (
-          events: HistoricEntry[],
-          last?: string | null,
-          next?: string | null,
-        ): WalletFrcBucket => {
-          const lastDate = last ? new Date(last) : null
-          const nextDate = next ? new Date(next) : null
-          // Filter only BUY/SELL inside the cycle window
-          const relevant = events.filter((e) => {
-            if (e.historyType !== 'BUY_ASSET' && e.historyType !== 'SELL_ASSET')
-              return false
-            const created = new Date(e.createAt)
-            if (lastDate && created < lastDate) return false
-            if (nextDate && created >= nextDate) return false
-            return true
-          })
-          // Group by calendar day (1-day window). Multiple trades same day = 1 rebalance.
-          const uniqueDays = new Set<string>()
-          relevant.forEach((e) => {
-            const d = new Date(e.createAt)
-            // Using UTC date component; adjust if business timezone differs.
-            const dayKey = d.toISOString().slice(0, 10) // YYYY-MM-DD
-            uniqueDays.add(dayKey)
-          })
-          const rebalanceCount = uniqueDays.size
-          if (rebalanceCount === 0) return 'FRC0'
-          if (rebalanceCount === 1) return 'FRC1'
-          return 'FRC_GT1'
-        }
 
         for (const w of walletsResponse) {
           try {
