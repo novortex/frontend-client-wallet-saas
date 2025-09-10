@@ -6,6 +6,7 @@ import {
   getBenchmarkAnalysis,
   getExchangeBreakdown,
   getClientSegmentAnalysis,
+  getManagerBreakdown,
   invalidateAnalyticsCache
 } from '@/services/managementService'
 
@@ -45,6 +46,11 @@ interface ClientSegmentAnalysis {
   averageInvestmentByClientSegment: Record<string, any>
 }
 
+interface ManagerBreakdown {
+  byManager: Record<string, any>
+  averageInvestmentByManager: Record<string, any>
+}
+
 interface AssetAllocation {
   totalAUM: number
   assets: Record<string, any>
@@ -81,6 +87,11 @@ interface DashboardState {
     loading: boolean
     error: string | null
   }
+  managerBreakdown: {
+    data: ManagerBreakdown | null
+    loading: boolean
+    error: string | null
+  }
 }
 
 export const useDashboardData = () => {
@@ -91,6 +102,7 @@ export const useDashboardData = () => {
     benchmarkAnalysis: { data: null, loading: true, error: null },
     exchangeBreakdown: { data: null, loading: true, error: null },
     clientSegmentAnalysis: { data: null, loading: true, error: null },
+    managerBreakdown: { data: null, loading: true, error: null },
   })
 
   const [retryCount, setRetryCount] = useState(0)
@@ -227,13 +239,33 @@ export const useDashboardData = () => {
         }
       }
 
+      const loadManagerBreakdown = async () => {
+        try {
+          const data = await getManagerBreakdown()
+          setState(prev => ({
+            ...prev,
+            managerBreakdown: { data, loading: false, error: null }
+          }))
+        } catch (error) {
+          setState(prev => ({
+            ...prev,
+            managerBreakdown: { 
+              data: null, 
+              loading: false, 
+              error: error instanceof Error ? error.message : 'Erro ao carregar análise por manager'
+            }
+          }))
+        }
+      }
+
       // Load all secondary data in parallel
       Promise.all([
         loadAssetAllocation(),
         loadRiskBreakdown(),
         loadBenchmarkAnalysis(),
         loadExchangeBreakdown(),
-        loadClientSegmentAnalysis()
+        loadClientSegmentAnalysis(),
+        loadManagerBreakdown()
       ])
     }
 

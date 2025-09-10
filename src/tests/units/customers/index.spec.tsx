@@ -12,7 +12,7 @@ import { Toaster } from '@/components/ui/toaster'
 
 // Mock do módulo de serviço
 jest.mock('@/services/managementService', () => ({
-  deleteCustomer: jest.fn()
+  deleteCustomer: jest.fn(),
 }))
 
 // Mock data for EditCustomerModal
@@ -72,40 +72,40 @@ describe('CustomersOrganization', () => {
         <>
           {ui}
           <Toaster />
-        </>
+        </>,
       )
     }
 
     it('renders the modal with the correct title and warning message', () => {
       renderWithToaster(
-        <DisableCustomerModal 
-          isOpen={true} 
+        <DisableCustomerModal
+          isOpen={true}
           onOpenChange={mockOnOpenChange}
           customerUuid={mockCustomerUuid}
-        />
+        />,
       )
 
       // Verifica o título exato
       expect(screen.getByText('Disabled Customer')).toBeInTheDocument()
-      
+
       // Verifica o ícone de alerta
       const alertIcon = screen.getByTestId('triangle-alert-icon')
       expect(alertIcon).toBeInTheDocument()
-      
+
       // Verifica a mensagem de aviso completa
       const warningMessage = screen.getByText(
-        /Warning: You are about to disable this customer and all his data\. This action is irreversible \. Please confirm that you want to proceed with this operation\./
+        /Warning: You are about to disable this customer and all his data\. This action is irreversible \. Please confirm that you want to proceed with this operation\./,
       )
       expect(warningMessage).toBeInTheDocument()
     })
 
     it('renders the correct buttons with proper text and roles', () => {
       renderWithToaster(
-        <DisableCustomerModal 
-          isOpen={true} 
+        <DisableCustomerModal
+          isOpen={true}
           onOpenChange={mockOnOpenChange}
           customerUuid={mockCustomerUuid}
-        />
+        />,
       )
 
       // Verifica o botão de fechar
@@ -121,30 +121,32 @@ describe('CustomersOrganization', () => {
 
     it('calls onOpenChange when the close button is clicked', async () => {
       renderWithToaster(
-        <DisableCustomerModal 
-          isOpen={true} 
+        <DisableCustomerModal
+          isOpen={true}
           onOpenChange={mockOnOpenChange}
           customerUuid={mockCustomerUuid}
-        />
+        />,
       )
 
       const closeButton = screen.getByTestId('modal-close-button')
       await userEvent.click(closeButton)
-      
+
       expect(mockOnOpenChange).toHaveBeenCalledWith(false)
       expect(mockOnOpenChange).toHaveBeenCalledTimes(1)
     })
 
     it('handles customer disable process correctly', async () => {
       // Configura o mock para retornar sucesso
-      (managementService.deleteCustomer as jest.Mock).mockResolvedValue(undefined)
+      ;(managementService.deleteCustomer as jest.Mock).mockResolvedValue(
+        undefined,
+      )
 
       renderWithToaster(
-        <DisableCustomerModal 
-          isOpen={true} 
+        <DisableCustomerModal
+          isOpen={true}
           onOpenChange={mockOnOpenChange}
           customerUuid={mockCustomerUuid}
-        />
+        />,
       )
 
       const confirmButton = screen.getByTestId('confirm-disable-button')
@@ -159,19 +161,23 @@ describe('CustomersOrganization', () => {
 
       // Verifica se o modal foi fechado
       expect(mockOnOpenChange).toHaveBeenCalledWith(false)
-      expect(managementService.deleteCustomer).toHaveBeenCalledWith(mockCustomerUuid)
+      expect(managementService.deleteCustomer).toHaveBeenCalledWith(
+        mockCustomerUuid,
+      )
     })
 
     it('handles disable error correctly', async () => {
       // Configura o mock para simular erro
-      (managementService.deleteCustomer as jest.Mock).mockRejectedValue(new Error('Delete failed'))
+      ;(managementService.deleteCustomer as jest.Mock).mockRejectedValue(
+        new Error('Delete failed'),
+      )
 
       renderWithToaster(
-        <DisableCustomerModal 
-          isOpen={true} 
+        <DisableCustomerModal
+          isOpen={true}
           onOpenChange={mockOnOpenChange}
           customerUuid={mockCustomerUuid}
-        />
+        />,
       )
 
       const confirmButton = screen.getByTestId('confirm-disable-button')
@@ -186,7 +192,9 @@ describe('CustomersOrganization', () => {
 
       // Verifica se o modal não foi fechado
       expect(mockOnOpenChange).not.toHaveBeenCalled()
-      expect(managementService.deleteCustomer).toHaveBeenCalledWith(mockCustomerUuid)
+      expect(managementService.deleteCustomer).toHaveBeenCalledWith(
+        mockCustomerUuid,
+      )
     })
   })
 
@@ -362,6 +370,9 @@ describe('CustomersOrganization', () => {
     initialFeeIsPaid: true,
     setInitialFeeIsPaid: jest.fn(),
     handleUpdateWallet: jest.fn(),
+    showUpdateCheckbox: false,
+    isUpdateWithBaseWallet: false,
+    setIsUpdateWithBaseWallet: jest.fn(),
   }
 
   // Tests for WalletTab
