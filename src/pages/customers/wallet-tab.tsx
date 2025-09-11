@@ -114,14 +114,14 @@ export function WalletTab({
 
       <div className="w-full">
         <Label className="ml-2" htmlFor="EmailExchage">
-          Email (Exchange)
+          Email/Usuário (Exchange)
         </Label>
         <Input
           className="dark:border-[#323232] dark:bg-[#131313] dark:text-white"
-          type="email"
+          type="text"
           id="Email Exchage"
           ref={emailExchangeRef}
-          placeholder="Email Exchange"
+          placeholder="Digite o email ou nome de usuário"
           defaultValue={rowInfos.emailExchange || ''}
           required
         />
@@ -210,8 +210,8 @@ export function WalletTab({
         <div className="mb-3 flex gap-3">
           <Checkbox
             className="border-gray-500"
-            checked={!!contractChecked}
-            onCheckedChange={() => setContractChecked(!contractChecked)}
+            checked={initialFeeIsPaid ?? false}
+            onCheckedChange={() => setInitialFeeIsPaid(!initialFeeIsPaid)}
           />
           <Label>Initial Fee is paid?</Label>
         </div>
@@ -219,8 +219,8 @@ export function WalletTab({
         <div className="flex gap-3">
           <Checkbox
             className="border-gray-500"
-            checked={initialFeeIsPaid ?? false}
-            onCheckedChange={() => setInitialFeeIsPaid(!initialFeeIsPaid)}
+            checked={!!contractChecked}
+            onCheckedChange={() => setContractChecked(!contractChecked)}
           />
           <Label>Contract</Label>
         </div>

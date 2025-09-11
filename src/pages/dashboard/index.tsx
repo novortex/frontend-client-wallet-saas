@@ -9,6 +9,7 @@ import { BenchmarkTab } from './components/BenchmarkTab'
 import { ExchangeTab } from './components/ExchangeTab'
 import { ClientTab } from './components/ClientTab'
 import { ManagerTab } from './components/ManagerTab'
+import { CashFlowVolumeTab } from './components/CashFlowVolumeTab'
 import { TabType, RevenueProjection } from './constants/types'
 
 const Dashboard = () => {
@@ -123,6 +124,10 @@ const Dashboard = () => {
 
       {activeTab === 'manager' && (
         <ManagerTab revenueProjection={revenueProjection} />
+      )}
+
+      {activeTab === 'cashflow' && (
+        <CashFlowVolumeTab />
       )}
     </div>
   )

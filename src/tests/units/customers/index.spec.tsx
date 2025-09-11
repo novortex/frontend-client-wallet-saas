@@ -386,7 +386,7 @@ describe('CustomersOrganization', () => {
 
       expect(screen.getByText('Exchange')).toBeInTheDocument()
       expect(screen.getByText(/email password/i)).toBeInTheDocument()
-      expect(screen.getByText(/email \(exchange\)/i)).toBeInTheDocument()
+      expect(screen.getByText(/email\/usuário \(exchange\)/i)).toBeInTheDocument()
       expect(screen.getByText(/exchange password/i)).toBeInTheDocument()
       expect(screen.getByText('Manager')).toBeInTheDocument()
       expect(screen.getByText(/performance fee/i)).toBeInTheDocument()
@@ -464,8 +464,8 @@ describe('CustomersOrganization', () => {
         </Dialog>,
       )
 
-      const checkboxes = screen.getAllByRole('checkbox')
-      const initialFeeCheckbox = checkboxes[1]
+      const initialFeeLabelElement = screen.getByText('Initial Fee is paid?')
+      const initialFeeCheckbox = initialFeeLabelElement.previousSibling as HTMLElement
 
       await userEvent.click(initialFeeCheckbox)
 
@@ -478,8 +478,9 @@ describe('CustomersOrganization', () => {
           <WalletTab {...mockWalletTabProps} />
         </Dialog>,
       )
-      const checkboxes = screen.getAllByRole('checkbox')
-      const contractCheckbox = checkboxes[0]
+      
+      const contractLabelElement = screen.getByText('Contract')
+      const contractCheckbox = contractLabelElement.previousSibling as HTMLElement
 
       await userEvent.click(contractCheckbox)
 
