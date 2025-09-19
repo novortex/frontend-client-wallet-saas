@@ -37,7 +37,7 @@ export function CopyButton({ text, className = '' }: CopyButtonProps) {
   return (
     <button
       onClick={handleCopy}
-      className={`h-6 w-6 p-0 bg-yellow-400 text-black transition-all duration-200 transform hover:scale-110 hover:bg-yellow-500 hover:text-white flex items-center justify-center rounded-md ${className}`}
+      className={`h-6 w-6 p-0 bg-red-400 text-white transition-all duration-200 transform hover:scale-110 hover:bg-red-500 hover:text-white flex items-center justify-center rounded-md ${className}`}
       aria-label={`Copy ${text}`}
       title={copied ? 'Copied!' : 'Click to copy'}
     >

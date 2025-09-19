@@ -62,8 +62,8 @@ export function ApplyBaseWalletModal({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-md">
         <DialogHeader className="text-center">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-yellow-100 dark:bg-yellow-900/30">
-            <AlertTriangle className="h-8 w-8 text-yellow-600 dark:text-yellow-400" />
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-orange-100 dark:bg-yellow-900/30">
+            <AlertTriangle className="h-8 w-8 text-orange-600 dark:text-orange-400" />
           </div>
           <DialogTitle className="text-xl font-bold text-foreground">
             Aplicar Base Wallet
@@ -78,7 +78,7 @@ export function ApplyBaseWalletModal({
             "{riskProfile}"?
           </p>
           
-          <div className="rounded-lg bg-yellow-50 p-4 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300">
+          <div className="rounded-lg bg-orange-50 p-4 text-orange-800 dark:bg-yellow-900/20 dark:text-yellow-300">
             <p className="text-sm">
               Esta ação irá substituir as alocações atuais da carteira pelas alocações padrão da base wallet correspondente.
             </p>

@@ -115,7 +115,7 @@ export const columnsCustomerOrg: ColumnDef<CustomersOrganization>[] = [
         bgColor = 'bg-green-500'
       } else if (isWallet && !hasManager) {
         status = 'Need Manager'
-        bgColor = 'bg-yellow-500'
+        bgColor = 'bg-red-500'
       }
       
       return (

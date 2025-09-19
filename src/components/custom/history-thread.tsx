@@ -90,7 +90,7 @@ export default function HistoryThread({
             <p className="font-bold">{user}</p> performed a buy of{' '}
             <p className="font-bold">{asset}</p> on {date} ({hour}). Before the
             buy:{' '}
-            <p className="font-bold text-[#F2BE38]">
+            <p className="font-bold text-[#FF4A3A]">
               {oldValue} {asset}
             </p>
             , after the buy:{' '}
@@ -105,7 +105,7 @@ export default function HistoryThread({
             <p className="font-bold">{user}</p> performed a sell of{' '}
             <p className="font-bold">{asset}</p> on {date} ({hour}). Before the
             sell:{' '}
-            <p className="font-bold text-[#F2BE38]">
+            <p className="font-bold text-[#FF4A3A]">
               {oldValue} {asset}
             </p>
             , after the sell:{' '}

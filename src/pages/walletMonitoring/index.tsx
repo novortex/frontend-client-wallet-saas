@@ -106,7 +106,7 @@ export default function WalletMonitoring() {
           <button
             className={`px-4 py-2 ${
               activeTab === 'balance'
-                ? 'border-b-2 border-yellow-500 text-yellow-600'
+                ? 'border-b-2 border-orange-500 text-orange-600'
                 : 'text-black dark:text-white'
             }`}
             onClick={() => setActiveTab('balance')}
@@ -116,7 +116,7 @@ export default function WalletMonitoring() {
           <button
             className={`px-4 py-2 ${
               activeTab === 'frc'
-                ? 'border-b-2 border-yellow-500 text-yellow-600'
+                ? 'border-b-2 border-orange-500 text-orange-600'
                 : 'text-black dark:text-white'
             }`}
             onClick={() => setActiveTab('frc')}
@@ -249,7 +249,7 @@ export default function WalletMonitoring() {
                         setCurrentPage((prev) => Math.min(prev + 1, totalPages))
                       }
                       disabled={!canNextPage}
-                      className="bg-[#F2BE38] text-black hover:bg-yellow-500 hover:text-white"
+                      className="bg-[#FF4A3A] text-black hover:bg-red-500 hover:text-white"
                     >
                       Next
                     </Button>
@@ -493,7 +493,7 @@ export default function WalletMonitoring() {
                             setFrcPage((p) => Math.min(p + 1, frcTotalPages))
                           }
                           disabled={!canFrcNext}
-                          className="bg-[#F2BE38] text-black hover:bg-yellow-500 hover:text-white"
+                          className="bg-[#FF4A3A] text-black hover:bg-red-500 hover:text-white"
                         >
                           Next
                         </Button>

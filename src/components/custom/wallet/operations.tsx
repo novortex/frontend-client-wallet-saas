@@ -190,7 +190,7 @@ export default function OperationsModal({
       <DialogContent className="h-[95%] border-transparent dark:bg-[#131313] dark:text-[#fff]">
         <DialogHeader>
           <DialogTitle className="flex flex-row items-center gap-4 text-2xl">
-            Withdrawal / Deposit <HandCoins className="text-[#F2BE38]" />
+            Withdrawal / Deposit <HandCoins className="text-[#FF4A3A]" />
           </DialogTitle>
         </DialogHeader>
         <div className="flex w-full flex-col justify-center gap-2">

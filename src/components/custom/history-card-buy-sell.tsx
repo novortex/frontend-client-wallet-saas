@@ -13,7 +13,7 @@ export default function HistoryCardBuySell({
 }: HistoryCardBuySellProps) {
   const tagStyles = tagState
     ? 'text-[#74F238] bg-[#74F238]'
-    : 'text-[#F2BE38] bg-[#F2BE38]'
+    : 'text-[#FF4A3A] bg-[#FF4A3A]'
 
   const tagText = tagState ? 'New' : 'Old'
 

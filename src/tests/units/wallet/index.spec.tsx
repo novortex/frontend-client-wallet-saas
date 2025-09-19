@@ -550,7 +550,7 @@ describe('Wallet Component', () => {
           // Specifically look for the Balance element with yellow class
           const balanceElement = screen
             .getByText('Balance')
-            .parentElement?.querySelector('.text-yellow-600')
+            .parentElement?.querySelector('.text-orange-600')
           expect(balanceElement).toHaveTextContent('$1,000')
         })
       })
@@ -808,7 +808,7 @@ describe('Wallet Component', () => {
 
         // Should show yellow color for imbalance
         const balanceText = screen.getByText('$500')
-        expect(balanceText.closest('p')).toHaveClass('text-yellow-600')
+        expect(balanceText.closest('p')).toHaveClass('text-orange-600')
       })
 
       it('should update balance indicator in real-time', async () => {

@@ -88,7 +88,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
       </Label>
       <div className="flex gap-5">
         <Button
-          className="flex items-center gap-2 bg-[#F2BE38] px-4 font-medium text-black transition-all duration-200 transform hover:scale-105 hover:bg-yellow-500 hover:text-white"
+          className="flex items-center gap-2 bg-[#FF4A3A] px-4 font-medium text-black transition-all duration-200 transform hover:scale-105 hover:bg-red-500 hover:text-white"
           onClick={() => setIsKpiModalOpen(true)}
         >
           <TrendingUp /> KPI's
@@ -104,7 +104,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
 
             <div className="mb-6 flex justify-center gap-4">
               <Button
-                className={`flex items-center gap-2 rounded-md px-4 py-2 font-medium transition-all duration-200 transform hover:scale-105 hover:text-white ${selectedPeriod === 'all' ? 'bg-yellow-500 text-black hover:bg-yellow-500' : 'bg-gray-700 text-white hover:bg-gray-600'}`}
+                className={`flex items-center gap-2 rounded-md px-4 py-2 font-medium transition-all duration-200 transform hover:scale-105 hover:text-white ${selectedPeriod === 'all' ? 'bg-orange-500 text-black hover:bg-red-500' : 'bg-gray-700 text-white hover:bg-gray-600'}`}
                 onClick={() => {
                   fetchKpis('all')
                   setShowAllTimeOnly(true)
@@ -115,7 +115,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
               <Button
                 className={`flex items-center gap-2 rounded-md px-4 py-2 font-medium transition-all duration-200 transform hover:scale-105 hover:text-white ${
                   selectedPeriod === 'sixmonths'
-                    ? 'bg-yellow-500 text-black hover:bg-yellow-500'
+                    ? 'bg-orange-500 text-black hover:bg-red-500'
                     : 'bg-gray-700 text-white hover:bg-gray-600'
                 }`}
                 onClick={() => {
@@ -128,7 +128,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
               <Button
                 className={`flex items-center gap-2 rounded-md px-4 py-2 font-medium transition-all duration-200 transform hover:scale-105 hover:text-white ${
                   selectedPeriod === 'month'
-                    ? 'bg-yellow-500 text-black hover:bg-yellow-500'
+                    ? 'bg-orange-500 text-black hover:bg-red-500'
                     : 'bg-gray-700 text-white hover:bg-gray-600'
                 }`}
                 onClick={() => {
@@ -141,7 +141,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
               <Button
                 className={`flex items-center gap-2 rounded-md px-4 py-2 font-medium transition-all duration-200 transform hover:scale-105 hover:text-white ${
                   selectedPeriod === 'week'
-                    ? 'bg-yellow-500 text-black hover:bg-yellow-500'
+                    ? 'bg-orange-500 text-black hover:bg-red-500'
                     : 'bg-gray-700 text-white hover:bg-gray-600'
                 }`}
                 onClick={() => {
@@ -222,7 +222,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
 
         {/* Other Wallet Actions */}
         <Button
-          className="flex items-center gap-2 bg-[#F2BE38] px-4 font-medium text-black transition-all duration-200 transform hover:scale-105 hover:bg-yellow-500 hover:text-white"
+          className="flex items-center gap-2 bg-[#FF4A3A] px-4 font-medium text-black transition-all duration-200 transform hover:scale-105 hover:bg-red-500 hover:text-white"
           onClick={openOperationModal}
         >
           <HandCoins /> Withdrawal / Deposit
@@ -230,14 +230,14 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
         <Button
           type="button"
           onClick={() => navigate(`/wallet/${walletUuid}/history`)}
-          className="flex items-center gap-2 bg-[#F2BE38] px-4 font-medium text-black transition-all duration-200 transform hover:scale-105 hover:bg-yellow-500 hover:text-white"
+          className="flex items-center gap-2 bg-[#FF4A3A] px-4 font-medium text-black transition-all duration-200 transform hover:scale-105 hover:bg-red-500 hover:text-white"
         >
           <History className="h-4 w-4" />
           Historic
         </Button>
         <Button
           type="button"
-          className="flex items-center gap-2 bg-[#F2BE38] px-4 font-medium text-black transition-all duration-200 transform hover:scale-105 hover:bg-yellow-500 hover:text-white"
+          className="flex items-center gap-2 bg-[#FF4A3A] px-4 font-medium text-black transition-all duration-200 transform hover:scale-105 hover:bg-red-500 hover:text-white"
           onClick={openOrCloseModalRebalanced}
         >
           <RotateCcw className="h-4 w-4" />

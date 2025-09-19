@@ -226,17 +226,17 @@ export function WalletTab({
         </div>
 
         {showUpdateCheckbox && (
-          <div className="mt-4 rounded-lg border-2 border-yellow-400 bg-yellow-50 dark:bg-yellow-900/20 dark:border-yellow-500 p-4 shadow-md">
+          <div className="mt-4 rounded-lg border-2 border-yellow-400 bg-orange-50 dark:bg-yellow-900/20 dark:border-orange-500 p-4 shadow-md">
             <div className="flex items-start gap-3">
               <Checkbox
-                className="border-yellow-500 data-[state=checked]:bg-yellow-500 data-[state=checked]:border-yellow-500 mt-1"
+                className="border-orange-500 data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500 mt-1"
                 checked={isUpdateWithBaseWallet}
                 onCheckedChange={(checked) =>
                   setIsUpdateWithBaseWallet(checked as boolean)
                 }
               />
               <div className="flex-1">
-                <Label className="text-sm font-semibold text-yellow-800 dark:text-yellow-200 cursor-pointer" onClick={() => setIsUpdateWithBaseWallet(!isUpdateWithBaseWallet)}>
+                <Label className="text-sm font-semibold text-orange-800 dark:text-yellow-200 cursor-pointer" onClick={() => setIsUpdateWithBaseWallet(!isUpdateWithBaseWallet)}>
                   🔄 Atualizar com carteira base
                 </Label>
                 <p className="text-xs text-yellow-700 dark:text-yellow-300 mt-1 leading-relaxed">

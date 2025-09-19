@@ -77,7 +77,7 @@ const SubmitButton: React.FC<{ isLoading: boolean }> = ({ isLoading }) => (
   <div className="flex w-full items-center justify-center">
     <Button
       type="submit"
-      className="h-5/6 w-full bg-yellow-500 text-xl text-black hover:bg-yellow-500/70"
+      className="h-5/6 w-full bg-red-500 text-xl text-white hover:bg-red-500/70"
       disabled={isLoading} // Desativa o botão se isLoading for true
     >
       {isLoading ? 'Logging in...' : 'Sign In'}

@@ -25,9 +25,9 @@ export function PerformanceBadge({
     } else if (percentage >= 60) {
       return {
         label: 'Warning',
-        bgColor: 'bg-yellow-100 dark:bg-yellow-900',
-        textColor: 'text-yellow-800 dark:text-yellow-100',
-        dotColor: 'bg-yellow-500',
+        bgColor: 'bg-orange-100 dark:bg-yellow-900',
+        textColor: 'text-orange-800 dark:text-yellow-100',
+        dotColor: 'bg-orange-500',
       }
     } else {
       return {

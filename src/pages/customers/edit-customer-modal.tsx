@@ -330,13 +330,13 @@ export function EditCustomerModal({
         <Tabs defaultValue="Profile">
           <TabsList className="flex justify-between gap-5 border dark:border-0 dark:bg-[#1C1C1C]">
             <TabsTrigger
-              className="w-1/2 border bg-lightComponent text-[#F2BE38] data-[state=active]:bg-yellow-500 dark:border-0 dark:bg-[#171717] dark:data-[state=active]:bg-yellow-500 dark:data-[state=active]:text-black"
+              className="w-1/2 border bg-lightComponent text-[#FF4A3A] data-[state=active]:bg-orange-500 dark:border-0 dark:bg-[#171717] dark:data-[state=active]:bg-orange-500 dark:data-[state=active]:text-black"
               value="Profile"
             >
               Profile
             </TabsTrigger>
             <TabsTrigger
-              className="w-1/2 border bg-lightComponent text-[#F2BE38] data-[state=active]:bg-yellow-500 dark:bg-[#171717] dark:data-[state=active]:bg-yellow-500 dark:data-[state=active]:text-black"
+              className="w-1/2 border bg-lightComponent text-[#FF4A3A] data-[state=active]:bg-orange-500 dark:bg-[#171717] dark:data-[state=active]:bg-orange-500 dark:data-[state=active]:text-black"
               value="Wallet"
             >
               Wallet

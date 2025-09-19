@@ -61,7 +61,7 @@ export function Graphs() {
           return toast({
             className: 'toast-error',
             title: 'Failed get assets organization :(',
-            description: 'Demo Vault !!',
+            description: 'Erro ao buscar ativos da organização.',
             duration: 6000,
           })
         }

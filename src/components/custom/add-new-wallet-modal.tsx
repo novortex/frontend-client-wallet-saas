@@ -67,7 +67,7 @@ export function AddNewWalletModal({
     toast({
       className: 'toast-warning',
       title: 'Processing add Asset in organization',
-      description: 'Demo Vault !!',
+      description: 'Adicionando ativo na organização...',
       duration: 5000,
     })
 
@@ -85,7 +85,7 @@ export function AddNewWalletModal({
       return toast({
         className: 'toast-error',
         title: 'Failed add Asset in organization',
-        description: 'Demo Vault !!',
+        description: 'Adicionando ativo na organização...',
         duration: 6000,
       })
     }
@@ -105,7 +105,7 @@ export function AddNewWalletModal({
     return toast({
       className: 'toast-success',
       title: 'Success !! new Asset in organization',
-      description: 'Demo Vault !!',
+      description: 'Adicionando ativo na organização...',
       duration: 4000,
     })
   }

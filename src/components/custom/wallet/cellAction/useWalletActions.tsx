@@ -154,7 +154,7 @@ export function useWalletActions(
     toast({
       className: 'toast-warning',
       title: 'Processing delete Asset in wallet',
-      description: 'Demo Vault !!',
+      description: 'Removendo ativo da carteira...',
       duration: 5000,
     })
 
@@ -171,7 +171,7 @@ export function useWalletActions(
       toast({
         className: 'toast-success',
         title: 'Success delete !!',
-        description: 'Demo Vault !!',
+        description: 'Removendo ativo da carteira...',
         duration: 4000,
       })
     } catch (error: unknown) {

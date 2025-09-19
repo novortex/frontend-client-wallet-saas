@@ -145,7 +145,7 @@ export function WalletsTableView({ clients, formatDate }: WalletsTableViewProps)
                           client.infosClient.phone
                         )
                       }}
-                      className="text-primary hover:bg-yellow-500 hover:text-white transition-all duration-200 transform hover:scale-105"
+                      className="text-primary hover:bg-red-500 hover:text-white transition-all duration-200 transform hover:scale-105"
                       title="Ver Informações"
                     >
                       <Eye className="h-4 w-4" />
@@ -157,7 +157,7 @@ export function WalletsTableView({ clients, formatDate }: WalletsTableViewProps)
                         e.stopPropagation()
                         handleViewWallet(client.walletUuid)
                       }}
-                      className="text-primary hover:bg-yellow-500 hover:text-white transition-all duration-200 transform hover:scale-105"
+                      className="text-primary hover:bg-red-500 hover:text-white transition-all duration-200 transform hover:scale-105"
                       title="Ver Carteira"
                     >
                       <Wallet className="h-4 w-4" />
@@ -169,7 +169,7 @@ export function WalletsTableView({ clients, formatDate }: WalletsTableViewProps)
                         e.stopPropagation()
                         handleViewGraphs(client.walletUuid)
                       }}
-                      className="text-primary hover:bg-yellow-500 hover:text-white transition-all duration-200 transform hover:scale-105"
+                      className="text-primary hover:bg-red-500 hover:text-white transition-all duration-200 transform hover:scale-105"
                       title="Ver Gráficos"
                     >
                       <BarChart3 className="h-4 w-4" />

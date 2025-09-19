@@ -41,7 +41,7 @@ export function RebalanceModal({ walletUuid }: RebalanceModalProps) {
   return (
     <>
       <Button
-        className="flex items-center gap-2 bg-[#F2BE38] px-4 font-medium text-black transition-all duration-200 transform hover:scale-105 hover:bg-yellow-500 hover:text-white"
+        className="flex items-center gap-2 bg-[#FF4A3A] px-4 font-medium text-black transition-all duration-200 transform hover:scale-105 hover:bg-red-500 hover:text-white"
         onClick={handleRebalanceCalculation}
         disabled={loading}
       >

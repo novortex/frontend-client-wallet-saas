@@ -101,7 +101,7 @@ export function DataTableAssetOrg<TValue>({
             <img src={exportIcon} alt="" /> Export
           </Button>
           <Button
-            className="w-1/2 bg-[#F2BE38] text-black hover:bg-yellow-500 hover:text-white"
+            className="w-1/2 bg-[#FF4A3A] text-black hover:bg-red-500 hover:text-white"
             onClick={openModal}
           >
             + Add new

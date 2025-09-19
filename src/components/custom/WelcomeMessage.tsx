@@ -1,4 +1,4 @@
-import vaultLogo from '@/assets/image/vault-logo.png'
+import novortexLogo from '@/assets/image/novortex-logo.png'
 
 const WelcomeMessage = () => (
   <div className="h-1/3 w-full">
@@ -6,14 +6,14 @@ const WelcomeMessage = () => (
       Welcome back!
     </div>
     <div className="flex h-1/2 w-full items-center text-2xl text-gray-400">
-      A Vault makes the difficult thing easier when investing in crypto
+      A Novórtex torna o difícil mais fácil ao investir em crypto
     </div>
   </div>
 )
 
 const LogoSection = () => (
   <div className="flex h-3/5 w-3/5 items-center justify-center">
-    <img src={vaultLogo} alt="Vault Logo" />
+    <img src={novortexLogo} alt="Novórtex Logo" />
   </div>
 )
 

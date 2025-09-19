@@ -437,7 +437,7 @@ export function MonthlyStandardizationModal({
         ) : (
           <div className="space-y-6">
             {/* Month selector */}
-            <div className="rounded-lg border bg-yellow-50 p-4 dark:bg-yellow-900/20">
+            <div className="rounded-lg border bg-orange-50 p-4 dark:bg-yellow-900/20">
               <div className="mb-3 flex items-center justify-between">
                 <label className="font-semibold text-yellow-900 dark:text-yellow-100">
                   Select the wallets&apos; months:
@@ -459,9 +459,9 @@ export function MonthlyStandardizationModal({
                 {MONTHS.map((month) => (
                   <label
                     key={month}
-                    className={`flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium transition-all hover:bg-yellow-100 dark:hover:bg-yellow-800/50 ${
+                    className={`flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium transition-all hover:bg-orange-100 dark:hover:bg-yellow-800/50 ${
                       selectedMonths.includes(month)
-                        ? 'border-yellow-500 bg-yellow-100 text-yellow-900 dark:bg-yellow-800 dark:text-yellow-100'
+                        ? 'border-orange-500 bg-orange-100 text-yellow-900 dark:bg-yellow-800 dark:text-yellow-100'
                         : 'border-gray-300 bg-white text-gray-700 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300'
                     }`}
                   >
@@ -469,7 +469,7 @@ export function MonthlyStandardizationModal({
                       type="checkbox"
                       checked={selectedMonths.includes(month)}
                       onChange={() => handleMonthToggle(month)}
-                      className="h-4 w-4 rounded border-gray-300 text-yellow-600 focus:ring-yellow-500"
+                      className="h-4 w-4 rounded border-gray-300 text-orange-600 focus:ring-yellow-500"
                     />
                     <span className="text-xs">{month.slice(0, 3)}</span>
                   </label>
@@ -481,7 +481,7 @@ export function MonthlyStandardizationModal({
                   <Badge
                     key={month}
                     variant="secondary"
-                    className="bg-yellow-600 text-white hover:bg-yellow-700"
+                    className="bg-orange-600 text-white hover:bg-orange-700"
                   >
                     {month}
                   </Badge>
@@ -493,7 +493,7 @@ export function MonthlyStandardizationModal({
                   No month selected.
                 </p>
               ) : (
-                <p className="mt-2 text-sm text-yellow-800 dark:text-yellow-200">
+                <p className="mt-2 text-sm text-orange-800 dark:text-yellow-200">
                   Only wallets that started in{' '}
                   <strong>
                     {selectedMonths.length === 1
@@ -595,7 +595,7 @@ export function MonthlyStandardizationModal({
               )}
 
               {selectedMonths.length === 0 && (
-                <div className="mt-4 flex items-center gap-2 rounded-lg bg-yellow-50 p-3 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-200">
+                <div className="mt-4 flex items-center gap-2 rounded-lg bg-orange-50 p-3 text-orange-800 dark:bg-yellow-900/20 dark:text-yellow-200">
                   <span className="text-lg">!</span>
                   <span className="font-medium">
                     Please select at least one month to continue.
@@ -762,7 +762,7 @@ export function MonthlyStandardizationModal({
                                           {change.from.toFixed(2)}%
                                         </span>
                                         <span>→</span>
-                                        <span className="font-bold text-yellow-600">
+                                        <span className="font-bold text-orange-600">
                                           {change.to.toFixed(2)}%
                                         </span>
                                         <span

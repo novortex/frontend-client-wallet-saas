@@ -142,7 +142,7 @@ export default function RegisterCustomerModal({
       <DialogContent className="flex h-[80vh] w-[60%] max-w-full flex-col border-transparent dark:bg-[#131313] dark:text-[#fff]">
         <DialogHeader>
           <DialogTitle className="flex flex-row items-center gap-4 text-3xl">
-            Register new Customer <User className="dark:text-[#F2BE38]" />
+            Register new Customer <User className="dark:text-[#FF4A3A]" />
           </DialogTitle>
         </DialogHeader>
         <div className="flex flex-grow flex-col justify-center gap-4 overflow-y-auto px-4">
@@ -150,8 +150,8 @@ export default function RegisterCustomerModal({
             <div style={{ width: 65, height: 65 }}>
               <CircularProgressbar
                 styles={buildStyles({
-                  pathColor: `#F2BE38`,
-                  textColor: '#F2BE38',
+                  pathColor: `#FF4A3A`,
+                  textColor: '#FF4A3A',
                 })}
                 value={percentage}
                 text={`${percentage}%`}

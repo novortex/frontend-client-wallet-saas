@@ -257,7 +257,7 @@ export function FilterModal({
                 />
                 <Label htmlFor="status-days-left" className="flex">
                   <span className="mr-2">Days Left</span>
-                  <span className="rounded-full bg-yellow-500 px-2 py-0.5 text-xs text-white">
+                  <span className="rounded-full bg-orange-500 px-2 py-0.5 text-xs text-white">
                     Days Left
                   </span>
                 </Label>
@@ -454,7 +454,7 @@ export function FilterModal({
           </Button>
           <Button
             onClick={handleApplyFilters}
-            className="bg-[#F2BE38] text-black hover:bg-yellow-500 hover:text-white"
+            className="bg-[#FF4A3A] text-black hover:bg-red-500 hover:text-white"
           >
             Apply Filters
           </Button>

@@ -31,7 +31,7 @@ export function StatusBadge({ call, calculateCallStatus }: StatusBadgeProps) {
       )
     case 'days_left':
       return (
-        <span className="inline-flex items-center rounded-full bg-yellow-100 px-2 py-1 text-xs font-medium text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100">
+        <span className="inline-flex items-center rounded-full bg-orange-100 px-2 py-1 text-xs font-medium text-orange-800 dark:bg-yellow-900 dark:text-yellow-100">
           <Clock className="mr-1 h-3 w-3" />
           {statusInfo.message}
         </span>

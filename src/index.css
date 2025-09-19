@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@100..800&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Inter:wght@100..900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -15,8 +15,8 @@
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 10%;
 
-    /* Vault Primary Color - Amarelo */
-    --primary: 45 95% 58%;
+    /* Novórtex Primary Color - Vermelho */
+    --primary: 6 90% 55%;
     --primary-foreground: 220.9 39.3% 11%;
 
     --secondary: 0 0% 96%;
@@ -35,7 +35,7 @@
     --success: 145 63% 32%;
     --success-foreground: 210 20% 98%;
     
-    --warning: 45 95% 58%;
+    --warning: 6 90% 55%;
     --warning-foreground: 220.9 39.3% 11%;
     
     --info: 217 91% 60%;
@@ -45,10 +45,10 @@
     --sidebar: 0 0% 10%;
     --sidebar-accent: 0 0% 15%;
     --sidebar-foreground: 0 0% 50%;
-    --sidebar-primary: 45 95% 58%;
+    --sidebar-primary: 6 90% 55%;
 
     /* Sistema de cores para gráficos */
-    --chart-1: 45 95% 58%;     /* Amarelo Vault */
+    --chart-1: 6 90% 55%;     /* Vermelho Novórtex */
     --chart-2: 145 63% 32%;    /* Verde */
     --chart-3: 0 84% 60%;      /* Vermelho */
     --chart-4: 217 91% 60%;    /* Azul */
@@ -74,8 +74,8 @@
     --popover: 0 0% 15%;
     --popover-foreground: 0 0% 95%;
 
-    /* Vault Primary Color - Amarelo (mesmo no dark) */
-    --primary: 45 95% 58%;
+    /* Novórtex Primary Color - Vermelho (mesmo no dark) */
+    --primary: 6 90% 55%;
     --primary-foreground: 220.9 39.3% 11%;
 
     --secondary: 0 0% 15%;
@@ -94,7 +94,7 @@
     --success: 145 63% 42%;
     --success-foreground: 210 20% 98%;
     
-    --warning: 45 95% 58%;
+    --warning: 6 90% 55%;
     --warning-foreground: 220.9 39.3% 11%;
     
     --info: 217 91% 70%;
@@ -104,10 +104,10 @@
     --sidebar: 0 0% 9%;
     --sidebar-accent: 0 0% 15%;
     --sidebar-foreground: 0 0% 60%;
-    --sidebar-primary: 45 95% 58%;
+    --sidebar-primary: 6 90% 55%;
 
     /* Sistema de cores para gráficos (ajustado para dark) */
-    --chart-1: 45 95% 68%;     /* Amarelo Vault mais claro */
+    --chart-1: 6 90% 65%;     /* Vermelho Novórtex mais claro */
     --chart-2: 145 63% 42%;    /* Verde mais claro */
     --chart-3: 0 84% 70%;      /* Vermelho mais claro */
     --chart-4: 217 91% 70%;    /* Azul mais claro */
@@ -133,7 +133,7 @@
 
 @layer components {
   .btn-standard {
-    @apply flex items-center gap-2 bg-[#F2BE38] px-4 font-medium text-black transition-all duration-200 transform hover:scale-105 hover:bg-primary hover:text-white;
+    @apply flex items-center gap-2 bg-[#FF4A3A] px-4 font-medium text-white transition-all duration-200 transform hover:scale-105 hover:bg-primary hover:text-white;
   }
   
   
@@ -160,11 +160,20 @@
   }
   
   .btn-yellow {
-    @apply flex items-center gap-2 text-black transition-all duration-200 transform hover:scale-105;
-    background-color: #F2BE38 !important;
+    @apply flex items-center gap-2 text-white transition-all duration-200 transform hover:scale-105;
+    background-color: #FF4A3A !important;
   }
   .btn-yellow:hover {
-    background-color: #eab308 !important;
+    background-color: #E63E2E !important;
+    color: white !important;
+  }
+  
+  .btn-warning {
+    @apply flex items-center gap-2 text-black transition-all duration-200 transform hover:scale-105;
+    background-color: #FF8C00 !important;
+  }
+  .btn-warning:hover {
+    background-color: #FF7700 !important;
     color: white !important;
   }
   
@@ -180,8 +189,8 @@
   .card-wallet {
     @apply cursor-pointer rounded-[12px] border border-gray-200 bg-lightComponent 
            shadow-md transition-all duration-300 ease-in-out
-           hover:scale-[1.02] hover:shadow-xl hover:shadow-yellow-500/20 hover:border-yellow-400 hover:bg-gray-100
-           dark:border-gray-700 dark:bg-[#171717] dark:hover:border-yellow-400 dark:hover:bg-[#373737];
+           hover:scale-[1.02] hover:shadow-xl hover:shadow-red-500/20 hover:border-red-400 hover:bg-gray-100
+           dark:border-gray-700 dark:bg-[#171717] dark:hover:border-red-400 dark:hover:bg-[#373737];
   }
   
   .toast-success {

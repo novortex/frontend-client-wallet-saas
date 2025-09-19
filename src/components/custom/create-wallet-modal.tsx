@@ -189,7 +189,7 @@ export default function CreateWalletModal({
       <DialogContent className="h-4/5 w-[60%] max-w-full border-transparent bg-[#131313] text-[#fff]">
         <DialogHeader>
           <DialogTitle className="flex flex-row items-center gap-4 text-3xl">
-            Register new Wallet <Wallet className="text-[#F2BE38]" />
+            Register new Wallet <Wallet className="text-[#FF4A3A]" />
           </DialogTitle>
         </DialogHeader>
         <div className="flex justify-evenly">

@@ -310,7 +310,7 @@ export function History() {
             <DialogTrigger asChild>
               <Button
                 type="button"
-                className="transform bg-[#F2BE38] text-black transition-all duration-200 hover:scale-105 hover:bg-yellow-500 hover:text-white"
+                className="transform bg-[#FF4A3A] text-black transition-all duration-200 hover:scale-105 hover:bg-red-500 hover:text-white"
               >
                 <SlidersHorizontal className="mr-2 h-4 w-4" />
                 Filtros
@@ -333,12 +333,12 @@ export function History() {
 
               {/* Active Filters Section */}
               {activeFilters.length > 0 && (
-                <div className="mb-4 rounded-lg border border-yellow-200 bg-yellow-50 p-4 dark:border-yellow-800 dark:bg-yellow-900/20">
+                <div className="mb-4 rounded-lg border border-yellow-200 bg-orange-50 p-4 dark:border-yellow-800 dark:bg-yellow-900/20">
                   <div className="mb-3 flex items-center justify-between">
                     <h3 className="font-semibold text-yellow-900 dark:text-yellow-100">
                       Filtros Ativos ({activeFilters.length})
                     </h3>
-                    <div className="text-sm text-yellow-800 dark:text-yellow-200">
+                    <div className="text-sm text-orange-800 dark:text-yellow-200">
                       Mostrando {filteredHistoric.length} de {historic.length} operações
                     </div>
                   </div>
@@ -346,7 +346,7 @@ export function History() {
                     {activeFilters.map((filter, index) => (
                       <Badge
                         key={index}
-                        className="bg-yellow-600 text-white hover:bg-yellow-700 cursor-pointer transition-all duration-200 transform hover:scale-105"
+                        className="bg-orange-600 text-white hover:bg-orange-700 cursor-pointer transition-all duration-200 transform hover:scale-105"
                         onClick={() => removeFilter(filter)}
                       >
                         <span className="mr-1">{filter.label}:</span>

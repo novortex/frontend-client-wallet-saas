@@ -127,7 +127,7 @@ export default function DeleteAssetModal({
               </p>
             </div>
           ) : (
-            <div className="rounded-lg bg-yellow-50 p-4 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300">
+            <div className="rounded-lg bg-orange-50 p-4 text-orange-800 dark:bg-yellow-900/20 dark:text-yellow-300">
               <p className="text-sm">
                 Esta ação não pode ser desfeita. O ativo será removido permanentemente desta carteira padrão.
               </p>

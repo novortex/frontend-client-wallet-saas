@@ -284,7 +284,7 @@ export default function HistoryCompactCard({ entry, fiatCurrency }: HistoryCompa
               <Button 
                 size="sm"
                 onClick={handleDownloadPdf}
-                className="flex items-center gap-2 bg-[#F2BE38] text-black hover:bg-yellow-500 hover:text-white transition-all duration-200 transform hover:scale-105"
+                className="flex items-center gap-2 bg-[#FF4A3A] text-black hover:bg-red-500 hover:text-white transition-all duration-200 transform hover:scale-105"
               >
                 <Download className="h-4 w-4" />
                 Baixar PDF

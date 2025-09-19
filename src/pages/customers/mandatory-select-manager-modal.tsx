@@ -129,9 +129,9 @@ export function MandatorySelectManagerModal({
 
         <div className="grid gap-6 py-4">
           <div className="text-center">
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-yellow-100 dark:bg-yellow-900/20">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-orange-100 dark:bg-yellow-900/20">
               <svg
-                className="h-8 w-8 text-yellow-600 dark:text-yellow-400"
+                className="h-8 w-8 text-orange-600 dark:text-orange-400"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"

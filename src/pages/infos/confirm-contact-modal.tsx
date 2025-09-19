@@ -53,7 +53,7 @@ export function ConfirmContactModal({
           </DialogTitle>
         </DialogHeader>
         <div className="flex flex-col items-center justify-center gap-6">
-          <CircleAlert className="text-red-600 dark:text-[#F2BE38]" />
+          <CircleAlert className="text-red-600 dark:text-[#FF4A3A]" />
           <p className="flex w-2/3 text-center">
             Você confirma que entrou em contato com o cliente? Após
             a confirmação, a próxima data de contato recomendada será atualizada e

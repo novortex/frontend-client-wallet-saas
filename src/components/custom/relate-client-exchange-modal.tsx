@@ -114,7 +114,7 @@ export default function RelateClientExchangeModal({
     toast({
       className: 'toast-warning',
       title: 'Processing create wallet for this customer ',
-      description: 'Demo Vault !!',
+      description: 'Processando criação da wallet...',
       duration: 5000,
     })
 
@@ -139,7 +139,7 @@ export default function RelateClientExchangeModal({
       return toast({
         className: 'toast-error',
         title: 'Failed create a wallet for this customer ',
-        description: 'Demo Vault !!',
+        description: 'Processando criação da wallet...',
         duration: 6000,
       })
     }
@@ -155,7 +155,7 @@ export default function RelateClientExchangeModal({
     return toast({
       className: 'toast-success',
       title: 'Success !! wallet created for this customer ',
-      description: 'Demo Vault !!',
+      description: 'Processando criação da wallet...',
       duration: 4000,
     })
   }
@@ -168,7 +168,7 @@ export default function RelateClientExchangeModal({
         <DialogHeader>
           <DialogTitle className="flex flex-row items-center gap-4 text-3xl">
             Register new Wallet - (Exchange){' '}
-            <Wallet className="text-[#F2BE38]" />
+            <Wallet className="text-[#FF4A3A]" />
           </DialogTitle>
         </DialogHeader>
         <div className="flex items-start justify-center">

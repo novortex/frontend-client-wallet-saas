@@ -1,5 +1,5 @@
 import { MoreVertical, LogOut, ChevronDown } from 'lucide-react'
-import LogoOrg from '../../assets/image/vault-logo.png'
+import LogoOrg from '../../assets/image/novortex-logo.png'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
   ReactNode,
@@ -106,9 +106,8 @@ export function SideBar({
           {expanded && (
             <div className="w-20 overflow-hidden transition-all">
               <h2 className="font-semibold text-foreground">
-                Vault
+                Novórtex
               </h2>
-              <p className="text-sm text-sidebar-foreground">Capital</p>
             </div>
           )}
         </div>

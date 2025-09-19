@@ -119,7 +119,7 @@ export function ClientSearch({ className = "mb-6" }: ClientSearchProps) {
       <div className="relative">
         <Input
           ref={searchInputRef}
-          className="h-12 border-2 border-border bg-background text-foreground transition-all placeholder:text-muted-foreground focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20"
+          className="h-12 border-2 border-border bg-background text-foreground transition-all placeholder:text-muted-foreground focus:border-orange-500 focus:ring-2 focus:ring-yellow-500/20"
           type="text"
           placeholder="Search for clients..."
           value={searchQuery}
@@ -141,7 +141,7 @@ export function ClientSearch({ className = "mb-6" }: ClientSearchProps) {
                 key={client.uuid}
                 className={`cursor-pointer border-b border-border px-4 py-3 text-sm transition-all duration-200 last:border-b-0 ${
                   index === selectedIndex
-                    ? 'border-yellow-500/20 bg-yellow-500/10 text-yellow-600'
+                    ? 'border-orange-500/20 bg-orange-500/10 text-orange-600'
                     : 'text-popover-foreground hover:bg-muted/50'
                 }`}
                 onClick={() => handleClientSelect(client)}

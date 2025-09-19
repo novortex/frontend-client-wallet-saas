@@ -20,8 +20,8 @@ export function ComingSoonModal({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-md">
         <DialogHeader className="text-center">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-yellow-500/10">
-            <Clock className="h-8 w-8 text-yellow-600" />
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-orange-500/10">
+            <Clock className="h-8 w-8 text-orange-600" />
           </div>
           <DialogTitle className="text-2xl font-bold text-foreground">
             Em Breve

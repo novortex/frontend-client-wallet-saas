@@ -14,7 +14,7 @@ export function StatusBadge({ status }: StatusBadgeProps) {
   } else if (status === 'OK') {
     bgColor = 'bg-green-500'
   } else if (typeof status === 'string' && status.includes('days left')) {
-    bgColor = 'bg-yellow-500'
+    bgColor = 'bg-red-500'
   } else if (typeof status === 'string' && status.includes('days overdue')) {
     bgColor = 'bg-red-500'
   } else {

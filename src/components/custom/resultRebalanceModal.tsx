@@ -273,7 +273,7 @@ export function ResultRebalanceModal({
                   <p className="text-xs text-gray-500 dark:text-gray-400">
                     Original: ${result.originalAmount.toLocaleString()}
                     {result.isCustomAmount && (
-                      <span className="ml-1 text-yellow-500 font-medium">• Custom</span>
+                      <span className="ml-1 text-orange-500 font-medium">• Custom</span>
                     )}
                   </p>
                 </div>
@@ -294,7 +294,7 @@ export function ResultRebalanceModal({
                       handleAmountChange(originalIndex, e.target.value)
                     }
                     className={`h-8 flex-1 text-[14px] ${
-                      result.isCustomAmount ? 'border-yellow-500' : ''
+                      result.isCustomAmount ? 'border-orange-500' : ''
                     }`}
                     placeholder="Amount"
                     data-testid="input"
@@ -367,7 +367,7 @@ export function ResultRebalanceModal({
                   className={`text-lg font-bold ${
                     isBalanced
                       ? 'text-green-600 dark:text-green-400'
-                      : 'text-yellow-600 dark:text-yellow-400'
+                      : 'text-orange-600 dark:text-orange-400'
                   }`}
                 >
                   ${balanceValue.toLocaleString()}

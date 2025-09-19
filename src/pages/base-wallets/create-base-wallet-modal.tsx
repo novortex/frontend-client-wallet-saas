@@ -217,7 +217,7 @@ export default function CreateBaseWalletModal({
       <DialogContent className="flex h-[80vh] w-[70%] max-w-full flex-col border-transparent dark:bg-[#131313] dark:text-[#fff]">
         <DialogHeader>
           <DialogTitle className="flex flex-row items-center gap-4 text-3xl">
-            Nova Carteira Padrão <Wallet className="dark:text-[#F2BE38]" />
+            Nova Carteira Padrão <Wallet className="dark:text-[#FF4A3A]" />
           </DialogTitle>
         </DialogHeader>
         
@@ -226,8 +226,8 @@ export default function CreateBaseWalletModal({
             <div style={{ width: 65, height: 65 }}>
               <CircularProgressbar
                 styles={buildStyles({
-                  pathColor: `#F2BE38`,
-                  textColor: '#F2BE38',
+                  pathColor: `#FF4A3A`,
+                  textColor: '#FF4A3A',
                 })}
                 value={percentage}
                 text={`${percentage}%`}
